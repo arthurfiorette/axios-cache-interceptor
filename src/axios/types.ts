@@ -1,4 +1,4 @@
-import { CacheStorage } from '#/storage/types';
+import { CacheStorage } from '../storage/types';
 import type {
   AxiosInstance,
   AxiosInterceptorManager,

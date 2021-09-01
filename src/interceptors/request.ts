@@ -1,9 +1,9 @@
-import { AxiosCacheInstance } from '#/axios/types';
+import { AxiosCacheInstance } from '../axios/types';
 import {
   CACHED_RESPONSE_STATUS,
   CACHED_RESPONSE_STATUS_TEXT
-} from '#/constants';
-import { Deferred } from '#/utils/deferred';
+} from '../constants';
+import { Deferred } from '../utils/deferred';
 
 export function applyRequestInterceptor(axios: AxiosCacheInstance) {
   axios.interceptors.request.use(async (config) => {

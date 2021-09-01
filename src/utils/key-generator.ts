@@ -1,4 +1,4 @@
-import { CacheRequestConfig } from '#/axios/types';
+import { CacheRequestConfig } from '../axios/types';
 
 export function defaultKeyGenerator({
   baseURL,

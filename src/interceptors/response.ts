@@ -1,4 +1,4 @@
-import { AxiosCacheInstance } from '#/axios/types';
+import { AxiosCacheInstance } from '../axios/types';
 import { parse } from '@tusbar/cache-control';
 
 export function applyResponseInterceptor(axios: AxiosCacheInstance) {

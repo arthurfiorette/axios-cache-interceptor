@@ -1,4 +1,4 @@
-import { Deferred } from '#/utils/deferred';
+import { Deferred } from '../utils/deferred';
 
 export interface CacheStorage {
   /**
