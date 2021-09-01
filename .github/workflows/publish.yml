@@ -25,8 +25,11 @@ jobs:
       - name: Install deps (with cache)
         uses: bahmutov/npm-install@v1
         with:
-          # yarn.lock deleted and created an package-lock.json
+          # delete yarn.lock and create an package-lock.json
           useLockFile: false
+
+      - name: Lint
+        run: npm run lint
 
       - name: Build
         run: npm run build

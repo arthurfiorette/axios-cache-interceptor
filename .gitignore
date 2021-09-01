@@ -2,3 +2,4 @@
 /dist
 /ignore
 /.vscode
+/package-lock.json

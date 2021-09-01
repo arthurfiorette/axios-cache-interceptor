@@ -5,7 +5,9 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "prettify": "prettier . --write"
+    "prettify": "prettier . --write",
+    "lint": "tsc --noEmit && eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix"
   },
   "repository": {
     "type": "git",
@@ -28,12 +30,16 @@
   "homepage": "https://github.com/ArthurFiorette/axios-cache-interceptor#readme",
   "devDependencies": {
     "@types/node": "^16.7.10",
+    "@typescript-eslint/eslint-plugin": "^4.30.0",
+    "@typescript-eslint/parser": "^4.30.0",
     "axios": "^0.21.1",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
     "prettier": "^2.3.2",
     "prettier-plugin-jsdoc": "^0.3.23",
     "prettier-plugin-organize-imports": "^2.3.3",
-    "typescript": "^4.4.2",
-    "yarn": "^1.22.11"
+    "typescript": "^4.4.2"
   },
   "dependencies": {
     "@tusbar/cache-control": "^0.6.0"

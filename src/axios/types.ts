@@ -58,7 +58,7 @@ export type CacheRequestConfig = AxiosRequestConfig & {
      * Can be used to update the request or delete other caches.
      *
      * If the function returns void, the entry is deleted
-     * 
+     *
      * This is independent if the request made was cached or not.
      *
      * The id used is the same as the id on `CacheRequestConfig['id']`, auto-generated or not.

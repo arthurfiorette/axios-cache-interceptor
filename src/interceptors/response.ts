@@ -14,7 +14,7 @@ export function applyResponseInterceptor(axios: AxiosCacheInstance) {
 
       const oldValue = await axios.storage.get(cacheKey);
       const newValue = value(oldValue, response.data);
-      if(newValue !== undefined) {
+      if (newValue !== undefined) {
         await axios.storage.set(cacheKey, newValue);
       } else {
         await axios.storage.remove(cacheKey);
@@ -50,7 +50,7 @@ export function applyResponseInterceptor(axios: AxiosCacheInstance) {
       const expirationTime = maxAge
         ? // Header max age in seconds
           Date.now() + maxAge * 1000
-        : response.config.cache?.maxAge || axios.defaults.cache?.maxAge!;
+        : response.config.cache?.maxAge || axios.defaults.cache!.maxAge!;
 
       cache.expiration = expirationTime;
     } else {
@@ -58,7 +58,7 @@ export function applyResponseInterceptor(axios: AxiosCacheInstance) {
       cache.expiration =
         cache.expiration ||
         response.config.cache?.maxAge ||
-        axios.defaults.cache?.maxAge!;
+        axios.defaults.cache!.maxAge!;
     }
 
     const data = { body: response.data, headers: response.headers };
