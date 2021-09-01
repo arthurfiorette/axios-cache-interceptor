@@ -77,12 +77,14 @@ cache.get('http://example.com/');
 
 ### Installing
 
+> Axios is a peer dependency and must be installed separately.
+
 ```sh
 # Npm
-npm install --save axios-cache-interceptor
+npm install --save axios axios-cache-interceptor
 
 # Yarn
-yarn add axios-cache-interceptor
+yarn add axios axios-cache-interceptor
 ```
 
 <br />

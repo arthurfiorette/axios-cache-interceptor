@@ -22,7 +22,11 @@
     "plugin",
     "wrapper"
   ],
-  "author": "Hazork",
+  "author": {
+    "name": "Arthur Fiorette",
+    "email": "arthur.fiorette@gmail.com",
+    "url": "https://arthurfiorette.com.br"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/ArthurFiorette/axios-cache-interceptor/issues"
