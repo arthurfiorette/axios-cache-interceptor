@@ -1,3 +1,2 @@
-export function sum(a: number, b: number): number {
-  return a + b;
-}
+export { createCache } from './axios/cache';
+export * from './storage';
