@@ -1,0 +1,12 @@
+# White-list approach
+
+*
+
+!LICENSE
+!README.md
+!package.json
+!tsconfig.json
+!.prettierrc
+!.gitignore
+!/src/**
+!/dist/**
