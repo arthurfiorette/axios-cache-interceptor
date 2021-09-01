@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@tusbar/cache-control@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@tusbar/cache-control/-/cache-control-0.6.0.tgz#9d057b393db24bfbf7d39e6e2bf766b945602e54"
+  integrity sha512-szxZ+I62MYILpuGywjShgE4e1WemNfNq5zu57ZP4gLXnQD7ng8vssrJ8MBseHPDNheJBLFsn2yfdHZIAHnmuvQ==
+
 "@types/mdast@^3.0.0":
   version "3.0.10"
   resolved "https://registry.yarnpkg.com/@types/mdast/-/mdast-3.0.10.tgz#4724244a82a4598884cbbe9bcfd73dff927ee8af"
@@ -18,11 +23,6 @@
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/@types/unist/-/unist-2.0.6.tgz#250a7b16c3b91f672a24552ec64678eeb1d3a08d"
   integrity sha512-PBjIUxZHOuj0R15/xuwJYjFi+KZdNFrehocChv4g5hu6aFroHue8m0lBP0POdK2nKzbw0cgV1mws8+V/JAcEkQ==
-
-add@^2.0.6:
-  version "2.0.6"
-  resolved "https://registry.yarnpkg.com/add/-/add-2.0.6.tgz#248f0a9f6e5a528ef2295dbeec30532130ae2235"
-  integrity sha1-JI8Kn25aUo7yKV2+7DBTITCuIjU=
 
 axios@^0.21.1:
   version "0.21.1"

@@ -1,11 +1,5 @@
 import { CacheStorage, StorageValue } from './types';
 
-const emptyValue: StorageValue = {
-  data: null,
-  expires: -1,
-  state: 'empty'
-};
-
 export class MemoryStorage implements CacheStorage {
   readonly storage: Map<string, StorageValue> = new Map();
 
@@ -17,8 +11,7 @@ export class MemoryStorage implements CacheStorage {
     }
 
     // Fresh copy to prevent code duplication
-    const empty = { ...emptyValue };
-
+    const empty = { data: null, expiration: -1, state: 'empty' } as const;
     this.storage.set(key, empty);
     return empty;
   };

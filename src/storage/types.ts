@@ -1,6 +1,9 @@
+import { Deferred } from '../utils/deferred';
+
 export interface CacheStorage {
   /**
-   * Returns the cached value for the given key or a new empty
+   * Returns the cached value for the given key. Should return a 'empty'
+   * state StorageValue if the key does not exist.
    */
   get: (key: string) => Promise<StorageValue>;
   /**
@@ -13,20 +16,30 @@ export interface CacheStorage {
   remove: (key: string) => Promise<void>;
 }
 
-export interface StorageValue {
-  /**
-   * The value of the cached response
-   */
-  data: any | null;
+export type CachedResponse = {
+  headers: any;
+  body: any;
+};
 
-  /**
-   * The time when the cached response expires
-   * -1 means not cached
-   */
-  expires: number;
-
-  /**
-   * The status of this value.
-   */
-  state: 'cached' | 'empty' | 'loading';
-}
+/**
+ * The value returned for a given key.
+ */
+export type StorageValue =
+  | {
+      data: CachedResponse;
+      expiration: number;
+      state: 'cached';
+    }
+  | {
+      data: Deferred<CachedResponse>;
+      /**
+       * If interpretHeader is used, this value will be `-1`until the response is received
+       */
+      expiration: number;
+      state: 'loading';
+    }
+  | {
+      data: null;
+      expiration: -1;
+      state: 'empty';
+    };

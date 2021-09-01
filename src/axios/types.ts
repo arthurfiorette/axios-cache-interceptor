@@ -1,3 +1,4 @@
+import { CacheStorage } from '#/storage/types';
 import type {
   AxiosInstance,
   AxiosInterceptorManager,
@@ -6,12 +7,19 @@ import type {
   AxiosResponse,
   Method
 } from 'axios';
-import { CacheStorage } from '../storage/types';
 
 /**
  * Options that can be overridden per request
  */
 export type CacheRequestConfig = AxiosRequestConfig & {
+  /**
+   * An id for this request, if this request is used in cache, only the last request made with this id will be returned.
+   *
+   * @see cacheKey
+   * @default undefined
+   */
+  id?: string | number | symbol;
+
   /**
    * All cache options for the request
    */
@@ -37,6 +45,29 @@ export type CacheRequestConfig = AxiosRequestConfig & {
      * @default ['get']
      */
     methods?: Lowercase<Method>[];
+
+    /**
+     * The function to check if the response code permit being cached.
+     *
+     * @default ({ status }) => status >= 200 && status < 300
+     */
+    shouldCache?: (response: AxiosResponse) => boolean;
+
+    /**
+     * Once the request is resolved, this specifies what requests should we change the cache.
+     * Can be used to update the request or delete other caches.
+     *
+     * If the function returns void, the entry is deleted
+     * 
+     * This is independent if the request made was cached or not.
+     *
+     * The id used is the same as the id on `CacheRequestConfig['id']`, auto-generated or not.
+     *
+     * @default {}
+     */
+    update?: {
+      [id: string]: 'delete' | ((oldValue: any, atual: any) => any | void);
+    };
   };
 };
 
@@ -47,6 +78,13 @@ export interface CacheInstance {
    * @default new MemoryStorage()
    */
   storage: CacheStorage;
+
+  /**
+   * The function used to create different keys for each request.
+   * Defaults to a function that priorizes the id, and if not specified,
+   * a string is generated using the method, baseUrl, params, and url
+   */
+  generateKey: (options: CacheRequestConfig) => string;
 }
 
 export interface AxiosCacheInstance extends AxiosInstance, CacheInstance {
