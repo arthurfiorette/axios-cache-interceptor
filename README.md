@@ -43,7 +43,7 @@ Axios Cache Interceptor</h1>
 <br />
 <br />
 
-<div align="center"><b><pre>This library is in beta and can have breaking changes until v1.</pre></b></div>
+<div align="center"><b><pre>This library is in beta and can have breaking changes until v1.<br />Not ready for production usage!</pre></b></div>
 
 <br />
 <br />
