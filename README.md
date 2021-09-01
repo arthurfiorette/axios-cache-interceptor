@@ -48,7 +48,7 @@ Axios Cache Interceptor</h1>
 <br />
 <br />
 
-#### `axios-cache-interceptor` is a axios adapter for caching and preventing unneeded requests
+#### `axios-cache-interceptor` is a axios wrapper for caching and preventing unneeded requests
 
 <br />
 
