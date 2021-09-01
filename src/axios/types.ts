@@ -1,4 +1,3 @@
-import { CacheStorage } from '../storage/types';
 import type {
   AxiosInstance,
   AxiosInterceptorManager,
@@ -7,6 +6,7 @@ import type {
   AxiosResponse,
   Method
 } from 'axios';
+import { CacheStorage } from '../storage/types';
 
 /**
  * Options that can be overridden per request

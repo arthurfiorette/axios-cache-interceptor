@@ -1,8 +1,8 @@
+import { AxiosInstance } from 'axios';
 import { applyRequestInterceptor } from '../interceptors/request';
 import { applyResponseInterceptor } from '../interceptors/response';
 import { MemoryStorage } from '../storage/memory';
 import { defaultKeyGenerator } from '../utils/key-generator';
-import { AxiosInstance } from 'axios';
 import { AxiosCacheInstance, CacheInstance, CacheRequestConfig } from './types';
 
 type Options = CacheRequestConfig['cache'] & Partial<CacheInstance>;
