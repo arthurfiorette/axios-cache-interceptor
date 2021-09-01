@@ -1,0 +1,39 @@
+{
+  "name": "axios-cache-interceptor",
+  "version": "0.0.1",
+  "description": "Cache interceptor for axios",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "prettify": "prettier . --write"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ArthurFiorette/axios-cache-interceptor.git"
+  },
+  "keywords": [
+    "axios",
+    "cache",
+    "interceptor",
+    "adapter",
+    "http",
+    "plugin",
+    "wrapper"
+  ],
+  "author": "Hazork",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ArthurFiorette/axios-cache-interceptor/issues"
+  },
+  "homepage": "https://github.com/ArthurFiorette/axios-cache-interceptor#readme",
+  "devDependencies": {
+    "@types/node": "^16.7.10",
+    "add": "^2.0.6",
+    "axios": "^0.21.1",
+    "prettier": "^2.3.2",
+    "prettier-plugin-jsdoc": "^0.3.23",
+    "prettier-plugin-organize-imports": "^2.3.3",
+    "typescript": "^4.4.2",
+    "yarn": "^1.22.11"
+  }
+}
