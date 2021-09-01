@@ -89,9 +89,9 @@ yarn add axios-cache-interceptor
 
 ### Inspiration
 
-This project is highly inspired by several projects, written entirely in typescript, supporting https headers and much more,
+This project is highly inspired by several projects, written entirely in typescript, supporting https headers and much more.
 
-Take a look at some projects:
+Take a look at some similar projects:
 
 - [axios-cache-adapter](https://github.com/RasCarlito/axios-cache-adapter)
 - [axios-cache-plugin](https://github.com/jin5354/axios-cache-plugin)
