@@ -36,6 +36,13 @@ Axios Cache Interceptor</h1>
         target="_blank"
         alt="License" /></a
   ></code>
+  <code
+    ><a href="https://www.npmjs.com/package/axios-cache-interceptor"
+      ><img
+        src="https://img.shields.io/npm/v/axios-cache-interceptor?color=CB3837&logo=npm&label=Npm"
+        target="_blank"
+        alt="Npm" /></a
+  ></code>
 </div>
 
 #
