@@ -11,7 +11,7 @@ const cache = createCache(api, {
   // Store values on window.sessionStorage
   storage: new SessionCacheStorage(),
 
-  // Use the max-age header to determina the cache expiration time
+  // Use the max-age header to determine the cache expiration time
   interpretHeader: true
 });
 
