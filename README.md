@@ -2,7 +2,7 @@
 <div align="center">
   <pre>
   <br />
-  <h1>💾💿
+  <h1>🗄️📦💿
 Axios Cache Interceptor</h1>
   <br />
   </pre>
@@ -95,7 +95,7 @@ Take a look at some projects:
 
 - [axios-cache-adapter](https://github.com/RasCarlito/axios-cache-adapter)
 - [axios-cache-plugin](https://github.com/jin5354/axios-cache-plugin)
-- [cache-control](https://github.com/RasCarlito/cache-control)
+- [@tusbar/cache-control](https://github.com/tusbar/cache-control)
 
 <br />
 
