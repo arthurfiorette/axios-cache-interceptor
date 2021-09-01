@@ -4,9 +4,17 @@
 
 !LICENSE
 !README.md
+
 !package.json
 !tsconfig.json
-!.prettierrc
+
 !.gitignore
+
+!.prettierrc
+!.prettierignore
+
+!.eslintrc
+!.eslintignore
+
 !/src/**
 !/dist/**
