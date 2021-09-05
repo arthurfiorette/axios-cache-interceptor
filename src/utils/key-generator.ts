@@ -9,7 +9,5 @@ export function defaultKeyGenerator({
 }: CacheRequestConfig): string {
   return id
     ? `id::${String(id)}`
-    : `${method?.toLowerCase() || 'get'}::${baseURL}::${url}::${JSON.stringify(
-        params || '{}'
-      )}`;
+    : `${method?.toLowerCase() || 'get'}::${baseURL}::${url}::${JSON.stringify(params || '{}')}`;
 }

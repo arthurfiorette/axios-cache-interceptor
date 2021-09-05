@@ -7,10 +7,7 @@ import { AxiosCacheInstance, CacheInstance, CacheRequestConfig } from './types';
 
 type Options = CacheRequestConfig['cache'] & Partial<CacheInstance>;
 
-export function createCache(
-  axios: AxiosInstance,
-  options: Options = {}
-): AxiosCacheInstance {
+export function createCache(axios: AxiosInstance, options: Options = {}): AxiosCacheInstance {
   const axiosCache = axios as AxiosCacheInstance;
 
   axiosCache.storage = options.storage || new MemoryStorage();

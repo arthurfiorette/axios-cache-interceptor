@@ -4,9 +4,7 @@ import { AxiosCacheInstance } from '../axios/types';
 export function applyResponseInterceptor(axios: AxiosCacheInstance) {
   axios.interceptors.response.use(async (response) => {
     // Update other entries before updating himself
-    for (const [cacheKey, value] of Object.entries(
-      response.config.cache?.update || {}
-    )) {
+    for (const [cacheKey, value] of Object.entries(response.config.cache?.update || {})) {
       if (value == 'delete') {
         await axios.storage.remove(cacheKey);
         continue;
@@ -56,9 +54,7 @@ export function applyResponseInterceptor(axios: AxiosCacheInstance) {
     } else {
       // If the cache expiration has not been set, use the default expiration.
       cache.expiration =
-        cache.expiration ||
-        response.config.cache?.maxAge ||
-        axios.defaults.cache!.maxAge!;
+        cache.expiration || response.config.cache?.maxAge || axios.defaults.cache!.maxAge!;
     }
 
     const data = { body: response.data, headers: response.headers };

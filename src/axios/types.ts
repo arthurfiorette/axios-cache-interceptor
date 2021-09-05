@@ -94,33 +94,17 @@ export interface AxiosCacheInstance extends AxiosInstance, CacheInstance {
   defaults: CacheRequestConfig;
   interceptors: {
     request: AxiosInterceptorManager<CacheRequestConfig>;
-    response: AxiosInterceptorManager<
-      AxiosResponse & { config: CacheRequestConfig }
-    >;
+    response: AxiosInterceptorManager<AxiosResponse & { config: CacheRequestConfig }>;
   };
 
   getUri(config?: CacheRequestConfig): string;
 
-  request<T = any, R = AxiosResponse<T>>(
-    config: CacheRequestConfig
-  ): Promise<R>;
+  request<T = any, R = AxiosResponse<T>>(config: CacheRequestConfig): Promise<R>;
 
-  get<T = any, R = AxiosResponse<T>>(
-    url: string,
-    config?: CacheRequestConfig
-  ): Promise<R>;
-  delete<T = any, R = AxiosResponse<T>>(
-    url: string,
-    config?: CacheRequestConfig
-  ): Promise<R>;
-  head<T = any, R = AxiosResponse<T>>(
-    url: string,
-    config?: CacheRequestConfig
-  ): Promise<R>;
-  options<T = any, R = AxiosResponse<T>>(
-    url: string,
-    config?: CacheRequestConfig
-  ): Promise<R>;
+  get<T = any, R = AxiosResponse<T>>(url: string, config?: CacheRequestConfig): Promise<R>;
+  delete<T = any, R = AxiosResponse<T>>(url: string, config?: CacheRequestConfig): Promise<R>;
+  head<T = any, R = AxiosResponse<T>>(url: string, config?: CacheRequestConfig): Promise<R>;
+  options<T = any, R = AxiosResponse<T>>(url: string, config?: CacheRequestConfig): Promise<R>;
   post<T = any, R = AxiosResponse<T>>(
     url: string,
     data?: any,
