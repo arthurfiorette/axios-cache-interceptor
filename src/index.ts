@@ -1,3 +1,3 @@
-export { createCache } from './axios/cache';
-export * from './constants';
+export * from './axios';
+export * as Constants from './constants';
 export * from './storage';

@@ -20,7 +20,7 @@ export function applyRequestInterceptor(axios: AxiosCacheInstance) {
         // The cache header will be set after the response has been read, until that time, the expiration will be -1
         expiration: config.cache?.interpretHeader
           ? -1
-          : config.cache?.maxAge || axios.defaults.cache!.maxAge!
+          : config.cache?.maxAge || axios.defaults.cache.maxAge
       });
       return config;
     }

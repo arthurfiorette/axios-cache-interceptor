@@ -3,15 +3,16 @@ import { applyRequestInterceptor } from '../interceptors/request';
 import { applyResponseInterceptor } from '../interceptors/response';
 import { MemoryStorage } from '../storage/memory';
 import { defaultKeyGenerator } from '../utils/key-generator';
-import { AxiosCacheInstance, CacheInstance, CacheRequestConfig } from './types';
+import { AxiosCacheInstance, CacheInstance, CacheProperties } from './types';
 
-type Options = CacheRequestConfig['cache'] & Partial<CacheInstance>;
-
-export function createCache(axios: AxiosInstance, options: Options = {}): AxiosCacheInstance {
+export function createCache(
+  axios: AxiosInstance,
+  options: Partial<CacheInstance & CacheProperties> = {}
+): AxiosCacheInstance {
   const axiosCache = axios as AxiosCacheInstance;
 
   axiosCache.storage = options.storage || new MemoryStorage();
-  axiosCache.generateKey = defaultKeyGenerator;
+  axiosCache.generateKey = options.generateKey || defaultKeyGenerator;
 
   // CacheRequestConfig values
   axiosCache.defaults = {

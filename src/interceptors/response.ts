@@ -48,13 +48,13 @@ export function applyResponseInterceptor(axios: AxiosCacheInstance) {
       const expirationTime = maxAge
         ? // Header max age in seconds
           Date.now() + maxAge * 1000
-        : response.config.cache?.maxAge || axios.defaults.cache!.maxAge!;
+        : response.config.cache?.maxAge || axios.defaults.cache.maxAge;
 
       cache.expiration = expirationTime;
     } else {
       // If the cache expiration has not been set, use the default expiration.
       cache.expiration =
-        cache.expiration || response.config.cache?.maxAge || axios.defaults.cache!.maxAge!;
+        cache.expiration || response.config.cache?.maxAge || axios.defaults.cache.maxAge!;
     }
 
     const data = { body: response.data, headers: response.headers };

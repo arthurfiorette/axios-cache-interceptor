@@ -10,7 +10,6 @@ export class MemoryStorage implements CacheStorage {
       return value;
     }
 
-    // Fresh copy to prevent code duplication
     const empty = { data: null, expiration: -1, state: 'empty' } as const;
     this.storage.set(key, empty);
     return empty;
