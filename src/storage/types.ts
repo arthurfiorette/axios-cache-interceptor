@@ -1,5 +1,3 @@
-import { Deferred } from '../utils/deferred';
-
 export interface CacheStorage {
   /**
    * Returns the cached value for the given key. Should return a 'empty'
@@ -31,7 +29,7 @@ export type StorageValue =
       state: 'cached';
     }
   | {
-      data: Deferred<CachedResponse>;
+      data: null;
       /**
        * If interpretHeader is used, this value will be `-1`until the response is received
        */

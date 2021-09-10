@@ -6,10 +6,11 @@ import type {
   AxiosResponse,
   Method
 } from 'axios';
-import { CacheStorage } from '../storage/types';
+import { Deferred } from 'src/utils/deferred';
+import { CachedResponse, CacheStorage } from '../storage/types';
 
 export type DefaultCacheRequestConfig = AxiosRequestConfig & {
-  cache: Required<CacheProperties>;
+  cache: CacheProperties;
 };
 
 export type CacheProperties = {
@@ -18,7 +19,7 @@ export type CacheProperties = {
    *
    * @default 1000 * 60 * 5
    */
-  maxAge?: number;
+  maxAge: number;
 
   /**
    * If this interceptor should configure the cache from the request cache header
@@ -26,21 +27,21 @@ export type CacheProperties = {
    *
    * @default false
    */
-  interpretHeader?: boolean;
+  interpretHeader: boolean;
 
   /**
    * All methods that should be cached.
    *
    * @default ['get']
    */
-  methods?: Lowercase<Method>[];
+  methods: Lowercase<Method>[];
 
   /**
    * The function to check if the response code permit being cached.
    *
    * @default ({ status }) => status >= 200 && status < 300
    */
-  shouldCache?: (response: AxiosResponse) => boolean;
+  shouldCache: (response: AxiosResponse) => boolean;
 
   /**
    * Once the request is resolved, this specifies what requests should we change the cache.
@@ -54,8 +55,8 @@ export type CacheProperties = {
    *
    * @default {}
    */
-  update?: {
-    [id: string]: 'delete' | ((oldValue: any, atual: any) => any | void);
+  update: {
+    [id: string]: 'delete' | ((oldValue: any, atual: any) => any | undefined);
   };
 };
 
@@ -74,7 +75,7 @@ export type CacheRequestConfig = AxiosRequestConfig & {
   /**
    * All cache options for the request
    */
-  cache?: CacheProperties;
+  cache?: Partial<CacheProperties>;
 };
 
 export interface CacheInstance {
@@ -91,6 +92,11 @@ export interface CacheInstance {
    * a string is generated using the method, baseUrl, params, and url
    */
   generateKey: (options: CacheRequestConfig) => string;
+
+  /**
+   * A simple object that holds all deferred objects until it is resolved.
+   */
+  waiting: Record<string, Deferred<CachedResponse>>;
 }
 
 /**

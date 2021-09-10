@@ -1,3 +1,4 @@
+import { CachedResponse } from 'src/storage/types';
 import { AxiosCacheInstance } from '../axios/types';
 import { CACHED_RESPONSE_STATUS, CACHED_RESPONSE_STATUS_TEXT } from '../constants';
 import { Deferred } from '../utils/deferred';
@@ -14,14 +15,18 @@ export function applyRequestInterceptor(axios: AxiosCacheInstance) {
 
     // Not cached, continue the request, and mark it as fetching
     if (cache.state == 'empty') {
+      // Create a deferred to resolve other requests for the same key when it's completed
+      axios.waiting[key] = new Deferred();
+
       await axios.storage.set(key, {
         state: 'loading',
-        data: new Deferred(),
+        data: null,
         // The cache header will be set after the response has been read, until that time, the expiration will be -1
         expiration: config.cache?.interpretHeader
           ? -1
           : config.cache?.maxAge || axios.defaults.cache.maxAge
       });
+
       return config;
     }
 
@@ -31,13 +36,26 @@ export function applyRequestInterceptor(axios: AxiosCacheInstance) {
       return config;
     }
 
-    const { body, headers } = await cache.data;
+    let data = {} as CachedResponse;
+    if (cache.state === 'loading') {
+      const deferred = axios.waiting[key];
+
+      // If the deferred is undefined, means that the
+      // outside has removed that key from the waiting list
+      if (!deferred) {
+        return config;
+      }
+
+      data = await deferred;
+    } else {
+      data = cache.data;
+    }
 
     config.adapter = () =>
       Promise.resolve({
-        data: body,
         config,
-        headers,
+        data: data.body,
+        headers: data.headers,
         status: CACHED_RESPONSE_STATUS,
         statusText: CACHED_RESPONSE_STATUS_TEXT
       });
