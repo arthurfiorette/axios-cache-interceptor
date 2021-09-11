@@ -7,6 +7,7 @@ import type {
   Method
 } from 'axios';
 import { Deferred } from 'src/util/deferred';
+import { KeyGenerator } from 'src/util/key-generator';
 import { HeaderInterpreter } from '../header';
 import { CachedResponse, CacheStorage } from '../storage/types';
 
@@ -92,7 +93,7 @@ export default interface CacheInstance {
    * Defaults to a function that priorizes the id, and if not specified,
    * a string is generated using the method, baseUrl, params, and url
    */
-  generateKey: (options: CacheRequestConfig) => string;
+  generateKey: KeyGenerator;
 
   /**
    * A simple object that holds all deferred objects until it is resolved.

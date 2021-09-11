@@ -1,15 +1,17 @@
 import { AxiosCacheInstance } from '../axios/types';
 import { updateCache } from '../util/update-cache';
 
-export function applyResponseInterceptor(axios: AxiosCacheInstance) {
+export function applyResponseInterceptor(axios: AxiosCacheInstance): void {
   axios.interceptors.response.use(async (response) => {
     // Update other entries before updating himself
     if (response.config.cache?.update) {
       updateCache(axios, response.data, response.config.cache.update);
     }
 
+    const shouldCache = response.config.cache?.shouldCache || axios.defaults.cache.shouldCache;
+
     // Config told that this response should be cached.
-    if (!response.config.cache?.shouldCache!(response)) {
+    if (shouldCache(response)) {
       return response;
     }
 
@@ -24,14 +26,14 @@ export function applyResponseInterceptor(axios: AxiosCacheInstance) {
 
     const defaultMaxAge = response.config.cache?.maxAge || axios.defaults.cache.maxAge;
     cache.expiration = cache.expiration || defaultMaxAge;
-    let shouldCache = true;
+    let saveCache = true;
 
     if (response.config.cache?.interpretHeader) {
       const expirationTime = axios.interpretHeader(response.headers['cache-control']);
 
       // Header told that this response should not be cached.
       if (expirationTime === false) {
-        shouldCache = false;
+        saveCache = false;
       } else {
         cache.expiration = expirationTime ? expirationTime : defaultMaxAge;
       }
@@ -45,7 +47,7 @@ export function applyResponseInterceptor(axios: AxiosCacheInstance) {
       deferred.resolve(data);
     }
 
-    if (shouldCache) {
+    if (saveCache) {
       await axios.storage.set(key, {
         data,
         expiration: cache.expiration,

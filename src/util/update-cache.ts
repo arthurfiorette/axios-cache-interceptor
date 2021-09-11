@@ -4,7 +4,7 @@ export async function updateCache(
   axios: AxiosCacheInstance,
   data: any,
   entries: CacheProperties['update']
-) {
+): Promise<void> {
   for (const [cacheKey, value] of Object.entries(entries)) {
     if (value == 'delete') {
       await axios.storage.remove(cacheKey);

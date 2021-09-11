@@ -1,13 +1,20 @@
 import { CacheRequestConfig } from '../axios/types';
 
-export function defaultKeyGenerator({
+export type KeyGenerator = (options: CacheRequestConfig) => string;
+
+export const defaultKeyGenerator: KeyGenerator = ({
   baseURL,
   url,
-  method,
+  method: nullableMethod,
   params,
   id
-}: CacheRequestConfig): string {
-  return id
-    ? `id::${String(id)}`
-    : `${method?.toLowerCase() || 'get'}::${baseURL}::${url}::${JSON.stringify(params || '{}')}`;
-}
+}) => {
+  if (id) {
+    return `id::${String(id)}`;
+  }
+
+  const method = nullableMethod?.toLowerCase() || 'get';
+  const jsonParams = params ? JSON.stringify(params) : '{}';
+
+  return `${method}::${baseURL}::${url}::${jsonParams}`;
+};

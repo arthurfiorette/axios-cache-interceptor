@@ -1,9 +1,9 @@
 import { CachedResponse } from 'src/storage/types';
 import { AxiosCacheInstance } from '../axios/types';
-import { CACHED_RESPONSE_STATUS, CACHED_RESPONSE_STATUS_TEXT } from '../constants';
 import { Deferred } from '../util/deferred';
+import { CACHED_RESPONSE_STATUS, CACHED_RESPONSE_STATUS_TEXT } from '../util/status-codes';
 
-export function applyRequestInterceptor(axios: AxiosCacheInstance) {
+export function applyRequestInterceptor(axios: AxiosCacheInstance): void {
   axios.interceptors.request.use(async (config) => {
     // Only cache specified methods
     if (config.cache?.methods?.some((method) => (config.method || 'get').toLowerCase() == method)) {
