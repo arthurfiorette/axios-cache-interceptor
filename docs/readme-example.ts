@@ -7,7 +7,7 @@ import { createCache, SessionCacheStorage } from '../src/index';
 const api = axios.create();
 
 // Other axios instance with caching enabled
-const cache = createCache(api, {
+const cachedApi = createCache(api, {
   // Store values on window.sessionStorage
   storage: new SessionCacheStorage(),
 
@@ -15,5 +15,11 @@ const cache = createCache(api, {
   interpretHeader: true
 });
 
-// Exactly the same as before
-cache.get('http://example.com/');
+// Make a requests that's only cached if the response comes with success header
+cachedApi.get('http://example.com/', {
+  cache: {
+    cachePredicate: {
+      containsHeaders: ['success']
+    }
+  }
+});
