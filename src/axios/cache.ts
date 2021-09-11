@@ -13,6 +13,7 @@ export function createCache(
 
   axiosCache.storage = options.storage || new MemoryStorage();
   axiosCache.generateKey = options.generateKey || defaultKeyGenerator;
+  axiosCache.waiting = options.waiting || {};
 
   // CacheRequestConfig values
   axiosCache.defaults = {
