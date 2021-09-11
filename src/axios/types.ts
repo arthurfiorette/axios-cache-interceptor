@@ -7,6 +7,7 @@ import type {
   Method
 } from 'axios';
 import { Deferred } from 'src/util/deferred';
+import { HeaderInterpreter } from '../header';
 import { CachedResponse, CacheStorage } from '../storage/types';
 
 export type DefaultCacheRequestConfig = AxiosRequestConfig & {
@@ -78,7 +79,7 @@ export type CacheRequestConfig = AxiosRequestConfig & {
   cache?: Partial<CacheProperties>;
 };
 
-export interface CacheInstance {
+export default interface CacheInstance {
   /**
    * The storage to save the cache data.
    *
@@ -97,6 +98,12 @@ export interface CacheInstance {
    * A simple object that holds all deferred objects until it is resolved.
    */
   waiting: Record<string, Deferred<CachedResponse>>;
+
+  /**
+   * The function to parse and interpret response headers.
+   * Only used if cache.interpretHeader is true.
+   */
+  interpretHeader: HeaderInterpreter;
 }
 
 /**
