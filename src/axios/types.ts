@@ -105,7 +105,7 @@ export default interface CacheInstance {
    * The function to parse and interpret response headers.
    * Only used if cache.interpretHeader is true.
    */
-  interpretHeader: HeaderInterpreter;
+  headerInterpreter: HeaderInterpreter;
 }
 
 /**

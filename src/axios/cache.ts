@@ -8,14 +8,14 @@ import CacheInstance, { AxiosCacheInstance, CacheProperties } from './types';
 
 export function createCache(
   axios: AxiosInstance,
-  options: Partial<CacheInstance & CacheProperties> = {}
+  options: Partial<CacheInstance> & Partial<CacheProperties> = {}
 ): AxiosCacheInstance {
   const axiosCache = axios as AxiosCacheInstance;
 
   axiosCache.storage = options.storage || new MemoryStorage();
   axiosCache.generateKey = options.generateKey || defaultKeyGenerator;
   axiosCache.waiting = options.waiting || {};
-  axiosCache.interpretHeader = options.interpretHeader || defaultHeaderInterpreter;
+  axiosCache.headerInterpreter = options.headerInterpreter || defaultHeaderInterpreter;
 
   // CacheRequestConfig values
   axiosCache.defaults = {
