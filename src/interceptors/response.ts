@@ -1,6 +1,6 @@
 import { AxiosCacheInstance } from '../axios/types';
+import { checkPredicateObject } from '../util/cache-predicate';
 import { updateCache } from '../util/update-cache';
-import {checkPredicateObject} from '../util/cache-predicate'
 
 export function applyResponseInterceptor(axios: AxiosCacheInstance): void {
   axios.interceptors.response.use(async (response) => {
@@ -9,15 +9,16 @@ export function applyResponseInterceptor(axios: AxiosCacheInstance): void {
       updateCache(axios, response.data, response.config.cache.update);
     }
 
-    const cachePredicate = response.config.cache?.cachePredicate || axios.defaults.cache.cachePredicate;
+    const cachePredicate =
+      response.config.cache?.cachePredicate || axios.defaults.cache.cachePredicate;
 
     // Config told that this response should be cached.
     if (typeof cachePredicate === 'function') {
-      if(!cachePredicate(response)) {
+      if (!cachePredicate(response)) {
         return response;
       }
     } else {
-      if(!checkPredicateObject(response, cachePredicate)) {
+      if (!checkPredicateObject(response, cachePredicate)) {
         return response;
       }
     }
