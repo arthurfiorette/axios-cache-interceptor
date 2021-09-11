@@ -24,7 +24,7 @@ export function createCache(
       maxAge: 1000 * 60 * 5,
       interpretHeader: false,
       methods: ['get'],
-      shouldCache: ({ status }) => status >= 200 && status < 300,
+      cachePredicate: ({ status }) => status >= 200 && status < 300,
       update: {},
       ...options
     }

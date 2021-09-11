@@ -10,6 +10,7 @@ import { Deferred } from 'src/util/deferred';
 import { KeyGenerator } from 'src/util/key-generator';
 import { HeaderInterpreter } from '../header';
 import { CachedResponse, CacheStorage } from '../storage/types';
+import { CachePredicate } from '../util/cache-predicate';
 
 export type DefaultCacheRequestConfig = AxiosRequestConfig & {
   cache: CacheProperties;
@@ -43,7 +44,7 @@ export type CacheProperties = {
    *
    * @default ({ status }) => status >= 200 && status < 300
    */
-  shouldCache: (response: AxiosResponse) => boolean;
+  cachePredicate: CachePredicate;
 
   /**
    * Once the request is resolved, this specifies what requests should we change the cache.
