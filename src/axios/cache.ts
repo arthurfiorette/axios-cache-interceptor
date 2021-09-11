@@ -2,7 +2,7 @@ import { AxiosInstance } from 'axios';
 import { applyRequestInterceptor } from '../interceptors/request';
 import { applyResponseInterceptor } from '../interceptors/response';
 import { MemoryStorage } from '../storage/memory';
-import { defaultKeyGenerator } from '../utils/key-generator';
+import { defaultKeyGenerator } from '../util/key-generator';
 import { AxiosCacheInstance, CacheInstance, CacheProperties } from './types';
 
 export function createCache(

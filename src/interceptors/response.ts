@@ -1,6 +1,6 @@
 import { AxiosCacheInstance } from '../axios/types';
 import { interpretCacheHeader } from './util/interpret-header';
-import { updateCache } from './util/update-cache';
+import { updateCache } from '../util/update-cache';
 
 export function applyResponseInterceptor(axios: AxiosCacheInstance) {
   axios.interceptors.response.use(async (response) => {

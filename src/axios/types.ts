@@ -6,7 +6,7 @@ import type {
   AxiosResponse,
   Method
 } from 'axios';
-import { Deferred } from 'src/utils/deferred';
+import { Deferred } from 'src/util/deferred';
 import { CachedResponse, CacheStorage } from '../storage/types';
 
 export type DefaultCacheRequestConfig = AxiosRequestConfig & {

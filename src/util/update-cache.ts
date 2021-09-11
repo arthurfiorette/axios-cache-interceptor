@@ -1,4 +1,4 @@
-import { AxiosCacheInstance, CacheProperties } from '../../axios';
+import { AxiosCacheInstance, CacheProperties } from '../axios';
 
 export async function updateCache(
   axios: AxiosCacheInstance,
