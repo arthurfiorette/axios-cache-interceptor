@@ -18,7 +18,7 @@ export type CachePredicateObject = {
   /**
    * Check if the desired response matches this predicate.
    */
-  responseMatch?: (res: any | undefined) => boolean;
+  responseMatch?: <T = any>(res: T | undefined) => boolean;
 };
 
 export function checkPredicateObject(
