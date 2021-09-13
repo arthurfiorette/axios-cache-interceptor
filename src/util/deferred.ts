@@ -3,8 +3,8 @@ export type MaybePromise<T> = T | PromiseLike<T>;
 /**
  * Represents the completion of an asynchronous operation that can be completed later.
  */
-export class Deferred<T> implements PromiseLike<T> {
-  readonly promise: Promise<T>;
+export class Deferred<T = any> implements PromiseLike<T> {
+  private readonly promise: Promise<T>;
   private _resolve: (value: MaybePromise<T>) => void = () => {};
   private _reject: (reason?: any) => void = () => {};
 
