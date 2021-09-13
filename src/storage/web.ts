@@ -7,7 +7,7 @@ export abstract class WindowStorageWrapper implements CacheStorage {
 
   get = async (key: string): Promise<StorageValue> => {
     const json = this.storage.getItem(this.prefix + key);
-    return json ? JSON.parse(json) : { data: null, expiration: -1, state: 'empty' };
+    return json ? JSON.parse(json) : { state: 'empty' };
   };
 
   set = async (key: string, value: StorageValue): Promise<void> => {

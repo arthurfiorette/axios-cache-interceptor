@@ -1,3 +1,4 @@
+import { EmptyStorageValue } from '.';
 import { CacheStorage, StorageValue } from './types';
 
 export class MemoryStorage implements CacheStorage {
@@ -10,7 +11,7 @@ export class MemoryStorage implements CacheStorage {
       return value;
     }
 
-    const empty = { data: null, expiration: -1, state: 'empty' } as const;
+    const empty: EmptyStorageValue = { state: 'empty' };
     this.storage.set(key, empty);
     return empty;
   };

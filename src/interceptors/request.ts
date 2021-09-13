@@ -1,12 +1,15 @@
-import { CachedResponse } from 'src/storage/types';
 import { AxiosCacheInstance } from '../axios/types';
+import { CachedResponse } from '../storage/types';
 import { Deferred } from '../util/deferred';
 import { CACHED_RESPONSE_STATUS, CACHED_RESPONSE_STATUS_TEXT } from '../util/status-codes';
 
 export function applyRequestInterceptor(axios: AxiosCacheInstance): void {
   axios.interceptors.request.use(async (config) => {
     // Only cache specified methods
-    if (config.cache?.methods?.some((method) => (config.method || 'get').toLowerCase() == method)) {
+    if (
+      config.cache?.methods &&
+      !config.cache.methods.some((method) => (config.method || 'get').toLowerCase() == method)
+    ) {
       return config;
     }
 
@@ -19,30 +22,26 @@ export function applyRequestInterceptor(axios: AxiosCacheInstance): void {
       axios.waiting[key] = new Deferred();
 
       await axios.storage.set(key, {
-        state: 'loading',
-        data: null,
-        // The cache header will be set after the response has been read, until that time, the expiration will be -1
-        expiration: config.cache?.interpretHeader
-          ? -1
-          : config.cache?.maxAge || axios.defaults.cache.maxAge
+        state: 'loading'
       });
 
       return config;
     }
 
-    // Only check for expiration if the cache exists, because if it is loading, the expiration value may be -1.
     if (cache.state === 'cached' && cache.expiration < Date.now()) {
       await axios.storage.remove(key);
       return config;
     }
 
-    let data = {} as CachedResponse;
+    let data: CachedResponse = {};
+
     if (cache.state === 'loading') {
       const deferred = axios.waiting[key];
 
       // If the deferred is undefined, means that the
       // outside has removed that key from the waiting list
       if (!deferred) {
+        await axios.storage.remove(key);
         return config;
       }
 

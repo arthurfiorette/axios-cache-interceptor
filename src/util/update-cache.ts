@@ -12,6 +12,11 @@ export async function updateCache(
     }
 
     const oldValue = await axios.storage.get(cacheKey);
+
+    if (oldValue.state === 'loading') {
+      throw new Error('cannot update the cache while loading');
+    }
+
     const newValue = value(oldValue, data);
 
     if (newValue === undefined) {

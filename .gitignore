@@ -3,3 +3,4 @@
 /ignore
 /.vscode
 /package-lock.json
+/coverage

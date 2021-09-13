@@ -6,11 +6,16 @@ import type {
   AxiosResponse,
   Method
 } from 'axios';
-import { Deferred } from 'src/util/deferred';
-import { KeyGenerator } from 'src/util/key-generator';
 import { HeaderInterpreter } from '../header';
-import { CachedResponse, CacheStorage } from '../storage/types';
+import {
+  CachedResponse,
+  CachedStorageValue,
+  CacheStorage,
+  EmptyStorageValue
+} from '../storage/types';
 import { CachePredicate } from '../util/cache-predicate';
+import { Deferred } from '../util/deferred';
+import { KeyGenerator } from '../util/key-generator';
 
 export type DefaultCacheRequestConfig = AxiosRequestConfig & {
   cache: CacheProperties;
@@ -59,7 +64,12 @@ export type CacheProperties = {
    * @default {}
    */
   update: {
-    [id: string]: 'delete' | ((oldValue: any, atual: any) => any | undefined);
+    [id: string]:
+      | 'delete'
+      | ((
+          cached: EmptyStorageValue | CachedStorageValue,
+          newData: any
+        ) => CachedStorageValue | undefined);
   };
 };
 
