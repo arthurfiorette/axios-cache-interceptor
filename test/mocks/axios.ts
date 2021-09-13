@@ -15,7 +15,7 @@ export const axiosMock = {
 export function mockAxios(
   options?: Partial<CacheInstance> & Partial<CacheProperties>
 ): AxiosCacheInstance {
-  // A simple jest that resolves every request with this response
+  // A simple axios that resolves every request with a static response
   const api = axios.create();
 
   const cachedApi = createCache(api, {

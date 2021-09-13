@@ -39,7 +39,7 @@ Axios Cache Interceptor</h1>
   <code
     ><a href="https://codecov.io/gh/arthurfiorette/axios-cache-interceptor"
       ><img
-        src="https://codecov.io/gh/arthurfiorette/axios-cache-interceptor/branch/main/graph/badge.svg"
+        src="https://codecov.io/gh/arthurfiorette/axios-cache-interceptor/branch/main/graph/badge.svg?token=ML0KGCU0VM"
         target="_blank"
         alt="Codecov" /></a
   ></code>
