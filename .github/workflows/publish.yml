@@ -16,20 +16,14 @@ jobs:
           ref: ${{ github.head_ref }}
           fetch-depth: 0
 
-      - name: Setup Node.js
+      - name: Setup node and restore cached dependencies
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
-          registry-url: 'https://registry.npmjs.org/'
+          node-version: '16'
+          cache: 'yarn'
 
-      - name: Install deps (with cache)
-        uses: bahmutov/npm-install@v1
-        with:
-          # delete yarn.lock and create an package-lock.json
-          useLockFile: false
-
-      - name: Lint
-        run: npm run lint
+      - name: Install packages
+        run: yarn --prefer-offline
 
       - name: Build
         run: npm run build
