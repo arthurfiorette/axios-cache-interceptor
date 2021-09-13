@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Readme example
 
 import axios from 'axios';
@@ -15,11 +16,5 @@ const cachedApi = createCache(api, {
   interpretHeader: true
 });
 
-// Make a requests that's only cached if the response comes with success header
-cachedApi.get('http://example.com/', {
-  cache: {
-    cachePredicate: {
-      containsHeaders: ['success']
-    }
-  }
-});
+// Make a simple request, with caching support, to the api
+const { data } = await cachedApi.get('https://api.example.com/');

@@ -37,6 +37,13 @@ Axios Cache Interceptor</h1>
         alt="License" /></a
   ></code>
   <code
+    ><a href="https://codecov.io/gh/arthurfiorette/axios-cache-adapter"
+      ><img
+        src="https://codecov.io/gh/arthurfiorette/axios-cache-adapter/branch/main/graph/badge.svg"
+        target="_blank"
+        alt="Codecov" /></a
+  ></code>
+  <code
     ><a href="https://www.npmjs.com/package/axios-cache-interceptor"
       ><img
         src="https://img.shields.io/npm/v/axios-cache-interceptor?color=CB3837&logo=npm&label=Npm"
@@ -75,14 +82,8 @@ const cachedApi = createCache(api, {
   interpretHeader: true
 });
 
-// Make a requests that's only cached if the response comes with success header
-cachedApi.get('http://example.com/', {
-  cache: {
-    cachePredicate: {
-      containsHeaders: ['success']
-    }
-  }
-});
+// Make a simple request, with caching support, to the api
+const { data } = await cachedApi.get('https://api.example.com/');
 ```
 
 <br />
