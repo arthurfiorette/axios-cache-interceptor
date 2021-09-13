@@ -20,7 +20,6 @@ export function mockAxios(
 
   const cachedApi = createCache(api, {
     // Defaults to cache every request
-    // cachePredicate: () => true,
     ...options
   });
 

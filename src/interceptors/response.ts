@@ -18,7 +18,7 @@ export function applyResponseInterceptor(axios: AxiosCacheInstance): void {
     const key = axios.generateKey(response.config);
     const cache = await axios.storage.get(key);
 
-    // Response is empty or was already cached
+    // Response shouldn't be cached or was already cached
     if (cache.state !== 'loading') {
       return response;
     }

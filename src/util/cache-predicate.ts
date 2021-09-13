@@ -34,7 +34,10 @@ export function checkPredicateObject(
       }
     } else {
       const [start, end] = statusCheck;
-      if (response.status <= start || response.status >= end) {
+      if (
+        response.status < start || //
+        response.status > end
+      ) {
         return false;
       }
     }
