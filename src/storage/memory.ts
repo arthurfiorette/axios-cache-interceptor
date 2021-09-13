@@ -23,12 +23,4 @@ export class MemoryStorage implements CacheStorage {
   remove = async (key: string): Promise<void> => {
     this.storage.delete(key);
   };
-
-  size = async (): Promise<number> => {
-    return this.storage.size;
-  };
-
-  clear = async (): Promise<void> => {
-    this.storage.clear();
-  };
 }
