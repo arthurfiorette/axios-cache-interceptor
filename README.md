@@ -37,9 +37,9 @@ Axios Cache Interceptor</h1>
         alt="License" /></a
   ></code>
   <code
-    ><a href="https://codecov.io/gh/arthurfiorette/axios-cache-adapter"
+    ><a href="https://codecov.io/gh/arthurfiorette/axios-cache-interceptor"
       ><img
-        src="https://codecov.io/gh/arthurfiorette/axios-cache-adapter/branch/main/graph/badge.svg"
+        src="https://codecov.io/gh/arthurfiorette/axios-cache-interceptor/branch/main/graph/badge.svg"
         target="_blank"
         alt="Codecov" /></a
   ></code>
