@@ -24,5 +24,5 @@ export const defaultKeyGenerator: KeyGenerator = ({
   const method = nullableMethod?.toLowerCase() || 'get';
   const jsonParams = params ? JSON.stringify(params, Object.keys(params).sort()) : '{}';
 
-  return `${method}::${baseURL + '/' + url}::${jsonParams}`;
+  return `${method}::${baseURL + (url && baseURL ? '/' : '') + url}::${jsonParams}`;
 };

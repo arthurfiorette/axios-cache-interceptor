@@ -17,7 +17,6 @@ describe('Tests update-cache', () => {
 
   beforeEach(() => {
     axios = mockAxios({});
-
     axios.storage.set(KEY, INITIAL_DATA);
   });
 
@@ -60,5 +59,20 @@ describe('Tests update-cache', () => {
 
     expect(response.state).toBe('cached');
     expect(response.data?.body).toBe(`${INITIAL_DATA.data?.body}:${DEFAULT_DATA}`);
+  });
+
+  it('check if the state is loading while updating', async () => {
+    axios.storage.set(KEY, { state: 'loading' });
+
+    const result = updateCache(axios, DEFAULT_DATA, {
+      [KEY]: (cached, newData) => ({
+        state: 'cached',
+        ttl: Infinity,
+        createdAt: Date.now(),
+        data: { body: `${cached.data?.body}:${newData}` }
+      })
+    });
+
+    expect(result).rejects.toThrowError();
   });
 });

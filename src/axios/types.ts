@@ -49,7 +49,7 @@ export type CacheProperties = {
   /**
    * The function to check if the response code permit being cached.
    *
-   * @default ({ status }) => status >= 200 && status < 300
+   * @default { statusCheck: [200, 399] }
    */
   cachePredicate: CachePredicate;
 

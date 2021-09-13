@@ -8,8 +8,8 @@ export const axiosMock = {
    * requests are intercepted by a custom adapter.
    */
   url: 'https://github.com/ArthurFiorette/axios-cache-interceptor/',
-  statusCode: -1,
-  statusText: '-1 Intercepted'
+  statusCode: 200,
+  statusText: '200 Intercepted'
 };
 
 export function mockAxios(
@@ -20,7 +20,7 @@ export function mockAxios(
 
   const cachedApi = createCache(api, {
     // Defaults to cache every request
-    cachePredicate: () => true,
+    // cachePredicate: () => true,
     ...options
   });
 

@@ -1,14 +1,14 @@
-import { AxiosCacheInstance } from '../../src';
 import { StatusCodes } from '../../src/';
 import { axiosMock, mockAxios } from '../mocks/axios';
 
 const KEY = 'cacheKey';
 
 describe('Tests cached status code', () => {
-  let axios: AxiosCacheInstance;
-
-  beforeEach(() => {
-    axios = mockAxios({});
+  it('test response status code', async () => {
+    const axios = mockAxios({
+      // Accept all status codes
+      cachePredicate: () => true
+    });
 
     axios.storage.set(KEY, {
       data: { body: true },
@@ -16,9 +16,7 @@ describe('Tests cached status code', () => {
       createdAt: Date.now(),
       state: 'cached'
     });
-  });
 
-  it('test response status code', async () => {
     const firstResponse = await axios.get(axiosMock.url);
     expect(firstResponse.status).toBe(axiosMock.statusCode);
     expect(firstResponse.statusText).toBe(axiosMock.statusText);

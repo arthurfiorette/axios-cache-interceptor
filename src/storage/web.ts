@@ -35,7 +35,7 @@ export abstract class WindowStorageWrapper implements CacheStorage {
 
 export class LocalCacheStorage extends WindowStorageWrapper {
   constructor(prefix?: string) {
-    super(window.localStorage || localStorage, prefix);
+    super(window.localStorage, prefix);
   }
 }
 

@@ -29,21 +29,27 @@ describe('tests key generation', () => {
     const method = 'get';
     const params = {};
 
-    const keyWithBaseUrl = defaultKeyGenerator({
+    const keyWithBoth = defaultKeyGenerator({
       baseURL: 'http://example.com',
       url: '/asd/test',
       method,
       params
     });
 
-    const keyWithoutBaseUrl = defaultKeyGenerator({
-      url: 'http://example.com/asd/test',
+    const keyWithBaseUrl = defaultKeyGenerator({
+      baseURL: 'http://example.com/asd/test',
       method,
-      params,
-      id: 'random-id'
+      params
     });
 
-    expect(keyWithBaseUrl).not.toEqual(keyWithoutBaseUrl);
+    const keyWithUrl = defaultKeyGenerator({
+      url: 'http://example.com/asd/test',
+      method,
+      params
+    });
+
+    expect(keyWithBoth).toEqual(keyWithBaseUrl);
+    expect(keyWithBoth).toEqual(keyWithUrl);
   });
 
   it('tests against trailing slashes', () => {

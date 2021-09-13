@@ -24,7 +24,7 @@ export function createCache(
       ttl: 1000 * 60 * 5,
       interpretHeader: false,
       methods: ['get'],
-      cachePredicate: ({ status }) => status >= 200 && status < 300,
+      cachePredicate: { statusCheck: [200, 399] },
       update: {},
       ...options
     }
