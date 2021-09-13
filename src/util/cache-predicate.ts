@@ -11,9 +11,11 @@ export type CachePredicateObject = {
   statusCheck?: [start: number, end: number] | ((status: number) => boolean);
 
   /**
-   * Matches if the response header container all keys. A tuple also checks for values.
+   * Matches if the response header container all keys.
+   * A tuple also checks for values.
+   * Can also be a predicate.
    */
-  containsHeaders?: (string | [string, string])[];
+  containsHeaders?: Record<string, true | string | ((header: string) => boolean)>;
 
   /**
    * Check if the desired response matches this predicate.
@@ -39,16 +41,25 @@ export function checkPredicateObject(
   }
 
   if (containsHeader) {
-    for (const entry of containsHeader) {
-      if (typeof entry === 'string') {
-        if (!response.headers[entry]) {
-          return false;
-        }
-      } else {
-        const [key, value] = entry;
-        if (!response.headers[key] || response.headers[key] == value) {
-          return false;
-        }
+    for (const [headerName, value] of Object.entries(containsHeader)) {
+      const header = response.headers[headerName];
+
+      // At any case, if the header is not found, the predicate fails.
+      if (!header) {
+        return false;
+      }
+
+      switch (typeof value) {
+        case 'string':
+          if (header != value) {
+            return false;
+          }
+          break;
+        case 'function':
+          if (!value(header)) {
+            return false;
+          }
+          break;
       }
     }
   }

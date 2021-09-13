@@ -24,6 +24,7 @@ export function mockAxios(
     ...options
   });
 
+  // Axios interceptors are a stack, so apply this after the cache interceptor
   cachedApi.interceptors.request.use((config) => {
     config.adapter = async (config) => ({
       data: true,
