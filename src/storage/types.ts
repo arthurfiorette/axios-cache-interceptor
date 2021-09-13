@@ -1,15 +1,17 @@
 export interface CacheStorage {
   /**
-   * Returns the cached value for the given key. Should return a 'empty'
-   * state StorageValue if the key does not exist.
+   * Returns the cached value for the given key.
+   * Must handle cache miss and staling by returning a new `StorageValue` with `empty` state.
    */
   get: (key: string) => Promise<StorageValue>;
+
   /**
    * Sets a new value for the given key
    *
    * Use CacheStorage.remove(key) to define a key to 'empty' state.
    */
   set: (key: string, value: LoadingStorageValue | CachedStorageValue) => Promise<void>;
+
   /**
    * Removes the value for the given key
    */
@@ -28,18 +30,29 @@ export type StorageValue = CachedStorageValue | LoadingStorageValue | EmptyStora
 
 export type CachedStorageValue = {
   data: CachedResponse;
-  expiration: number;
+  ttl: number;
+  createdAt: number;
   state: 'cached';
 };
 
 export type LoadingStorageValue = {
   data?: undefined;
-  expiration?: undefined;
+  ttl?: number;
+
+  /**
+   * Defined when the state is cached
+   */
+  createdAt?: undefined;
   state: 'loading';
 };
 
 export type EmptyStorageValue = {
   data?: undefined;
-  expiration?: undefined;
+  ttl?: undefined;
+
+  /**
+   * Defined when the state is cached
+   */
+  createdAt?: undefined;
   state: 'empty';
 };

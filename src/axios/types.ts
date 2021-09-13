@@ -25,13 +25,15 @@ export type CacheProperties = {
   /**
    * The time until the cached value is expired in milliseconds.
    *
-   * @default 1000 * 60 * 5
+   * **Note**: a custom storage implementation may not respect this.
+   *
+   * @default 1000 * 60 * 5 // 5 Minutes
    */
-  maxAge: number;
+  ttl: number;
 
   /**
    * If this interceptor should configure the cache from the request cache header
-   * When used, the maxAge property is ignored
+   * When used, the ttl property is ignored
    *
    * @default false
    */

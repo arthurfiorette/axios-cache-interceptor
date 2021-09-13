@@ -1,11 +1,16 @@
-import { AxiosCacheInstance, StorageValue } from '../../src';
+import { AxiosCacheInstance, CachedStorageValue } from '../../src';
 import { updateCache } from '../../src/util/update-cache';
 import { mockAxios } from '../mocks/axios';
 
 const KEY = 'cacheKey';
 const EMPTY_STATE = { state: 'empty' };
 const DEFAULT_DATA = 'random-data';
-const INITIAL_DATA: StorageValue = { data: { body: true }, expiration: Infinity, state: 'cached' };
+const INITIAL_DATA: CachedStorageValue = {
+  data: { body: true },
+  createdAt: Date.now(),
+  ttl: Infinity,
+  state: 'cached'
+};
 
 describe('Tests update-cache', () => {
   let axios: AxiosCacheInstance;
@@ -42,7 +47,8 @@ describe('Tests update-cache', () => {
     await updateCache(axios, DEFAULT_DATA, {
       [KEY]: (cached, newData) => ({
         state: 'cached',
-        expiration: Infinity,
+        ttl: Infinity,
+        createdAt: Date.now(),
         data: { body: `${cached.data?.body}:${newData}` }
       })
     });
@@ -53,6 +59,6 @@ describe('Tests update-cache', () => {
     expect(response).not.toStrictEqual(EMPTY_STATE);
 
     expect(response.state).toBe('cached');
-    expect(response.data?.body).toBe(`${INITIAL_DATA.data.body}:${DEFAULT_DATA}`);
+    expect(response.data?.body).toBe(`${INITIAL_DATA.data?.body}:${DEFAULT_DATA}`);
   });
 });

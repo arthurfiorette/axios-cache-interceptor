@@ -12,7 +12,8 @@ describe('Tests cached status code', () => {
 
     axios.storage.set(KEY, {
       data: { body: true },
-      expiration: Infinity,
+      ttl: Infinity,
+      createdAt: Date.now(),
       state: 'cached'
     });
   });

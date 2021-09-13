@@ -21,7 +21,7 @@ export function createCache(
   axiosCache.defaults = {
     ...axios.defaults,
     cache: {
-      maxAge: 1000 * 60 * 5,
+      ttl: 1000 * 60 * 5,
       interpretHeader: false,
       methods: ['get'],
       cachePredicate: ({ status }) => status >= 200 && status < 300,

@@ -14,6 +14,8 @@ export function applyRequestInterceptor(axios: AxiosCacheInstance): void {
     }
 
     const key = axios.generateKey(config);
+
+    // Assumes that the storage handled staled responses
     const cache = await axios.storage.get(key);
 
     // Not cached, continue the request, and mark it as fetching
@@ -22,14 +24,10 @@ export function applyRequestInterceptor(axios: AxiosCacheInstance): void {
       axios.waiting[key] = new Deferred();
 
       await axios.storage.set(key, {
-        state: 'loading'
+        state: 'loading',
+        ttl: config.cache?.ttl
       });
 
-      return config;
-    }
-
-    if (cache.state === 'cached' && cache.expiration < Date.now()) {
-      await axios.storage.remove(key);
       return config;
     }
 

@@ -30,7 +30,7 @@ export function applyResponseInterceptor(axios: AxiosCacheInstance): void {
       return response;
     }
 
-    let expiration = Date.now() + (response.config.cache?.maxAge || axios.defaults.cache.maxAge);
+    let ttl = response.config.cache?.ttl || axios.defaults.cache.ttl;
 
     if (response.config.cache?.interpretHeader) {
       const expirationTime = axios.headerInterpreter(response.headers['cache-control']);
@@ -42,13 +42,14 @@ export function applyResponseInterceptor(axios: AxiosCacheInstance): void {
         return response;
       }
 
-      expiration = expirationTime ? expirationTime : expiration;
+      ttl = expirationTime ? expirationTime : ttl;
     }
 
     const newCache: CachedStorageValue = {
       data: { body: response.data, headers: response.headers },
       state: 'cached',
-      expiration: expiration
+      ttl: ttl,
+      createdAt: Date.now()
     };
 
     // Update other entries before updating himself

@@ -5,9 +5,22 @@ import { CacheStorage, StorageValue } from './types';
 export abstract class WindowStorageWrapper implements CacheStorage {
   constructor(readonly storage: Storage, readonly prefix: string = 'axios-cache:') {}
 
-  get = async (key: string): Promise<StorageValue> => {
-    const json = this.storage.getItem(this.prefix + key);
-    return json ? JSON.parse(json) : { state: 'empty' };
+  get = async (_key: string): Promise<StorageValue> => {
+    const key = this.prefix + _key;
+    const json = this.storage.getItem(key);
+
+    if (!json) {
+      return { state: 'empty' };
+    }
+
+    const parsed = JSON.parse(json);
+
+    if (parsed.state === 'cached' && parsed.createdAt + parsed.ttl < Date.now()) {
+      this.storage.removeItem(key);
+      return { state: 'empty' };
+    }
+
+    return parsed;
   };
 
   set = async (key: string, value: StorageValue): Promise<void> => {
@@ -22,7 +35,7 @@ export abstract class WindowStorageWrapper implements CacheStorage {
 
 export class LocalCacheStorage extends WindowStorageWrapper {
   constructor(prefix?: string) {
-    super(window.localStorage, prefix);
+    super(window.localStorage || localStorage, prefix);
   }
 }
 
