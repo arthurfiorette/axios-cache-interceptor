@@ -88,9 +88,11 @@ export type CacheRequestConfig = AxiosRequestConfig & {
   id?: string | number;
 
   /**
-   * All cache options for the request
+   * All cache options for the request.
+   *
+   * False means ignore everything about cache, for this request.
    */
-  cache?: Partial<CacheProperties>;
+  cache?: false | Partial<CacheProperties>;
 };
 
 export default interface CacheInstance {

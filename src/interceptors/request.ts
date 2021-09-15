@@ -5,6 +5,11 @@ import { CACHED_RESPONSE_STATUS, CACHED_RESPONSE_STATUS_TEXT } from '../util/sta
 
 export function applyRequestInterceptor(axios: AxiosCacheInstance): void {
   axios.interceptors.request.use(async (config) => {
+    // Ignore caching
+    if (config.cache === false) {
+      return config;
+    }
+
     // Only cache specified methods
     const allowedMethods = config.cache?.methods || axios.defaults.cache.methods;
 

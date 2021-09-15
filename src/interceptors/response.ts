@@ -1,11 +1,13 @@
 import { AxiosResponse } from 'axios';
-import { AxiosCacheInstance, CacheRequestConfig } from '../axios/types';
+import { AxiosCacheInstance, CacheProperties, CacheRequestConfig } from '../axios/types';
 import { CachedStorageValue } from '../storage/types';
 import { checkPredicateObject } from '../util/cache-predicate';
 import { updateCache } from '../util/update-cache';
 
+type CacheConfig = CacheRequestConfig & { cache?: Partial<CacheProperties> };
+
 export function applyResponseInterceptor(axios: AxiosCacheInstance): void {
-  const testCachePredicate = (response: AxiosResponse, config: CacheRequestConfig): boolean => {
+  const testCachePredicate = (response: AxiosResponse, config: CacheConfig): boolean => {
     const cachePredicate = config.cache?.cachePredicate || axios.defaults.cache.cachePredicate;
 
     return (
@@ -15,6 +17,11 @@ export function applyResponseInterceptor(axios: AxiosCacheInstance): void {
   };
 
   axios.interceptors.response.use(async (response) => {
+    // Ignore caching
+    if (response.config.cache === false) {
+      return response;
+    }
+
     const key = axios.generateKey(response.config);
     const cache = await axios.storage.get(key);
 
@@ -24,7 +31,7 @@ export function applyResponseInterceptor(axios: AxiosCacheInstance): void {
     }
 
     // Config told that this response should be cached.
-    if (!testCachePredicate(response, response.config)) {
+    if (!testCachePredicate(response, response.config as CacheConfig)) {
       // Update the cache to empty to prevent infinite loading state
       await axios.storage.remove(key);
       return response;
