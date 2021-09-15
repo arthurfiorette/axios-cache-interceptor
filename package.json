@@ -1,6 +1,6 @@
 {
   "name": "axios-cache-interceptor",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Cache interceptor for axios",
   "main": "dist/index.js",
   "scripts": {
