@@ -13,9 +13,7 @@ export const defaultKeyGenerator: KeyGenerator = ({
   params,
   id
 }) => {
-  if (id) {
-    return `id::${String(id)}`;
-  }
+  if (id) return String(id);
 
   // Remove trailing slashes
   baseURL = baseURL.replace(SLASHES_REGEX, '');
