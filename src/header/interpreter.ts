@@ -2,12 +2,12 @@ import { parse } from '@tusbar/cache-control';
 import { HeaderInterpreter } from './types';
 
 export const defaultHeaderInterpreter: HeaderInterpreter = (headers) => {
-  const cacheControl = headers?.['Cache-Control'];
+  const cacheControl = headers?.['cache-control'];
 
   if (!cacheControl) {
     // Checks if Expires header is present
     // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Expires
-    const expires = headers?.['Expires'];
+    const expires = headers?.['expires'];
 
     if (expires) {
       const milliseconds = Date.parse(expires) - Date.now();

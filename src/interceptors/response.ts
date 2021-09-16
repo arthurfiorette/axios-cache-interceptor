@@ -40,7 +40,7 @@ export function applyResponseInterceptor(axios: AxiosCacheInstance): void {
     let ttl = response.config.cache?.ttl || axios.defaults.cache.ttl;
 
     if (response.config.cache?.interpretHeader) {
-      const expirationTime = axios.headerInterpreter(response.headers['cache-control']);
+      const expirationTime = axios.headerInterpreter(response.headers);
 
       // Cache should not be used
       if (expirationTime === false) {
