@@ -10,7 +10,9 @@
         "${workspaceRoot}/node_modules/jest/bin/jest.js",
         // Linux:
         // "${workspaceRoot}/node_modules/.bin/jest",
-        "--runInBand"
+        "--runInBand",
+        "--watch",
+        "request.test.ts"
       ],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",

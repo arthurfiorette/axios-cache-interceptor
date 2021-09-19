@@ -1,5 +1,5 @@
 import { AxiosCacheInstance, CacheRequestConfig } from '../axios/types';
-import { CachedResponse } from '../storage/types';
+import { CachedResponse, CachedStorageValue, LoadingStorageValue } from '../storage/types';
 import { Deferred } from '../util/deferred';
 import { CACHED_STATUS_CODE, CACHED_STATUS_TEXT } from '../util/status-codes';
 import { AxiosInterceptor } from './types';
@@ -27,10 +27,19 @@ export class CacheRequestInterceptor implements AxiosInterceptor<CacheRequestCon
     const key = this.axios.generateKey(config);
 
     // Assumes that the storage handled staled responses
-    const cache = await this.axios.storage.get(key);
+    let cache = await this.axios.storage.get(key);
 
     // Not cached, continue the request, and mark it as fetching
-    if (cache.state == 'empty') {
+    emptyState: if (cache.state == 'empty') {
+      // This if catches concurrent access to a new key.
+      // The js event loop skips in the first await statement,
+      // so the next code block will be executed both if called
+      // from two places asynchronously.
+      if (this.axios.waiting[key]) {
+        cache = (await this.axios.storage.get(key)) as CachedStorageValue | LoadingStorageValue;
+        break emptyState;
+      }
+
       // Create a deferred to resolve other requests for the same key when it's completed
       this.axios.waiting[key] = new Deferred();
 
