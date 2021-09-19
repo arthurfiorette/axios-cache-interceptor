@@ -7,4 +7,6 @@
  * headers was not enough to determine a valid value. Or a `number` containing
  * the number of **milliseconds** to cache the response.
  */
-export type HeaderInterpreter = (headers?: Record<string, string>) => false | undefined | number;
+export type HeaderInterpreter = (
+  headers?: Record<Lowercase<string>, string>
+) => false | undefined | number;

@@ -17,6 +17,10 @@ import { CachePredicate } from '../util/cache-predicate';
 import { Deferred } from '../util/deferred';
 import { KeyGenerator } from '../util/key-generator';
 
+export type CacheUpdater =
+  | ((cached: EmptyStorageValue | CachedStorageValue, newData: any) => CachedStorageValue | void)
+  | 'delete';
+
 export type DefaultCacheRequestConfig = AxiosRequestConfig & {
   cache: CacheProperties;
 };
@@ -57,7 +61,7 @@ export type CacheProperties = {
    * Once the request is resolved, this specifies what requests should we change the cache.
    * Can be used to update the request or delete other caches.
    *
-   * If the function returns void, the entry is deleted
+   * If the function returns nothing, the entry is deleted
    *
    * This is independent if the request made was cached or not.
    *
@@ -65,14 +69,7 @@ export type CacheProperties = {
    *
    * @default {}
    */
-  update: {
-    [id: string]:
-      | 'delete'
-      | ((
-          cached: EmptyStorageValue | CachedStorageValue,
-          newData: any
-        ) => CachedStorageValue | undefined);
-  };
+  update: Record<string, CacheUpdater | undefined>;
 };
 
 /**
