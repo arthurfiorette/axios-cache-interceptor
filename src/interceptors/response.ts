@@ -1,14 +1,26 @@
 import { AxiosResponse } from 'axios';
-import { AxiosCacheInstance, CacheProperties, CacheRequestConfig } from '../axios/types';
+import {
+  AxiosCacheInstance,
+  CacheAxiosResponse,
+  CacheProperties,
+  CacheRequestConfig
+} from '../axios/types';
 import { CachedStorageValue } from '../storage/types';
 import { checkPredicateObject } from '../util/cache-predicate';
 import { updateCache } from '../util/update-cache';
+import { AxiosInterceptor } from './types';
 
 type CacheConfig = CacheRequestConfig & { cache?: Partial<CacheProperties> };
 
-export function applyResponseInterceptor(axios: AxiosCacheInstance): void {
-  const testCachePredicate = (response: AxiosResponse, config: CacheConfig): boolean => {
-    const cachePredicate = config.cache?.cachePredicate || axios.defaults.cache.cachePredicate;
+export class CacheResponseInterceptor implements AxiosInterceptor<CacheAxiosResponse> {
+  constructor(readonly axios: AxiosCacheInstance) {}
+
+  apply = (): void => {
+    this.axios.interceptors.response.use(this.onFulfilled);
+  };
+
+  testCachePredicate = (response: AxiosResponse, { cache }: CacheConfig): boolean => {
+    const cachePredicate = cache?.cachePredicate || this.axios.defaults.cache.cachePredicate;
 
     return (
       (typeof cachePredicate === 'function' && cachePredicate(response)) ||
@@ -16,14 +28,14 @@ export function applyResponseInterceptor(axios: AxiosCacheInstance): void {
     );
   };
 
-  axios.interceptors.response.use(async (response) => {
+  onFulfilled = async (response: CacheAxiosResponse): Promise<CacheAxiosResponse> => {
     // Ignore caching
     if (response.config.cache === false) {
       return response;
     }
 
-    const key = axios.generateKey(response.config);
-    const cache = await axios.storage.get(key);
+    const key = this.axios.generateKey(response.config);
+    const cache = await this.axios.storage.get(key);
 
     // Response shouldn't be cached or was already cached
     if (cache.state !== 'loading') {
@@ -31,21 +43,21 @@ export function applyResponseInterceptor(axios: AxiosCacheInstance): void {
     }
 
     // Config told that this response should be cached.
-    if (!testCachePredicate(response, response.config as CacheConfig)) {
+    if (!this.testCachePredicate(response, response.config as CacheConfig)) {
       // Update the cache to empty to prevent infinite loading state
-      await axios.storage.remove(key);
+      await this.axios.storage.remove(key);
       return response;
     }
 
-    let ttl = response.config.cache?.ttl || axios.defaults.cache.ttl;
+    let ttl = response.config.cache?.ttl || this.axios.defaults.cache.ttl;
 
     if (response.config.cache?.interpretHeader) {
-      const expirationTime = axios.headerInterpreter(response.headers);
+      const expirationTime = this.axios.headerInterpreter(response.headers);
 
       // Cache should not be used
       if (expirationTime === false) {
         // Update the cache to empty to prevent infinite loading state
-        await axios.storage.remove(key);
+        await this.axios.storage.remove(key);
         return response;
       }
 
@@ -61,18 +73,18 @@ export function applyResponseInterceptor(axios: AxiosCacheInstance): void {
 
     // Update other entries before updating himself
     if (response.config.cache?.update) {
-      updateCache(axios, response.data, response.config.cache.update);
+      updateCache(this.axios, response.data, response.config.cache.update);
     }
 
-    const deferred = axios.waiting[key];
+    const deferred = this.axios.waiting[key];
 
     // Resolve all other requests waiting for this response
     if (deferred) {
       await deferred.resolve(newCache.data);
     }
 
-    await axios.storage.set(key, newCache);
+    await this.axios.storage.set(key, newCache);
 
     return response;
-  });
+  };
 }

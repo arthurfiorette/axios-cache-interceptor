@@ -7,6 +7,7 @@ import type {
   Method
 } from 'axios';
 import { HeaderInterpreter } from '../header';
+import { AxiosInterceptor } from '../interceptors/types';
 import {
   CachedResponse,
   CachedStorageValue,
@@ -72,6 +73,10 @@ export type CacheProperties = {
   update: Record<string, CacheUpdater | undefined>;
 };
 
+export type CacheAxiosResponse = AxiosResponse & {
+  config: CacheRequestConfig;
+};
+
 /**
  * Options that can be overridden per request
  */
@@ -117,6 +122,16 @@ export default interface CacheInstance {
    * Only used if cache.interpretHeader is true.
    */
   headerInterpreter: HeaderInterpreter;
+
+  /**
+   * The request interceptor that will be used to handle the cache.
+   */
+  requestInterceptor: AxiosInterceptor<CacheRequestConfig>;
+
+  /**
+   * The response interceptor that will be used to handle the cache.
+   */
+  responseInterceptor: AxiosInterceptor<CacheAxiosResponse>;
 }
 
 /**
@@ -134,7 +149,7 @@ export interface AxiosCacheInstance extends AxiosInstance, CacheInstance {
 
   interceptors: {
     request: AxiosInterceptorManager<CacheRequestConfig>;
-    response: AxiosInterceptorManager<AxiosResponse & { config: CacheRequestConfig }>;
+    response: AxiosInterceptorManager<CacheAxiosResponse>;
   };
 
   getUri(config?: CacheRequestConfig): string;

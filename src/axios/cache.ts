@@ -1,7 +1,7 @@
 import Axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import { defaultHeaderInterpreter } from '../header';
-import { applyRequestInterceptor } from '../interceptors/request';
-import { applyResponseInterceptor } from '../interceptors/response';
+import { CacheRequestInterceptor } from '../interceptors/request';
+import { CacheResponseInterceptor } from '../interceptors/response';
 import { MemoryStorage } from '../storage/memory';
 import { defaultKeyGenerator } from '../util/key-generator';
 import CacheInstance, { AxiosCacheInstance, CacheProperties } from './types';
@@ -15,14 +15,24 @@ import CacheInstance, { AxiosCacheInstance, CacheProperties } from './types';
  */
 export function applyCache(
   axios: AxiosInstance,
-  config: Partial<CacheInstance> & Partial<CacheProperties> = {}
+  {
+    storage,
+    generateKey,
+    waiting,
+    headerInterpreter,
+    requestInterceptor,
+    responseInterceptor,
+    ...cacheOptions
+  }: Partial<CacheInstance> & Partial<CacheProperties> = {}
 ): AxiosCacheInstance {
   const axiosCache = axios as AxiosCacheInstance;
 
-  axiosCache.storage = config.storage || new MemoryStorage();
-  axiosCache.generateKey = config.generateKey || defaultKeyGenerator;
-  axiosCache.waiting = config.waiting || {};
-  axiosCache.headerInterpreter = config.headerInterpreter || defaultHeaderInterpreter;
+  axiosCache.storage = storage || new MemoryStorage();
+  axiosCache.generateKey = generateKey || defaultKeyGenerator;
+  axiosCache.waiting = waiting || {};
+  axiosCache.headerInterpreter = headerInterpreter || defaultHeaderInterpreter;
+  axiosCache.requestInterceptor = requestInterceptor || new CacheRequestInterceptor(axiosCache);
+  axiosCache.responseInterceptor = responseInterceptor || new CacheResponseInterceptor(axiosCache);
 
   // CacheRequestConfig values
   axiosCache.defaults = {
@@ -31,15 +41,17 @@ export function applyCache(
       ttl: 1000 * 60 * 5,
       interpretHeader: false,
       methods: ['get'],
-      cachePredicate: { statusCheck: [200, 399] },
+      cachePredicate: {
+        statusCheck: [200, 399]
+      },
       update: {},
-      ...config
+      ...cacheOptions
     }
   };
 
   // Apply interceptors
-  applyRequestInterceptor(axiosCache);
-  applyResponseInterceptor(axiosCache);
+  axiosCache.requestInterceptor.apply();
+  axiosCache.responseInterceptor.apply();
 
   return axiosCache;
 }
