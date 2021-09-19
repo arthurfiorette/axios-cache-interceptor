@@ -17,11 +17,11 @@ describe('Tests cached status code', () => {
       state: 'cached'
     });
 
-    const firstResponse = await axios.get(axiosMock.url);
+    const firstResponse = await axios.get('');
     expect(firstResponse.status).toBe(axiosMock.statusCode);
     expect(firstResponse.statusText).toBe(axiosMock.statusText);
 
-    const secondResponse = await axios.get(axiosMock.url);
+    const secondResponse = await axios.get('');
     expect(secondResponse.status).not.toBe(axiosMock.statusCode);
     expect(secondResponse.statusText).not.toBe(axiosMock.statusText);
 

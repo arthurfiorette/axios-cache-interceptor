@@ -1,4 +1,4 @@
-import { axiosMock, mockAxios } from '../mocks/axios';
+import { mockAxios } from '../mocks/axios';
 
 describe('test request interceptor', () => {
   it('tests against specified methods', async () => {
@@ -7,7 +7,7 @@ describe('test request interceptor', () => {
       methods: ['post']
     });
 
-    const response = await axios.get(axiosMock.url);
+    const response = await axios.get('');
     const cacheKey = await axios.generateKey(response.config);
     const cache = await axios.storage.get(cacheKey);
 
@@ -20,7 +20,7 @@ describe('test request interceptor', () => {
       methods: ['get']
     });
 
-    const response = await axios.get(axiosMock.url);
+    const response = await axios.get('');
     const cacheKey = await axios.generateKey(response.config);
     const cache = await axios.storage.get(cacheKey);
 

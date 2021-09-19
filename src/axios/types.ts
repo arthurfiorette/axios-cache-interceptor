@@ -70,7 +70,7 @@ export type CacheProperties = {
    *
    * @default {}
    */
-  update: Record<string, CacheUpdater | undefined>;
+  update: Record<string, CacheUpdater>;
 };
 
 export type CacheAxiosResponse = AxiosResponse & {

@@ -1,9 +1,9 @@
-import { AxiosCacheInstance, CacheProperties } from '../axios';
+import { AxiosCacheInstance, CacheUpdater } from '../axios';
 
 export async function updateCache(
   axios: AxiosCacheInstance,
   data: any,
-  entries: CacheProperties['update']
+  entries: Record<string, CacheUpdater>
 ): Promise<void> {
   for (const [cacheKey, value] of Object.entries(entries)) {
     if (value == 'delete') {

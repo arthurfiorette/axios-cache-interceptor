@@ -5,25 +5,25 @@ describe('tests header interpreter', () => {
     const noHeader = defaultHeaderInterpreter({});
     expect(noHeader).toBeUndefined();
 
-    const emptyHeader = defaultHeaderInterpreter({ 'Cache-Control': 'public' });
+    const emptyHeader = defaultHeaderInterpreter({ 'cache-control': 'public' });
     expect(emptyHeader).toBeUndefined();
   });
 
   it('tests with cache preventing headers', () => {
     const noStore = defaultHeaderInterpreter({
-      'Cache-Control': 'no-store'
+      'cache-control': 'no-store'
     });
 
     expect(noStore).toBe(false);
 
     const noCache = defaultHeaderInterpreter({
-      'Cache-Control': 'no-cache'
+      'cache-control': 'no-cache'
     });
 
     expect(noCache).toBe(false);
 
     const mustRevalidate = defaultHeaderInterpreter({
-      'Cache-Control': 'must-revalidate'
+      'cache-control': 'must-revalidate'
     });
 
     expect(mustRevalidate).toBe(false);
@@ -31,41 +31,45 @@ describe('tests header interpreter', () => {
 
   it('tests with maxAge header for 10 seconds', () => {
     const result = defaultHeaderInterpreter({
-      'Cache-Control': 'max-age=10'
+      'cache-control': 'max-age=10'
     });
 
     // 10 Seconds in milliseconds
     expect(result).toBe(10 * 1000);
   });
 
-  it('tests with Expires and Cache-Control present', () => {
+  it('tests with expires and cache-control present', () => {
     const result = defaultHeaderInterpreter({
-      'Cache-Control': 'max-age=10',
-      Expires: new Date(new Date().getFullYear() + 1, 1, 1).toISOString()
+      'cache-control': 'max-age=10',
+      expires: new Date(new Date().getFullYear() + 1, 1, 1).toISOString()
     });
 
-    // Expires should be ignored
+    // expires should be ignored
     // 10 Seconds in milliseconds
     expect(result).toBe(10 * 1000);
   });
 
-  it('tests with past Expires', () => {
+  it('tests with past expires', () => {
     const result = defaultHeaderInterpreter({
-      Expires: new Date(new Date().getFullYear() - 1, 1, 1).toISOString()
+      expires: new Date(new Date().getFullYear() - 1, 1, 1).toISOString()
     });
 
     // Past means cache invalid
     expect(result).toBe(false);
   });
 
-  it('tests with future Expires', () => {
+  it('tests with future expires', () => {
     const date = new Date(new Date().getFullYear() + 1, 1, 1);
+
     const result = defaultHeaderInterpreter({
-      Expires: date.toISOString()
+      expires: date.toISOString()
     });
 
+    const approx = date.getTime() - Date.now();
+
+    expect(typeof result).toBe('number');
     // the result should be what the date is in milliseconds
     // minus the actual epoch milliseconds
-    expect(result).toBeCloseTo(date.getTime() - Date.now());
+    expect(Math.abs((result as number) - approx)).toBeLessThan(1);
   });
 });
