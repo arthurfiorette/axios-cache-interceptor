@@ -1,7 +1,7 @@
 import { AxiosCacheInstance, CacheRequestConfig } from '../axios/types';
 import { CachedResponse } from '../storage/types';
 import { Deferred } from '../util/deferred';
-import { CACHED_RESPONSE_STATUS, CACHED_RESPONSE_STATUS_TEXT } from '../util/status-codes';
+import { CACHED_STATUS_CODE, CACHED_STATUS_TEXT } from '../util/status-codes';
 import { AxiosInterceptor } from './types';
 
 export class CacheRequestInterceptor implements AxiosInterceptor<CacheRequestConfig> {
@@ -64,8 +64,8 @@ export class CacheRequestInterceptor implements AxiosInterceptor<CacheRequestCon
         config,
         data: data.body,
         headers: data.headers,
-        status: CACHED_RESPONSE_STATUS,
-        statusText: CACHED_RESPONSE_STATUS_TEXT
+        status: CACHED_STATUS_CODE,
+        statusText: CACHED_STATUS_TEXT
       });
 
     return config;

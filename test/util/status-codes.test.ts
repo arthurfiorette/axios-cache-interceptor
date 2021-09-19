@@ -25,7 +25,7 @@ describe('Tests cached status code', () => {
     expect(secondResponse.status).not.toBe(axiosMock.statusCode);
     expect(secondResponse.statusText).not.toBe(axiosMock.statusText);
 
-    expect(secondResponse.status).toBe(StatusCodes.CACHED_RESPONSE_STATUS);
-    expect(secondResponse.statusText).toBe(StatusCodes.CACHED_RESPONSE_STATUS_TEXT);
+    expect(secondResponse.status).toBe(StatusCodes.CACHED_STATUS_CODE);
+    expect(secondResponse.statusText).toBe(StatusCodes.CACHED_STATUS_TEXT);
   });
 });
