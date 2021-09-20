@@ -1,3 +1,5 @@
 /ignore
 /node_modules
 /coverage
+/dist
+/CHANGELOG.md
