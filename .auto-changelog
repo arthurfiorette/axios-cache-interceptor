@@ -1,0 +1,7 @@
+{
+  "releaseSummary": true,
+  "unreleased": true,
+  "commitLimit": false,
+  "sortCommits": "subject",
+  "template": "keepachangelog"
+}

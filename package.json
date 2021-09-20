@@ -10,7 +10,8 @@
     "test:coverage": "jest --coverage",
     "prettify": "prettier . --write",
     "lint": "tsc --noEmit && eslint . --ext .ts",
-    "lint:fix": "eslint . --ext .ts --fix"
+    "lint:fix": "eslint . --ext .ts --fix",
+    "version": "auto-changelog -p && git add CHANGELOG.md"
   },
   "repository": {
     "type": "git",
@@ -44,6 +45,7 @@
     "@types/node": "^16.7.10",
     "@typescript-eslint/eslint-plugin": "^4.30.0",
     "@typescript-eslint/parser": "^4.30.0",
+    "auto-changelog": "^2.3.0",
     "axios": "^0.21.1",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
