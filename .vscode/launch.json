@@ -11,8 +11,7 @@
         // Linux:
         // "${workspaceRoot}/node_modules/.bin/jest",
         "--runInBand",
-        "--watch",
-        "request.test.ts"
+        "--watch"
       ],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
