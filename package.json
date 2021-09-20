@@ -8,7 +8,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "prettify": "prettier . --write --plugin prettier-plugin-jsdoc --plugin prettier-plugin-organize-imports",
+    "prettify": "prettier --write .",
     "lint": "tsc --noEmit && eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "version": "auto-changelog -p && git add CHANGELOG.md"

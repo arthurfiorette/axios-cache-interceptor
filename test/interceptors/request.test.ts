@@ -33,9 +33,44 @@ describe('test request interceptor', () => {
 
     const [resp1, resp2] = await Promise.all([axios.get(''), axios.get('')]);
 
-    expect(resp1).toHaveProperty('status', axiosMock.statusCode);
-    expect(resp1).toHaveProperty('statusText', axiosMock.statusText);
-    expect(resp2).toHaveProperty('status', StatusCodes.CACHED_STATUS_CODE);
-    expect(resp2).toHaveProperty('statusText', StatusCodes.CACHED_STATUS_TEXT);
+    expect(resp1.status).toBe(axiosMock.statusCode);
+    expect(resp1.statusText).toBe(axiosMock.statusText);
+    expect(resp2.status).toBe(StatusCodes.CACHED_STATUS_CODE);
+    expect(resp2.statusText).toBe(StatusCodes.CACHED_STATUS_TEXT);
+  });
+
+  it('tests concurrent requests with cache: false', async () => {
+    const axios = mockAxios();
+
+    const results = await Promise.all([
+      axios.get('', { cache: false }),
+      axios.get(''),
+      axios.get('', { cache: false })
+    ]);
+    for (const result of results) {
+      expect(result.status).toBe(axiosMock.statusCode);
+      expect(result.statusText).toBe(axiosMock.statusText);
+    }
+  });
+
+  /**
+   * This is to test when two requests are made simultaneously. With
+   * that, the second response waits the deferred from the first one.
+   * Because the first request is not cached, the second should not be
+   * waiting forever for the deferred to be resolved with a cached response.
+   */
+  it('tests concurrent requests with uncached responses', async () => {
+    const axios = mockAxios();
+
+    const [, resp2] = await Promise.all([
+      axios.get('', {
+        // Simple predicate to ignore cache in the response step.
+        cache: { cachePredicate: () => false }
+      }),
+      axios.get('')
+    ]);
+
+    expect(resp2.status).toBe(axiosMock.statusCode);
+    expect(resp2.statusText).toBe(axiosMock.statusText);
   });
 });

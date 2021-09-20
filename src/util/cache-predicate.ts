@@ -4,16 +4,15 @@ export type CachePredicate = CachePredicateObject | ((response: AxiosResponse) =
 
 export type CachePredicateObject = {
   /**
-   * The status predicate, if a tuple is returned,
-   * the first and seconds value means the interval (inclusive) accepted.
-   * Can also be a function.
+   * The status predicate, if a tuple is returned, the first and
+   * seconds value means the interval (inclusive) accepted. Can also
+   * be a function.
    */
   statusCheck?: [start: number, end: number] | ((status: number) => boolean);
 
   /**
-   * Matches if the response header container all keys.
-   * A tuple also checks for values.
-   * Can also be a predicate.
+   * Matches if the response header container all keys. A tuple also
+   * checks for values. Can also be a predicate.
    */
   containsHeaders?: Record<string, true | string | ((header: string) => boolean)>;
 

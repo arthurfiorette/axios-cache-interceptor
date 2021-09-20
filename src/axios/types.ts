@@ -37,8 +37,8 @@ export type CacheProperties = {
   ttl: number;
 
   /**
-   * If this interceptor should configure the cache from the request cache header
-   * When used, the ttl property is ignored
+   * If this interceptor should configure the cache from the request
+   * cache header When used, the ttl property is ignored
    *
    * @default false
    */
@@ -54,27 +54,35 @@ export type CacheProperties = {
   /**
    * The function to check if the response code permit being cached.
    *
-   * @default { statusCheck: [200, 399] }
+   * @default {statusCheck: [200, 399]}
    */
   cachePredicate: CachePredicate;
 
   /**
-   * Once the request is resolved, this specifies what requests should we change the cache.
-   * Can be used to update the request or delete other caches.
+   * Once the request is resolved, this specifies what requests should
+   * we change the cache. Can be used to update the request or delete
+   * other caches.
    *
    * If the function returns nothing, the entry is deleted
    *
    * This is independent if the request made was cached or not.
    *
-   * The id used is the same as the id on `CacheRequestConfig['id']`, auto-generated or not.
+   * The id used is the same as the id on `CacheRequestConfig['id']`,
+   * auto-generated or not.
    *
-   * @default {}
+   * @default
    */
   update: Record<string, CacheUpdater>;
 };
 
-export type CacheAxiosResponse = AxiosResponse & {
+export type CacheAxiosResponse<T = any> = AxiosResponse<T> & {
   config: CacheRequestConfig;
+
+  /**
+   * The id used for this request. if config specified an id, the id
+   * will be returned
+   */
+  id: string | symbol;
 };
 
 /**
@@ -82,9 +90,9 @@ export type CacheAxiosResponse = AxiosResponse & {
  */
 export type CacheRequestConfig = AxiosRequestConfig & {
   /**
-   * An id for this request, if this request is used in cache, only the last request made with this id will be returned.
+   * An id for this request, if this request is used in cache, only
+   * the last request made with this id will be returned.
    *
-   * @see cacheKey
    * @default undefined
    */
   id?: string | symbol;
@@ -107,19 +115,21 @@ export default interface CacheInstance {
 
   /**
    * The function used to create different keys for each request.
-   * Defaults to a function that priorizes the id, and if not specified,
-   * a string is generated using the method, baseUrl, params, and url
+   * Defaults to a function that priorizes the id, and if not
+   * specified, a string is generated using the method, baseUrl,
+   * params, and url
    */
   generateKey: KeyGenerator;
 
   /**
-   * A simple object that holds all deferred objects until it is resolved.
+   * A simple object that holds all deferred objects until it is
+   * resolved or rejected.
    */
-  waiting: Record<string, Deferred<CachedResponse>>;
+  waiting: Record<string, Deferred<CachedResponse, void>>;
 
   /**
-   * The function to parse and interpret response headers.
-   * Only used if cache.interpretHeader is true.
+   * The function to parse and interpret response headers. Only used
+   * if cache.interpretHeader is true.
    */
   headerInterpreter: HeaderInterpreter;
 
@@ -135,7 +145,8 @@ export default interface CacheInstance {
 }
 
 /**
- * Same as the AxiosInstance but with CacheRequestConfig as a config type.
+ * Same as the AxiosInstance but with CacheRequestConfig as a config
+ * type and CacheAxiosResponse as response type.
  *
  * @see AxiosInstance
  * @see CacheRequestConfig
@@ -154,23 +165,23 @@ export interface AxiosCacheInstance extends AxiosInstance, CacheInstance {
 
   getUri(config?: CacheRequestConfig): string;
 
-  request<T = any, R = AxiosResponse<T>>(config: CacheRequestConfig): Promise<R>;
+  request<T = any, R = CacheAxiosResponse<T>>(config: CacheRequestConfig): Promise<R>;
 
-  get<T = any, R = AxiosResponse<T>>(url: string, config?: CacheRequestConfig): Promise<R>;
-  delete<T = any, R = AxiosResponse<T>>(url: string, config?: CacheRequestConfig): Promise<R>;
-  head<T = any, R = AxiosResponse<T>>(url: string, config?: CacheRequestConfig): Promise<R>;
-  options<T = any, R = AxiosResponse<T>>(url: string, config?: CacheRequestConfig): Promise<R>;
-  post<T = any, R = AxiosResponse<T>>(
+  get<T = any, R = CacheAxiosResponse<T>>(url: string, config?: CacheRequestConfig): Promise<R>;
+  delete<T = any, R = CacheAxiosResponse<T>>(url: string, config?: CacheRequestConfig): Promise<R>;
+  head<T = any, R = CacheAxiosResponse<T>>(url: string, config?: CacheRequestConfig): Promise<R>;
+  options<T = any, R = CacheAxiosResponse<T>>(url: string, config?: CacheRequestConfig): Promise<R>;
+  post<T = any, R = CacheAxiosResponse<T>>(
     url: string,
     data?: any,
     config?: CacheRequestConfig
   ): Promise<R>;
-  put<T = any, R = AxiosResponse<T>>(
+  put<T = any, R = CacheAxiosResponse<T>>(
     url: string,
     data?: any,
     config?: CacheRequestConfig
   ): Promise<R>;
-  patch<T = any, R = AxiosResponse<T>>(
+  patch<T = any, R = CacheAxiosResponse<T>>(
     url: string,
     data?: any,
     config?: CacheRequestConfig

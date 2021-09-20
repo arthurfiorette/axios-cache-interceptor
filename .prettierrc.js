@@ -3,6 +3,6 @@
 module.exports = require('@arthurfiorette/prettier-config')({
   tsdoc: true,
   jsdocSpaces: 1,
-  jsdocPrintWidth: 100,
+  jsdocPrintWidth: 70,
   jsdocSingleLineComment: false
 });

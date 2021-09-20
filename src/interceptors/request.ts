@@ -1,6 +1,6 @@
 import { AxiosCacheInstance, CacheRequestConfig } from '../axios/types';
 import { CachedResponse, CachedStorageValue, LoadingStorageValue } from '../storage/types';
-import { Deferred } from '../util/deferred';
+import { deferred } from '../util/deferred';
 import { CACHED_STATUS_CODE, CACHED_STATUS_TEXT } from '../util/status-codes';
 import { AxiosInterceptor } from './types';
 
@@ -12,7 +12,7 @@ export class CacheRequestInterceptor implements AxiosInterceptor<CacheRequestCon
   };
 
   onFulfilled = async (config: CacheRequestConfig): Promise<CacheRequestConfig> => {
-    // Ignore caching
+    // Skip cache
     if (config.cache === false) {
       return config;
     }
@@ -31,17 +31,24 @@ export class CacheRequestInterceptor implements AxiosInterceptor<CacheRequestCon
 
     // Not cached, continue the request, and mark it as fetching
     emptyState: if (cache.state == 'empty') {
-      // This if catches concurrent access to a new key.
-      // The js event loop skips in the first await statement,
-      // so the next code block will be executed both if called
-      // from two places asynchronously.
+      /**
+       * This checks for simultaneous access to a new key. The js
+       * event loop jumps on the first await statement, so the second
+       * (asynchronous call) request may have already started executing.
+       */
       if (this.axios.waiting[key]) {
         cache = (await this.axios.storage.get(key)) as CachedStorageValue | LoadingStorageValue;
         break emptyState;
       }
 
       // Create a deferred to resolve other requests for the same key when it's completed
-      this.axios.waiting[key] = new Deferred();
+      this.axios.waiting[key] = deferred();
+
+      /**
+       * Add a default reject handler to detect when the request is
+       * aborted without others waiting
+       */
+      this.axios.waiting[key]?.catch(() => {});
 
       await this.axios.storage.set(key, {
         state: 'loading',
@@ -56,14 +63,21 @@ export class CacheRequestInterceptor implements AxiosInterceptor<CacheRequestCon
     if (cache.state === 'loading') {
       const deferred = this.axios.waiting[key];
 
-      // If the deferred is undefined, means that the
-      // outside has removed that key from the waiting list
+      /**
+       * If the deferred is undefined, means that the outside has
+       * removed that key from the waiting list
+       */
       if (!deferred) {
         await this.axios.storage.remove(key);
         return config;
       }
 
-      data = await deferred;
+      try {
+        data = await deferred;
+      } catch (e) {
+        // The deferred is rejected when the request that we are waiting rejected cache.
+        return config;
+      }
     } else {
       data = cache.data;
     }

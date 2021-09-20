@@ -19,7 +19,7 @@ export class CacheResponseInterceptor implements AxiosInterceptor<CacheAxiosResp
     this.axios.interceptors.response.use(this.onFulfilled);
   };
 
-  testCachePredicate = (response: AxiosResponse, { cache }: CacheConfig): boolean => {
+  private testCachePredicate = (response: AxiosResponse, { cache }: CacheConfig): boolean => {
     const cachePredicate = cache?.cachePredicate || this.axios.defaults.cache.cachePredicate;
 
     return (
@@ -28,13 +28,27 @@ export class CacheResponseInterceptor implements AxiosInterceptor<CacheAxiosResp
     );
   };
 
+  /**
+   * Rejects cache for this response. Also update the waiting list for
+   * this key by rejecting it.
+   */
+  private rejectResponse = async (key: string) => {
+    // Update the cache to empty to prevent infinite loading state
+    await this.axios.storage.remove(key);
+    // Reject the deferred if present
+    this.axios.waiting[key]?.reject();
+    delete this.axios.waiting[key];
+  };
+
   onFulfilled = async (response: CacheAxiosResponse): Promise<CacheAxiosResponse> => {
-    // Ignore caching
+    const key = this.axios.generateKey(response.config);
+    response.id = key;
+
+    // Skip cache
     if (response.config.cache === false) {
       return response;
     }
 
-    const key = this.axios.generateKey(response.config);
     const cache = await this.axios.storage.get(key);
 
     // Response shouldn't be cached or was already cached
@@ -44,8 +58,7 @@ export class CacheResponseInterceptor implements AxiosInterceptor<CacheAxiosResp
 
     // Config told that this response should be cached.
     if (!this.testCachePredicate(response, response.config as CacheConfig)) {
-      // Update the cache to empty to prevent infinite loading state
-      await this.axios.storage.remove(key);
+      await this.rejectResponse(key);
       return response;
     }
 
@@ -56,8 +69,7 @@ export class CacheResponseInterceptor implements AxiosInterceptor<CacheAxiosResp
 
       // Cache should not be used
       if (expirationTime === false) {
-        // Update the cache to empty to prevent infinite loading state
-        await this.axios.storage.remove(key);
+        await this.rejectResponse(key);
         return response;
       }
 

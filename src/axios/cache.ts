@@ -9,9 +9,9 @@ import CacheInstance, { AxiosCacheInstance, CacheProperties } from './types';
 /**
  * Apply the caching interceptors for a already created axios instance.
  *
- * @param axios the already created axios instance
- * @param config the config for the caching interceptors
- * @returns the same instance but with caching enabled
+ * @param axios The already created axios instance
+ * @param config The config for the caching interceptors
+ * @returns The same instance but with caching enabled
  */
 export function applyCache(
   axios: AxiosInstance,
@@ -59,9 +59,9 @@ export function applyCache(
 /**
  * Returns a new axios instance with caching enabled.
  *
- * @param config the config for the caching interceptors
- * @param axiosConfig the config for the created axios instance
- * @returns the same instance but with caching enabled
+ * @param config The config for the caching interceptors
+ * @param axiosConfig The config for the created axios instance
+ * @returns The same instance but with caching enabled
  */
 export function createCache(
   config: Partial<CacheInstance> & Partial<CacheProperties> = {},

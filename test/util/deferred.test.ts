@@ -1,52 +1,67 @@
-import { Deferred } from '../../src/util/deferred';
+import { deferred } from '../../src/util/deferred';
 
 describe('Tests cached status code', () => {
   it('test resolve method', () => {
-    const deferred = new Deferred();
+    const d = deferred();
 
-    expect(deferred).resolves.toBe(1);
-    deferred.resolve(1);
+    expect(d).resolves.toBe(1);
+    d.resolve(1);
   });
 
   it('test reject method', () => {
-    const deferred = new Deferred();
+    const d = deferred();
 
-    expect(deferred).rejects.toBe(1);
-    deferred.reject(1);
+    expect(d).rejects.toBe(1);
+    d.reject(1);
   });
 
   it('test then method', () => {
-    const deferred = new Deferred();
+    const d = deferred();
 
-    deferred.then((data) => {
+    d.then((data) => {
       expect(data).toBe(1);
     });
 
-    deferred.resolve(1);
+    d.resolve(1);
   });
 
   it('test catch method', () => {
-    const deferred = new Deferred();
+    const d = deferred();
 
-    deferred.catch((data) => {
+    d.catch((data) => {
       expect(data).toBe(1);
     });
 
-    deferred.resolve(1);
+    d.resolve(1);
   });
 
   it('test finally method', () => {
-    const deferred = new Deferred<number>();
+    const d = deferred<number, any>();
 
     let data: number;
-    deferred.then((d) => {
+    d.then((d) => {
       data = d;
     });
 
-    deferred.finally(() => {
+    d.finally(() => {
       expect(data).toBe(1);
     });
 
-    deferred.resolve(1);
+    d.resolve(1);
+  });
+
+  it('test with try catch', async () => {
+    const d = deferred<number, any>();
+
+    process.nextTick(d.resolve, 1);
+
+    let data: number;
+    try {
+      data = await d;
+    } catch (err) {
+      data = 2;
+    }
+
+    expect(data).toBe(1);
   });
 });
