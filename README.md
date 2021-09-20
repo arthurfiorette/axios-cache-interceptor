@@ -103,6 +103,209 @@ yarn add axios axios-cache-interceptor
 
 <br />
 
+### Getting Started
+
+To you use this cache interceptor, you can apply to an existing instance or create a new one.
+
+```js
+import { applyCache } from 'axios-cache-interceptor';
+
+// Your axios instance
+let axios;
+
+// Return the same axios instance, but with a modified Typescript type.
+axios = applyCache(axios, {
+  /* options here */
+});
+```
+
+or by creating a new one:
+
+```js
+import { createCache } from 'axios-cache-interceptor';
+
+const axios = createCache({
+  /* options here */
+});
+```
+
+After that, you can made your own requests normally.
+
+<br />
+
+### Basic Knowledge
+
+#### Request id
+
+A good thing to know is that every request passed through this interceptor. **This does not mean
+that is a unique id**. The id is used in a number of ways, but the most important is to bind a
+request to its cache.
+
+The id generation is good enough to generate the same id for theoretically the same request. The
+example of this is a request with `{ baseUrl: 'https://a.com/', url: '/b' }` results to the same id
+with `{ url: 'https://a.com/b/' }`.
+
+The id is retrieved with the response object.
+
+```js
+const result = await cache.get(/* ... */);
+
+const id = result.id; // <-- The id to find the cache and more;
+```
+
+Also, a custom id can be used to treat two requests as the same.
+
+```js
+axios.get('', {
+  id: 'my-custom-id',
+  cache: {
+    // other properties...
+  }
+});
+```
+
+The [default](src/util/key-generator.ts) id generation can clarify this idea.
+
+<br />
+
+### Global configuration
+
+When applying the interceptor, you can customize some properties:
+
+```js
+const axios = createCache({
+  // Properties here
+});
+```
+
+#### storage
+
+The storage used to save the cache. Here will probably be the most changed property. Defaults to
+[MemoryStorage](src/storage/memory.ts).
+
+You can create your own implementation by implementing [CacheStorage](src/storage/types.ts).
+
+Existing implementations:
+
+- [MemoryStorage](src/storage/memory.ts)
+- [Session and Local Storage](src/storage/web.ts)
+- _Maybe your own?_ (PR's are welcome)
+
+#### generateKey
+
+The function used to create different keys for each request. Defaults to a function that priorizes
+the id, and if not specified, a string is generated using the method, baseUrl, params, and url.
+
+#### waiting
+
+A simple object that will hold a promise for each pending request. Used to handle concurrent
+requests.
+
+Can also be used as type of _listener_ to know when a request is finished.
+
+#### headerInterpreter
+
+The function used to interpret all headers from a request and determine a time to live (`ttl`)
+number.
+
+Check out the [inline documentation](src/header/types.ts) to know how to modify your own.
+
+#### requestInterceptor and responseInterceptor
+
+The used request and response interceptor. Basically the core function of this library. Check out
+the used [request](src/interceptors/request.ts) and [response](src/interceptors/response.ts) to see
+the default used.
+
+<br />
+
+### Per-request configuration
+
+By using this axios client and using an ide with intellisense, you'll see a custom property called
+`cache`.
+
+The inline documentation is self explanatory, but here are some examples and information:
+
+#### ttl
+
+The time that the request will remain in cache. Some custom storage implementations may not respect
+100% the time.
+
+When using `interpretHeader`, this value is ignored.
+
+#### interpretHeader
+
+If activated, when the response is received, the `ttl` property will be inferred from the requests
+headers. See the actual implementation of the [`interpretHeader`](src/header/interpreter.ts) method
+for more information. You can override the default behavior by setting the `headerInterpreter` when
+creating the cached axios client.
+
+#### methods
+
+Specify what request methods should be cached.
+
+Defaults to only `GET` methods.
+
+#### cachePredicate
+
+An object or function that will be tested against the response to test if it can be cached. See the
+[inline documentation](src/util/cache-predicate.ts) for more.
+
+An simple example with all values:
+
+```js
+axios.get('url', {
+  cache: {
+    cachePredicate: {
+      // Only cache if the response comes with a *good* status code
+      statusCheck: [200, 399],
+
+      // Tests against any header present in the response.
+      containsHeader: {
+        'x-custom-header': true,
+        'x-custom-header-2': 'only if matches this string',
+        'x-custom-header-3': (value) => /* some calculation */ true
+      },
+
+      // Check custom response body
+      responseMatch: (response) => {
+        // Sample that only caches if the response is authenticated
+        return response.auth.status === 'authenticated':
+      }
+    }
+  }
+});
+```
+
+#### update
+
+Once the request is resolved, this specifies what other responses should change their cache. Can be
+used to update the request or delete other caches. It is a simple `Record` with the request id.
+
+Example:
+
+```js
+// Retrieved together with their responses
+let otherResponseId;
+let userInfoResponseId;
+
+axios.get('url', {
+  cache: {
+    update: {
+      // Evict the otherRequestId cache when this response arrives
+      [otherResponseId]: 'delete',
+
+      // An example that update the "user info response cache" when doing a login.
+      // Imagine this request is a login one.
+      [userInfoResponseId]: (cachedValue, thisResponse) => {
+        return { ...cachedValue, user: thisResponse.user.info };
+      }
+    }
+  }
+});
+```
+
+<br />
+
 ### Inspiration
 
 This project is highly inspired by several projects, written entirely in typescript, supporting

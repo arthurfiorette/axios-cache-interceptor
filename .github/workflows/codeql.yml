@@ -37,7 +37,7 @@ jobs:
 
       - name: Install packages
         run: yarn --prefer-offline
-      
+
       - name: Build
         run: yarn build
 
