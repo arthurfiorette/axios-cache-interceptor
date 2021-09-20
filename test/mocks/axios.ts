@@ -7,7 +7,8 @@ export const axiosMock = {
 };
 
 export function mockAxios(
-  options?: Partial<CacheInstance> & Partial<CacheProperties>
+  options: Partial<CacheInstance> & Partial<CacheProperties> = {},
+  headers: Record<string, string> = {}
 ): AxiosCacheInstance {
   const axios = createCache({
     // Defaults to cache every request
@@ -20,7 +21,7 @@ export function mockAxios(
       data: true,
       status: axiosMock.statusCode,
       statusText: axiosMock.statusText,
-      headers: {},
+      headers,
       config
     });
 

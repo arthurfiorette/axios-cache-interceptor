@@ -19,8 +19,8 @@ import { Deferred } from '../util/deferred';
 import { KeyGenerator } from '../util/key-generator';
 
 export type CacheUpdater =
-  | ((cached: EmptyStorageValue | CachedStorageValue, newData: any) => CachedStorageValue | void)
-  | 'delete';
+  | 'delete'
+  | ((cached: EmptyStorageValue | CachedStorageValue, newData: any) => CachedStorageValue | void);
 
 export type DefaultCacheRequestConfig = AxiosRequestConfig & {
   cache: CacheProperties;
@@ -82,7 +82,7 @@ export type CacheAxiosResponse<T = any> = AxiosResponse<T> & {
    * The id used for this request. if config specified an id, the id
    * will be returned
    */
-  id: string | symbol;
+  id: string;
 };
 
 /**
@@ -95,7 +95,7 @@ export type CacheRequestConfig = AxiosRequestConfig & {
    *
    * @default undefined
    */
-  id?: string | symbol;
+  id?: string;
 
   /**
    * All cache options for the request.
@@ -124,6 +124,8 @@ export default interface CacheInstance {
   /**
    * A simple object that holds all deferred objects until it is
    * resolved or rejected.
+   *
+   * Can be used to listen when a request is cached or not.
    */
   waiting: Record<string, Deferred<CachedResponse, void>>;
 
