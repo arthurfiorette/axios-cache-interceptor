@@ -87,7 +87,7 @@ export type CacheRequestConfig = AxiosRequestConfig & {
    * @see cacheKey
    * @default undefined
    */
-  id?: string | number;
+  id?: string | symbol;
 
   /**
    * All cache options for the request.
