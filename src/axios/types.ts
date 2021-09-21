@@ -19,7 +19,10 @@ import { CachePredicate, KeyGenerator } from '../util/types';
 
 export type CacheUpdater =
   | 'delete'
-  | ((cached: EmptyStorageValue | CachedStorageValue, newData: any) => CachedStorageValue | void);
+  | ((
+      cached: EmptyStorageValue | CachedStorageValue,
+      newData: any
+    ) => CachedStorageValue | void);
 
 export type DefaultCacheRequestConfig = AxiosRequestConfig & {
   cache: CacheProperties;
@@ -168,10 +171,22 @@ export interface AxiosCacheInstance extends AxiosInstance, CacheInstance {
 
   request<T = any, R = CacheAxiosResponse<T>>(config: CacheRequestConfig): Promise<R>;
 
-  get<T = any, R = CacheAxiosResponse<T>>(url: string, config?: CacheRequestConfig): Promise<R>;
-  delete<T = any, R = CacheAxiosResponse<T>>(url: string, config?: CacheRequestConfig): Promise<R>;
-  head<T = any, R = CacheAxiosResponse<T>>(url: string, config?: CacheRequestConfig): Promise<R>;
-  options<T = any, R = CacheAxiosResponse<T>>(url: string, config?: CacheRequestConfig): Promise<R>;
+  get<T = any, R = CacheAxiosResponse<T>>(
+    url: string,
+    config?: CacheRequestConfig
+  ): Promise<R>;
+  delete<T = any, R = CacheAxiosResponse<T>>(
+    url: string,
+    config?: CacheRequestConfig
+  ): Promise<R>;
+  head<T = any, R = CacheAxiosResponse<T>>(
+    url: string,
+    config?: CacheRequestConfig
+  ): Promise<R>;
+  options<T = any, R = CacheAxiosResponse<T>>(
+    url: string,
+    config?: CacheRequestConfig
+  ): Promise<R>;
   post<T = any, R = CacheAxiosResponse<T>>(
     url: string,
     data?: any,

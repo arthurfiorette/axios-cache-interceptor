@@ -31,8 +31,10 @@ export function applyCache(
   axiosCache.generateKey = generateKey || defaultKeyGenerator;
   axiosCache.waiting = waiting || {};
   axiosCache.headerInterpreter = headerInterpreter || defaultHeaderInterpreter;
-  axiosCache.requestInterceptor = requestInterceptor || new CacheRequestInterceptor(axiosCache);
-  axiosCache.responseInterceptor = responseInterceptor || new CacheResponseInterceptor(axiosCache);
+  axiosCache.requestInterceptor =
+    requestInterceptor || new CacheRequestInterceptor(axiosCache);
+  axiosCache.responseInterceptor =
+    responseInterceptor || new CacheResponseInterceptor(axiosCache);
 
   // CacheRequestConfig values
   axiosCache.defaults = {

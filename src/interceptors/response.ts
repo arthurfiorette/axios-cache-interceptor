@@ -19,12 +19,17 @@ export class CacheResponseInterceptor implements AxiosInterceptor<CacheAxiosResp
     this.axios.interceptors.response.use(this.onFulfilled);
   };
 
-  private testCachePredicate = (response: AxiosResponse, { cache }: CacheConfig): boolean => {
-    const cachePredicate = cache?.cachePredicate || this.axios.defaults.cache.cachePredicate;
+  private testCachePredicate = (
+    response: AxiosResponse,
+    { cache }: CacheConfig
+  ): boolean => {
+    const cachePredicate =
+      cache?.cachePredicate || this.axios.defaults.cache.cachePredicate;
 
     return (
       (typeof cachePredicate === 'function' && cachePredicate(response)) ||
-      (typeof cachePredicate === 'object' && checkPredicateObject(response, cachePredicate))
+      (typeof cachePredicate === 'object' &&
+        checkPredicateObject(response, cachePredicate))
     );
   };
 

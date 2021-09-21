@@ -40,7 +40,7 @@
     "@tusbar/cache-control": "^0.6.0"
   },
   "devDependencies": {
-    "@arthurfiorette/prettier-config": "^1.0.5",
+    "@arthurfiorette/prettier-config": "^1.0.6",
     "@types/jest": "^27.0.1",
     "@types/node": "^16.7.10",
     "@typescript-eslint/eslint-plugin": "^4.30.0",

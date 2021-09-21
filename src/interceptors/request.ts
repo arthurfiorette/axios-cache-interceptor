@@ -1,5 +1,9 @@
 import { AxiosCacheInstance, CacheRequestConfig } from '../axios/types';
-import { CachedResponse, CachedStorageValue, LoadingStorageValue } from '../storage/types';
+import {
+  CachedResponse,
+  CachedStorageValue,
+  LoadingStorageValue
+} from '../storage/types';
 import { deferred } from '../util/deferred';
 import { CACHED_STATUS_CODE, CACHED_STATUS_TEXT } from '../util/status-codes';
 import { AxiosInterceptor } from './types';
@@ -20,7 +24,9 @@ export class CacheRequestInterceptor implements AxiosInterceptor<CacheRequestCon
     // Only cache specified methods
     const allowedMethods = config.cache?.methods || this.axios.defaults.cache.methods;
 
-    if (!allowedMethods.some((method) => (config.method || 'get').toLowerCase() == method)) {
+    if (
+      !allowedMethods.some((method) => (config.method || 'get').toLowerCase() == method)
+    ) {
       return config;
     }
 
@@ -37,7 +43,9 @@ export class CacheRequestInterceptor implements AxiosInterceptor<CacheRequestCon
        * (asynchronous call) request may have already started executing.
        */
       if (this.axios.waiting[key]) {
-        cache = (await this.axios.storage.get(key)) as CachedStorageValue | LoadingStorageValue;
+        cache = (await this.axios.storage.get(key)) as
+          | CachedStorageValue
+          | LoadingStorageValue;
         break emptyState;
       }
 

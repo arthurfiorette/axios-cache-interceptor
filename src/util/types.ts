@@ -1,7 +1,9 @@
 import { AxiosResponse } from 'axios';
 import { CacheRequestConfig } from '../axios/types';
 
-export type CachePredicate = CachePredicateObject | ((response: AxiosResponse) => boolean);
+export type CachePredicate =
+  | CachePredicateObject
+  | ((response: AxiosResponse) => boolean);
 
 export type CachePredicateObject = {
   /**
@@ -24,6 +26,7 @@ export type CachePredicateObject = {
 };
 
 /**
- * A simple function that receives a cache request config and should return a string id for it.
+ * A simple function that receives a cache request config and should
+ * return a string id for it.
  */
 export type KeyGenerator = (options: CacheRequestConfig) => string;
