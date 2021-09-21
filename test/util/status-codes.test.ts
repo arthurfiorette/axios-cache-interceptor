@@ -1,4 +1,4 @@
-import { StatusCodes } from '../../src/';
+import { StatusCodes } from '../../src';
 import { axiosMock, mockAxios } from '../mocks/axios';
 
 const KEY = 'cacheKey';

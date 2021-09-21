@@ -185,10 +185,14 @@ The storage used to save the cache. Here will probably be the most changed prope
 
 You can create your own implementation by implementing [CacheStorage](src/storage/types.ts).
 
-Existing implementations:
+There are few built in storage implementations, you can use them by importing:
 
-- [MemoryStorage](src/storage/memory.ts)
-- [Session and Local Storage](src/storage/web.ts)
+```js
+import { /* ... */ } from 'axios-cache-interceptor/dist/storage/{name}';
+```
+
+- [MemoryStorage](src/storage/memory.ts) `import 'axios-cache-interceptor/dist/storage/memory';`
+- [Session and Local Storage](src/storage/web.ts) `import 'axios-cache-interceptor/dist/storage/web';`
 - _Maybe your own?_ (PR's are welcome)
 
 #### generateKey

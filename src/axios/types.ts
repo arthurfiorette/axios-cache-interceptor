@@ -6,7 +6,7 @@ import type {
   AxiosResponse,
   Method
 } from 'axios';
-import { HeaderInterpreter } from '../header';
+import { HeaderInterpreter } from '../header/types';
 import { AxiosInterceptor } from '../interceptors/types';
 import {
   CachedResponse,
@@ -14,9 +14,8 @@ import {
   CacheStorage,
   EmptyStorageValue
 } from '../storage/types';
-import { CachePredicate } from '../util/cache-predicate';
 import { Deferred } from '../util/deferred';
-import { KeyGenerator } from '../util/key-generator';
+import { CachePredicate, KeyGenerator } from '../util/types';
 
 export type CacheUpdater =
   | 'delete'

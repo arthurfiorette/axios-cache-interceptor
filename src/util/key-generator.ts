@@ -1,10 +1,8 @@
-import { CacheRequestConfig } from '../axios/types';
+import { KeyGenerator } from './types';
 
 // Remove first and last '/' char, if present
 // https://regex101.com/r/ENqrFy/1
 const SLASHES_REGEX = /^\/|\/+$/g;
-
-export type KeyGenerator = (options: CacheRequestConfig) => string;
 
 export const defaultKeyGenerator: KeyGenerator = ({
   baseURL = '',

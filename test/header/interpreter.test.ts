@@ -1,4 +1,4 @@
-import { defaultHeaderInterpreter } from '../../src/header';
+import { defaultHeaderInterpreter } from '../../src/header/interpreter';
 
 describe('tests header interpreter', () => {
   it('tests without cache-control header', () => {

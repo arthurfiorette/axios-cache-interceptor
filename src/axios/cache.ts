@@ -1,5 +1,5 @@
 import Axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
-import { defaultHeaderInterpreter } from '../header';
+import { defaultHeaderInterpreter } from '../header/interpreter';
 import { CacheRequestInterceptor } from '../interceptors/request';
 import { CacheResponseInterceptor } from '../interceptors/response';
 import { MemoryStorage } from '../storage/memory';

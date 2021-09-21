@@ -1,8 +1,8 @@
 import { CacheStorage } from '../../src/storage/types';
 
-export function testStorage(name: string, Storage: { new (): CacheStorage }) {
+export function testStorage(name: string, Storage: () => CacheStorage) {
   it(`tests ${name} storage methods`, async () => {
-    const storage = new Storage();
+    const storage = Storage();
 
     const result = await storage.get('key');
 
@@ -32,7 +32,7 @@ export function testStorage(name: string, Storage: { new (): CacheStorage }) {
 
   it(`tests ${name} storage staling`, async () => {
     jest.useFakeTimers('modern');
-    const storage = new Storage();
+    const storage = Storage();
 
     await storage.set('key', {
       state: 'cached',
