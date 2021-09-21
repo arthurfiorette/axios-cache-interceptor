@@ -2,7 +2,7 @@
 <div align="center">
   <pre>
   <br />
-  <h1>🗄️📦💿
+  <h1>🗄️🔥💨
 Axios Cache Interceptor</h1>
   <br />
   </pre>
@@ -62,7 +62,7 @@ Axios Cache Interceptor</h1>
 <br />
 <br />
 
-#### `axios-cache-interceptor` is a axios wrapper for caching and preventing unneeded requests
+### `axios-cache-interceptor` is a axios wrapper for caching and preventing unneeded requests
 
 <br />
 
@@ -89,7 +89,7 @@ const { data } = await cachedApi.get('https://api.example.com/');
 <br />
 <br />
 
-### Installing
+## Installing
 
 > Axios is a peer dependency and must be installed separately.
 
@@ -103,7 +103,7 @@ yarn add axios axios-cache-interceptor
 
 <br />
 
-### Getting Started
+## Getting Started
 
 To you use this cache interceptor, you can apply to an existing instance or create a new one.
 
@@ -133,15 +133,25 @@ After that, you can made your own requests normally.
 
 <br />
 
-### Basic Knowledge
+## What we support
 
-#### Request id
+- [x] Cache concurrent requests
+- [x] Typescript support
+- [x] Unit tests
+- [x] Header interpretation
+- [x] Infinity storage options
+- [x] Cache revalidation from responses
+- [ ] External storages, like redis
 
-A good thing to know is that every request passed through this interceptor. **This does not mean
-that is a unique id**. The id is used in a number of ways, but the most important is to bind a
-request to its cache.
+## Basic Knowledge
 
-The id generation is good enough to generate the same id for theoretically the same request. The
+### Request id
+
+A good thing to know is that every request passed through this interceptor, has an id. **This does
+not mean that is a unique id**. The id is used in a number of ways, but the most important is to
+bind a request to its cache.
+
+The id generation is good enough to generate the same id for theoretically sames requests. The
 example of this is a request with `{ baseUrl: 'https://a.com/', url: '/b' }` results to the same id
 with `{ url: 'https://a.com/b/' }`.
 
@@ -156,7 +166,7 @@ const id = result.id; // <-- The id to find the cache and more;
 Also, a custom id can be used to treat two requests as the same.
 
 ```js
-axios.get('', {
+axios.get('...', {
   id: 'my-custom-id',
   cache: {
     // other properties...
@@ -168,7 +178,7 @@ The [default](src/util/key-generator.ts) id generation can clarify this idea.
 
 <br />
 
-### Global configuration
+## Global configuration
 
 When applying the interceptor, you can customize some properties:
 
@@ -178,7 +188,7 @@ const axios = createCache({
 });
 ```
 
-#### storage
+### storage
 
 The storage used to save the cache. Here will probably be the most changed property. Defaults to
 [MemoryStorage](src/storage/memory.ts).
@@ -188,33 +198,34 @@ You can create your own implementation by implementing [CacheStorage](src/storag
 There are few built in storage implementations, you can use them by importing:
 
 ```js
-import { /* ... */ } from 'axios-cache-interceptor/dist/storage/{name}';
+import /* ... */ 'axios-cache-interceptor/dist/storage/{name}';
 ```
 
 - [MemoryStorage](src/storage/memory.ts) `import 'axios-cache-interceptor/dist/storage/memory';`
-- [Session and Local Storage](src/storage/web.ts) `import 'axios-cache-interceptor/dist/storage/web';`
+- [Session and Local Storage](src/storage/web.ts)
+  `import 'axios-cache-interceptor/dist/storage/web';`
 - _Maybe your own?_ (PR's are welcome)
 
-#### generateKey
+### generateKey
 
 The function used to create different keys for each request. Defaults to a function that priorizes
 the id, and if not specified, a string is generated using the method, baseUrl, params, and url.
 
-#### waiting
+### waiting
 
 A simple object that will hold a promise for each pending request. Used to handle concurrent
 requests.
 
 Can also be used as type of _listener_ to know when a request is finished.
 
-#### headerInterpreter
+### headerInterpreter
 
 The function used to interpret all headers from a request and determine a time to live (`ttl`)
 number.
 
 Check out the [inline documentation](src/header/types.ts) to know how to modify your own.
 
-#### requestInterceptor and responseInterceptor
+### requestInterceptor and responseInterceptor
 
 The used request and response interceptor. Basically the core function of this library. Check out
 the used [request](src/interceptors/request.ts) and [response](src/interceptors/response.ts) to see
@@ -222,34 +233,34 @@ the default used.
 
 <br />
 
-### Per-request configuration
+## Per-request configuration
 
 By using this axios client and using an ide with intellisense, you'll see a custom property called
 `cache`.
 
 The inline documentation is self explanatory, but here are some examples and information:
 
-#### ttl
+### ttl
 
 The time that the request will remain in cache. Some custom storage implementations may not respect
 100% the time.
 
 When using `interpretHeader`, this value is ignored.
 
-#### interpretHeader
+### interpretHeader
 
 If activated, when the response is received, the `ttl` property will be inferred from the requests
 headers. See the actual implementation of the [`interpretHeader`](src/header/interpreter.ts) method
 for more information. You can override the default behavior by setting the `headerInterpreter` when
 creating the cached axios client.
 
-#### methods
+### methods
 
 Specify what request methods should be cached.
 
 Defaults to only `GET` methods.
 
-#### cachePredicate
+### cachePredicate
 
 An object or function that will be tested against the response to test if it can be cached. See the
 [inline documentation](src/util/cache-predicate.ts) for more.
@@ -280,7 +291,7 @@ axios.get('url', {
 });
 ```
 
-#### update
+### update
 
 Once the request is resolved, this specifies what other responses should change their cache. Can be
 used to update the request or delete other caches. It is a simple `Record` with the request id.
@@ -310,7 +321,7 @@ axios.get('url', {
 
 <br />
 
-### Inspiration
+## Inspiration
 
 This project is highly inspired by several projects, written entirely in typescript, supporting
 https headers and much more.
@@ -323,13 +334,13 @@ Take a look at some similar projects:
 
 <br />
 
-### License
+## License
 
 Licensed under the **MIT**. See [`LICENSE`](LICENSE) for more informations.
 
 <br />
 
-### Contact
+## Contact
 
 See my contact information on my [github profile](https://github.com/ArthurFiorette) or open a new
 issue.
