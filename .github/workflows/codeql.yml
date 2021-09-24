@@ -3,6 +3,7 @@ name: 'CodeQL'
 on:
   push:
     branches: [main]
+    paths: ['**.js', '**.jsx', '**.ts', '**.tsx']
   pull_request:
     branches: [main]
   schedule:
