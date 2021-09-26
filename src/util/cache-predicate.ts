@@ -22,7 +22,9 @@ export function checkPredicateObject(
   }
 
   if (containsHeader) {
-    for (const [headerName, value] of Object.entries(containsHeader)) {
+    for (const headerName in containsHeader) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const value = containsHeader[headerName]!;
       const header = response.headers[headerName];
 
       // At any case, if the header is not found, the predicate fails.

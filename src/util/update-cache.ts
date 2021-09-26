@@ -5,7 +5,10 @@ export async function updateCache(
   data: any,
   entries: Record<string, CacheUpdater>
 ): Promise<void> {
-  for (const [cacheKey, value] of Object.entries(entries)) {
+  for (const cacheKey in entries) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const value = entries[cacheKey]!;
+
     if (value == 'delete') {
       await axios.storage.remove(cacheKey);
       continue;
