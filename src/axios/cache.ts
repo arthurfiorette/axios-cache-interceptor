@@ -4,7 +4,7 @@ import { CacheRequestInterceptor } from '../interceptors/request';
 import { CacheResponseInterceptor } from '../interceptors/response';
 import { MemoryStorage } from '../storage/memory';
 import { defaultKeyGenerator } from '../util/key-generator';
-import CacheInstance, { AxiosCacheInstance, CacheProperties } from './types';
+import type { AxiosCacheInstance, CacheInstance, CacheProperties } from './types';
 
 /**
  * Apply the caching interceptors for a already created axios instance.

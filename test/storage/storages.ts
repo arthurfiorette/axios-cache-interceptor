@@ -1,4 +1,4 @@
-import { CacheStorage } from '../../src/storage/types';
+import type { CacheStorage } from '../../src/storage/types';
 
 export function testStorage(name: string, Storage: () => CacheStorage) {
   it(`tests ${name} storage methods`, async () => {

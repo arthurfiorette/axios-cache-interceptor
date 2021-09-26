@@ -1,21 +1,4 @@
-// /**
-//    * The status predicate, if a tuple is returned,
-//    * the first and seconds value means the interval (inclusive) accepted.
-//    * Can also be a function.
-//    */
-//  statusCheck?: [start: number, end: number] | ((status: number) => boolean);
-
-//  /**
-//   * Matches if the response header container all keys. A tuple also checks for values.
-//   */
-//  containsHeaders?: (string | [string, string])[];
-
-//  /**
-//   * Check if the desired response matches this predicate.
-//   */
-//  responseMatch?: <T = any>(res: T | undefined) => boolean;
-
-import { AxiosResponse } from 'axios';
+import type { AxiosResponse } from 'axios';
 import { checkPredicateObject } from '../../src/util/cache-predicate';
 
 const Response = (config: Partial<AxiosResponse>): AxiosResponse => {

@@ -1,4 +1,4 @@
-import { CacheStorage, StorageValue } from './types';
+import type { CacheStorage, StorageValue } from './types';
 
 export class MemoryStorage implements CacheStorage {
   private readonly storage: Map<string, StorageValue> = new Map();

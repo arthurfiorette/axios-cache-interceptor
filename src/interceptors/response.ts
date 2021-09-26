@@ -1,14 +1,14 @@
-import { AxiosResponse } from 'axios';
-import {
+import type { AxiosResponse } from 'axios';
+import type {
   AxiosCacheInstance,
   CacheAxiosResponse,
   CacheProperties,
   CacheRequestConfig
 } from '../axios/types';
-import { CachedStorageValue } from '../storage/types';
+import type { CachedStorageValue } from '../storage/types';
 import { checkPredicateObject } from '../util/cache-predicate';
 import { updateCache } from '../util/update-cache';
-import { AxiosInterceptor } from './types';
+import type { AxiosInterceptor } from './types';
 
 type CacheConfig = CacheRequestConfig & { cache?: Partial<CacheProperties> };
 

@@ -1,4 +1,4 @@
-import { AxiosCacheInstance, CacheUpdater } from '../axios/types';
+import type { AxiosCacheInstance, CacheUpdater } from '../axios/types';
 
 export async function updateCache(
   axios: AxiosCacheInstance,

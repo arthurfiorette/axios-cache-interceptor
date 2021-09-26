@@ -1,5 +1,5 @@
 import { AxiosCacheInstance, CacheProperties, createCache } from '../../src';
-import CacheInstance from '../../src/axios/types';
+import type { CacheInstance } from '../../src/axios/types';
 
 export const axiosMock = {
   statusCode: 200,

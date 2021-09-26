@@ -1,5 +1,5 @@
 import { parse } from '@tusbar/cache-control';
-import { HeaderInterpreter } from './types';
+import type { HeaderInterpreter } from './types';
 
 export const defaultHeaderInterpreter: HeaderInterpreter = (headers) => {
   const cacheControl = headers?.['cache-control'];

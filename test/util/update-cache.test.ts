@@ -1,4 +1,4 @@
-import { AxiosCacheInstance, CachedStorageValue } from '../../src';
+import type { AxiosCacheInstance, CachedStorageValue } from '../../src';
 import { updateCache } from '../../src/util/update-cache';
 import { mockAxios } from '../mocks/axios';
 

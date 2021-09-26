@@ -1,12 +1,12 @@
-import { AxiosCacheInstance, CacheRequestConfig } from '../axios/types';
-import {
+import type { AxiosCacheInstance, CacheRequestConfig } from '../axios/types';
+import type {
   CachedResponse,
   CachedStorageValue,
   LoadingStorageValue
 } from '../storage/types';
 import { deferred } from '../util/deferred';
 import { CACHED_STATUS_CODE, CACHED_STATUS_TEXT } from '../util/status-codes';
-import { AxiosInterceptor } from './types';
+import type { AxiosInterceptor } from './types';
 
 export class CacheRequestInterceptor implements AxiosInterceptor<CacheRequestConfig> {
   constructor(readonly axios: AxiosCacheInstance) {}

@@ -6,16 +6,16 @@ import type {
   AxiosResponse,
   Method
 } from 'axios';
-import { HeaderInterpreter } from '../header/types';
-import { AxiosInterceptor } from '../interceptors/types';
-import {
+import type { HeaderInterpreter } from '../header/types';
+import type { AxiosInterceptor } from '../interceptors/types';
+import type {
   CachedResponse,
   CachedStorageValue,
   CacheStorage,
   EmptyStorageValue
 } from '../storage/types';
-import { Deferred } from '../util/deferred';
-import { CachePredicate, KeyGenerator } from '../util/types';
+import type { Deferred } from '../util/deferred';
+import type { CachePredicate, KeyGenerator } from '../util/types';
 
 export type CacheUpdater =
   | 'delete'
@@ -111,7 +111,7 @@ export type CacheRequestConfig = AxiosRequestConfig & {
   cache?: false | Partial<CacheProperties>;
 };
 
-export default interface CacheInstance {
+export interface CacheInstance {
   /**
    * The storage to save the cache data.
    *

@@ -1,4 +1,4 @@
-import { CacheStorage, StorageValue } from './types';
+import type { CacheStorage, StorageValue } from './types';
 /**
  * A storage that uses any {@link Storage} as his storage.
  */

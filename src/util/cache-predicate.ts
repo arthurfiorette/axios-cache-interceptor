@@ -1,5 +1,5 @@
-import { AxiosResponse } from 'axios';
-import { CachePredicateObject } from './types';
+import type { AxiosResponse } from 'axios';
+import type { CachePredicateObject } from './types';
 
 export function checkPredicateObject(
   response: AxiosResponse,

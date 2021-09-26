@@ -1,4 +1,4 @@
-import { KeyGenerator } from './types';
+import type { KeyGenerator } from './types';
 
 // Remove first and last '/' char, if present
 // https://regex101.com/r/ENqrFy/1
