@@ -23,7 +23,7 @@ export function applyCache(
     requestInterceptor,
     responseInterceptor,
     ...cacheOptions
-  }: Partial<CacheInstance> & Partial<CacheProperties> = {}
+  }: CreateCacheOptions['cache'] = {}
 ): AxiosCacheInstance {
   const axiosCache = axios as AxiosCacheInstance;
 
@@ -52,8 +52,8 @@ export function applyCache(
   };
 
   // Apply interceptors
-  axiosCache.requestInterceptor.apply();
-  axiosCache.responseInterceptor.apply();
+  axiosCache.requestInterceptor.use();
+  axiosCache.responseInterceptor.use();
 
   return axiosCache;
 }
@@ -65,8 +65,8 @@ export function applyCache(
  * @returns A new AxiosCacheInstance with caching enabled
  */
 export function createCache({
-  axios = {},
-  cache = {}
+  axios,
+  cache
 }: CreateCacheOptions = {}): AxiosCacheInstance {
   return applyCache(Axios.create(axios), cache);
 }

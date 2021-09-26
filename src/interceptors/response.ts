@@ -15,7 +15,7 @@ type CacheConfig = CacheRequestConfig & { cache?: Partial<CacheProperties> };
 export class CacheResponseInterceptor implements AxiosInterceptor<CacheAxiosResponse> {
   constructor(readonly axios: AxiosCacheInstance) {}
 
-  apply = (): void => {
+  use = (): void => {
     this.axios.interceptors.response.use(this.onFulfilled);
   };
 

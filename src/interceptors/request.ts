@@ -11,7 +11,7 @@ import { AxiosInterceptor } from './types';
 export class CacheRequestInterceptor implements AxiosInterceptor<CacheRequestConfig> {
   constructor(readonly axios: AxiosCacheInstance) {}
 
-  apply = (): void => {
+  use = (): void => {
     this.axios.interceptors.request.use(this.onFulfilled);
   };
 

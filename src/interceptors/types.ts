@@ -5,5 +5,5 @@ export interface AxiosInterceptor<T> {
   /**
    * Should apply this interceptor to an already provided axios instance
    */
-  apply(): void;
+  use(): void;
 }
