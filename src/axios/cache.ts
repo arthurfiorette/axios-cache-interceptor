@@ -61,13 +61,17 @@ export function applyCache(
 /**
  * Returns a new axios instance with caching enabled.
  *
- * @param config The config for the caching interceptors
- * @param axiosConfig The config for the created axios instance
- * @returns The same instance but with caching enabled
+ * @param config The config for the caching interceptors and the axios instance
+ * @returns A new AxiosCacheInstance with caching enabled
  */
-export function createCache(
-  config: Partial<CacheInstance> & Partial<CacheProperties> = {},
-  axiosConfig: AxiosRequestConfig = {}
-): AxiosCacheInstance {
-  return applyCache(Axios.create(axiosConfig), config);
+export function createCache({
+  axios = {},
+  cache = {}
+}: CreateCacheOptions = {}): AxiosCacheInstance {
+  return applyCache(Axios.create(axios), cache);
 }
+
+export type CreateCacheOptions = {
+  axios?: Partial<AxiosRequestConfig>;
+  cache?: Partial<CacheInstance> & Partial<CacheProperties>;
+};

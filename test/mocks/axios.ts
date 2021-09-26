@@ -11,8 +11,7 @@ export function mockAxios(
   headers: Record<string, string> = {}
 ): AxiosCacheInstance {
   const axios = createCache({
-    // Defaults to cache every request
-    ...options
+    cache: options
   });
 
   // Axios interceptors are a stack, so apply this after the cache interceptor
