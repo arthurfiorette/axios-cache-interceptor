@@ -53,8 +53,8 @@ export class CacheRequestInterceptor implements AxiosInterceptor<CacheRequestCon
       this.axios.waiting[key] = deferred();
 
       /**
-       * Add a default reject handler to detect when the request is
-       * aborted without others waiting
+       * Add a default reject handler to catch when the request is
+       * aborted without others waiting for it.
        */
       this.axios.waiting[key]?.catch(() => {});
 

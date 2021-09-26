@@ -47,10 +47,8 @@ export function checkPredicateObject(
     }
   }
 
-  if (responseMatch) {
-    if (!responseMatch(response.data)) {
-      return false;
-    }
+  if (responseMatch && !responseMatch(response.data)) {
+    return false;
   }
 
   return true;
