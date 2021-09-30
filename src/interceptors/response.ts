@@ -97,6 +97,7 @@ export class CacheResponseInterceptor implements AxiosInterceptor<CacheAxiosResp
 
     // Resolve all other requests waiting for this response
     await deferred?.resolve(newCache.data);
+    delete this.axios.waiting[key];
 
     await this.axios.storage.set(key, newCache);
 
