@@ -98,6 +98,19 @@ yarn add axios axios-cache-interceptor
 
 <br />
 
+## Support list
+
+Below you can check what version of this package is supported by your version of axios.
+
+> **NOTE**: Below v2.9, axios was not configured as a peer dependency
+
+| [Version](https://github.com/ArthurFiorette/axios-cache-interceptor/releases) | [Axios](https://github.com/axios/axios/releases) | Supported          |
+| ----------------------------------------------------------------------------- | ------------------------------------------------ | ------------------ |
+| `v2.9`                                                                        | `>= v0.22`                                       | :white_check_mark: |
+| `<= v2.8`                                                                     | `v0.21`                                          | :x:                |
+
+<br />
+
 ## Getting Started
 
 To you use this cache interceptor, you can apply to an existing instance or create a new

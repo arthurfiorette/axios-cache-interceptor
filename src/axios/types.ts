@@ -81,7 +81,7 @@ export type CacheProperties = {
   update: Record<string, CacheUpdater>;
 };
 
-export type CacheAxiosResponse<T = any> = AxiosResponse<T> & {
+export type CacheAxiosResponse<T = never> = AxiosResponse<T> & {
   config: CacheRequestConfig;
 
   /**
