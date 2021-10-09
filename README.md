@@ -104,10 +104,10 @@ Below you can check what version of this package is supported by your version of
 
 > **NOTE**: Below v2.9, axios was not configured as a peer dependency
 
-| [Version](https://github.com/ArthurFiorette/axios-cache-interceptor/releases) | [Axios](https://github.com/axios/axios/releases) | Supported          |
-| ----------------------------------------------------------------------------- | ------------------------------------------------ | ------------------ |
-| `v2.9`                                                                        | `>= v0.22`                                       | :white_check_mark: |
-| `<= v2.8`                                                                     | `v0.21`                                          | :x:                |
+| [Version](https://github.com/ArthurFiorette/axios-cache-interceptor/releases) | [Axios](https://github.com/axios/axios/releases) |
+| ----------------------------------------------------------------------------- | ------------------------------------------------ |
+| `v2.9`                                                                        | `>= v0.22`                                       |
+| `<= v2.8`                                                                     | `v0.21`                                          |
 
 <br />
 
