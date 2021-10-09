@@ -12,15 +12,17 @@ import type { AxiosInterceptor } from './types';
 
 type CacheConfig = CacheRequestConfig & { cache?: Partial<CacheProperties> };
 
-export class CacheResponseInterceptor implements AxiosInterceptor<CacheAxiosResponse> {
+export class CacheResponseInterceptor<R>
+  implements AxiosInterceptor<CacheAxiosResponse<R>>
+{
   constructor(readonly axios: AxiosCacheInstance) {}
 
   use = (): void => {
     this.axios.interceptors.response.use(this.onFulfilled);
   };
 
-  private testCachePredicate = (
-    response: AxiosResponse,
+  private testCachePredicate = <R>(
+    response: AxiosResponse<R>,
     { cache }: CacheConfig
   ): boolean => {
     const cachePredicate =
@@ -45,7 +47,9 @@ export class CacheResponseInterceptor implements AxiosInterceptor<CacheAxiosResp
     delete this.axios.waiting[key];
   };
 
-  onFulfilled = async (response: CacheAxiosResponse): Promise<CacheAxiosResponse> => {
+  onFulfilled = async (
+    response: CacheAxiosResponse<R>
+  ): Promise<CacheAxiosResponse<R>> => {
     const key = this.axios.generateKey(response.config);
     response.id = key;
 

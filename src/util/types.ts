@@ -3,7 +3,7 @@ import type { CacheRequestConfig } from '../axios/types';
 
 export type CachePredicate =
   | CachePredicateObject
-  | ((response: AxiosResponse) => boolean);
+  | (<R>(response: AxiosResponse<R>) => boolean);
 
 export type CachePredicateObject = {
   /**

@@ -1,12 +1,12 @@
 import type { AxiosResponse } from 'axios';
 import { checkPredicateObject } from '../../src/util/cache-predicate';
 
-const Response = (config: Partial<AxiosResponse>): AxiosResponse => {
+const Response = <R>(config: Partial<AxiosResponse<R>>): AxiosResponse<R> => {
   return {
     status: 200,
     headers: {},
     config: {},
-    data: {},
+    data: {} as R,
     statusText: '',
     request: {},
     ...config

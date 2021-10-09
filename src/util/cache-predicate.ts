@@ -1,8 +1,8 @@
 import type { AxiosResponse } from 'axios';
 import type { CachePredicateObject } from './types';
 
-export function checkPredicateObject(
-  response: AxiosResponse,
+export function checkPredicateObject<R>(
+  response: AxiosResponse<R>,
   { statusCheck, containsHeaders: containsHeader, responseMatch }: CachePredicateObject
 ): boolean {
   if (statusCheck) {

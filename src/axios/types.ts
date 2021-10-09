@@ -149,7 +149,7 @@ export interface CacheInstance {
   /**
    * The response interceptor that will be used to handle the cache.
    */
-  responseInterceptor: AxiosInterceptor<CacheAxiosResponse>;
+  responseInterceptor: AxiosInterceptor<CacheAxiosResponse<any>>;
 }
 
 /**
@@ -168,7 +168,7 @@ export interface AxiosCacheInstance extends AxiosInstance, CacheInstance {
 
   interceptors: {
     request: AxiosInterceptorManager<CacheRequestConfig>;
-    response: AxiosInterceptorManager<CacheAxiosResponse>;
+    response: AxiosInterceptorManager<CacheAxiosResponse<never>>;
   };
 
   getUri(config?: CacheRequestConfig): string;
