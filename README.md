@@ -84,6 +84,33 @@ const { data } = await cachedApi.get('https://api.example.com/');
 <br />
 <br />
 
+## Table of contents
+
+- [Table of contents](#table-of-contents)
+- [Installing](#installing)
+- [Support list](#support-list)
+- [Getting Started](#getting-started)
+- [What we support](#what-we-support)
+- [Basic Knowledge](#basic-knowledge)
+  - [Request id](#request-id)
+- [Global configuration](#global-configuration)
+  - [storage](#storage)
+  - [generateKey](#generatekey)
+  - [waiting](#waiting)
+  - [headerInterpreter](#headerinterpreter)
+  - [requestInterceptor and responseInterceptor](#requestinterceptor-and-responseinterceptor)
+- [Per-request configuration](#per-request-configuration)
+  - [ttl](#ttl)
+  - [interpretHeader](#interpretheader)
+  - [methods](#methods)
+  - [cachePredicate](#cachepredicate)
+  - [update](#update)
+- [Inspiration](#inspiration)
+- [License](#license)
+- [Contact](#contact)
+
+<br />
+
 ## Installing
 
 > Axios is a peer dependency and must be installed separately.
