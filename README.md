@@ -93,18 +93,22 @@ const { data } = await cachedApi.get('https://api.example.com/');
 - [What we support](#what-we-support)
 - [Basic Knowledge](#basic-knowledge)
   - [Request id](#request-id)
+  - [Response object](#response-object)
+    - [response.cached](#responsecached)
+    - [response.id](#responseid)
 - [Global configuration](#global-configuration)
-  - [storage](#storage)
-  - [generateKey](#generatekey)
-  - [waiting](#waiting)
-  - [headerInterpreter](#headerinterpreter)
-  - [requestInterceptor and responseInterceptor](#requestinterceptor-and-responseinterceptor)
+  - [config.storage](#configstorage)
+  - [config.generateKey](#configgeneratekey)
+  - [config.waiting](#configwaiting)
+  - [config.headerInterpreter](#configheaderinterpreter)
+  - [config.requestInterceptor and config.responseInterceptor](#configrequestinterceptor-and-configresponseinterceptor)
 - [Per-request configuration](#per-request-configuration)
-  - [ttl](#ttl)
-  - [interpretHeader](#interpretheader)
-  - [methods](#methods)
-  - [cachePredicate](#cachepredicate)
-  - [update](#update)
+  - [request.id](#requestid)
+  - [request.cache.ttl](#requestcachettl)
+  - [request.cache.interpretHeader](#requestcacheinterpretheader)
+  - [request.cache.methods](#requestcachemethods)
+  - [request.cache.cachePredicate](#requestcachecachepredicate)
+  - [request.cache.update](#requestcacheupdate)
 - [Inspiration](#inspiration)
 - [License](#license)
 - [Contact](#contact)
@@ -191,14 +195,6 @@ The id generation is good enough to generate the same id for theoretically sames
 The example of this is a request with `{ baseUrl: 'https://a.com/', url: '/b' }` results
 to the same id with `{ url: 'https://a.com/b/' }`.
 
-The id is retrieved with the response object.
-
-```js
-const result = await cache.get(/* ... */);
-
-const id = result.id; // <-- The id to find the cache and more;
-```
-
 Also, a custom id can be used to treat two requests as the same.
 
 ```js
@@ -212,6 +208,39 @@ axios.get('...', {
 
 The [default](src/util/key-generator.ts) id generation can clarify this idea.
 
+### Response object
+
+Every response that came from our custom axios instance, will have some extras properties,
+that you can retrieve like that:
+
+```js
+const result = await cache.get(/* ... */);
+const id = result['propertyName'];
+```
+
+/\*\*
+
+- The id used for this request. if config specified an id, the id
+- will be returned \*/ id: string;
+
+/\*\*
+
+- A simple boolean to check whether this request was cached or not \*/ cached: boolean;
+
+#### response.cached
+
+A simple boolean to check whether this request was cached or not.
+
+**NOTE**: The first response of a request capable of being cached will return
+`cached: false`, as only your next requests will return `cached: true`.
+
+#### response.id
+
+The [request id](#request-id) resolved. This property represents the ID used throughout
+the internal code. Remember that, depending on the
+[config.keyGenerator](#configgeneratekey), it can be different as the provided on the
+[request.id](#requestid).
+
 <br />
 
 ## Global configuration
@@ -224,7 +253,7 @@ const axios = createCache({
 });
 ```
 
-### storage
+### config.storage
 
 The storage used to save the cache. Here will probably be the most changed property.
 Defaults to [MemoryStorage](src/storage/memory.ts).
@@ -244,27 +273,27 @@ import /* ... */ 'axios-cache-interceptor/dist/storage/{name}';
   `import 'axios-cache-interceptor/dist/storage/web';`
 - _Maybe your own?_ (PR's are welcome)
 
-### generateKey
+### config.generateKey
 
 The function used to create different keys for each request. Defaults to a function that
 priorizes the id, and if not specified, a string is generated using the method, baseUrl,
 params, and url.
 
-### waiting
+### config.waiting
 
 A simple object that will hold a promise for each pending request. Used to handle
 concurrent requests.
 
 Can also be used as type of _listener_ to know when a request is finished.
 
-### headerInterpreter
+### config.headerInterpreter
 
 The function used to interpret all headers from a request and determine a time to live
 (`ttl`) number.
 
 Check out the [inline documentation](src/header/types.ts) to know how to modify your own.
 
-### requestInterceptor and responseInterceptor
+### config.requestInterceptor and config.responseInterceptor
 
 The used request and response interceptor. Basically the core function of this library.
 Check out the used [request](src/interceptors/request.ts) and
@@ -279,14 +308,18 @@ property called `cache`.
 
 The inline documentation is self explanatory, but here are some examples and information:
 
-### ttl
+### request.id
+
+You can override the request id used by this property.
+
+### request.cache.ttl
 
 The time that the request will remain in cache. Some custom storage implementations may
 not respect 100% the time.
 
 When using `interpretHeader`, this value is ignored.
 
-### interpretHeader
+### request.cache.interpretHeader
 
 If activated, when the response is received, the `ttl` property will be inferred from the
 requests headers. See the actual implementation of the
@@ -294,13 +327,13 @@ requests headers. See the actual implementation of the
 override the default behavior by setting the `headerInterpreter` when creating the cached
 axios client.
 
-### methods
+### request.cache.methods
 
 Specify what request methods should be cached.
 
 Defaults to only `GET` methods.
 
-### cachePredicate
+### request.cache.cachePredicate
 
 An object or function that will be tested against the response to test if it can be
 cached. See the [inline documentation](src/util/cache-predicate.ts) for more.
@@ -331,7 +364,7 @@ axios.get('url', {
 });
 ```
 
-### update
+### request.cache.update
 
 Once the request is resolved, this specifies what other responses should change their
 cache. Can be used to update the request or delete other caches. It is a simple `Record`
