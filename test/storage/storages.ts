@@ -1,6 +1,6 @@
 import type { CacheStorage } from '../../src/storage/types';
 
-export function testStorage(name: string, Storage: () => CacheStorage) {
+export function testStorage(name: string, Storage: () => CacheStorage): void {
   it(`tests ${name} storage methods`, async () => {
     const storage = Storage();
 

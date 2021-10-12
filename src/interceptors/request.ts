@@ -56,7 +56,7 @@ export class CacheRequestInterceptor implements AxiosInterceptor<CacheRequestCon
        * Add a default reject handler to catch when the request is
        * aborted without others waiting for it.
        */
-      this.axios.waiting[key]?.catch(() => {});
+      this.axios.waiting[key]?.catch(() => undefined);
 
       await this.axios.storage.set(key, {
         state: 'loading',
