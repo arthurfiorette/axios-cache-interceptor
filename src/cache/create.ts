@@ -4,7 +4,8 @@ import { CacheRequestInterceptor } from '../interceptors/request';
 import { CacheResponseInterceptor } from '../interceptors/response';
 import { MemoryStorage } from '../storage/memory';
 import { defaultKeyGenerator } from '../util/key-generator';
-import type { AxiosCacheInstance, CacheInstance, CacheProperties } from './types';
+import type { AxiosCacheInstance } from './axios';
+import type { CacheInstance, CacheProperties } from './cache';
 
 /**
  * Apply the caching interceptors for a already created axios instance.
@@ -13,7 +14,7 @@ import type { AxiosCacheInstance, CacheInstance, CacheProperties } from './types
  * @param config The config for the caching interceptors
  * @returns The same instance but with caching enabled
  */
-export function applyCache(
+export function useCache(
   axios: AxiosInstance,
   {
     storage,
@@ -23,7 +24,7 @@ export function applyCache(
     requestInterceptor,
     responseInterceptor,
     ...cacheOptions
-  }: CreateCacheOptions['cache'] = {}
+  }: CacheOptions = {}
 ): AxiosCacheInstance {
   const axiosCache = axios as AxiosCacheInstance;
 
@@ -68,10 +69,12 @@ export function createCache({
   axios,
   cache
 }: CreateCacheOptions = {}): AxiosCacheInstance {
-  return applyCache(Axios.create(axios), cache);
+  return useCache(Axios.create(axios), cache);
 }
+
+export type CacheOptions = Partial<CacheInstance> & Partial<CacheProperties>;
 
 export type CreateCacheOptions = {
   axios?: Partial<AxiosRequestConfig>;
-  cache?: Partial<CacheInstance> & Partial<CacheProperties>;
+  cache?: CacheOptions;
 };

@@ -3,7 +3,7 @@ import type {
   AxiosCacheInstance,
   CacheAxiosResponse,
   CacheRequestConfig
-} from '../axios/types';
+} from '../cache/axios';
 import type {
   CachedResponse,
   CachedStorageValue,

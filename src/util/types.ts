@@ -1,5 +1,5 @@
 import type { AxiosResponse } from 'axios';
-import type { CacheRequestConfig } from '../axios/types';
+import type { CacheRequestConfig } from '../cache/axios';
 
 export type CachePredicate =
   | CachePredicateObject

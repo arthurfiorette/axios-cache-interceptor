@@ -1,5 +1,5 @@
 import { AxiosCacheInstance, CacheProperties, createCache } from '../../src';
-import type { CacheInstance } from '../../src/axios/types';
+import type { CacheInstance } from '../../src/cache/cache';
 
 export function mockAxios(
   options: Partial<CacheInstance> & Partial<CacheProperties> = {},

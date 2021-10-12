@@ -151,13 +151,13 @@ To you use this cache interceptor, you can apply to an existing instance or crea
 one.
 
 ```js
-import { applyCache } from 'axios-cache-interceptor';
+import { useCache } from 'axios-cache-interceptor';
 
 // Your axios instance
 let axios;
 
 // Return the same axios instance, but with a modified Typescript type.
-axios = applyCache(axios, {
+axios = useCache(axios, {
   /* options here */
 });
 ```
