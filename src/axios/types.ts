@@ -171,44 +171,44 @@ export interface AxiosCacheInstance extends CacheInstance {
   getUri<T>(config?: CacheRequestConfig<T>): string;
 
   request<R = unknown, D = any>(
-    config: AxiosRequestConfig<D>
-  ): Promise<CacheRequestConfig<R>>;
+    config: CacheRequestConfig<D>
+  ): Promise<CacheAxiosResponse<R, D>>;
 
   get<R = unknown, D = any>(
     url: string,
-    config?: AxiosRequestConfig<D>
-  ): Promise<CacheRequestConfig<R>>;
+    config?: CacheRequestConfig<D>
+  ): Promise<CacheAxiosResponse<R, D>>;
 
   delete<R = unknown, D = any>(
     url: string,
-    config?: AxiosRequestConfig<D>
-  ): Promise<CacheRequestConfig<R>>;
+    config?: CacheRequestConfig<D>
+  ): Promise<CacheAxiosResponse<R, D>>;
 
   head<R = unknown, D = any>(
     url: string,
-    config?: AxiosRequestConfig<D>
-  ): Promise<CacheRequestConfig<R>>;
+    config?: CacheRequestConfig<D>
+  ): Promise<CacheAxiosResponse<R, D>>;
 
   options<R = unknown, D = any>(
     url: string,
-    config?: AxiosRequestConfig<D>
-  ): Promise<CacheRequestConfig<R>>;
+    config?: CacheRequestConfig<D>
+  ): Promise<CacheAxiosResponse<R, D>>;
 
   post<R = unknown, D = any>(
     url: string,
     data?: D,
-    config?: AxiosRequestConfig<D>
-  ): Promise<CacheRequestConfig<R>>;
+    config?: CacheRequestConfig<D>
+  ): Promise<CacheAxiosResponse<R, D>>;
 
   put<R = unknown, D = any>(
     url: string,
     data?: D,
-    config?: AxiosRequestConfig<D>
-  ): Promise<CacheRequestConfig<R>>;
+    config?: CacheRequestConfig<D>
+  ): Promise<CacheAxiosResponse<R, D>>;
 
   patch<R = unknown, D = any>(
     url: string,
     data?: D,
-    config?: AxiosRequestConfig<D>
-  ): Promise<CacheRequestConfig<R>>;
+    config?: CacheRequestConfig<D>
+  ): Promise<CacheAxiosResponse<R, D>>;
 }
