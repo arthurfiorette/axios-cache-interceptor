@@ -63,22 +63,19 @@ Axios Cache Interceptor</h1>
 
 ```ts
 import axios from 'axios';
-import { createCache, SessionCacheStorage } from 'axios-cache-interceptor';
+import { useCache, SessionCacheStorage } from 'axios-cache-interceptor';
 
-// Any custom axios instance
-const api = axios.create();
-
-// Other axios instance with caching enabled
-const cachedApi = createCache(api, {
-  // Store values on window.sessionStorage
-  storage: new SessionCacheStorage(),
-
-  // Use the max-age header to determine the cache expiration time
-  interpretHeader: true
+// An axios instance with modified types
+const api = useCache(axios.create(), {
+  /* options */
 });
 
 // Make a simple request, with caching support, to the api
-const { data } = await cachedApi.get('https://api.example.com/');
+const resp1 = await api.get('https://api.example.com/');
+// resp1.cached = false
+
+const resp2 = await api.get('https://api.example.com/');
+// resp2.cached = true
 ```
 
 <br />
@@ -178,7 +175,7 @@ After that, you can made your own requests normally.
 
 ## What we support
 
-- [x] Cache concurrent requests
+- [x] Concurrent requests
 - [x] Typescript support
 - [x] Unit tests
 - [x] Header interpretation
