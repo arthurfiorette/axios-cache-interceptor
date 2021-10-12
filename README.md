@@ -218,15 +218,6 @@ const result = await cache.get(/* ... */);
 const id = result['propertyName'];
 ```
 
-/\*\*
-
-- The id used for this request. if config specified an id, the id
-- will be returned \*/ id: string;
-
-/\*\*
-
-- A simple boolean to check whether this request was cached or not \*/ cached: boolean;
-
 #### response.cached
 
 A simple boolean to check whether this request was cached or not.
