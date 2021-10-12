@@ -1,8 +1,9 @@
-import type { AxiosCacheInstance, CacheUpdater } from '../axios/types';
+import type { CacheUpdater } from '../axios/types';
+import type { CacheStorage } from '../storage/types';
 
-export async function updateCache(
-  axios: AxiosCacheInstance,
-  data: any,
+export async function updateCache<T = any>(
+  storage: CacheStorage,
+  data: T,
   entries: Record<string, CacheUpdater>
 ): Promise<void> {
   for (const cacheKey in entries) {
@@ -10,11 +11,11 @@ export async function updateCache(
     const value = entries[cacheKey]!;
 
     if (value == 'delete') {
-      await axios.storage.remove(cacheKey);
+      await storage.remove(cacheKey);
       continue;
     }
 
-    const oldValue = await axios.storage.get(cacheKey);
+    const oldValue = await storage.get(cacheKey);
 
     if (oldValue.state === 'loading') {
       throw new Error('cannot update the cache while loading');
@@ -23,10 +24,10 @@ export async function updateCache(
     const newValue = value(oldValue, data);
 
     if (newValue === undefined) {
-      await axios.storage.remove(cacheKey);
+      await storage.remove(cacheKey);
       continue;
     }
 
-    await axios.storage.set(cacheKey, newValue);
+    await storage.set(cacheKey, newValue);
   }
 }

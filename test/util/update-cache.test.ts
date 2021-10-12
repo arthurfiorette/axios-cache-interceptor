@@ -21,7 +21,7 @@ describe('Tests update-cache', () => {
   });
 
   it('tests for delete key', async () => {
-    await updateCache(axios, DEFAULT_DATA, {
+    await updateCache(axios.storage, DEFAULT_DATA, {
       [KEY]: 'delete'
     });
 
@@ -32,7 +32,7 @@ describe('Tests update-cache', () => {
   });
 
   it('tests for returning undefined', async () => {
-    await updateCache(axios, DEFAULT_DATA, {
+    await updateCache(axios.storage, DEFAULT_DATA, {
       [KEY]: () => undefined
     });
 
@@ -43,7 +43,7 @@ describe('Tests update-cache', () => {
   });
 
   it('tests for returning an new value', async () => {
-    await updateCache(axios, DEFAULT_DATA, {
+    await updateCache(axios.storage, DEFAULT_DATA, {
       [KEY]: (cached, newData) => ({
         state: 'cached',
         ttl: Infinity,
@@ -64,7 +64,7 @@ describe('Tests update-cache', () => {
   it('check if the state is loading while updating', async () => {
     axios.storage.set(KEY, { state: 'loading' });
 
-    const result = updateCache(axios, DEFAULT_DATA, {
+    const result = updateCache(axios.storage, DEFAULT_DATA, {
       [KEY]: (cached, newData) => ({
         state: 'cached',
         ttl: Infinity,

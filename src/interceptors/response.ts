@@ -94,7 +94,7 @@ export class CacheResponseInterceptor<R>
 
     // Update other entries before updating himself
     if (response.config.cache?.update) {
-      updateCache(this.axios, response.data, response.config.cache.update);
+      updateCache(this.axios.storage, response.data, response.config.cache.update);
     }
 
     const deferred = this.axios.waiting[key];
