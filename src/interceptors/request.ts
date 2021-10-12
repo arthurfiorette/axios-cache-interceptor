@@ -11,8 +11,8 @@ import type {
 } from '../storage/types';
 import type { AxiosInterceptor } from './types';
 
-export class CacheRequestInterceptor<R>
-  implements AxiosInterceptor<CacheRequestConfig<R>>
+export class CacheRequestInterceptor<D>
+  implements AxiosInterceptor<CacheRequestConfig<D>>
 {
   constructor(readonly axios: AxiosCacheInstance) {}
 
@@ -20,7 +20,7 @@ export class CacheRequestInterceptor<R>
     this.axios.interceptors.request.use(this.onFulfilled);
   };
 
-  onFulfilled = async (config: CacheRequestConfig<R>): Promise<CacheRequestConfig<R>> => {
+  onFulfilled = async (config: CacheRequestConfig<D>): Promise<CacheRequestConfig<D>> => {
     // Skip cache
     if (config.cache === false) {
       return config;
@@ -100,7 +100,7 @@ export class CacheRequestInterceptor<R>
        * Even though the response interceptor receives this one from
        * here, it has been configured to ignore cached responses: true
        */
-      Promise.resolve<CacheAxiosResponse<R>>({
+      Promise.resolve<CacheAxiosResponse<unknown, D>>({
         config: config,
         data: cachedResponse.data,
         headers: cachedResponse.headers,

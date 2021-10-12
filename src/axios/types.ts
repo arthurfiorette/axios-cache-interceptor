@@ -1,5 +1,5 @@
 import type {
-  AxiosInstance,
+  AxiosDefaults,
   AxiosInterceptorManager,
   AxiosPromise,
   AxiosRequestConfig,
@@ -9,24 +9,9 @@ import type {
 import type { Deferred } from 'typed-core/dist/promises/deferred';
 import type { HeaderInterpreter } from '../header/types';
 import type { AxiosInterceptor } from '../interceptors/types';
-import type {
-  CachedResponse,
-  CachedStorageValue,
-  CacheStorage,
-  EmptyStorageValue
-} from '../storage/types';
+import type { CachedResponse, CacheStorage } from '../storage/types';
 import type { CachePredicate, KeyGenerator } from '../util/types';
-
-export type CacheUpdater =
-  | 'delete'
-  | ((
-      cached: EmptyStorageValue | CachedStorageValue,
-      newData: any
-    ) => CachedStorageValue | void);
-
-export type DefaultCacheRequestConfig = AxiosRequestConfig & {
-  cache: CacheProperties;
-};
+import type { CacheUpdater } from '../util/update-cache';
 
 export type CacheProperties = {
   /**
@@ -81,11 +66,11 @@ export type CacheProperties = {
 };
 
 /**
- * @template T The data type that this responses use. Also the same
- *   generic type as it's request
+ * @template R The type returned by this response
+ * @template D The type that the request body was
  */
-export type CacheAxiosResponse<T> = AxiosResponse<T> & {
-  config: CacheRequestConfig<T>;
+export type CacheAxiosResponse<R, D> = AxiosResponse<R, D> & {
+  config: CacheRequestConfig<D>;
 
   /**
    * The id used for this request. if config specified an id, the id
@@ -102,9 +87,9 @@ export type CacheAxiosResponse<T> = AxiosResponse<T> & {
 /**
  * Options that can be overridden per request
  *
- * @template T The data that this request should return
+ * @template D The type for the request body
  */
-export type CacheRequestConfig<T> = AxiosRequestConfig<T> & {
+export type CacheRequestConfig<D> = AxiosRequestConfig<D> & {
   /**
    * An id for this request, if this request is used in cache, only
    * the last request made with this id will be returned.
@@ -159,61 +144,71 @@ export interface CacheInstance {
   /**
    * The response interceptor that will be used to handle the cache.
    */
-  responseInterceptor: AxiosInterceptor<CacheAxiosResponse<any>>;
+  responseInterceptor: AxiosInterceptor<CacheAxiosResponse<unknown, any>>;
 }
 
 /**
  * Same as the AxiosInstance but with CacheRequestConfig as a config
  * type and CacheAxiosResponse as response type.
  *
- * @see AxiosInstance
+ * @see Axios
  * @see CacheRequestConfig
  * @see CacheInstance
  */
-export interface AxiosCacheInstance extends AxiosInstance, CacheInstance {
+export interface AxiosCacheInstance extends CacheInstance {
   <T>(config: CacheRequestConfig<T>): AxiosPromise;
   <T>(url: string, config?: CacheRequestConfig<T>): AxiosPromise;
 
-  defaults: DefaultCacheRequestConfig;
+  defaults: AxiosDefaults<any> & {
+    cache: CacheProperties;
+  };
 
   interceptors: {
     request: AxiosInterceptorManager<CacheRequestConfig<any>>;
-    response: AxiosInterceptorManager<CacheAxiosResponse<never>>;
+    response: AxiosInterceptorManager<CacheAxiosResponse<never, any>>;
   };
 
   getUri<T>(config?: CacheRequestConfig<T>): string;
 
-  request<T = any, R = CacheAxiosResponse<T>>(config: CacheRequestConfig<T>): Promise<R>;
+  request<R = unknown, D = any>(
+    config: AxiosRequestConfig<D>
+  ): Promise<CacheRequestConfig<R>>;
 
-  get<T = any, R = CacheAxiosResponse<T>>(
+  get<R = unknown, D = any>(
     url: string,
-    config?: CacheRequestConfig<T>
-  ): Promise<R>;
-  delete<T = any, R = CacheAxiosResponse<T>>(
+    config?: AxiosRequestConfig<D>
+  ): Promise<CacheRequestConfig<R>>;
+
+  delete<R = unknown, D = any>(
     url: string,
-    config?: CacheRequestConfig<T>
-  ): Promise<R>;
-  head<T = any, R = CacheAxiosResponse<T>>(
+    config?: AxiosRequestConfig<D>
+  ): Promise<CacheRequestConfig<R>>;
+
+  head<R = unknown, D = any>(
     url: string,
-    config?: CacheRequestConfig<T>
-  ): Promise<R>;
-  options<T = any, R = CacheAxiosResponse<T>>(
+    config?: AxiosRequestConfig<D>
+  ): Promise<CacheRequestConfig<R>>;
+
+  options<R = unknown, D = any>(
     url: string,
-    config?: CacheRequestConfig<T>
-  ): Promise<R>;
-  post<T = any, R = CacheAxiosResponse<T>>(
+    config?: AxiosRequestConfig<D>
+  ): Promise<CacheRequestConfig<R>>;
+
+  post<R = unknown, D = any>(
     url: string,
-    data?: any,
-    config?: CacheRequestConfig<T>
-  ): Promise<R>;
-  put<T = any, R = CacheAxiosResponse<T>>(
+    data?: D,
+    config?: AxiosRequestConfig<D>
+  ): Promise<CacheRequestConfig<R>>;
+
+  put<R = unknown, D = any>(
     url: string,
-    data?: any,
-    config?: CacheRequestConfig<T>
-  ): Promise<R>;
-  patch<T = any, R = CacheAxiosResponse<T>>(
+    data?: D,
+    config?: AxiosRequestConfig<D>
+  ): Promise<CacheRequestConfig<R>>;
+
+  patch<R = unknown, D = any>(
     url: string,
-    data?: any,
-    config?: CacheRequestConfig<T>
-  ): Promise<R>;
+    data?: D,
+    config?: AxiosRequestConfig<D>
+  ): Promise<CacheRequestConfig<R>>;
 }

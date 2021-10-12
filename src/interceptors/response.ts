@@ -10,8 +10,8 @@ import { checkPredicateObject } from '../util/cache-predicate';
 import { updateCache } from '../util/update-cache';
 import type { AxiosInterceptor } from './types';
 
-export class CacheResponseInterceptor<R>
-  implements AxiosInterceptor<CacheAxiosResponse<R>>
+export class CacheResponseInterceptor<R, D>
+  implements AxiosInterceptor<CacheAxiosResponse<R, D>>
 {
   constructor(readonly axios: AxiosCacheInstance) {}
 
@@ -46,15 +46,15 @@ export class CacheResponseInterceptor<R>
   };
 
   onFulfilled = async (
-    axiosResponse: AxiosResponse<R>
-  ): Promise<CacheAxiosResponse<R>> => {
+    axiosResponse: AxiosResponse<R, D>
+  ): Promise<CacheAxiosResponse<R, D>> => {
     const key = this.axios.generateKey(axiosResponse.config);
 
-    const response: CacheAxiosResponse<R> = {
+    const response: CacheAxiosResponse<R, D> = {
       id: key,
       // When the request interceptor override the request adapter, it means
       // that the response.cached will be true and therefore, the request was cached.
-      cached: (axiosResponse as CacheAxiosResponse<R>).cached || false,
+      cached: (axiosResponse as CacheAxiosResponse<R, D>).cached || false,
       ...axiosResponse
     };
 

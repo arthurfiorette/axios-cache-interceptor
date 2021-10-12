@@ -1,5 +1,15 @@
-import type { CacheUpdater } from '../axios/types';
-import type { CacheStorage } from '../storage/types';
+import type {
+  CachedStorageValue,
+  CacheStorage,
+  EmptyStorageValue
+} from '../storage/types';
+
+export type CacheUpdater =
+  | 'delete'
+  | ((
+      cached: EmptyStorageValue | CachedStorageValue,
+      newData: any
+    ) => CachedStorageValue | void);
 
 export async function updateCache<T = any>(
   storage: CacheStorage,
