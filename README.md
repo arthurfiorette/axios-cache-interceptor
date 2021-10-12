@@ -135,7 +135,7 @@ by axios was it's types.
 
 | [Version](https://github.com/ArthurFiorette/axios-cache-interceptor/releases) | [Axios](https://github.com/axios/axios/releases) |
 | ----------------------------------------------------------------------------- | ------------------------------------------------ |
-| `~v0.4`                                                                       | `>= v0.22`                                       |
+| `~v0.4`                                                                       | `>= v0.32`                                       |
 | `~v0.3`                                                                       | `>= v0.22`                                       |
 | `<= v0.2`                                                                     | `v0.21`                                          |
 
