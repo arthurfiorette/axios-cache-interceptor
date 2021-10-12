@@ -1,5 +1,4 @@
-import { StatusCodes } from '../../src';
-import { axiosMock, mockAxios } from '../mocks/axios';
+import { mockAxios } from '../mocks/axios';
 
 describe('test request interceptor', () => {
   it('tests against specified methods', async () => {
@@ -33,10 +32,8 @@ describe('test request interceptor', () => {
 
     const [resp1, resp2] = await Promise.all([axios.get(''), axios.get('')]);
 
-    expect(resp1.status).toBe(axiosMock.statusCode);
-    expect(resp1.statusText).toBe(axiosMock.statusText);
-    expect(resp2.status).toBe(StatusCodes.CACHED_STATUS_CODE);
-    expect(resp2.statusText).toBe(StatusCodes.CACHED_STATUS_TEXT);
+    expect(resp1.cached).toBe(false);
+    expect(resp2.cached).toBe(true);
   });
 
   it('tests concurrent requests with cache: false', async () => {
@@ -48,8 +45,7 @@ describe('test request interceptor', () => {
       axios.get('', { cache: false })
     ]);
     for (const result of results) {
-      expect(result.status).toBe(axiosMock.statusCode);
-      expect(result.statusText).toBe(axiosMock.statusText);
+      expect(result.cached).toBe(false);
     }
   });
 
@@ -70,7 +66,22 @@ describe('test request interceptor', () => {
       axios.get('')
     ]);
 
-    expect(resp2.status).toBe(axiosMock.statusCode);
-    expect(resp2.statusText).toBe(axiosMock.statusText);
+    expect(resp2.cached).toBe(false);
+  });
+
+  it('tests response.cached', async () => {
+    const axios = mockAxios();
+
+    const response = await axios.get('');
+    expect(response.cached).toBe(false);
+
+    const response2 = await axios.get('');
+    expect(response2.cached).toBe(true);
+
+    const response3 = await axios.get('', { id: 'random-id' });
+    expect(response3.cached).toBe(false);
+
+    const response4 = await axios.get('', { id: 'random-id' });
+    expect(response4.cached).toBe(true);
   });
 });

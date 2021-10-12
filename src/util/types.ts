@@ -29,4 +29,4 @@ export type CachePredicateObject = {
  * A simple function that receives a cache request config and should
  * return a string id for it.
  */
-export type KeyGenerator = (options: CacheRequestConfig) => string;
+export type KeyGenerator = <R>(options: CacheRequestConfig<R>) => string;

@@ -1,11 +1,6 @@
 import { AxiosCacheInstance, CacheProperties, createCache } from '../../src';
 import type { CacheInstance } from '../../src/axios/types';
 
-export const axiosMock = {
-  statusCode: 200,
-  statusText: '200 Intercepted'
-};
-
 export function mockAxios(
   options: Partial<CacheInstance> & Partial<CacheProperties> = {},
   headers: Record<string, string> = {}
@@ -18,8 +13,8 @@ export function mockAxios(
   axios.interceptors.request.use((config) => {
     config.adapter = async (config) => ({
       data: true,
-      status: axiosMock.statusCode,
-      statusText: axiosMock.statusText,
+      status: 200,
+      statusText: '200 OK',
       headers,
       config
     });

@@ -1,4 +1,5 @@
 import type { CacheStorage } from '../../src/storage/types';
+import { EMPTY_RESPONSE } from '../constants';
 
 export function testStorage(name: string, Storage: () => CacheStorage): void {
   it(`tests ${name} storage methods`, async () => {
@@ -13,14 +14,14 @@ export function testStorage(name: string, Storage: () => CacheStorage): void {
       state: 'cached',
       createdAt: Date.now(),
       ttl: 1000 * 60 * 5,
-      data: { body: 'data', headers: {} }
+      data: { ...EMPTY_RESPONSE, data: 'data' }
     });
 
     const result2 = await storage.get('key');
 
     expect(result2).not.toBeNull();
     expect(result2.state).toBe('cached');
-    expect(result2.data?.body).toBe('data');
+    expect(result2.data?.data).toBe('data');
 
     await storage.remove('key');
 
@@ -38,14 +39,14 @@ export function testStorage(name: string, Storage: () => CacheStorage): void {
       state: 'cached',
       createdAt: Date.now(),
       ttl: 1000 * 60 * 5, // 5 Minutes
-      data: { body: 'data', headers: {} }
+      data: { ...EMPTY_RESPONSE, data: 'data' }
     });
 
     const result = await storage.get('key');
 
     expect(result).not.toBeNull();
     expect(result.state).toBe('cached');
-    expect(result.data?.body).toBe('data');
+    expect(result.data?.data).toBe('data');
 
     // Advance 6 minutes in time
     jest.setSystemTime(Date.now() + 1000 * 60 * 6);

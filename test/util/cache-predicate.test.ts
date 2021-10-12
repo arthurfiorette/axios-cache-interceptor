@@ -1,21 +1,9 @@
-import type { AxiosResponse } from 'axios';
 import { checkPredicateObject } from '../../src/util/cache-predicate';
-
-const Response = <R>(config: Partial<AxiosResponse<R>>): AxiosResponse<R> => {
-  return {
-    status: 200,
-    headers: {},
-    config: {},
-    data: {} as R,
-    statusText: '',
-    request: {},
-    ...config
-  };
-};
+import { createResponse } from '../constants';
 
 describe('tests cache predicate object', () => {
   it('tests statusCheck with tuples', () => {
-    const response = Response({ status: 764 });
+    const response = createResponse({ status: 764 });
 
     const falsyTest = checkPredicateObject(response, { statusCheck: [200, 299] });
     const truthyTest = checkPredicateObject(response, { statusCheck: [760, 769] });
@@ -25,7 +13,7 @@ describe('tests cache predicate object', () => {
   });
 
   it('tests statusCheck with a predicate', () => {
-    const response = Response({ status: 764 });
+    const response = createResponse({ status: 764 });
 
     const falsyTest = checkPredicateObject(response, {
       statusCheck: (status) => status >= 200 && status <= 299
@@ -40,7 +28,7 @@ describe('tests cache predicate object', () => {
   });
 
   it('tests containsHeader with string array', () => {
-    const response = Response({
+    const response = createResponse({
       headers: { 'Content-Type': 'application/json' }
     });
 
@@ -57,7 +45,7 @@ describe('tests cache predicate object', () => {
   });
 
   it('tests containsHeader with string tuple', () => {
-    const response = Response({
+    const response = createResponse({
       headers: { 'Content-Type': 'application/json' }
     });
 
@@ -79,7 +67,7 @@ describe('tests cache predicate object', () => {
   });
 
   it('tests containsHeader with string predicate', () => {
-    const response = Response({
+    const response = createResponse({
       headers: { 'Content-Type': 'application/json' }
     });
 
@@ -101,7 +89,7 @@ describe('tests cache predicate object', () => {
   });
 
   it('tests responseMatch', () => {
-    const response = Response({
+    const response = createResponse({
       data: { a: true, b: 1 }
     });
 

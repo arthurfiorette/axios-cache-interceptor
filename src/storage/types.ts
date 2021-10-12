@@ -19,8 +19,10 @@ export interface CacheStorage {
 }
 
 export type CachedResponse = {
-  headers?: any;
-  body?: any;
+  data?: any;
+  headers: Record<string, string>;
+  status: number;
+  statusText: string;
 };
 
 /**

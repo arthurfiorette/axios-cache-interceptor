@@ -3,7 +3,7 @@ import type { CachePredicateObject } from './types';
 
 export function checkPredicateObject<R>(
   response: AxiosResponse<R>,
-  { statusCheck, containsHeaders: containsHeader, responseMatch }: CachePredicateObject
+  { statusCheck, containsHeaders, responseMatch }: CachePredicateObject
 ): boolean {
   if (statusCheck) {
     if (typeof statusCheck === 'function') {
@@ -21,10 +21,10 @@ export function checkPredicateObject<R>(
     }
   }
 
-  if (containsHeader) {
-    for (const headerName in containsHeader) {
+  if (containsHeaders) {
+    for (const headerName in containsHeaders) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const value = containsHeader[headerName]!;
+      const value = containsHeaders[headerName]!;
       const header = response.headers[headerName];
 
       // At any case, if the header is not found, the predicate fails.

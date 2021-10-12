@@ -1,16 +1,14 @@
 import type { AxiosResponse } from 'axios';
+import { extract } from 'typed-core/dist/core/object';
 import type {
   AxiosCacheInstance,
   CacheAxiosResponse,
-  CacheProperties,
-  CacheRequestConfig
+  CacheProperties
 } from '../axios/types';
 import type { CachedStorageValue } from '../storage/types';
 import { checkPredicateObject } from '../util/cache-predicate';
 import { updateCache } from '../util/update-cache';
 import type { AxiosInterceptor } from './types';
-
-type CacheConfig = CacheRequestConfig & { cache?: Partial<CacheProperties> };
 
 export class CacheResponseInterceptor<R>
   implements AxiosInterceptor<CacheAxiosResponse<R>>
@@ -23,7 +21,7 @@ export class CacheResponseInterceptor<R>
 
   private testCachePredicate = <R>(
     response: AxiosResponse<R>,
-    { cache }: CacheConfig
+    cache?: Partial<CacheProperties>
   ): boolean => {
     const cachePredicate =
       cache?.cachePredicate || this.axios.defaults.cache.cachePredicate;
@@ -48,25 +46,41 @@ export class CacheResponseInterceptor<R>
   };
 
   onFulfilled = async (
-    response: CacheAxiosResponse<R>
+    axiosResponse: AxiosResponse<R>
   ): Promise<CacheAxiosResponse<R>> => {
-    const key = this.axios.generateKey(response.config);
-    response.id = key;
+    const key = this.axios.generateKey(axiosResponse.config);
+
+    const response: CacheAxiosResponse<R> = {
+      id: key,
+      // When the request interceptor override the request adapter, it means
+      // that the response.cached will be true and therefore, the request was cached.
+      cached: (axiosResponse as CacheAxiosResponse<R>).cached || false,
+      ...axiosResponse
+    };
 
     // Skip cache
     if (response.config.cache === false) {
+      return { ...response, cached: false };
+    }
+
+    // Response was marked as cached
+    if (response.cached) {
       return response;
     }
 
     const cache = await this.axios.storage.get(key);
 
-    // Response shouldn't be cached or was already cached
+    /**
+     * From now on, the cache and response represents the state of the
+     * first response to a request, which has not yet been cached or
+     * processed before.
+     */
     if (cache.state !== 'loading') {
       return response;
     }
 
     // Config told that this response should be cached.
-    if (!this.testCachePredicate(response, response.config as CacheConfig)) {
+    if (!this.testCachePredicate(response, response.config.cache)) {
       await this.rejectResponse(key);
       return response;
     }
@@ -86,10 +100,10 @@ export class CacheResponseInterceptor<R>
     }
 
     const newCache: CachedStorageValue = {
-      data: { body: response.data, headers: response.headers },
       state: 'cached',
       ttl: ttl,
-      createdAt: Date.now()
+      createdAt: Date.now(),
+      data: extract(response, ['data', 'headers', 'status', 'statusText'])
     };
 
     // Update other entries before updating himself
@@ -103,8 +117,10 @@ export class CacheResponseInterceptor<R>
     await deferred?.resolve(newCache.data);
     delete this.axios.waiting[key];
 
+    // Define this key as cache on the storage
     await this.axios.storage.set(key, newCache);
 
+    // Return the response with cached as false, because it was not cached at all
     return response;
   };
 }

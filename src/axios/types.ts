@@ -6,6 +6,7 @@ import type {
   AxiosResponse,
   Method
 } from 'axios';
+import type { Deferred } from 'typed-core/dist/promises/deferred';
 import type { HeaderInterpreter } from '../header/types';
 import type { AxiosInterceptor } from '../interceptors/types';
 import type {
@@ -14,7 +15,6 @@ import type {
   CacheStorage,
   EmptyStorageValue
 } from '../storage/types';
-import type { Deferred } from '../util/deferred';
 import type { CachePredicate, KeyGenerator } from '../util/types';
 
 export type CacheUpdater =
@@ -32,9 +32,8 @@ export type CacheProperties = {
   /**
    * The time until the cached value is expired in milliseconds.
    *
-   * When using `interpretHeader: true`, this value will only
-   * be used if the interpreter can't determine their TTL value
-   * to override this
+   * When using `interpretHeader: true`, this value will only be used
+   * if the interpreter can't determine their TTL value to override this
    *
    * **Note**: a custom storage implementation may not respect this.
    *
@@ -81,20 +80,31 @@ export type CacheProperties = {
   update: Record<string, CacheUpdater>;
 };
 
-export type CacheAxiosResponse<T = never> = AxiosResponse<T> & {
-  config: CacheRequestConfig;
+/**
+ * @template T The data type that this responses use. Also the same
+ *   generic type as it's request
+ */
+export type CacheAxiosResponse<T> = AxiosResponse<T> & {
+  config: CacheRequestConfig<T>;
 
   /**
    * The id used for this request. if config specified an id, the id
    * will be returned
    */
   id: string;
+
+  /**
+   * A simple boolean to check whether this request was cached or not
+   */
+  cached: boolean;
 };
 
 /**
  * Options that can be overridden per request
+ *
+ * @template T The data that this request should return
  */
-export type CacheRequestConfig = AxiosRequestConfig & {
+export type CacheRequestConfig<T> = AxiosRequestConfig<T> & {
   /**
    * An id for this request, if this request is used in cache, only
    * the last request made with this id will be returned.
@@ -144,7 +154,7 @@ export interface CacheInstance {
   /**
    * The request interceptor that will be used to handle the cache.
    */
-  requestInterceptor: AxiosInterceptor<CacheRequestConfig>;
+  requestInterceptor: AxiosInterceptor<CacheRequestConfig<any>>;
 
   /**
    * The response interceptor that will be used to handle the cache.
@@ -161,49 +171,49 @@ export interface CacheInstance {
  * @see CacheInstance
  */
 export interface AxiosCacheInstance extends AxiosInstance, CacheInstance {
-  (config: CacheRequestConfig): AxiosPromise;
-  (url: string, config?: CacheRequestConfig): AxiosPromise;
+  <T>(config: CacheRequestConfig<T>): AxiosPromise;
+  <T>(url: string, config?: CacheRequestConfig<T>): AxiosPromise;
 
   defaults: DefaultCacheRequestConfig;
 
   interceptors: {
-    request: AxiosInterceptorManager<CacheRequestConfig>;
+    request: AxiosInterceptorManager<CacheRequestConfig<any>>;
     response: AxiosInterceptorManager<CacheAxiosResponse<never>>;
   };
 
-  getUri(config?: CacheRequestConfig): string;
+  getUri<T>(config?: CacheRequestConfig<T>): string;
 
-  request<T = any, R = CacheAxiosResponse<T>>(config: CacheRequestConfig): Promise<R>;
+  request<T = any, R = CacheAxiosResponse<T>>(config: CacheRequestConfig<T>): Promise<R>;
 
   get<T = any, R = CacheAxiosResponse<T>>(
     url: string,
-    config?: CacheRequestConfig
+    config?: CacheRequestConfig<T>
   ): Promise<R>;
   delete<T = any, R = CacheAxiosResponse<T>>(
     url: string,
-    config?: CacheRequestConfig
+    config?: CacheRequestConfig<T>
   ): Promise<R>;
   head<T = any, R = CacheAxiosResponse<T>>(
     url: string,
-    config?: CacheRequestConfig
+    config?: CacheRequestConfig<T>
   ): Promise<R>;
   options<T = any, R = CacheAxiosResponse<T>>(
     url: string,
-    config?: CacheRequestConfig
+    config?: CacheRequestConfig<T>
   ): Promise<R>;
   post<T = any, R = CacheAxiosResponse<T>>(
     url: string,
     data?: any,
-    config?: CacheRequestConfig
+    config?: CacheRequestConfig<T>
   ): Promise<R>;
   put<T = any, R = CacheAxiosResponse<T>>(
     url: string,
     data?: any,
-    config?: CacheRequestConfig
+    config?: CacheRequestConfig<T>
   ): Promise<R>;
   patch<T = any, R = CacheAxiosResponse<T>>(
     url: string,
     data?: any,
-    config?: CacheRequestConfig
+    config?: CacheRequestConfig<T>
   ): Promise<R>;
 }

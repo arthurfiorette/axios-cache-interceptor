@@ -1,21 +1,26 @@
-import type { AxiosCacheInstance, CacheRequestConfig } from '../axios/types';
+import { deferred } from 'typed-core/dist/promises/deferred';
+import type {
+  AxiosCacheInstance,
+  CacheAxiosResponse,
+  CacheRequestConfig
+} from '../axios/types';
 import type {
   CachedResponse,
   CachedStorageValue,
   LoadingStorageValue
 } from '../storage/types';
-import { deferred } from '../util/deferred';
-import { CACHED_STATUS_CODE, CACHED_STATUS_TEXT } from '../util/status-codes';
 import type { AxiosInterceptor } from './types';
 
-export class CacheRequestInterceptor implements AxiosInterceptor<CacheRequestConfig> {
+export class CacheRequestInterceptor<R>
+  implements AxiosInterceptor<CacheRequestConfig<R>>
+{
   constructor(readonly axios: AxiosCacheInstance) {}
 
   use = (): void => {
     this.axios.interceptors.request.use(this.onFulfilled);
   };
 
-  onFulfilled = async (config: CacheRequestConfig): Promise<CacheRequestConfig> => {
+  onFulfilled = async (config: CacheRequestConfig<R>): Promise<CacheRequestConfig<R>> => {
     // Skip cache
     if (config.cache === false) {
       return config;
@@ -66,7 +71,7 @@ export class CacheRequestInterceptor implements AxiosInterceptor<CacheRequestCon
       return config;
     }
 
-    let data: CachedResponse = {};
+    let cachedResponse: CachedResponse;
 
     if (cache.state === 'loading') {
       const deferred = this.axios.waiting[key];
@@ -81,22 +86,28 @@ export class CacheRequestInterceptor implements AxiosInterceptor<CacheRequestCon
       }
 
       try {
-        data = await deferred;
+        cachedResponse = await deferred;
       } catch (e) {
         // The deferred is rejected when the request that we are waiting rejected cache.
         return config;
       }
     } else {
-      data = cache.data;
+      cachedResponse = cache.data;
     }
 
     config.adapter = () =>
-      Promise.resolve({
-        config,
-        data: data.body,
-        headers: data.headers,
-        status: CACHED_STATUS_CODE,
-        statusText: CACHED_STATUS_TEXT
+      /**
+       * Even though the response interceptor receives this one from
+       * here, it has been configured to ignore cached responses: true
+       */
+      Promise.resolve<CacheAxiosResponse<R>>({
+        config: config,
+        data: cachedResponse.data,
+        headers: cachedResponse.headers,
+        status: cachedResponse.status,
+        statusText: cachedResponse.statusText,
+        cached: true,
+        id: key
       });
 
     return config;

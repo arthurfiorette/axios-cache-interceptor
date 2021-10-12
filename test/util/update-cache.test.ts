@@ -1,12 +1,16 @@
 import type { AxiosCacheInstance, CachedStorageValue } from '../../src';
 import { updateCache } from '../../src/util/update-cache';
+import { EMPTY_RESPONSE } from '../constants';
 import { mockAxios } from '../mocks/axios';
 
 const KEY = 'cacheKey';
 const EMPTY_STATE = { state: 'empty' };
 const DEFAULT_DATA = 'random-data';
 const INITIAL_DATA: CachedStorageValue = {
-  data: { body: true },
+  data: {
+    ...EMPTY_RESPONSE,
+    data: true
+  },
   createdAt: Date.now(),
   ttl: Infinity,
   state: 'cached'
@@ -48,7 +52,10 @@ describe('Tests update-cache', () => {
         state: 'cached',
         ttl: Infinity,
         createdAt: Date.now(),
-        data: { body: `${cached.data?.body}:${newData}` }
+        data: {
+          ...EMPTY_RESPONSE,
+          data: `${cached.data?.data}:${newData}`
+        }
       })
     });
 
@@ -58,7 +65,7 @@ describe('Tests update-cache', () => {
     expect(response).not.toStrictEqual(EMPTY_STATE);
 
     expect(response.state).toBe('cached');
-    expect(response.data?.body).toBe(`${INITIAL_DATA.data?.body}:${DEFAULT_DATA}`);
+    expect(response.data?.data).toBe(`${INITIAL_DATA.data?.data}:${DEFAULT_DATA}`);
   });
 
   it('check if the state is loading while updating', async () => {
@@ -69,7 +76,10 @@ describe('Tests update-cache', () => {
         state: 'cached',
         ttl: Infinity,
         createdAt: Date.now(),
-        data: { body: `${cached.data?.body}:${newData}` }
+        data: {
+          ...EMPTY_RESPONSE,
+          data: `${cached.data?.data}:${newData}`
+        }
       })
     });
 

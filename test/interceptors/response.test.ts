@@ -1,5 +1,4 @@
-import { StatusCodes } from '../../src';
-import { axiosMock, mockAxios } from '../mocks/axios';
+import { mockAxios } from '../mocks/axios';
 
 describe('test request interceptor', () => {
   it('tests cache predicate integration', async () => {
@@ -18,8 +17,7 @@ describe('test request interceptor', () => {
     await fetch();
     const result = await fetch();
 
-    expect(result.status).toBe(axiosMock.statusCode);
-    expect(result.statusText).toBe(axiosMock.statusText);
+    expect(result.cached).toBe(false);
   });
 
   it('tests header interpreter integration', async () => {
@@ -29,8 +27,7 @@ describe('test request interceptor', () => {
     await axiosNoCache.get('', { cache: { interpretHeader: true } });
     const resultNoCache = await axiosNoCache.get('');
 
-    expect(resultNoCache.status).toBe(axiosMock.statusCode);
-    expect(resultNoCache.statusText).toBe(axiosMock.statusText);
+    expect(resultNoCache.cached).toBe(false);
 
     const axiosCache = mockAxios({}, { 'cache-control': `maxAge=${60 * 60 * 24 * 365}` });
 
@@ -38,8 +35,7 @@ describe('test request interceptor', () => {
     await axiosCache.get('', { cache: { interpretHeader: true } });
     const resultCache = await axiosCache.get('');
 
-    expect(resultCache.status).toBe(StatusCodes.CACHED_STATUS_CODE);
-    expect(resultCache.statusText).toBe(StatusCodes.CACHED_STATUS_TEXT);
+    expect(resultCache.cached).toBe(true);
   });
 
   it('tests update cache integration', async () => {
