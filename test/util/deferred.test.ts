@@ -1,6 +1,6 @@
 import { deferred } from '../../src/util/deferred';
 
-describe('Tests cached status code', () => {
+describe('Tests deferred object', () => {
   it('test resolve method', () => {
     const d = deferred();
 
