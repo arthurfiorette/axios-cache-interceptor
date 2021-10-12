@@ -106,7 +106,6 @@ const resp2 = await api.get('https://api.example.com/');
   - [request.cache.methods](#requestcachemethods)
   - [request.cache.cachePredicate](#requestcachecachepredicate)
   - [request.cache.update](#requestcacheupdate)
-- [Inspiration](#inspiration)
 - [License](#license)
 - [Contact](#contact)
 
@@ -383,19 +382,6 @@ axios.get('url', {
   }
 });
 ```
-
-<br />
-
-## Inspiration
-
-This project is highly inspired by several projects, written entirely in typescript,
-supporting https headers and much more.
-
-Take a look at some similar projects:
-
-- [axios-cache-adapter](https://github.com/RasCarlito/axios-cache-adapter)
-- [axios-cache-plugin](https://github.com/jin5354/axios-cache-plugin)
-- [@tusbar/cache-control](https://github.com/tusbar/cache-control)
 
 <br />
 
