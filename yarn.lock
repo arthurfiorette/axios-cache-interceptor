@@ -2,10 +2,12 @@
 # yarn lockfile v1
 
 
-"@arthurfiorette/prettier-config@^1.0.6":
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/@arthurfiorette/prettier-config/-/prettier-config-1.0.6.tgz#dca729366cca252d94d4557621ae6d755981da8c"
-  integrity sha512-Le91x+bTfQogkMSLitxGr3xDjIaQYbsGmhljLihkA1jEuqrXTdg6CDrYSgbXHJblNXaigswZ66rPyP/poBRbOw==
+"@arthurfiorette/prettier-config@*":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@arthurfiorette/prettier-config/-/prettier-config-1.0.7.tgz#f723fc8c7c828cbea9cf15def89dbbf9b7335d33"
+  integrity sha512-AcMC+/JwgeRPgFId0blxjQ1ZsIZdjM3fRc32U+hk0Fj/7SnKe2ppbpObQPi7l2kpb7HhYCzCP5psUd3k/+8XLA==
+  dependencies:
+    "@types/prettier" "*"
 
 "@babel/code-frame@7.12.11":
   version "7.12.11"
@@ -657,7 +659,7 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-16.10.9.tgz#8f1cdd517972f76a3b928298f4c0747cd6fef25a"
   integrity sha512-H9ReOt+yqIJPCutkTYjFjlyK6WEMQYT9hLZMlWtOjFQY2ItppsWZ6RJf8Aw+jz5qTYceuHvFgPIaKOHtLAEWBw==
 
-"@types/prettier@^2.1.5":
+"@types/prettier@*", "@types/prettier@^2.1.5":
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-2.4.1.tgz#e1303048d5389563e130f5bdd89d37a99acb75eb"
   integrity sha512-Fo79ojj3vdEZOHg3wR9ksAMRz4P3S5fDB5e/YWZiFnyFQI1WY2Vftu9XoXVVtJfxB7Bpce/QTqWSSntkz2Znrw==
