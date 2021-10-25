@@ -2,5 +2,6 @@
 /node_modules
 /coverage
 /dist
+/types
 /CHANGELOG.md
 /tsconfig.json
