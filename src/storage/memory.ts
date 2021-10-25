@@ -11,7 +11,7 @@ export class MemoryStorage implements CacheStorage {
       return { state: 'empty' };
     }
 
-    if (!isCacheValid(value)) {
+    if (isCacheValid(value) === false) {
       this.remove(key);
       return { state: 'empty' };
     }

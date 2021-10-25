@@ -2,9 +2,25 @@ import type { CacheStorage, StorageValue } from './types';
 import { isCacheValid } from './util';
 
 /**
+ * The key prefix used in WindowStorageWrapper to prevent key
+ * collisions with other code.
+ */
+export const DEFAULT_KEY_PREFIX = 'axios-cache-interceptor';
+
+/**
  * A storage that uses any {@link Storage} as his storage.
+ *
+ * **Note**: All storage keys used are prefixed with `prefix` value.
  */
 export abstract class WindowStorageWrapper implements CacheStorage {
+  /**
+   * Creates a new instance of WindowStorageWrapper
+   *
+   * @param storage The storage to interact
+   * @param prefix The prefix to use for all keys or
+   *   `DEFAULT_KEY_PREFIX` if not provided.
+   * @see DEFAULT_KEY_PREFIX
+   */
   constructor(readonly storage: Storage, readonly prefix: string = DEFAULT_KEY_PREFIX) {}
 
   get = async (key: string): Promise<StorageValue> => {
@@ -17,7 +33,7 @@ export abstract class WindowStorageWrapper implements CacheStorage {
 
     const parsed = JSON.parse(json);
 
-    if (!isCacheValid(parsed)) {
+    if (isCacheValid(parsed) === false) {
       this.storage.removeItem(prefixedKey);
       return { state: 'empty' };
     }
@@ -48,5 +64,3 @@ export class SessionCacheStorage extends WindowStorageWrapper {
     super(window.sessionStorage, prefix);
   }
 }
-
-export const DEFAULT_KEY_PREFIX = 'axios-cache-interceptor';

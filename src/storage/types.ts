@@ -32,6 +32,10 @@ export type StorageValue = CachedStorageValue | LoadingStorageValue | EmptyStora
 
 export type CachedStorageValue = {
   data: CachedResponse;
+  /**
+   * The number in milliseconds to wait after createdAt before the
+   * value is considered stale.
+   */
   ttl: number;
   createdAt: number;
   state: 'cached';
