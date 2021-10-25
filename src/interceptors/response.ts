@@ -49,8 +49,11 @@ export class CacheResponseInterceptor<R, D>
 
     const response: CacheAxiosResponse<R, D> = {
       id: key,
-      // When the request interceptor override the request adapter, it means
-      // that the response.cached will be true and therefore, the request was cached.
+
+      /**
+       * The request interceptor response.cache will return true or
+       * undefined. And true only when the response was cached.
+       */
       cached: (axiosResponse as CacheAxiosResponse<R, D>).cached || false,
       ...axiosResponse
     };
@@ -60,7 +63,7 @@ export class CacheResponseInterceptor<R, D>
       return { ...response, cached: false };
     }
 
-    // Response was marked as cached
+    // Response is already cached
     if (response.cached) {
       return response;
     }
