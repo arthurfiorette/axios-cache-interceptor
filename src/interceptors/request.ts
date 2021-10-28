@@ -100,7 +100,7 @@ export class CacheRequestInterceptor<D>
        * Even though the response interceptor receives this one from
        * here, it has been configured to ignore cached responses: true
        */
-      Promise.resolve<CacheAxiosResponse<unknown, D>>({
+      Promise.resolve<CacheAxiosResponse<any, D>>({
         config: config,
         data: cachedResponse.data,
         headers: cachedResponse.headers,

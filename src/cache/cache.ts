@@ -97,5 +97,5 @@ export interface CacheInstance {
   /**
    * The response interceptor that will be used to handle the cache.
    */
-  responseInterceptor: AxiosInterceptor<CacheAxiosResponse<unknown, any>>;
+  responseInterceptor: AxiosInterceptor<CacheAxiosResponse<any, any>>;
 }
