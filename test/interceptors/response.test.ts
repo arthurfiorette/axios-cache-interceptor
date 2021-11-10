@@ -29,7 +29,7 @@ describe('test request interceptor', () => {
 
     expect(resultNoCache.cached).toBe(false);
 
-    const axiosCache = mockAxios({}, { 'cache-control': `maxAge=${60 * 60 * 24 * 365}` });
+    const axiosCache = mockAxios({}, { 'cache-control': `max-age=${60 * 60 * 24 * 365}` });
 
     // Make first request to cache it
     await axiosCache.get('', { cache: { interpretHeader: true } });
