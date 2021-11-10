@@ -13,13 +13,26 @@ export function mockAxios(
   axios.interceptors.request.use((config) => {
     config.adapter = async (config) => {
       await 0; // Jumps to next tick of nodejs event loop
-      return {
-        data: true,
-        status: 200,
-        statusText: '200 OK',
-        headers,
-        config
-      };
+      if (
+        config.headers &&
+        (config.headers['if-none-match'] || config.headers['if-modified-since'])
+      ) {
+        return {
+          data: null,
+          status: 304,
+          statusText: '304 Not Modified',
+          headers,
+          config
+        };
+      } else {
+        return {
+          data: true,
+          status: 200,
+          statusText: '200 OK',
+          headers,
+          config
+        };
+      }
     };
 
     return config;
