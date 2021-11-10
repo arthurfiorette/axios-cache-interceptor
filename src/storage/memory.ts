@@ -1,5 +1,5 @@
 import type { CacheStorage, StorageValue } from './types';
-import { isCacheValid } from './util';
+import { isCacheValid, canRevalidate } from './util';
 
 export class MemoryStorage implements CacheStorage {
   private readonly storage: Map<string, StorageValue> = new Map();
@@ -12,8 +12,11 @@ export class MemoryStorage implements CacheStorage {
     }
 
     if (isCacheValid(value) === false) {
-      this.remove(key);
-      return { state: 'empty' };
+        if (value.state == 'cached' && canRevalidate(value)) {
+            return { ...value, state: 'stale' };
+        } else {
+            return { state: 'empty' };
+        }
     }
 
     return value;

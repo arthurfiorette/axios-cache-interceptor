@@ -21,13 +21,15 @@ describe('tests header interpreter', () => {
     });
 
     expect(noCache).toBe(false);
+  });
 
+  it('tests with must revalidate headers',() => {
     const mustRevalidate = defaultHeaderInterpreter({
       'cache-control': 'must-revalidate'
     });
 
-    expect(mustRevalidate).toBe(false);
-  });
+    expect(mustRevalidate).toBe(1); // ttl set to 1ms, enabling cache with revalidation
+  })
 
   it('tests with maxAge header for 10 seconds', () => {
     const result = defaultHeaderInterpreter({

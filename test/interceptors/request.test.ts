@@ -84,4 +84,66 @@ describe('test request interceptor', () => {
     const response4 = await axios.get('', { id: 'random-id' });
     expect(response4.cached).toBe(true);
   });
+
+  it('test cache expiration', async () => {
+    const axios = mockAxios({}, { 'cache-control': 'max-age=1' });
+
+    await axios.get('', { cache: { interpretHeader: true } });
+    const resultCache = await axios.get('');
+    expect(resultCache.cached).toBe(true);
+    await sleep(1100);// slightly over max-age
+    const response2 = await axios.get('');
+    expect(response2.cached).toBe(false);
+  });
+
+  it('tests etag handling', async () => {
+    const axios = mockAxios({},{'etag': 'fakeEtag', 'cache-control': 'max-age=1' });
+    const config = { cache: { interpretHeader: true } };
+
+    await axios.get('', config);
+    const response = await axios.get('', config);
+    expect(response.cached).toBe(true);
+    expect(response.data).toBe(true);
+    await sleep(1100); // slightly over max-age
+    const response2 = await axios.get('', config);
+    expect(response2.cached).toBe(true); // from revalidation
+    expect(response2.data).toBe(true); // ensure value from stale cache is kept
+  });
+
+  it('tests last modified handling', async () => {
+      const axios = mockAxios({},{'last-modified': 'Wed, 21 Oct 2015 07:28:00 GMT', 'cache-control': 'max-age=1' });
+      const config = { cache: { interpretHeader: true } };
+      await axios.get('', config);
+      const response = await axios.get('', config);
+      expect(response.cached).toBe(true);
+      expect(response.data).toBe(true);
+      await sleep(1100); // slightly over max-age
+      const response2 = await axios.get('', config);
+      expect(response2.cached).toBe(true); // from revalidation
+      expect(response2.data).toBe(true); // ensure value from stale cache is kept
+      expect(response2.status).toBe(200); // ensure value from stale cache is kept
+  });
+
+  it('tests must revalidate handling', async () => {
+    const axios = mockAxios({},{'cache-control': 'must-revalidate' });
+    const config = { cache: { interpretHeader: true } };
+    await axios.get('', config);
+    await sleep(2); // 1ms cache
+    const response = await axios.get('', config);
+    expect(response.cached).toBe(false); // nothing to use for revalidation
+  });
+
+  it('tests must revalidate handling with etag', async () => {
+    const axios = mockAxios({},{'etag': 'fakeEtag', 'cache-control': 'must-revalidate' });
+    const config = { cache: { interpretHeader: true } };
+    await axios.get('', config);
+    await sleep(2); // 1ms cache
+    const response = await axios.get('', config);
+    expect(response.cached).toBe(true); // from etag revalidation
+    expect(response.data).toBe(true);
+  });
 });
+
+function sleep(ms: number) {
+  return new Promise( resolve => setTimeout(resolve, ms) );
+}

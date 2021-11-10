@@ -1,13 +1,14 @@
 import type {
   CachedStorageValue,
   CacheStorage,
-  EmptyStorageValue
+  EmptyStorageValue,
+  StaleStorageValue
 } from '../storage/types';
 
 export type CacheUpdater =
   | 'delete'
   | ((
-      cached: EmptyStorageValue | CachedStorageValue,
+      cached: EmptyStorageValue | CachedStorageValue | StaleStorageValue,
       newData: any
     ) => CachedStorageValue | void);
 

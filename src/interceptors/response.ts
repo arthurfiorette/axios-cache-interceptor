@@ -1,4 +1,4 @@
-import type { AxiosResponse } from 'axios';
+import type {AxiosResponse} from 'axios';
 import { extract } from 'typed-core/dist/core/object';
 import type { AxiosCacheInstance, CacheAxiosResponse } from '../cache/axios';
 import type { CacheProperties } from '../cache/cache';
@@ -99,11 +99,24 @@ export class CacheResponseInterceptor<R, D>
       ttl = expirationTime ? expirationTime : ttl;
     }
 
+    const staleCacheData = cache.data;
+    if (response.status == 304 && staleCacheData) { // server told us data we have is still current
+      response.cached = true;
+      const {data, status, statusText, headers} = staleCacheData;
+      response.data = data;
+      response.status = status;
+      response.statusText = statusText;
+      const cacheHeaders:any = extract(headers,['cache-control', 'etag', 'last-modified']);
+      response.headers = {...cacheHeaders, ...response.headers};
+    }
+
+    const data = extract(response, ['data', 'headers', 'status', 'statusText']);
+
     const newCache: CachedStorageValue = {
       state: 'cached',
       ttl: ttl,
       createdAt: Date.now(),
-      data: extract(response, ['data', 'headers', 'status', 'statusText'])
+      data
     };
 
     // Update other entries before updating himself
@@ -120,7 +133,6 @@ export class CacheResponseInterceptor<R, D>
     // Define this key as cache on the storage
     await this.axios.storage.set(key, newCache);
 
-    // Return the response with cached as false, because it was not cached at all
     return response;
   };
 }

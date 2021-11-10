@@ -41,7 +41,7 @@ export class CacheRequestInterceptor<D>
     let cache = await this.axios.storage.get(key);
 
     // Not cached, continue the request, and mark it as fetching
-    emptyState: if (cache.state == 'empty') {
+    emptyOrStaleState: if (cache.state == 'empty' || cache.state == 'stale') {
       /**
        * This checks for simultaneous access to a new key. The js
        * event loop jumps on the first await statement, so the second
@@ -51,7 +51,7 @@ export class CacheRequestInterceptor<D>
         cache = (await this.axios.storage.get(key)) as
           | CachedStorageValue
           | LoadingStorageValue;
-        break emptyState;
+        break emptyOrStaleState;
       }
 
       // Create a deferred to resolve other requests for the same key when it's completed
@@ -63,9 +63,28 @@ export class CacheRequestInterceptor<D>
        */
       this.axios.waiting[key]?.catch(() => undefined);
 
+      let previousEntry;
+      if(cache.state == 'stale'){
+        previousEntry = cache.data;
+        const {etag, 'last-modified': lastModified} = previousEntry.headers;
+        if (etag) {
+          config.headers = {...config.headers, 'if-none-match': etag};
+        }
+        if (lastModified) {
+          config.headers = {...config.headers, 'if-modified-since': lastModified};
+        }
+        if (etag || lastModified) {
+          const previousValidateStatus = config.validateStatus;
+          config.validateStatus = function (status) {
+            return status==304 || !previousValidateStatus || previousValidateStatus(status);
+          }
+        }
+      }
+
       await this.axios.storage.set(key, {
         state: 'loading',
-        ttl: config.cache?.ttl
+        ttl: config.cache?.ttl,
+        data: previousEntry
       });
 
       return config;

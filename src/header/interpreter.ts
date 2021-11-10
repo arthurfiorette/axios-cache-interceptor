@@ -25,8 +25,13 @@ export const defaultHeaderInterpreter: HeaderInterpreter = (headers) => {
   const { noCache, noStore, mustRevalidate, maxAge } = parse(cacheControl);
 
   // Header told that this response should not be cached.
-  if (noCache || noStore || mustRevalidate) {
+  if (noCache || noStore) {
     return false;
+  }
+
+  // set ttl to 1ms, enabling use of etag / last-modified revalidation
+  if (mustRevalidate) {
+    return 1;
   }
 
   if (!maxAge) {

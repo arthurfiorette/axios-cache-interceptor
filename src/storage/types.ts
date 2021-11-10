@@ -28,7 +28,7 @@ export type CachedResponse = {
 /**
  * The value returned for a given key.
  */
-export type StorageValue = CachedStorageValue | LoadingStorageValue | EmptyStorageValue;
+export type StorageValue = CachedStorageValue | LoadingStorageValue | EmptyStorageValue | StaleStorageValue;
 
 export type CachedStorageValue = {
   data: CachedResponse;
@@ -42,7 +42,7 @@ export type CachedStorageValue = {
 };
 
 export type LoadingStorageValue = {
-  data?: undefined;
+  data?: CachedResponse;
   ttl?: number;
 
   /**
@@ -61,4 +61,11 @@ export type EmptyStorageValue = {
    */
   createdAt?: undefined;
   state: 'empty';
+};
+
+export type StaleStorageValue = {
+  data: CachedResponse;
+  ttl: number;
+  createdAt: number;
+  state: 'stale';
 };

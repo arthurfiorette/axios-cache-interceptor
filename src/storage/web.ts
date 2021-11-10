@@ -1,5 +1,5 @@
 import type { CacheStorage, StorageValue } from './types';
-import { isCacheValid } from './util';
+import { isCacheValid, canRevalidate } from './util';
 
 /**
  * The key prefix used in WindowStorageWrapper to prevent key
@@ -34,8 +34,11 @@ export abstract class WindowStorageWrapper implements CacheStorage {
     const parsed = JSON.parse(json);
 
     if (isCacheValid(parsed) === false) {
-      this.storage.removeItem(prefixedKey);
-      return { state: 'empty' };
+      if (canRevalidate(parsed)) {
+        return { ...parsed, state: 'stale' };
+      } else {
+        return { state: 'empty' };
+      }
     }
 
     return parsed;
