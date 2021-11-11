@@ -39,6 +39,15 @@ describe('tests header interpreter', () => {
     expect(result).toBe(10 * 1000);
   });
 
+  it('tests with maxAge=10 and age=7 headers', () => {
+    const result = defaultHeaderInterpreter({
+      [Header.CacheControl]: 'max-age=10',
+      [Header.Age]: '3'
+    });
+
+    expect(result).toBe(7 * 1000);
+  });
+
   it('tests with expires and cache-control present', () => {
     const result = defaultHeaderInterpreter({
       [Header.CacheControl]: 'max-age=10',

@@ -25,15 +25,14 @@ export const defaultHeaderInterpreter: HeaderInterpreter = (headers) => {
     return undefined;
   }
 
-  const ageHeader = headers?.[Header.Age];
+  const age = headers?.[Header.Age];
   const maxAgeSeconds = maxAge * 1000;
 
-  if (!ageHeader) {
+  if (!age) {
     return maxAgeSeconds;
   }
 
-  const age = parseInt(ageHeader, 10);
-  return age < 0 ? maxAgeSeconds : maxAgeSeconds - age;
+  return maxAgeSeconds - Number(age) * 1000;
 };
 
 const interpretExpires: HeaderInterpreter = (headers) => {
