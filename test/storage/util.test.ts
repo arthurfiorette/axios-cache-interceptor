@@ -1,20 +1,20 @@
-import { isCacheValid } from '../../src/storage/util';
+import { AxiosStorage } from '../../src/storage/storage';
 
 describe('tests common storages', () => {
   it('tests isCacheValid with empty state', () => {
-    const invalid = isCacheValid({ state: 'empty' });
+    const invalid = AxiosStorage.isValid({ state: 'empty' });
 
-    expect(invalid).toBe('unknown');
+    expect(invalid).toBe(true);
   });
 
   it('tests isCacheValid with loading state', () => {
-    const invalid = isCacheValid({ state: 'loading' });
+    const invalid = AxiosStorage.isValid({ state: 'loading' });
 
-    expect(invalid).toBe('unknown');
+    expect(invalid).toBe(true);
   });
 
   it('tests isCacheValid with overdue cached state', () => {
-    const isValid = isCacheValid({
+    const isValid = AxiosStorage.isValid({
       state: 'cached',
       data: {} as any, // doesn't matter
       createdAt: Date.now() - 2000, // 2 seconds in the past
@@ -24,8 +24,8 @@ describe('tests common storages', () => {
     expect(isValid).toBe(false);
   });
 
-  it('tests isCacheValid with overdue cached state', () => {
-    const isValid = isCacheValid({
+  it('tests isCacheValid with cached state', () => {
+    const isValid = AxiosStorage.isValid({
       state: 'cached',
       data: {} as any, // doesn't matter
       createdAt: Date.now(),

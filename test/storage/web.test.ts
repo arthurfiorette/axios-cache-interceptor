@@ -2,10 +2,10 @@
  * @jest-environment jsdom
  */
 
-import { LocalCacheStorage, SessionCacheStorage } from '../../src/storage/web';
+import { BrowserAxiosStorage } from '../../src/storage/browser';
 import { testStorage } from './storages';
 
 describe('tests web storages', () => {
-  testStorage('local-storage', () => new LocalCacheStorage());
-  testStorage('session-storage', () => new SessionCacheStorage());
+  testStorage('local-storage', () => new BrowserAxiosStorage(localStorage));
+  testStorage('session-storage', () => new BrowserAxiosStorage(sessionStorage));
 });
