@@ -36,13 +36,12 @@ const interpretCacheControl: HeaderInterpreter = (cacheControl, headers) => {
 
   if (maxAge) {
     const age = headers[Header.Age];
-    const maxAgeSeconds = maxAge * 1000;
 
     if (!age) {
-      return maxAgeSeconds;
+      return maxAge * 1000;
     }
 
-    return maxAgeSeconds - Number(age) * 1000;
+    return maxAge * 1000 - Number(age) * 1000;
   }
 
   return undefined;
