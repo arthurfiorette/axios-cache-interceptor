@@ -1,37 +1,38 @@
 import { defaultHeaderInterpreter } from '../../src/header/interpreter';
+import { Header } from '../../src/util/headers';
 
 describe('tests header interpreter', () => {
   it('tests without cache-control header', () => {
     const noHeader = defaultHeaderInterpreter({});
     expect(noHeader).toBeUndefined();
 
-    const emptyHeader = defaultHeaderInterpreter({ 'cache-control': 'public' });
+    const emptyHeader = defaultHeaderInterpreter({ [Header.CacheControl]: 'public' });
     expect(emptyHeader).toBeUndefined();
   });
 
   it('tests with cache preventing headers', () => {
     const noStore = defaultHeaderInterpreter({
-      'cache-control': 'no-store'
+      [Header.CacheControl]: 'no-store'
     });
 
     expect(noStore).toBe(false);
 
     const noCache = defaultHeaderInterpreter({
-      'cache-control': 'no-cache'
+      [Header.CacheControl]: 'no-cache'
     });
 
     expect(noCache).toBe(false);
 
     const mustRevalidate = defaultHeaderInterpreter({
-      'cache-control': 'must-revalidate'
+      [Header.CacheControl]: 'must-revalidate'
     });
 
-    expect(mustRevalidate).toBe(false);
+    expect(mustRevalidate).toBe(0);
   });
 
   it('tests with maxAge header for 10 seconds', () => {
     const result = defaultHeaderInterpreter({
-      'cache-control': 'max-age=10'
+      [Header.CacheControl]: 'max-age=10'
     });
 
     // 10 Seconds in milliseconds
@@ -40,7 +41,7 @@ describe('tests header interpreter', () => {
 
   it('tests with expires and cache-control present', () => {
     const result = defaultHeaderInterpreter({
-      'cache-control': 'max-age=10',
+      [Header.CacheControl]: 'max-age=10',
       expires: new Date(new Date().getFullYear() + 1, 1, 1).toISOString()
     });
 

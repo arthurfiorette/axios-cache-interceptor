@@ -1,37 +1,49 @@
 import { parse } from '@tusbar/cache-control';
+import { Header } from '../util/headers';
 import type { HeaderInterpreter } from './types';
 
 export const defaultHeaderInterpreter: HeaderInterpreter = (headers) => {
-  const cacheControl = headers?.['cache-control'];
+  const cacheControl = headers?.[Header.CacheControl];
 
   if (!cacheControl) {
-    // Checks if Expires header is present
-    // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Expires
-    const expires = headers?.['expires'];
-
-    if (expires) {
-      const milliseconds = Date.parse(expires) - Date.now();
-
-      if (milliseconds > 0) {
-        return milliseconds;
-      } else {
-        return false;
-      }
-    }
-
-    return undefined;
+    return interpretExpires(headers);
   }
 
   const { noCache, noStore, mustRevalidate, maxAge } = parse(cacheControl);
 
   // Header told that this response should not be cached.
-  if (noCache || noStore || mustRevalidate) {
+  if (noCache || noStore) {
     return false;
+  }
+
+  // Already out of date, for cache can be saved, but must be requested again
+  if (mustRevalidate) {
+    return 0;
   }
 
   if (!maxAge) {
     return undefined;
   }
 
-  return maxAge * 1000;
+  const ageHeader = headers?.[Header.Age];
+  const maxAgeSeconds = maxAge * 1000;
+
+  if (!ageHeader) {
+    return maxAgeSeconds;
+  }
+
+  const age = parseInt(ageHeader, 10);
+  return age < 0 ? maxAgeSeconds : maxAgeSeconds - age;
+};
+
+const interpretExpires: HeaderInterpreter = (headers) => {
+  const expires = headers?.[Header.Expires];
+
+  if (!expires) {
+    return undefined;
+  }
+
+  const milliseconds = Date.parse(expires) - Date.now();
+
+  return milliseconds >= 0 ? milliseconds : false;
 };
