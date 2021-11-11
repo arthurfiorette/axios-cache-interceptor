@@ -68,6 +68,15 @@ describe('tests header interpreter', () => {
     expect(result).toBe(false);
   });
 
+  it('tests with immutable', () => {
+    const result = defaultHeaderInterpreter({
+      [Header.CacheControl]: 'immutable'
+    });
+
+    // 1 year
+    expect(result).toBe(1000 * 60 * 60 * 24 * 365);
+  });
+
   it('tests with future expires', () => {
     const date = new Date(new Date().getFullYear() + 1, 1, 1);
 

@@ -22,11 +22,17 @@ const interpretExpires: HeaderInterpreter = (expires) => {
 };
 
 const interpretCacheControl: HeaderInterpreter = (cacheControl, headers) => {
-  const { noCache, noStore, mustRevalidate, maxAge } = parse(cacheControl);
+  const { noCache, noStore, mustRevalidate, maxAge, immutable } = parse(cacheControl);
 
   // Header told that this response should not be cached.
   if (noCache || noStore) {
     return false;
+  }
+
+  if (immutable) {
+    // 1 year is sufficient, as Infinity may cause more problems.
+    // It might not be the best way, but a year is better than none.
+    return 1000 * 60 * 60 * 24 * 365;
   }
 
   // Already out of date, for cache can be saved, but must be requested again
