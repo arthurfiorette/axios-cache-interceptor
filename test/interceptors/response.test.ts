@@ -32,7 +32,7 @@ describe('test request interceptor', () => {
 
     const axiosCache = mockAxios(
       {},
-      { [Header.CacheControl]: `maxAge=${60 * 60 * 24 * 365}` }
+      { [Header.CacheControl]: `max-age=${60 * 60 * 24 * 365}` }
     );
 
     // Make first request to cache it
@@ -58,5 +58,25 @@ describe('test request interceptor', () => {
     const cache = await axios.storage.get(id);
 
     expect(cache.state).toBe('empty');
+  });
+
+  it('tests with blank cache-control header', async () => {
+    const defaultTtl = 60;
+
+    const axios = mockAxios(
+      { ttl: defaultTtl, interpretHeader: true },
+      { [Header.CacheControl]: '' }
+    );
+
+    const { id } = await axios.get('key01', {
+      cache: {
+        interpretHeader: true
+      }
+    });
+
+    const cache = await axios.storage.get(id);
+
+    expect(cache.state).toBe('cached');
+    expect(cache.ttl).toBe(defaultTtl);
   });
 });

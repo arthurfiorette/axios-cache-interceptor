@@ -3,10 +3,10 @@ import { Header } from '../../src/util/headers';
 
 describe('tests header interpreter', () => {
   it('tests without cache-control header', () => {
-    const noHeader = defaultHeaderInterpreter({});
+    const noHeader = defaultHeaderInterpreter();
     expect(noHeader).toBeUndefined();
 
-    const emptyHeader = defaultHeaderInterpreter({ [Header.CacheControl]: 'public' });
+    const emptyHeader = defaultHeaderInterpreter({ [Header.CacheControl]: '' });
     expect(emptyHeader).toBeUndefined();
   });
 
@@ -51,7 +51,7 @@ describe('tests header interpreter', () => {
   it('tests with expires and cache-control present', () => {
     const result = defaultHeaderInterpreter({
       [Header.CacheControl]: 'max-age=10',
-      expires: new Date(new Date().getFullYear() + 1, 1, 1).toISOString()
+      [Header.Expires]: new Date(new Date().getFullYear() + 1, 1, 1).toUTCString()
     });
 
     // expires should be ignored
@@ -61,7 +61,7 @@ describe('tests header interpreter', () => {
 
   it('tests with past expires', () => {
     const result = defaultHeaderInterpreter({
-      expires: new Date(new Date().getFullYear() - 1, 1, 1).toISOString()
+      [Header.Expires]: new Date(new Date().getFullYear() - 1, 1, 1).toUTCString()
     });
 
     // Past means cache invalid
@@ -72,7 +72,7 @@ describe('tests header interpreter', () => {
     const date = new Date(new Date().getFullYear() + 1, 1, 1);
 
     const result = defaultHeaderInterpreter({
-      expires: date.toISOString()
+      [Header.Expires]: date.toUTCString()
     });
 
     const approx = date.getTime() - Date.now();

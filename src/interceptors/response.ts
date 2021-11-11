@@ -87,7 +87,10 @@ export class CacheResponseInterceptor<R, D>
 
     let ttl = response.config.cache?.ttl || this.axios.defaults.cache.ttl;
 
-    if (response.config.cache?.interpretHeader) {
+    if (
+      response.config.cache?.interpretHeader ||
+      this.axios.defaults.cache.interpretHeader
+    ) {
       const expirationTime = this.axios.headerInterpreter(response.headers);
 
       // Cache should not be used
