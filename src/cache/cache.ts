@@ -2,7 +2,8 @@ import type { Method } from 'axios';
 import type { Deferred } from 'typed-core/dist/promises/deferred';
 import type { HeadersInterpreter } from '../header/types';
 import type { AxiosInterceptor } from '../interceptors/types';
-import type { CachedResponse, CacheStorage } from '../storage/types';
+import type { AxiosStorage } from '../storage/storage';
+import type { CachedResponse } from '../storage/types';
 import type { CachePredicate, KeyGenerator } from '../util/types';
 import type { CacheUpdater } from '../util/update-cache';
 import type { CacheAxiosResponse, CacheRequestConfig } from './axios';
@@ -65,7 +66,7 @@ export interface CacheInstance {
    *
    * @default new MemoryStorage()
    */
-  storage: CacheStorage;
+  storage: AxiosStorage;
 
   /**
    * The function used to create different keys for each request.

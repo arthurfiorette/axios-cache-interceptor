@@ -1,8 +1,5 @@
-import type {
-  CachedStorageValue,
-  CacheStorage,
-  EmptyStorageValue
-} from '../storage/types';
+import type { AxiosStorage } from '../storage/storage';
+import type { CachedStorageValue, EmptyStorageValue } from '../storage/types';
 
 export type CacheUpdater =
   | 'delete'
@@ -12,7 +9,7 @@ export type CacheUpdater =
     ) => CachedStorageValue | void);
 
 export async function updateCache<T = any>(
-  storage: CacheStorage,
+  storage: AxiosStorage,
   data: T,
   entries: Record<string, CacheUpdater>
 ): Promise<void> {

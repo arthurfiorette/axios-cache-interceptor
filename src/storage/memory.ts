@@ -1,17 +1,19 @@
-import type { CacheStorage, StorageValue } from './types';
-import { isCacheValid } from './util';
+import { AxiosStorage } from './storage';
+import type { CachedStorageValue, LoadingStorageValue, StorageValue } from './types';
 
-export class MemoryStorage implements CacheStorage {
-  private readonly storage: Map<string, StorageValue> = new Map();
+export class MemoryAxiosStorage extends AxiosStorage {
+  constructor(readonly storage: Record<string, StorageValue> = {}) {
+    super();
+  }
 
-  get = async (key: string): Promise<StorageValue> => {
-    const value = this.storage.get(key);
+  public get = (key: string): StorageValue => {
+    const value = this.storage[key];
 
     if (!value) {
       return { state: 'empty' };
     }
 
-    if (isCacheValid(value) === false) {
+    if (!AxiosStorage.isValid(value)) {
       this.remove(key);
       return { state: 'empty' };
     }
@@ -19,11 +21,11 @@ export class MemoryStorage implements CacheStorage {
     return value;
   };
 
-  set = async (key: string, value: StorageValue): Promise<void> => {
-    this.storage.set(key, value);
+  public set = (key: string, value: CachedStorageValue | LoadingStorageValue): void => {
+    this.storage[key] = value;
   };
 
-  remove = async (key: string): Promise<void> => {
-    this.storage.delete(key);
+  public remove = (key: string): void => {
+    delete this.storage[key];
   };
 }
