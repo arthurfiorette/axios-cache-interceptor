@@ -1,7 +1,7 @@
-import type { CacheStorage } from '../../src/storage/types';
+import type { AxiosStorage } from '../../src/storage/storage';
 import { EMPTY_RESPONSE } from '../constants';
 
-export function testStorage(name: string, Storage: () => CacheStorage): void {
+export function testStorage(name: string, Storage: () => AxiosStorage): void {
   it(`tests ${name} storage methods`, async () => {
     const storage = Storage();
 
