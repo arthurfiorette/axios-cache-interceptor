@@ -1,37 +1,48 @@
 import { parse } from '@tusbar/cache-control';
-import type { HeaderInterpreter } from './types';
+import { Header } from '../util/headers';
+import type { HeaderInterpreter, HeadersInterpreter } from './types';
 
-export const defaultHeaderInterpreter: HeaderInterpreter = (headers) => {
-  const cacheControl = headers?.['cache-control'];
-
-  if (!cacheControl) {
-    // Checks if Expires header is present
-    // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Expires
-    const expires = headers?.['expires'];
-
-    if (expires) {
-      const milliseconds = Date.parse(expires) - Date.now();
-
-      if (milliseconds > 0) {
-        return milliseconds;
-      } else {
-        return false;
-      }
-    }
-
-    return undefined;
+export const defaultHeaderInterpreter: HeadersInterpreter = (headers = {}) => {
+  if (Header.CacheControl in headers) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return interpretCacheControl(headers[Header.CacheControl]!, headers);
   }
 
+  if (Header.Expires in headers) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return interpretExpires(headers[Header.Expires]!, headers);
+  }
+
+  return undefined;
+};
+
+const interpretExpires: HeaderInterpreter = (expires) => {
+  const milliseconds = Date.parse(expires) - Date.now();
+  return milliseconds >= 0 ? milliseconds : false;
+};
+
+const interpretCacheControl: HeaderInterpreter = (cacheControl, headers) => {
   const { noCache, noStore, mustRevalidate, maxAge } = parse(cacheControl);
 
   // Header told that this response should not be cached.
-  if (noCache || noStore || mustRevalidate) {
+  if (noCache || noStore) {
     return false;
   }
 
-  if (!maxAge) {
-    return undefined;
+  // Already out of date, for cache can be saved, but must be requested again
+  if (mustRevalidate) {
+    return 0;
   }
 
-  return maxAge * 1000;
+  if (maxAge) {
+    const age = headers[Header.Age];
+
+    if (!age) {
+      return maxAge * 1000;
+    }
+
+    return maxAge * 1000 - Number(age) * 1000;
+  }
+
+  return undefined;
 };

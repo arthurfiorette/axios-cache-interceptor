@@ -76,10 +76,7 @@ export class CacheRequestInterceptor<D>
     if (cache.state === 'loading') {
       const deferred = this.axios.waiting[key];
 
-      /**
-       * If the deferred is undefined, means that the outside has
-       * removed that key from the waiting list
-       */
+      // Just in case, the deferred doesn't exists.
       if (!deferred) {
         await this.axios.storage.remove(key);
         return config;

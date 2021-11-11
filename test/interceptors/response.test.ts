@@ -1,3 +1,4 @@
+import { Header } from '../../src/util/headers';
 import { mockAxios } from '../mocks/axios';
 
 describe('test request interceptor', () => {
@@ -21,7 +22,7 @@ describe('test request interceptor', () => {
   });
 
   it('tests header interpreter integration', async () => {
-    const axiosNoCache = mockAxios({}, { 'cache-control': 'no-cache' });
+    const axiosNoCache = mockAxios({}, { [Header.CacheControl]: 'no-cache' });
 
     // Make first request to cache it
     await axiosNoCache.get('', { cache: { interpretHeader: true } });
@@ -29,7 +30,10 @@ describe('test request interceptor', () => {
 
     expect(resultNoCache.cached).toBe(false);
 
-    const axiosCache = mockAxios({}, { 'cache-control': `maxAge=${60 * 60 * 24 * 365}` });
+    const axiosCache = mockAxios(
+      {},
+      { [Header.CacheControl]: `max-age=${60 * 60 * 24 * 365}` }
+    );
 
     // Make first request to cache it
     await axiosCache.get('', { cache: { interpretHeader: true } });
@@ -54,5 +58,25 @@ describe('test request interceptor', () => {
     const cache = await axios.storage.get(id);
 
     expect(cache.state).toBe('empty');
+  });
+
+  it('tests with blank cache-control header', async () => {
+    const defaultTtl = 60;
+
+    const axios = mockAxios(
+      { ttl: defaultTtl, interpretHeader: true },
+      { [Header.CacheControl]: '' }
+    );
+
+    const { id } = await axios.get('key01', {
+      cache: {
+        interpretHeader: true
+      }
+    });
+
+    const cache = await axios.storage.get(id);
+
+    expect(cache.state).toBe('cached');
+    expect(cache.ttl).toBe(defaultTtl);
   });
 });

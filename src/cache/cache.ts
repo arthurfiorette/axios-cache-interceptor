@@ -1,6 +1,6 @@
 import type { Method } from 'axios';
 import type { Deferred } from 'typed-core/dist/promises/deferred';
-import type { HeaderInterpreter } from '../header/types';
+import type { HeadersInterpreter } from '../header/types';
 import type { AxiosInterceptor } from '../interceptors/types';
 import type { CachedResponse, CacheStorage } from '../storage/types';
 import type { CachePredicate, KeyGenerator } from '../util/types';
@@ -87,7 +87,7 @@ export interface CacheInstance {
    * The function to parse and interpret response headers. Only used
    * if cache.interpretHeader is true.
    */
-  headerInterpreter: HeaderInterpreter;
+  headerInterpreter: HeadersInterpreter;
 
   /**
    * The request interceptor that will be used to handle the cache.
