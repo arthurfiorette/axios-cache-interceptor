@@ -74,6 +74,7 @@ export class CacheRequestInterceptor<D>
 
       const oldValidate = config.validateStatus;
       config.validateStatus = (status: number): boolean => {
+        /* istanbul ignore next 'for some reason this code is not detected' */
         return oldValidate?.(status) || (status >= 200 && status < 300) || status === 304;
       };
 
@@ -86,6 +87,7 @@ export class CacheRequestInterceptor<D>
       const deferred = this.axios.waiting[key];
 
       // Just in case, the deferred doesn't exists.
+      /* istanbul ignore if 'really hard to test' */
       if (!deferred) {
         await this.axios.storage.remove(key);
         return config;
