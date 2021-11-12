@@ -44,9 +44,9 @@ export function useCache(
       ttl: 1000 * 60 * 5,
       interpretHeader: false,
       methods: ['get'],
-      cachePredicate: {
-        statusCheck: [200, 399]
-      },
+      cachePredicate: { statusCheck: [200, 399] },
+      etag: false,
+      modifiedSince: true,
       update: {},
       ...cacheOptions
     }

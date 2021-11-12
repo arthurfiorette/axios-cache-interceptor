@@ -55,9 +55,28 @@ export type CacheProperties = {
    * The id used is the same as the id on `CacheRequestConfig['id']`,
    * auto-generated or not.
    *
-   * @default {}
+   * @default
    */
   update: Record<string, CacheUpdater>;
+
+  /**
+   * If the request should handle ETag and If-None-Match support. Use
+   * a string to force a custom value or true to use the response ETag
+   *
+   * @default false
+   * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag
+   */
+  etag: string | boolean;
+
+  /**
+   * Use If-Modified-Since header in this request. Use a date to force
+   * a custom value or true to use the last cached timestamp. If never
+   * cached before, the header is not set.
+   *
+   * @default true
+   * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/If-Modified-Since
+   */
+  modifiedSince: Date | boolean;
 };
 
 export interface CacheInstance {

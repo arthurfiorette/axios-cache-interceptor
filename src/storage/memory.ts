@@ -1,31 +1,20 @@
 import { AxiosStorage } from './storage';
-import type { CachedStorageValue, LoadingStorageValue, StorageValue } from './types';
+import type { NotEmptyStorageValue, StorageValue } from './types';
 
 export class MemoryAxiosStorage extends AxiosStorage {
   constructor(readonly storage: Record<string, StorageValue> = {}) {
     super();
   }
 
-  public get = (key: string): StorageValue => {
-    const value = this.storage[key];
-
-    if (!value) {
-      return { state: 'empty' };
-    }
-
-    if (!AxiosStorage.isValid(value)) {
-      this.remove(key);
-      return { state: 'empty' };
-    }
-
-    return value;
+  public find = async (key: string): Promise<StorageValue> => {
+    return this.storage[key] || { state: 'empty' };
   };
 
-  public set = (key: string, value: CachedStorageValue | LoadingStorageValue): void => {
+  public set = async (key: string, value: NotEmptyStorageValue): Promise<void> => {
     this.storage[key] = value;
   };
 
-  public remove = (key: string): void => {
+  public remove = async (key: string): Promise<void> => {
     delete this.storage[key];
   };
 }

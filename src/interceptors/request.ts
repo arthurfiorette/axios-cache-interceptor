@@ -1,4 +1,6 @@
+import type { Method } from 'axios';
 import { deferred } from 'typed-core/dist/promises/deferred';
+import type { CacheProperties } from '..';
 import type {
   AxiosCacheInstance,
   CacheAxiosResponse,
@@ -7,8 +9,11 @@ import type {
 import type {
   CachedResponse,
   CachedStorageValue,
-  LoadingStorageValue
+  EmptyStorageValue,
+  LoadingStorageValue,
+  StaleStorageValue
 } from '../storage/types';
+import { Header } from '../util/headers';
 import type { AxiosInterceptor } from './types';
 
 export class CacheRequestInterceptor<D>
@@ -16,21 +21,16 @@ export class CacheRequestInterceptor<D>
 {
   constructor(readonly axios: AxiosCacheInstance) {}
 
-  use = (): void => {
+  public use = (): void => {
     this.axios.interceptors.request.use(this.onFulfilled);
   };
 
-  onFulfilled = async (config: CacheRequestConfig<D>): Promise<CacheRequestConfig<D>> => {
-    // Skip cache
-    if (config.cache === false) {
-      return config;
-    }
-
-    // Only cache specified methods
-    const allowedMethods = config.cache?.methods || this.axios.defaults.cache.methods;
-
+  public onFulfilled = async (
+    config: CacheRequestConfig<D>
+  ): Promise<CacheRequestConfig<D>> => {
     if (
-      !allowedMethods.some((method) => (config.method || 'get').toLowerCase() == method)
+      config.cache === false ||
+      !this.isMethodAllowed(this.axios, config.method, config.cache)
     ) {
       return config;
     }
@@ -41,7 +41,7 @@ export class CacheRequestInterceptor<D>
     let cache = await this.axios.storage.get(key);
 
     // Not cached, continue the request, and mark it as fetching
-    emptyState: if (cache.state == 'empty') {
+    emptyOrStale: if (cache.state == 'empty' || cache.state === 'stale') {
       /**
        * This checks for simultaneous access to a new key. The js
        * event loop jumps on the first await statement, so the second
@@ -51,7 +51,7 @@ export class CacheRequestInterceptor<D>
         cache = (await this.axios.storage.get(key)) as
           | CachedStorageValue
           | LoadingStorageValue;
-        break emptyState;
+        break emptyOrStale;
       }
 
       // Create a deferred to resolve other requests for the same key when it's completed
@@ -65,8 +65,12 @@ export class CacheRequestInterceptor<D>
 
       await this.axios.storage.set(key, {
         state: 'loading',
-        ttl: config.cache?.ttl
+        ttl: config.cache?.ttl,
+        data: cache.data
       });
+
+      //@ts-expect-error type infer couldn't resolve this
+      this.setRequestHeaders(cache, config);
 
       return config;
     }
@@ -108,5 +112,54 @@ export class CacheRequestInterceptor<D>
       });
 
     return config;
+  };
+
+  private isMethodAllowed = (
+    axios: AxiosCacheInstance,
+    method: Method = 'get',
+    properties?: Partial<CacheProperties>
+  ): boolean => {
+    const requestMethod = method.toLowerCase();
+    const allowedMethods = properties?.methods || axios.defaults.cache.methods;
+
+    for (const method of allowedMethods) {
+      if (method.toLowerCase() === requestMethod) {
+        return true;
+      }
+    }
+
+    return false;
+  };
+
+  private setRequestHeaders = (
+    cache: StaleStorageValue | EmptyStorageValue,
+    config: CacheRequestConfig<D> & { cache: Partial<CacheProperties> | undefined }
+  ) => {
+    if (!config.cache) return;
+    config.headers ||= {};
+
+    const { etag, modifiedSince } = config.cache;
+
+    if (etag) {
+      const etagValue = etag === true ? cache.data?.headers[Header.ETag] : etag;
+      if (etagValue) {
+        config.headers[Header.IfNoneMatch] = etagValue;
+      }
+    }
+
+    if (
+      modifiedSince &&
+      cache.state === 'stale'
+
+      // TODO: See if this only applies to get and head
+      // && (!config.method ||
+      // config.method.toLowerCase() === 'get' ||
+      // config.method.toLowerCase() === 'head')
+    ) {
+      const modifiedDate =
+        modifiedSince === true ? new Date(cache.createdAt) : modifiedSince;
+
+      config.headers[Header.IfModifiedSince] = modifiedDate.toUTCString();
+    }
   };
 }
