@@ -45,7 +45,7 @@ export class CacheResponseInterceptor<R, D>
 
     // Config told that this response should be cached.
     if (
-      // If it was stale, a 304 response isn't bad.
+      // For 'loading' values (post stale), this check was already run in the past.
       !cache.data &&
       !this.testCachePredicate(response, response.config.cache)
     ) {
@@ -76,9 +76,14 @@ export class CacheResponseInterceptor<R, D>
             // Rust syntax <3
             response.cached = true;
             response.data = cache.data.data;
-            response.headers = cache.data.headers;
             response.status = cache.data.status;
             response.statusText = cache.data.statusText;
+
+            // We may have new headers.
+            response.headers = {
+              ...cache.data.headers,
+              ...response.headers
+            };
 
             return cache.data;
           })()
