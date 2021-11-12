@@ -67,7 +67,7 @@ export class CacheResponseInterceptor<R, D>
         return response;
       }
 
-      ttl = expirationTime ? expirationTime : ttl;
+      ttl = expirationTime || expirationTime === 0 ? expirationTime : ttl;
     }
 
     const data =
