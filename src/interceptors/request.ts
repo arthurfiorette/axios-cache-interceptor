@@ -72,6 +72,10 @@ export class CacheRequestInterceptor<D>
       //@ts-expect-error type infer couldn't resolve this
       this.setRequestHeaders(cache, config);
 
+      config.validateStatus = (status: number): boolean => {
+        return config.validateStatus?.(status) || status === 304;
+      };
+
       return config;
     }
 
