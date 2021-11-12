@@ -126,6 +126,25 @@ describe('test request interceptor', () => {
     expect(response2.data).toBe(true); // ensure value from stale cache is kept
     expect(response2.status).toBe(200); // ensure value from stale cache is kept
   });
+
+  it('tests must revalidate handling without any headers to do so', async () => {
+    const axios = mockAxios({}, { 'cache-control': 'must-revalidate' });
+    const config = { cache: { interpretHeader: true } };
+    await axios.get('', config);
+    await sleep(2); // 1ms cache
+    const response = await axios.get('', config);
+    expect(response.cached).toBe(false); // nothing to use for revalidation
+  });
+
+  it('tests must revalidate handling with etag', async () => {
+    const axios = mockAxios({}, { etag: 'fakeEtag', 'cache-control': 'must-revalidate' });
+    const config = { cache: { interpretHeader: true, etag: true } };
+    await axios.get('', config);
+    await sleep(2); // 1ms cache
+    const response = await axios.get('', config);
+    expect(response.cached).toBe(true); // from etag revalidation
+    expect(response.data).toBe(true);
+  });
 });
 
 function sleep(ms: number) {
