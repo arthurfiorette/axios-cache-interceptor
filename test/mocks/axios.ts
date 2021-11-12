@@ -1,5 +1,6 @@
 import { AxiosCacheInstance, CacheProperties, createCache } from '../../src';
 import type { CacheInstance } from '../../src/cache/cache';
+import { Header } from '../../src/util/headers';
 
 export function mockAxios(
   options: Partial<CacheInstance> & Partial<CacheProperties> = {},
@@ -13,26 +14,17 @@ export function mockAxios(
   axios.interceptors.request.use((config) => {
     config.adapter = async (config) => {
       await 0; // Jumps to next tick of nodejs event loop
-      if (
-        config.headers &&
-        (config.headers['if-none-match'] || config.headers['if-modified-since'])
-      ) {
-        return {
-          data: null,
-          status: 304,
-          statusText: '304 Not Modified',
-          headers,
-          config
-        };
-      } else {
-        return {
-          data: true,
-          status: 200,
-          statusText: '200 OK',
-          headers,
-          config
-        };
-      }
+
+      const should304 =
+        config.headers?.[Header.IfNoneMatch] || config.headers?.[Header.IfModifiedSince];
+
+      return {
+        data: true,
+        status: should304 ? 304 : 200,
+        statusText: should304 ? '304 Not Modified' : '200 OK',
+        headers,
+        config
+      };
     };
 
     return config;

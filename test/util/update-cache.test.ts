@@ -1,7 +1,7 @@
 import type { AxiosCacheInstance, CachedStorageValue } from '../../src';
 import { updateCache } from '../../src/util/update-cache';
-import { EMPTY_RESPONSE } from '../constants';
 import { mockAxios } from '../mocks/axios';
+import { EMPTY_RESPONSE } from '../utils';
 
 const KEY = 'cacheKey';
 const EMPTY_STATE = { state: 'empty' };

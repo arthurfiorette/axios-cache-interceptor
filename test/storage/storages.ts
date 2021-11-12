@@ -1,5 +1,5 @@
 import type { AxiosStorage } from '../../src/storage/storage';
-import { EMPTY_RESPONSE } from '../constants';
+import { EMPTY_RESPONSE } from '../utils';
 
 export function testStorage(name: string, Storage: () => AxiosStorage): void {
   it(`tests ${name} storage methods`, async () => {

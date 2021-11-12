@@ -1,5 +1,5 @@
 import { checkPredicateObject } from '../../src/util/cache-predicate';
-import { createResponse } from '../constants';
+import { createResponse } from '../utils';
 
 describe('tests cache predicate object', () => {
   it('tests statusCheck with tuples', () => {
