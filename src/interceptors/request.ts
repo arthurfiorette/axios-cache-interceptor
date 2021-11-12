@@ -72,8 +72,9 @@ export class CacheRequestInterceptor<D>
       //@ts-expect-error type infer couldn't resolve this
       this.setRequestHeaders(cache, config);
 
+      const oldValidate = config.validateStatus;
       config.validateStatus = (status: number): boolean => {
-        return config.validateStatus?.(status) || status === 304;
+        return oldValidate?.(status) || (status >= 200 && status < 300) || status === 304;
       };
 
       return config;
