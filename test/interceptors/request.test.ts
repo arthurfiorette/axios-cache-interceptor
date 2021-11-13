@@ -176,6 +176,21 @@ describe('test request interceptor', () => {
     expect(response.data).toBe(true);
   });
 
+  it('tests must revalidate handling with etag custom e-tag', async () => {
+    const axios = mockAxios({}, { etag: 'fakeEtag', 'cache-control': 'must-revalidate' });
+    const config = { cache: { interpretHeader: true, etag: 'fakeEtag' } };
+
+    await axios.get('', config);
+
+    // 1ms cache
+    await sleep(2);
+
+    const response = await axios.get('', config);
+    // from etag revalidation
+    expect(response.cached).toBe(true);
+    expect(response.data).toBe(true);
+  });
+
   it('tests validate-status function', async () => {
     const { createValidateStatus } = CacheRequestInterceptor;
 
