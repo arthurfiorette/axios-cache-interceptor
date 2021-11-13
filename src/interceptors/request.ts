@@ -152,14 +152,18 @@ export class CacheRequestInterceptor<D>
       }
     }
 
-    if (modifiedSince) {
-      const modifiedDate =
+    if (
+      modifiedSince &&
+      // This check is to make typescript happy, as with a empty state
+      // there's no way to determine any value, since we never saw it before.
+      cache.state === 'stale'
+    ) {
+      config.headers[Header.IfModifiedSince] =
         modifiedSince === true
-          ? cache.data?.headers[Header.LastModified]
+          ? // If last-modified is not present, use the createdAt timestamp
+            cache.data.headers[Header.LastModified] ||
+            new Date(cache.createdAt).toUTCString()
           : modifiedSince.toUTCString();
-      if (modifiedDate) {
-        config.headers[Header.IfModifiedSince] = modifiedDate;
-      }
     }
   };
 
