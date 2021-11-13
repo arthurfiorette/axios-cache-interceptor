@@ -1,4 +1,4 @@
-import type { Method } from 'axios';
+import type { AxiosRequestConfig, Method } from 'axios';
 import { deferred } from 'typed-core/dist/promises/deferred';
 import type { CacheProperties } from '..';
 import type {
@@ -72,10 +72,9 @@ export class CacheRequestInterceptor<D>
       //@ts-expect-error type infer couldn't resolve this
       this.setRequestHeaders(cache, config);
 
-      const oldValidate = config.validateStatus;
-      config.validateStatus = (status: number): boolean => {
-        return oldValidate?.(status) || (status >= 200 && status < 300) || status === 304;
-      };
+      config.validateStatus = CacheRequestInterceptor.createValidateStatus(
+        config.validateStatus
+      );
 
       return config;
     }
@@ -140,7 +139,7 @@ export class CacheRequestInterceptor<D>
   private setRequestHeaders = (
     cache: StaleStorageValue | EmptyStorageValue,
     config: CacheRequestConfig<D> & { cache: Partial<CacheProperties> | undefined }
-  ) => {
+  ): void => {
     if (!config.cache) return;
     config.headers ||= {};
 
@@ -162,5 +161,17 @@ export class CacheRequestInterceptor<D>
         config.headers[Header.IfModifiedSince] = modifiedDate;
       }
     }
+  };
+
+  /**
+   * Creates a new validateStatus function that will use the one
+   * already used and also accept status code 304.
+   */
+  static createValidateStatus = (oldValidate?: AxiosRequestConfig['validateStatus']) => {
+    return (status: number): boolean => {
+      return oldValidate
+        ? oldValidate(status) || status === 304
+        : (status >= 200 && status < 300) || status === 304;
+    };
   };
 }
