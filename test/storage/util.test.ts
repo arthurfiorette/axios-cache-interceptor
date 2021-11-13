@@ -29,7 +29,7 @@ describe('tests abstract storages', () => {
         statusText: '200 OK',
         data: true,
         headers: {
-          [Header.IfModifiedSince]: new Date().toUTCString()
+          [Header.LastModified]: new Date().toUTCString()
         }
       }
     });

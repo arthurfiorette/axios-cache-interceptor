@@ -52,7 +52,7 @@ export abstract class AxiosStorage {
    */
   static keepIfStale = ({ data }: CachedStorageValue): boolean => {
     if (data?.headers) {
-      return Header.ETag in data.headers || Header.IfModifiedSince in data.headers;
+      return Header.ETag in data.headers || Header.LastModified in data.headers;
     }
 
     return false;

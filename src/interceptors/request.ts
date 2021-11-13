@@ -154,19 +154,14 @@ export class CacheRequestInterceptor<D>
       }
     }
 
-    if (
-      modifiedSince &&
-      cache.state === 'stale'
-
-      // TODO: See if this only applies to get and head
-      // && (!config.method ||
-      // config.method.toLowerCase() === 'get' ||
-      // config.method.toLowerCase() === 'head')
-    ) {
+    if (modifiedSince) {
       const modifiedDate =
-        modifiedSince === true ? new Date(cache.createdAt) : modifiedSince;
-
-      config.headers[Header.IfModifiedSince] = modifiedDate.toUTCString();
+        modifiedSince === true
+          ? cache.data?.headers[Header.LastModified]
+          : modifiedSince.toUTCString();
+      if (modifiedDate) {
+        config.headers[Header.IfModifiedSince] = modifiedDate;
+      }
     }
   };
 }

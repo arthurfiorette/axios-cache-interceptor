@@ -10,6 +10,15 @@ export enum Header {
 
   /**
    * ```txt
+   * Last-Modified: <day-name>, <day> <month> <year> <hour>:<minute>:<second> GMT
+   * ```
+   *
+   * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Last-Modified
+   */
+  LastModified = 'last-modified',
+
+  /**
+   * ```txt
    * If-None-Match: "<etag_value>"
    * If-None-Match: "<etag_value>", "<etag_value>", …
    * If-None-Match: *

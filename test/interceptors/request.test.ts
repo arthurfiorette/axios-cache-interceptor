@@ -143,8 +143,9 @@ describe('test request interceptor', () => {
     await sleep(1000);
 
     const response2 = await axios.get('', config);
-    // new value, as the last-modified header doesn't trigger stale state
-    expect(response2.cached).toBe(false);
+    // from revalidation
+    expect(response2.cached).toBe(true);
+    expect(response2.status).toBe(200);
     expect(response2.status).toBe(200);
   });
 
