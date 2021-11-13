@@ -17,10 +17,13 @@ export function mockAxios(
 
       const should304 =
         config.headers?.[Header.IfNoneMatch] || config.headers?.[Header.IfModifiedSince];
+      const status = should304 ? 304 : 200;
+
+      config.validateStatus && config.validateStatus(status);
 
       return {
         data: true,
-        status: should304 ? 304 : 200,
+        status,
         statusText: should304 ? '304 Not Modified' : '200 OK',
         headers,
         config

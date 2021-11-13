@@ -74,7 +74,6 @@ export class CacheRequestInterceptor<D>
 
       const oldValidate = config.validateStatus;
       config.validateStatus = (status: number): boolean => {
-        /* istanbul ignore next 'for some reason this code is not detected' */
         return oldValidate?.(status) || (status >= 200 && status < 300) || status === 304;
       };
 
