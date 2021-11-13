@@ -1,4 +1,5 @@
 import { CacheRequestInterceptor } from '../../src/interceptors/request';
+import { Header } from '../../src/util/headers';
 import { mockAxios } from '../mocks/axios';
 import { sleep } from '../utils';
 
@@ -149,11 +150,8 @@ describe('test request interceptor', () => {
     expect(response2.status).toBe(200);
   });
 
-  it('tests last modified header handling with modified-since date', async () => {
-    const axios = mockAxios(
-      {},
-      { 'last-modified': 'Wed, 21 Oct 2015 07:28:00 GMT', 'cache-control': 'max-age=1' }
-    );
+  it('tests last modified header handling with modifiedSince date', async () => {
+    const axios = mockAxios({}, { 'last-modified': 'Wed, 21 Oct 2015 07:28:00 GMT' });
 
     const config = {
       cache: { interpretHeader: true, modifiedSince: new Date(2014, 1, 1) }
@@ -174,13 +172,13 @@ describe('test request interceptor', () => {
     expect(response2.status).toBe(200);
   });
 
-  it('tests last modified header handling without last-modified', async () => {
+  it('tests modifiedSince=true with last-modified response', async () => {
+    const date = 'Wed, 21 Oct 2015 07:28:00 GMT';
     const axios = mockAxios(
       {},
       {
-        'cache-control': 'max-age=1',
-        // Just present to the axios mock return a 304 response
-        etag: ':)'
+        'cache-control': 'must-revalidate',
+        'last-modified': date
       }
     );
 
@@ -191,17 +189,58 @@ describe('test request interceptor', () => {
     await axios.get('', config);
 
     const response = await axios.get('', config);
-    expect(response.cached).toBe(true);
-    expect(response.data).toBe(true);
 
-    // Sleep entire max age time.
-    await sleep(1000);
+    expect(response.config.headers?.[Header.IfModifiedSince]).toBe(date);
+    expect(response.headers?.[Header.LastModified]).toBe(date);
+  });
 
-    const response2 = await axios.get('', config);
+  it('tests modifiedSince=true without last-modified response', async () => {
+    const axios = mockAxios(
+      {},
+      {
+        'cache-control': 'must-revalidate',
+        // Return an etag to make the cache persist as stale, instead of being deleted.
+        etag: 'W/"1928"'
+      }
+    );
 
-    // from revalidation
-    expect(response2.cached).toBe(true);
-    expect(response2.status).toBe(200);
+    const config = {
+      cache: { interpretHeader: true, modifiedSince: true }
+    };
+
+    await axios.get('', config);
+    const response = await axios.get('', config);
+
+    const modifiedSince = response.config.headers?.[Header.IfModifiedSince];
+
+    if (!modifiedSince) {
+      throw new Error('modifiedSince is not defined');
+    }
+    const milliseconds = Date.parse(modifiedSince);
+
+    expect(typeof milliseconds).toBe('number');
+    expect(milliseconds).toBeLessThan(Date.now());
+  });
+
+  it('tests modifiedSince as date', async () => {
+    const date = 'Wed, 21 Oct 2015 07:28:00 GMT';
+    const axios = mockAxios(
+      {},
+      {
+        'cache-control': 'must-revalidate',
+        'last-modified': date
+      }
+    );
+
+    const config = {
+      cache: { interpretHeader: true, modifiedSince: new Date(date) }
+    };
+
+    await axios.get('', config);
+
+    const response = await axios.get('', config);
+    expect(response.config.headers?.[Header.IfModifiedSince]).toBe(date);
+    expect(response.headers?.[Header.LastModified]).toBe(date);
   });
 
   it('tests must revalidate handling without any headers to do so', async () => {
@@ -230,19 +269,15 @@ describe('test request interceptor', () => {
     expect(response.data).toBe(true);
   });
 
-  it('tests must revalidate handling with etag custom e-tag', async () => {
-    const axios = mockAxios({}, { etag: 'fakeEtag', 'cache-control': 'must-revalidate' });
-    const config = { cache: { interpretHeader: true, etag: 'fakeEtag' } };
+  it('tests custom e-tag', async () => {
+    const axios = mockAxios({}, { etag: 'fake-etag-2' });
 
-    await axios.get('', config);
+    const response = await axios.get('', {
+      cache: { interpretHeader: true, etag: 'fake-etag' }
+    });
 
-    // 1ms cache
-    await sleep(2);
-
-    const response = await axios.get('', config);
-    // from etag revalidation
-    expect(response.cached).toBe(true);
-    expect(response.data).toBe(true);
+    expect(response.config.headers?.[Header.IfNoneMatch]).toBe('fake-etag');
+    expect(response.headers?.[Header.ETag]).toBe('fake-etag-2');
   });
 
   it('tests validate-status function', async () => {
