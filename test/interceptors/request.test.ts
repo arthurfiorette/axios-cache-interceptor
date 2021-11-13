@@ -147,6 +147,60 @@ describe('test request interceptor', () => {
     // from revalidation
     expect(response2.cached).toBe(true);
     expect(response2.status).toBe(200);
+  });
+
+  it('tests last modified header handling with modified-since date', async () => {
+    const axios = mockAxios(
+      {},
+      { 'last-modified': 'Wed, 21 Oct 2015 07:28:00 GMT', 'cache-control': 'max-age=1' }
+    );
+
+    const config = {
+      cache: { interpretHeader: true, modifiedSince: new Date(2014, 1, 1) }
+    };
+
+    await axios.get('', config);
+
+    const response = await axios.get('', config);
+    expect(response.cached).toBe(true);
+    expect(response.data).toBe(true);
+
+    // Sleep entire max age time.
+    await sleep(1000);
+
+    const response2 = await axios.get('', config);
+    // from revalidation
+    expect(response2.cached).toBe(true);
+    expect(response2.status).toBe(200);
+  });
+
+  it('tests last modified header handling without last-modified', async () => {
+    const axios = mockAxios(
+      {},
+      {
+        'cache-control': 'max-age=1',
+        // Just present to the axios mock return a 304 response
+        etag: ':)'
+      }
+    );
+
+    const config = {
+      cache: { interpretHeader: true, modifiedSince: true }
+    };
+
+    await axios.get('', config);
+
+    const response = await axios.get('', config);
+    expect(response.cached).toBe(true);
+    expect(response.data).toBe(true);
+
+    // Sleep entire max age time.
+    await sleep(1000);
+
+    const response2 = await axios.get('', config);
+
+    // from revalidation
+    expect(response2.cached).toBe(true);
     expect(response2.status).toBe(200);
   });
 

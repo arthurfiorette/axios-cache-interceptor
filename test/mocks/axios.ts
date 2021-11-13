@@ -19,7 +19,8 @@ export function mockAxios(
         config.headers?.[Header.IfNoneMatch] || config.headers?.[Header.IfModifiedSince];
       const status = should304 ? 304 : 200;
 
-      config.validateStatus && config.validateStatus(status);
+      // real axios would throw an error here.
+      config.validateStatus?.(status);
 
       return {
         data: true,

@@ -30,7 +30,8 @@ export class CacheRequestInterceptor<D>
   ): Promise<CacheRequestConfig<D>> => {
     if (
       config.cache === false ||
-      !this.isMethodAllowed(this.axios, config.method, config.cache)
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      !this.isMethodAllowed(this.axios, config.method!, config.cache)
     ) {
       return config;
     }
@@ -121,7 +122,7 @@ export class CacheRequestInterceptor<D>
 
   private isMethodAllowed = (
     axios: AxiosCacheInstance,
-    method: Method = 'get',
+    method: Method,
     properties?: Partial<CacheProperties>
   ): boolean => {
     const requestMethod = method.toLowerCase();
