@@ -28,9 +28,12 @@ export class CacheResponseInterceptor<R, D>
     }
 
     // Skip cache
-    if (response.config.cache === false) {
+    // either false or weird behavior, config.cache should always exists, from global config merge at least
+    if (!response.config.cache) {
       return { ...response, cached: false };
     }
+
+    const cacheConfig = response.config.cache as CacheProperties;
 
     const cache = await this.axios.storage.get(response.id);
 
@@ -48,7 +51,7 @@ export class CacheResponseInterceptor<R, D>
     if (
       // For 'loading' values (post stale), this check was already run in the past.
       !cache.data &&
-      !this.testCachePredicate(response, response.config.cache)
+      !this.testCachePredicate(response, cacheConfig)
     ) {
       await this.rejectResponse(response.id);
       return response;
@@ -58,24 +61,21 @@ export class CacheResponseInterceptor<R, D>
     delete response.headers[Header.XAxiosCacheEtag];
     delete response.headers[Header.XAxiosCacheLastModified];
 
-    if (response.config.cache?.etag && response.config.cache?.etag !== true) {
-      response.headers[Header.XAxiosCacheEtag] = response.config.cache?.etag;
+    if (cacheConfig.etag && cacheConfig.etag !== true) {
+      response.headers[Header.XAxiosCacheEtag] = cacheConfig.etag;
     }
-    if (response.config.cache?.modifiedSince) {
-      if (response.config.cache?.modifiedSince === true) {
+    if (cacheConfig.modifiedSince) {
+      if (cacheConfig.modifiedSince === true) {
         response.headers[Header.XAxiosCacheLastModified] = 'use-cache-timestamp';
       } else {
         response.headers[Header.XAxiosCacheLastModified] =
-          response.config.cache?.modifiedSince.toUTCString();
+          cacheConfig.modifiedSince.toUTCString();
       }
     }
 
-    let ttl = response.config.cache?.ttl || this.axios.defaults.cache.ttl;
+    let ttl = cacheConfig.ttl || -1; // always set from global config
 
-    if (
-      response.config.cache?.interpretHeader ||
-      this.axios.defaults.cache.interpretHeader
-    ) {
+    if (cacheConfig?.interpretHeader) {
       const expirationTime = this.axios.headerInterpreter(response.headers);
 
       // Cache should not be used
@@ -108,14 +108,14 @@ export class CacheResponseInterceptor<R, D>
 
     const newCache: CachedStorageValue = {
       state: 'cached',
-      ttl: ttl,
+      ttl,
       createdAt: Date.now(),
       data
     };
 
     // Update other entries before updating himself
-    if (response.config.cache?.update) {
-      updateCache(this.axios.storage, response.data, response.config.cache.update);
+    if (cacheConfig?.update) {
+      updateCache(this.axios.storage, response.data, cacheConfig.update);
     }
 
     const deferred = this.axios.waiting[response.id];
@@ -133,10 +133,9 @@ export class CacheResponseInterceptor<R, D>
 
   private testCachePredicate = <R>(
     response: AxiosResponse<R>,
-    cache?: Partial<CacheProperties>
+    cache: CacheProperties
   ): boolean => {
-    const cachePredicate =
-      cache?.cachePredicate || this.axios.defaults.cache.cachePredicate;
+    const cachePredicate = cache.cachePredicate;
 
     return (
       (typeof cachePredicate === 'function' && cachePredicate(response)) ||

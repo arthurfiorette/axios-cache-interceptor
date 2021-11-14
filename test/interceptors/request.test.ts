@@ -89,7 +89,7 @@ describe('test request interceptor', () => {
   });
 
   it('test cache expiration', async () => {
-    const axios = mockAxios({}, { 'cache-control': 'max-age=1' });
+    const axios = mockAxios({ modifiedSince: false }, { 'cache-control': 'max-age=1' });
 
     await axios.get('', { cache: { interpretHeader: true } });
 
@@ -124,6 +124,29 @@ describe('test request interceptor', () => {
     expect(response2.data).toBe(true);
   });
 
+  it('tests etag header handling in global config', async () => {
+    const axios = mockAxios(
+      { interpretHeader: true, etag: true },
+      { etag: 'fakeEtag', 'cache-control': 'max-age=1' }
+    );
+
+    // initial request
+    await axios.get('');
+
+    const response = await axios.get('');
+    expect(response.cached).toBe(true);
+    expect(response.data).toBe(true);
+
+    // Sleep entire max age time.
+    await sleep(1000);
+
+    const response2 = await axios.get('');
+    // from revalidation
+    expect(response2.cached).toBe(true);
+    // ensure value from stale cache is kept
+    expect(response2.data).toBe(true);
+  });
+
   it('tests last modified header handling', async () => {
     const axios = mockAxios(
       {},
@@ -145,6 +168,30 @@ describe('test request interceptor', () => {
     await sleep(1000);
 
     const response2 = await axios.get('', config);
+    // from revalidation
+    expect(response2.cached).toBe(true);
+    expect(response2.status).toBe(200);
+  });
+
+  it('tests last modified header handling in global config', async () => {
+    const axios = mockAxios(
+      { interpretHeader: true, modifiedSince: true },
+      {
+        'last-modified': 'Wed, 21 Oct 2015 07:28:00 GMT',
+        'cache-control': 'max-age=1'
+      }
+    );
+
+    await axios.get('');
+
+    const response = await axios.get('');
+    expect(response.cached).toBe(true);
+    expect(response.data).toBe(true);
+
+    // Sleep entire max age time.
+    await sleep(1000);
+
+    const response2 = await axios.get('');
     // from revalidation
     expect(response2.cached).toBe(true);
     expect(response2.status).toBe(200);
@@ -197,7 +244,10 @@ describe('test request interceptor', () => {
   });
 
   it('tests "must revalidate" handling without any headers to do so', async () => {
-    const axios = mockAxios({}, { 'cache-control': 'must-revalidate' });
+    const axios = mockAxios(
+      { modifiedSince: false },
+      { 'cache-control': 'must-revalidate' }
+    );
     const config = { cache: { interpretHeader: true } };
     await axios.get('', config);
 

@@ -27,10 +27,16 @@ export class CacheRequestInterceptor<D>
   public onFulfilled = async (
     config: CacheRequestConfig<D>
   ): Promise<CacheRequestConfig<D>> => {
+    if (config.cache === false) {
+      return config;
+    }
+
+    // merge defaults with per request configuration
+    config.cache = { ...this.axios.defaults.cache, ...config.cache };
+
     if (
-      config.cache === false ||
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      !this.isMethodAllowed(this.axios, config.method!, config.cache)
+      !this.isMethodAllowed(config.method!, config.cache)
     ) {
       return config;
     }
@@ -65,7 +71,6 @@ export class CacheRequestInterceptor<D>
 
       await this.axios.storage.set(key, {
         state: 'loading',
-        ttl: config.cache?.ttl,
         data: cache.data
       });
 
@@ -122,14 +127,12 @@ export class CacheRequestInterceptor<D>
   };
 
   private isMethodAllowed = (
-    axios: AxiosCacheInstance,
     method: Method,
-    properties?: Partial<CacheProperties>
+    properties: Partial<CacheProperties>
   ): boolean => {
     const requestMethod = method.toLowerCase();
-    const allowedMethods = properties?.methods || axios.defaults.cache.methods;
 
-    for (const method of allowedMethods) {
+    for (const method of properties.methods || []) {
       if (method.toLowerCase() === requestMethod) {
         return true;
       }
@@ -140,9 +143,8 @@ export class CacheRequestInterceptor<D>
 
   private setRevalidationHeaders = (
     cache: StaleStorageValue,
-    config: CacheRequestConfig<D> & { cache: Partial<CacheProperties> | undefined }
+    config: CacheRequestConfig<D> & { cache: Partial<CacheProperties> }
   ): void => {
-    if (!config.cache) return;
     config.headers ||= {};
 
     const { etag, modifiedSince } = config.cache;
