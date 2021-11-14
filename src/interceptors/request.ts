@@ -9,7 +9,6 @@ import type {
 import type {
   CachedResponse,
   CachedStorageValue,
-  EmptyStorageValue,
   LoadingStorageValue,
   StaleStorageValue
 } from '../storage/types';
@@ -70,8 +69,10 @@ export class CacheRequestInterceptor<D>
         data: cache.data
       });
 
-      //@ts-expect-error type infer couldn't resolve this
-      this.setRequestHeaders(cache, config);
+      if (cache.state === 'stale') {
+        //@ts-expect-error type infer couldn't resolve this
+        this.setRevalidationHeaders(cache, config);
+      }
 
       config.validateStatus = CacheRequestInterceptor.createValidateStatus(
         config.validateStatus
@@ -137,8 +138,8 @@ export class CacheRequestInterceptor<D>
     return false;
   };
 
-  private setRequestHeaders = (
-    cache: StaleStorageValue | EmptyStorageValue,
+  private setRevalidationHeaders = (
+    cache: StaleStorageValue,
     config: CacheRequestConfig<D> & { cache: Partial<CacheProperties> | undefined }
   ): void => {
     if (!config.cache) return;
@@ -153,12 +154,7 @@ export class CacheRequestInterceptor<D>
       }
     }
 
-    if (
-      modifiedSince &&
-      // This check is to make typescript happy, as with a empty state
-      // there's no way to determine any value, since we never saw it before.
-      cache.state === 'stale'
-    ) {
+    if (modifiedSince) {
       config.headers[Header.IfModifiedSince] =
         modifiedSince === true
           ? // If last-modified is not present, use the createdAt timestamp

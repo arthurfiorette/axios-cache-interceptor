@@ -69,5 +69,8 @@ export enum Header {
    *
    * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type
    */
-  ContentType = 'content-type'
+  ContentType = 'content-type',
+
+  XAxiosCacheEtag = 'x-axios-cache-etag',
+  XAxiosCacheLastModified = 'x-axios-cache-last-modified'
 }

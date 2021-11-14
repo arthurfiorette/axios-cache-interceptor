@@ -4,6 +4,7 @@ import type { AxiosCacheInstance, CacheAxiosResponse } from '../cache/axios';
 import type { CacheProperties } from '../cache/cache';
 import type { CachedStorageValue } from '../storage/types';
 import { checkPredicateObject } from '../util/cache-predicate';
+import { Header } from '../util/headers';
 import { updateCache } from '../util/update-cache';
 import type { AxiosInterceptor } from './types';
 
@@ -51,6 +52,18 @@ export class CacheResponseInterceptor<R, D>
     ) {
       await this.rejectResponse(response.id);
       return response;
+    }
+
+    if (response.config.cache?.etag && response.config.cache?.etag !== true) {
+      response.headers[Header.XAxiosCacheEtag] = response.config.cache?.etag;
+    }
+    if (response.config.cache?.modifiedSince) {
+      if (response.config.cache?.modifiedSince === true) {
+        response.headers[Header.XAxiosCacheLastModified] = 'use-cache-timestamp';
+      } else {
+        response.headers[Header.XAxiosCacheLastModified] =
+          response.config.cache?.modifiedSince.toUTCString();
+      }
     }
 
     let ttl = response.config.cache?.ttl || this.axios.defaults.cache.ttl;
