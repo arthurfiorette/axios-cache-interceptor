@@ -54,6 +54,10 @@ export class CacheResponseInterceptor<R, D>
       return response;
     }
 
+    // avoid remnant headers from remote server to break implementation
+    delete response.headers[Header.XAxiosCacheEtag];
+    delete response.headers[Header.XAxiosCacheLastModified];
+
     if (response.config.cache?.etag && response.config.cache?.etag !== true) {
       response.headers[Header.XAxiosCacheEtag] = response.config.cache?.etag;
     }
