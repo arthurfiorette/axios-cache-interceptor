@@ -72,7 +72,7 @@ export interface AxiosCacheInstance extends CacheInstance, AxiosInstance {
    */
   <T = any, D = any, R = CacheAxiosResponse<T, D>>(
     url: string,
-    config: CacheRequestConfig<D>
+    config?: CacheRequestConfig<D>
   ): Promise<R>;
 
   defaults: AxiosDefaults<any> & {
