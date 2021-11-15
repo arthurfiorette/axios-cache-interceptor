@@ -87,7 +87,8 @@ const resp2 = await api.get('https://api.example.com/');
 - [Installing](#installing)
 - [Support list](#support-list)
 - [Getting Started](#getting-started)
-- [What we support](#what-we-support)
+- [Support list](#support-list-1)
+- [Compiled code](#compiled-code)
 - [Basic Knowledge](#basic-knowledge)
   - [Request id](#request-id)
   - [Response object](#response-object)
@@ -175,15 +176,27 @@ After that, you can made your own requests normally.
 
 <br />
 
-## What we support
+## Support list
 
 - [x] Concurrent requests
 - [x] Typescript support
 - [x] Unit tests
 - [x] Header interpretation
+- [x] ETag and If-Modified-Since cache support
 - [x] Infinity storage options
 - [x] Cache revalidation from responses
-- [ ] External storages, like redis
+- [x] Support for external storages
+
+## Compiled code
+
+Currently, the typescript compiler is only used to remove types from code, emitting almost
+the same output code as if this library were written in javascript. Nowadays, it is
+practically mandatory to use some pre-processor, like Babel. So for the support of
+multiple users in the browser, we recommend you to use it as well.
+
+Current target: **ES2020**
+
+Build options: **[`tsconfig.json`](/tsconfig.json)**
 
 ## Basic Knowledge
 
