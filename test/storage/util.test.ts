@@ -1,37 +1,66 @@
 import { AxiosStorage } from '../../src/storage/storage';
+import { Header } from '../../src/util/headers';
 
-describe('tests common storages', () => {
-  it('tests isCacheValid with empty state', () => {
-    const invalid = AxiosStorage.isValid({ state: 'empty' });
-
-    expect(invalid).toBe(true);
-  });
-
-  it('tests isCacheValid with loading state', () => {
-    const invalid = AxiosStorage.isValid({ state: 'loading' });
-
-    expect(invalid).toBe(true);
-  });
-
-  it('tests isCacheValid with overdue cached state', () => {
-    const isValid = AxiosStorage.isValid({
+describe('tests abstract storages', () => {
+  it('tests storage keep if stale method', () => {
+    const etag = AxiosStorage.keepIfStale({
       state: 'cached',
-      data: {} as any, // doesn't matter
-      createdAt: Date.now() - 2000, // 2 seconds in the past
-      ttl: 1000 // 1 second
+      // Reverse to be ~infinity
+      createdAt: 1,
+      ttl: Date.now(),
+      data: {
+        status: 200,
+        statusText: '200 OK',
+        data: true,
+        headers: {
+          [Header.ETag]: 'W/"123"'
+        }
+      }
     });
+    expect(etag).toBe(true);
 
-    expect(isValid).toBe(false);
-  });
-
-  it('tests isCacheValid with cached state', () => {
-    const isValid = AxiosStorage.isValid({
+    const modifiedSince = AxiosStorage.keepIfStale({
       state: 'cached',
-      data: {} as any, // doesn't matter
-      createdAt: Date.now(),
-      ttl: 1000 // 1 second
+      // Reverse to be ~infinity
+      createdAt: 1,
+      ttl: Date.now(),
+      data: {
+        status: 200,
+        statusText: '200 OK',
+        data: true,
+        headers: {
+          [Header.LastModified]: new Date().toUTCString()
+        }
+      }
     });
+    expect(modifiedSince).toBe(true);
 
-    expect(isValid).toBe(true);
+    const empty = AxiosStorage.keepIfStale({
+      state: 'cached',
+      // Reverse to be ~infinity
+      createdAt: 1,
+      ttl: Date.now(),
+      data: {
+        status: 200,
+        statusText: '200 OK',
+        data: true,
+        headers: {}
+      }
+    });
+    expect(empty).toBe(false);
+
+    const rest = AxiosStorage.keepIfStale({
+      state: 'cached',
+      // Reverse to be ~infinity
+      createdAt: 1,
+      ttl: Date.now(),
+      data: {
+        status: 200,
+        statusText: '200 OK',
+        data: true,
+        headers: undefined as any
+      }
+    });
+    expect(rest).toBe(false);
   });
 });

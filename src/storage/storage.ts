@@ -1,38 +1,65 @@
-import type { EmptyStorageValue, StorageValue } from './types';
+import type { CachedStorageValue, NotEmptyStorageValue } from '..';
+import { Header } from '../util/headers';
+import type { StaleStorageValue, StorageValue } from './types';
 
 export abstract class AxiosStorage {
   /**
-   * Returns the cached value for the given key. Must handle cache
-   * miss and staling by returning a new `StorageValue` with `empty` state.
-   *
-   * @see {AxiosStorage#isValid}
+   * Returns the cached value for the given key. The get method is
+   * what takes care to invalidate the values.
    */
-  public abstract get: (key: string) => Promise<StorageValue> | StorageValue;
+  protected abstract find: (key: string) => Promise<StorageValue>;
 
   /**
    * Sets a new value for the given key
    *
    * Use CacheStorage.remove(key) to define a key to 'empty' state.
    */
-  public abstract set: (
-    key: string,
-    value: Exclude<StorageValue, EmptyStorageValue>
-  ) => Promise<void> | void;
+  public abstract set: (key: string, value: NotEmptyStorageValue) => Promise<void>;
 
   /**
    * Removes the value for the given key
    */
-  public abstract remove: (key: string) => Promise<void> | void;
+  public abstract remove: (key: string) => Promise<void>;
 
-  /**
-   * Returns true if a storage value can still be used by checking his
-   * createdAt and ttl values.
-   */
-  static isValid = (value?: StorageValue): boolean | 'unknown' => {
-    if (value?.state === 'cached') {
-      return value.createdAt + value.ttl > Date.now();
+  public get = async (key: string): Promise<StorageValue> => {
+    const value = await this.find(key);
+
+    if (
+      value.state !== 'cached' ||
+      // Cached and fresh value
+      value.createdAt + value.ttl > Date.now()
+    ) {
+      return value;
     }
 
-    return true;
+    // Check if his can stale value.
+    if (AxiosStorage.keepIfStale(value)) {
+      const stale: StaleStorageValue = {
+        data: value.data,
+        state: 'stale',
+        createdAt: value.createdAt
+      };
+      await this.set(key, stale);
+      return stale;
+    }
+
+    await this.remove(key);
+    return { state: 'empty' };
+  };
+
+  /**
+   * Returns true if a invalid cache should still be kept
+   */
+  static keepIfStale = ({ data }: CachedStorageValue): boolean => {
+    if (data?.headers) {
+      return (
+        Header.ETag in data.headers ||
+        Header.LastModified in data.headers ||
+        Header.XAxiosCacheEtag in data.headers ||
+        Header.XAxiosCacheLastModified in data.headers
+      );
+    }
+
+    return false;
   };
 }

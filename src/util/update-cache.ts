@@ -1,13 +1,21 @@
 import type { AxiosStorage } from '../storage/storage';
-import type { CachedStorageValue, EmptyStorageValue } from '../storage/types';
+import type {
+  CachedStorageValue,
+  LoadingStorageValue,
+  StorageValue
+} from '../storage/types';
 
 export type CacheUpdater =
   | 'delete'
   | ((
-      cached: EmptyStorageValue | CachedStorageValue,
+      cached: Exclude<StorageValue, LoadingStorageValue>,
       newData: any
     ) => CachedStorageValue | void);
 
+/**
+ * Function to update all caches, from CacheProperties.update, with
+ * the new data.
+ */
 export async function updateCache<T = any>(
   storage: AxiosStorage,
   data: T,
@@ -17,7 +25,7 @@ export async function updateCache<T = any>(
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const value = entries[cacheKey]!;
 
-    if (value == 'delete') {
+    if (value === 'delete') {
       await storage.remove(cacheKey);
       continue;
     }

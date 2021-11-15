@@ -39,7 +39,7 @@ describe('tests header interpreter', () => {
     expect(result).toBe(10 * 1000);
   });
 
-  it('tests with maxAge=10 and age=7 headers', () => {
+  it('tests with maxAge=10 and age=3 headers', () => {
     const result = defaultHeaderInterpreter({
       [Header.CacheControl]: 'max-age=10',
       [Header.Age]: '3'

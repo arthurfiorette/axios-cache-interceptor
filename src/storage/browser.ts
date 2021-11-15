@@ -1,12 +1,13 @@
+import type { NotEmptyStorageValue } from '..';
 import { AxiosStorage } from './storage';
-import type { EmptyStorageValue, StorageValue } from './types';
+import type { StorageValue } from './types';
 
 export class BrowserAxiosStorage extends AxiosStorage {
   public static DEFAULT_KEY_PREFIX = 'a-c-i';
 
   /**
-   * @param storage any browser storage, like sessionStorage or localStorage
-   * @param prefix the key prefix to use on all keys.
+   * @param storage Any browser storage, like sessionStorage or localStorage
+   * @param prefix The key prefix to use on all keys.
    */
   constructor(
     readonly storage: Storage,
@@ -15,30 +16,16 @@ export class BrowserAxiosStorage extends AxiosStorage {
     super();
   }
 
-  public get = (key: string): StorageValue => {
-    const prefixedKey = `${this.prefix}:${key}`;
-
-    const json = this.storage.getItem(prefixedKey);
-
-    if (!json) {
-      return { state: 'empty' };
-    }
-
-    const parsed = JSON.parse(json);
-
-    if (!AxiosStorage.isValid(parsed)) {
-      this.storage.removeItem(prefixedKey);
-      return { state: 'empty' };
-    }
-
-    return parsed;
+  public find = async (key: string): Promise<StorageValue> => {
+    const json = this.storage.getItem(`${this.prefix}:${key}`);
+    return json ? JSON.parse(json) : { state: 'empty' };
   };
 
-  public set = (key: string, value: Exclude<StorageValue, EmptyStorageValue>): void => {
+  public set = async (key: string, value: NotEmptyStorageValue): Promise<void> => {
     return this.storage.setItem(`${this.prefix}:${key}`, JSON.stringify(value));
   };
 
-  public remove = (key: string): void | Promise<void> => {
+  public remove = async (key: string): Promise<void> => {
     return this.storage.removeItem(`${this.prefix}:${key}`);
   };
 }

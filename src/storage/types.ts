@@ -8,7 +8,20 @@ export type CachedResponse = {
 /**
  * The value returned for a given key.
  */
-export type StorageValue = CachedStorageValue | LoadingStorageValue | EmptyStorageValue;
+export type StorageValue =
+  | StaleStorageValue
+  | CachedStorageValue
+  | LoadingStorageValue
+  | EmptyStorageValue;
+
+export type NotEmptyStorageValue = Exclude<StorageValue, EmptyStorageValue>;
+
+export type StaleStorageValue = {
+  data: CachedResponse;
+  ttl?: undefined;
+  createdAt: number;
+  state: 'stale';
+};
 
 export type CachedStorageValue = {
   data: CachedResponse;
@@ -22,7 +35,11 @@ export type CachedStorageValue = {
 };
 
 export type LoadingStorageValue = {
-  data?: undefined;
+  /**
+   * Only present if the previous state was `stale`. So, in case the
+   * new response comes without a value, this data is used
+   */
+  data?: CachedResponse;
   ttl?: number;
 
   /**

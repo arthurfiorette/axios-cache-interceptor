@@ -4,6 +4,7 @@ import type { AxiosCacheInstance, CacheAxiosResponse } from '../cache/axios';
 import type { CacheProperties } from '../cache/cache';
 import type { CachedStorageValue } from '../storage/types';
 import { checkPredicateObject } from '../util/cache-predicate';
+import { Header } from '../util/headers';
 import { updateCache } from '../util/update-cache';
 import type { AxiosInterceptor } from './types';
 
@@ -12,16 +13,128 @@ export class CacheResponseInterceptor<R, D>
 {
   constructor(readonly axios: AxiosCacheInstance) {}
 
-  use = (): void => {
+  public use = (): void => {
     this.axios.interceptors.response.use(this.onFulfilled);
+  };
+
+  public onFulfilled = async (
+    axiosResponse: AxiosResponse<R, D>
+  ): Promise<CacheAxiosResponse<R, D>> => {
+    const response = this.cachedResponse(axiosResponse);
+
+    // Response is already cached
+    if (response.cached) {
+      return response;
+    }
+
+    // Skip cache
+    // either false or weird behavior, config.cache should always exists, from global config merge at least
+    if (!response.config.cache) {
+      return { ...response, cached: false };
+    }
+
+    const cacheConfig = response.config.cache as CacheProperties;
+
+    const cache = await this.axios.storage.get(response.id);
+
+    if (
+      // If the request interceptor had a problem
+      cache.state === 'stale' ||
+      cache.state === 'empty' ||
+      // Should not hit here because of later response.cached check
+      cache.state === 'cached'
+    ) {
+      return response;
+    }
+
+    // Config told that this response should be cached.
+    if (
+      // For 'loading' values (post stale), this check was already run in the past.
+      !cache.data &&
+      !this.testCachePredicate(response, cacheConfig)
+    ) {
+      await this.rejectResponse(response.id);
+      return response;
+    }
+
+    // avoid remnant headers from remote server to break implementation
+    delete response.headers[Header.XAxiosCacheEtag];
+    delete response.headers[Header.XAxiosCacheLastModified];
+
+    if (cacheConfig.etag && cacheConfig.etag !== true) {
+      response.headers[Header.XAxiosCacheEtag] = cacheConfig.etag;
+    }
+
+    if (cacheConfig.modifiedSince) {
+      response.headers[Header.XAxiosCacheLastModified] =
+        cacheConfig.modifiedSince === true
+          ? 'use-cache-timestamp'
+          : cacheConfig.modifiedSince.toUTCString();
+    }
+
+    let ttl = cacheConfig.ttl || -1; // always set from global config
+
+    if (cacheConfig?.interpretHeader) {
+      const expirationTime = this.axios.headerInterpreter(response.headers);
+
+      // Cache should not be used
+      if (expirationTime === false) {
+        await this.rejectResponse(response.id);
+        return response;
+      }
+
+      ttl = expirationTime || expirationTime === 0 ? expirationTime : ttl;
+    }
+
+    const data =
+      response.status == 304 && cache.data
+        ? (() => {
+            // Rust syntax <3
+            response.cached = true;
+            response.data = cache.data.data;
+            response.status = cache.data.status;
+            response.statusText = cache.data.statusText;
+
+            // We may have new headers.
+            response.headers = {
+              ...cache.data.headers,
+              ...response.headers
+            };
+
+            return cache.data;
+          })()
+        : extract(response, ['data', 'headers', 'status', 'statusText']);
+
+    const newCache: CachedStorageValue = {
+      state: 'cached',
+      ttl,
+      createdAt: Date.now(),
+      data
+    };
+
+    // Update other entries before updating himself
+    if (cacheConfig?.update) {
+      updateCache(this.axios.storage, response.data, cacheConfig.update);
+    }
+
+    const deferred = this.axios.waiting[response.id];
+
+    // Resolve all other requests waiting for this response
+    await deferred?.resolve(newCache.data);
+    delete this.axios.waiting[response.id];
+
+    // Define this key as cache on the storage
+    await this.axios.storage.set(response.id, newCache);
+
+    // Return the response with cached as false, because it was not cached at all
+    return response;
   };
 
   private testCachePredicate = <R>(
     response: AxiosResponse<R>,
-    cache?: Partial<CacheProperties>
+    cache: CacheProperties
   ): boolean => {
-    const cachePredicate =
-      cache?.cachePredicate || this.axios.defaults.cache.cachePredicate;
+    const cachePredicate = cache.cachePredicate;
 
     return (
       (typeof cachePredicate === 'function' && cachePredicate(response)) ||
@@ -42,88 +155,15 @@ export class CacheResponseInterceptor<R, D>
     delete this.axios.waiting[key];
   };
 
-  onFulfilled = async (
-    axiosResponse: AxiosResponse<R, D>
-  ): Promise<CacheAxiosResponse<R, D>> => {
-    const key = this.axios.generateKey(axiosResponse.config);
-
-    const response: CacheAxiosResponse<R, D> = {
-      id: key,
-
+  private cachedResponse = (response: AxiosResponse<R, D>): CacheAxiosResponse<R, D> => {
+    return {
+      id: this.axios.generateKey(response.config),
       /**
        * The request interceptor response.cache will return true or
        * undefined. And true only when the response was cached.
        */
-      cached: (axiosResponse as CacheAxiosResponse<R, D>).cached || false,
-      ...axiosResponse
+      cached: (response as CacheAxiosResponse<R, D>).cached || false,
+      ...response
     };
-
-    // Skip cache
-    if (response.config.cache === false) {
-      return { ...response, cached: false };
-    }
-
-    // Response is already cached
-    if (response.cached) {
-      return response;
-    }
-
-    const cache = await this.axios.storage.get(key);
-
-    /**
-     * From now on, the cache and response represents the state of the
-     * first response to a request, which has not yet been cached or
-     * processed before.
-     */
-    if (cache.state !== 'loading') {
-      return response;
-    }
-
-    // Config told that this response should be cached.
-    if (!this.testCachePredicate(response, response.config.cache)) {
-      await this.rejectResponse(key);
-      return response;
-    }
-
-    let ttl = response.config.cache?.ttl || this.axios.defaults.cache.ttl;
-
-    if (
-      response.config.cache?.interpretHeader ||
-      this.axios.defaults.cache.interpretHeader
-    ) {
-      const expirationTime = this.axios.headerInterpreter(response.headers);
-
-      // Cache should not be used
-      if (expirationTime === false) {
-        await this.rejectResponse(key);
-        return response;
-      }
-
-      ttl = expirationTime ? expirationTime : ttl;
-    }
-
-    const newCache: CachedStorageValue = {
-      state: 'cached',
-      ttl: ttl,
-      createdAt: Date.now(),
-      data: extract(response, ['data', 'headers', 'status', 'statusText'])
-    };
-
-    // Update other entries before updating himself
-    if (response.config.cache?.update) {
-      updateCache(this.axios.storage, response.data, response.config.cache.update);
-    }
-
-    const deferred = this.axios.waiting[key];
-
-    // Resolve all other requests waiting for this response
-    await deferred?.resolve(newCache.data);
-    delete this.axios.waiting[key];
-
-    // Define this key as cache on the storage
-    await this.axios.storage.set(key, newCache);
-
-    // Return the response with cached as false, because it was not cached at all
-    return response;
   };
 }

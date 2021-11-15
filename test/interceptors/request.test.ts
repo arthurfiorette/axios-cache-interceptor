@@ -1,4 +1,6 @@
+import { CacheRequestInterceptor } from '../../src/interceptors/request';
 import { mockAxios } from '../mocks/axios';
+import { sleep } from '../utils';
 
 describe('test request interceptor', () => {
   it('tests against specified methods', async () => {
@@ -83,5 +85,54 @@ describe('test request interceptor', () => {
 
     const response4 = await axios.get('', { id: 'random-id' });
     expect(response4.cached).toBe(true);
+  });
+
+  it('test cache expiration', async () => {
+    const axios = mockAxios({}, { 'cache-control': 'max-age=1' });
+
+    await axios.get('', { cache: { interpretHeader: true } });
+
+    const resultCache = await axios.get('');
+    expect(resultCache.cached).toBe(true);
+
+    // Sleep entire max age time.
+    await sleep(1000);
+
+    const response2 = await axios.get('');
+    expect(response2.cached).toBe(false);
+  });
+
+  it('tests "must revalidate" handling without any headers to do so', async () => {
+    const axios = mockAxios({}, { 'cache-control': 'must-revalidate' });
+    const config = { cache: { interpretHeader: true } };
+    await axios.get('', config);
+
+    // 0ms cache
+    await sleep(1);
+
+    const response = await axios.get('', config);
+    // nothing to use for revalidation
+    expect(response.cached).toBe(false);
+  });
+
+  it('tests validate-status function', async () => {
+    const { createValidateStatus } = CacheRequestInterceptor;
+
+    const def = createValidateStatus();
+    expect(def(200)).toBe(true);
+    expect(def(345)).toBe(false);
+    expect(def(304)).toBe(true);
+
+    const only200 = createValidateStatus((s) => s >= 200 && s < 300);
+    expect(only200(200)).toBe(true);
+    expect(only200(299)).toBe(true);
+    expect(only200(304)).toBe(true);
+    expect(only200(345)).toBe(false);
+
+    const randomValue = createValidateStatus((s) => s >= 405 && s <= 410);
+    expect(randomValue(200)).toBe(false);
+    expect(randomValue(404)).toBe(false);
+    expect(randomValue(405)).toBe(true);
+    expect(randomValue(304)).toBe(true);
   });
 });

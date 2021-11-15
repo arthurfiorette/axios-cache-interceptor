@@ -106,6 +106,8 @@ const resp2 = await api.get('https://api.example.com/');
   - [request.cache.methods](#requestcachemethods)
   - [request.cache.cachePredicate](#requestcachecachepredicate)
   - [request.cache.update](#requestcacheupdate)
+  - [request.cache.etag](#requestcacheetag)
+  - [request.cache.modifiedSince](#requestcachemodifiedsince)
 - [License](#license)
 - [Contact](#contact)
 
@@ -383,6 +385,20 @@ axios.get('url', {
   }
 });
 ```
+
+### request.cache.etag
+
+If the request should handle `ETag` and `If-None-Match support`. Use a string to force a
+custom static value or true to use the previous response ETag. To use `true` (automatic
+etag handling), `interpretHeader` option must be set to `true`. Default: `false`
+
+### request.cache.modifiedSince
+
+Use `If-Modified-Since` header in this request. Use a date to force a custom static value
+or true to use the last cached timestamp. If never cached before, the header is not set.
+If `interpretHeader` is set and a `Last-Modified` header is sent then value from that
+header is used, otherwise cache creation timestamp will be sent in `If-Modified-Since`.
+Default: `true`
 
 <br />
 

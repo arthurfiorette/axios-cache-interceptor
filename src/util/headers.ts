@@ -10,6 +10,15 @@ export enum Header {
 
   /**
    * ```txt
+   * Last-Modified: <day-name>, <day> <month> <year> <hour>:<minute>:<second> GMT
+   * ```
+   *
+   * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Last-Modified
+   */
+  LastModified = 'last-modified',
+
+  /**
+   * ```txt
    * If-None-Match: "<etag_value>"
    * If-None-Match: "<etag_value>", "<etag_value>", …
    * If-None-Match: *
@@ -26,8 +35,8 @@ export enum Header {
 
   /**
    * ```txt
-   * ETag: W / '<etag_value>';
-   * ETag: '<etag_value>';
+   * ETag: W/"<etag_value>"
+   * ETag: "<etag_value>"
    * ```
    *
    * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag
@@ -60,5 +69,32 @@ export enum Header {
    *
    * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type
    */
-  ContentType = 'content-type'
+  ContentType = 'content-type',
+
+  /**
+   * Used internally to mark the cache item as being revalidatable and
+   * enabling stale cache state Contains a string of ASCII characters
+   * that can be used as ETag for `If-Match` header Provided by user
+   * using `cache.etag` value.
+   *
+   * ```txt
+   * X-Axios-Cache-Etag: "<etag_value>"
+   * ```
+   */
+  XAxiosCacheEtag = 'x-axios-cache-etag',
+
+  /**
+   * Used internally to mark the cache item as being revalidatable and
+   * enabling stale cache state may contain `'use-cache-timestamp'` if
+   * `cache.modifiedSince` is `true`, otherwise will contain a date
+   * from `cache.modifiedSince`. If a date is provided, it can be used
+   * for `If-Modified-Since` header, otherwise the cache timestamp can
+   * be used for `If-Modified-Since` header.
+   *
+   * ```txt
+   * X-Axios-Cache-Last-Modified: <day-name>, <day> <month> <year> <hour>:<minute>:<second> GMT
+   * X-Axios-Cache-Last-Modified: use-cache-timestamp
+   * ```
+   */
+  XAxiosCacheLastModified = 'x-axios-cache-last-modified'
 }

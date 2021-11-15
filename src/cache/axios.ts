@@ -63,7 +63,7 @@ export interface AxiosCacheInstance extends CacheInstance, AxiosInstance {
    * @template D The type that the request body use
    */
   <T = any, D = any, R = CacheAxiosResponse<T, D>>(
-    config?: CacheRequestConfig<D>
+    config: CacheRequestConfig<D>
   ): Promise<R>;
   /**
    * @template T The type returned by this response

@@ -12,3 +12,6 @@ export const createResponse = <R>(
 ): AxiosResponse<R> => {
   return { ...EMPTY_RESPONSE, config: {}, data: {} as R, request: {}, ...config };
 };
+
+export const sleep = (ms: number): Promise<void> =>
+  new Promise((res) => setTimeout(res, ms));

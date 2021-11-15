@@ -1,4 +1,6 @@
+import type { AxiosRequestConfig, Method } from 'axios';
 import { deferred } from 'typed-core/dist/promises/deferred';
+import type { CacheProperties } from '..';
 import type {
   AxiosCacheInstance,
   CacheAxiosResponse,
@@ -7,8 +9,10 @@ import type {
 import type {
   CachedResponse,
   CachedStorageValue,
-  LoadingStorageValue
+  LoadingStorageValue,
+  StaleStorageValue
 } from '../storage/types';
+import { Header } from '../util/headers';
 import type { AxiosInterceptor } from './types';
 
 export class CacheRequestInterceptor<D>
@@ -16,21 +20,23 @@ export class CacheRequestInterceptor<D>
 {
   constructor(readonly axios: AxiosCacheInstance) {}
 
-  use = (): void => {
+  public use = (): void => {
     this.axios.interceptors.request.use(this.onFulfilled);
   };
 
-  onFulfilled = async (config: CacheRequestConfig<D>): Promise<CacheRequestConfig<D>> => {
-    // Skip cache
+  public onFulfilled = async (
+    config: CacheRequestConfig<D>
+  ): Promise<CacheRequestConfig<D>> => {
     if (config.cache === false) {
       return config;
     }
 
-    // Only cache specified methods
-    const allowedMethods = config.cache?.methods || this.axios.defaults.cache.methods;
+    // merge defaults with per request configuration
+    config.cache = { ...this.axios.defaults.cache, ...config.cache };
 
     if (
-      !allowedMethods.some((method) => (config.method || 'get').toLowerCase() == method)
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      !this.isMethodAllowed(config.method!, config.cache)
     ) {
       return config;
     }
@@ -41,7 +47,7 @@ export class CacheRequestInterceptor<D>
     let cache = await this.axios.storage.get(key);
 
     // Not cached, continue the request, and mark it as fetching
-    emptyState: if (cache.state == 'empty') {
+    emptyOrStale: if (cache.state == 'empty' || cache.state === 'stale') {
       /**
        * This checks for simultaneous access to a new key. The js
        * event loop jumps on the first await statement, so the second
@@ -51,7 +57,7 @@ export class CacheRequestInterceptor<D>
         cache = (await this.axios.storage.get(key)) as
           | CachedStorageValue
           | LoadingStorageValue;
-        break emptyState;
+        break emptyOrStale;
       }
 
       // Create a deferred to resolve other requests for the same key when it's completed
@@ -65,8 +71,17 @@ export class CacheRequestInterceptor<D>
 
       await this.axios.storage.set(key, {
         state: 'loading',
-        ttl: config.cache?.ttl
+        data: cache.data
       });
+
+      if (cache.state === 'stale') {
+        //@ts-expect-error type infer couldn't resolve this
+        this.setRevalidationHeaders(cache, config);
+      }
+
+      config.validateStatus = CacheRequestInterceptor.createValidateStatus(
+        config.validateStatus
+      );
 
       return config;
     }
@@ -77,6 +92,7 @@ export class CacheRequestInterceptor<D>
       const deferred = this.axios.waiting[key];
 
       // Just in case, the deferred doesn't exists.
+      /* istanbul ignore if 'really hard to test' */
       if (!deferred) {
         await this.axios.storage.remove(key);
         return config;
@@ -108,5 +124,57 @@ export class CacheRequestInterceptor<D>
       });
 
     return config;
+  };
+
+  private isMethodAllowed = (
+    method: Method,
+    properties: Partial<CacheProperties>
+  ): boolean => {
+    const requestMethod = method.toLowerCase();
+
+    for (const method of properties.methods || []) {
+      if (method.toLowerCase() === requestMethod) {
+        return true;
+      }
+    }
+
+    return false;
+  };
+
+  private setRevalidationHeaders = (
+    cache: StaleStorageValue,
+    config: CacheRequestConfig<D> & { cache: Partial<CacheProperties> }
+  ): void => {
+    config.headers ||= {};
+
+    const { etag, modifiedSince } = config.cache;
+
+    if (etag) {
+      const etagValue = etag === true ? cache.data?.headers[Header.ETag] : etag;
+      if (etagValue) {
+        config.headers[Header.IfNoneMatch] = etagValue;
+      }
+    }
+
+    if (modifiedSince) {
+      config.headers[Header.IfModifiedSince] =
+        modifiedSince === true
+          ? // If last-modified is not present, use the createdAt timestamp
+            cache.data.headers[Header.LastModified] ||
+            new Date(cache.createdAt).toUTCString()
+          : modifiedSince.toUTCString();
+    }
+  };
+
+  /**
+   * Creates a new validateStatus function that will use the one
+   * already used and also accept status code 304.
+   */
+  static createValidateStatus = (oldValidate?: AxiosRequestConfig['validateStatus']) => {
+    return (status: number): boolean => {
+      return oldValidate
+        ? oldValidate(status) || status === 304
+        : (status >= 200 && status < 300) || status === 304;
+    };
   };
 }
