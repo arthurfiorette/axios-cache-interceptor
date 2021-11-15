@@ -35,8 +35,8 @@ export enum Header {
 
   /**
    * ```txt
-   * ETag: W / '<etag_value>';
-   * ETag: '<etag_value>';
+   * ETag: W/"<etag_value>";
+   * ETag: "<etag_value>";
    * ```
    *
    * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag
