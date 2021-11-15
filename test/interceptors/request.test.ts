@@ -89,7 +89,7 @@ describe('test request interceptor', () => {
   });
 
   it('test cache expiration', async () => {
-    const axios = mockAxios({ modifiedSince: false }, { 'cache-control': 'max-age=1' });
+    const axios = mockAxios({}, { 'cache-control': 'max-age=1' });
 
     await axios.get('', { cache: { interpretHeader: true } });
 
@@ -244,10 +244,7 @@ describe('test request interceptor', () => {
   });
 
   it('tests "must revalidate" handling without any headers to do so', async () => {
-    const axios = mockAxios(
-      { modifiedSince: false },
-      { 'cache-control': 'must-revalidate' }
-    );
+    const axios = mockAxios({}, { 'cache-control': 'must-revalidate' });
     const config = { cache: { interpretHeader: true } };
     await axios.get('', config);
 
