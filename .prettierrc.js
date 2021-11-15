@@ -2,7 +2,5 @@
 
 module.exports = require('@arthurfiorette/prettier-config')({
   tsdoc: true,
-  jsdocSpaces: 1,
-  jsdocPrintWidth: 70,
-  jsdocSingleLineComment: false
+  plugins: ['prettier-plugin-jsdoc', 'prettier-plugin-organize-imports']
 });
