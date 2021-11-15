@@ -35,8 +35,8 @@ export enum Header {
 
   /**
    * ```txt
-   * ETag: W / '<etag_value>';
-   * ETag: '<etag_value>';
+   * ETag: W/"<etag_value>"
+   * ETag: "<etag_value>"
    * ```
    *
    * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag
@@ -93,7 +93,7 @@ export enum Header {
    *
    * ```txt
    * X-Axios-Cache-Last-Modified: <day-name>, <day> <month> <year> <hour>:<minute>:<second> GMT
-   * X-Axios-Cache-Last-Modified: "use-cache-timestamp"
+   * X-Axios-Cache-Last-Modified: use-cache-timestamp
    * ```
    */
   XAxiosCacheLastModified = 'x-axios-cache-last-modified'
