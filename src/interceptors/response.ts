@@ -64,13 +64,12 @@ export class CacheResponseInterceptor<R, D>
     if (cacheConfig.etag && cacheConfig.etag !== true) {
       response.headers[Header.XAxiosCacheEtag] = cacheConfig.etag;
     }
+
     if (cacheConfig.modifiedSince) {
-      if (cacheConfig.modifiedSince === true) {
-        response.headers[Header.XAxiosCacheLastModified] = 'use-cache-timestamp';
-      } else {
-        response.headers[Header.XAxiosCacheLastModified] =
-          cacheConfig.modifiedSince.toUTCString();
-      }
+      response.headers[Header.XAxiosCacheLastModified] =
+        cacheConfig.modifiedSince === true
+          ? 'use-cache-timestamp'
+          : cacheConfig.modifiedSince.toUTCString();
     }
 
     let ttl = cacheConfig.ttl || -1; // always set from global config
