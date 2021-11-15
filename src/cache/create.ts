@@ -46,7 +46,7 @@ export function useCache(
       methods: ['get'],
       cachePredicate: { statusCheck: [200, 399] },
       etag: false,
-      modifiedSince: true,
+      modifiedSince: false,
       update: {},
       ...cacheOptions
     }
