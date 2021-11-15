@@ -55,7 +55,7 @@ export type CacheProperties = {
    * The id used is the same as the id on `CacheRequestConfig['id']`,
    * auto-generated or not.
    *
-   * @default
+   * @default {{}}
    */
   update: Record<string, CacheUpdater>;
 
