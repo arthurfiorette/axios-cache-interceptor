@@ -84,10 +84,10 @@ const resp2 = await api.get('https://api.example.com/');
 ## Table of contents
 
 - [Table of contents](#table-of-contents)
+- [Features](#features)
 - [Installing](#installing)
 - [Support list](#support-list)
 - [Getting Started](#getting-started)
-- [Support list](#support-list-1)
 - [Compiled code](#compiled-code)
 - [Basic Knowledge](#basic-knowledge)
   - [Request id](#request-id)
@@ -111,6 +111,19 @@ const resp2 = await api.get('https://api.example.com/');
   - [request.cache.modifiedSince](#requestcachemodifiedsince)
 - [License](#license)
 - [Contact](#contact)
+
+<br />
+
+## Features
+
+- [x] Concurrent requests
+- [x] Typescript support
+- [x] Unit tests
+- [x] Header interpretation
+- [x] ETag and If-Modified-Since cache support
+- [x] Infinity storage options
+- [x] Cache revalidation from responses
+- [x] Support for external storages
 
 <br />
 
@@ -176,17 +189,6 @@ After that, you can made your own requests normally.
 
 <br />
 
-## Support list
-
-- [x] Concurrent requests
-- [x] Typescript support
-- [x] Unit tests
-- [x] Header interpretation
-- [x] ETag and If-Modified-Since cache support
-- [x] Infinity storage options
-- [x] Cache revalidation from responses
-- [x] Support for external storages
-
 ## Compiled code
 
 Currently, the typescript compiler is only used to remove types from code, emitting almost
@@ -197,6 +199,8 @@ multiple users in the browser, we recommend you to use it as well.
 Current target: **ES2020**
 
 Build options: **[`tsconfig.json`](/tsconfig.json)**
+
+<br />
 
 ## Basic Knowledge
 
