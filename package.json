@@ -3,8 +3,6 @@
   "version": "0.6.1",
   "description": "Cache interceptor for axios",
   "main": "./dist/index.js",
-  "types": "./types/index.d.ts",
-  "typings": "./types/index.d.ts",
   "scripts": {
     "build": "tsc --p tsconfig.build.json",
     "test": "jest",
