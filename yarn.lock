@@ -575,9 +575,9 @@
   integrity sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw==
 
 "@tusbar/cache-control@^0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@tusbar/cache-control/-/cache-control-0.6.0.tgz#9d057b393db24bfbf7d39e6e2bf766b945602e54"
-  integrity sha512-szxZ+I62MYILpuGywjShgE4e1WemNfNq5zu57ZP4gLXnQD7ng8vssrJ8MBseHPDNheJBLFsn2yfdHZIAHnmuvQ==
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/@tusbar/cache-control/-/cache-control-0.6.1.tgz#fb125e23e68a573752b474dd359374bddb796188"
+  integrity sha512-lVONHkx/OviQ8yIJu6sGmdBJVWMKQm7EDtpvM3s2VihmaqHQocFixMd/9rfAqK5IxFL7XQMVzkpRrKjQ/JBS+Q==
 
 "@types/babel__core@^7.0.0", "@types/babel__core@^7.1.14":
   version "7.1.16"
