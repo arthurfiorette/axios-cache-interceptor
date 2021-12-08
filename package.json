@@ -3,7 +3,9 @@
   "version": "0.7.0-beta1",
   "description": "Cache interceptor for axios",
   "main": "./dist/index.js",
-  "browser": "./dist/index.min.js",
+  "browser": "./dist/index.bundle.js",
+  "jsdelivr": "./dist/index.bundle.js",
+  "unpkg": "./dist/index.bundle.js",
   "scripts": {
     "build": "concurrently 'npm:build:*'",
     "build:node": "babel src --out-dir dist --extensions '.ts'",
