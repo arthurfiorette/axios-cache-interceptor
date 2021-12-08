@@ -163,10 +163,13 @@ import { useCache } from 'axios-cache-interceptor';
 
 <script
   crossorigin
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@VERSION"
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@VERSION/dist/index.bundle.js"
 ></script>
 <!-- or -->
-<script crossorigin src="https://unpkg.com/axios-cache-interceptor@VERSION"></script>
+<script
+  crossorigin
+  src="https://unpkg.com/axios-cache-interceptor@VERSION/dist/index.bundle.js"
+></script>
 ```
 
 ```js
