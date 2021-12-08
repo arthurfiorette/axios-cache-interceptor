@@ -46,7 +46,7 @@ Axios Cache Interceptor</h1>
   <code
     ><a href="https://bundlephobia.com/package/axios-cache-interceptor"
       ><img
-        src="https://img.shields.io/bundlephobia/min/axios-cache-interceptor?style=flat"
+        src="https://img.shields.io/bundlephobia/minzip/axios-cache-interceptor?style=flat"
         target="_blank"
         alt="Size" /></a
   ></code>
