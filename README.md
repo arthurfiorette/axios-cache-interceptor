@@ -175,16 +175,6 @@ axios = useCache(axios, {
 });
 ```
 
-or by creating a new one:
-
-```js
-import { createCache } from 'axios-cache-interceptor';
-
-const axios = createCache({
-  /* options here */
-});
-```
-
 After that, you can made your own requests normally.
 
 <br />
@@ -258,7 +248,7 @@ the internal code. Remember that, depending on the
 When applying the interceptor, you can customize some properties:
 
 ```js
-const axios = createCache({
+const axios = useCache(axios, {
   // Properties here
 });
 ```

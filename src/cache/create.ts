@@ -1,4 +1,4 @@
-import Axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import type { AxiosInstance } from 'axios';
 import { defaultHeaderInterpreter } from '../header/interpreter';
 import { CacheRequestInterceptor } from '../interceptors/request';
 import { CacheResponseInterceptor } from '../interceptors/response';
@@ -59,22 +59,4 @@ export function useCache(
   return axiosCache;
 }
 
-/**
- * Returns a new axios instance with caching enabled.
- *
- * @param config The config for the caching interceptors and the axios instance
- * @returns A new AxiosCacheInstance with caching enabled
- */
-export function createCache({
-  axios,
-  cache
-}: CreateCacheOptions = {}): AxiosCacheInstance {
-  return useCache(Axios.create(axios), cache);
-}
-
 export type CacheOptions = Partial<CacheInstance> & Partial<CacheProperties>;
-
-export type CreateCacheOptions = {
-  axios?: Partial<AxiosRequestConfig>;
-  cache?: CacheOptions;
-};
