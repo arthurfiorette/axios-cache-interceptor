@@ -161,7 +161,10 @@ import { useCache } from 'axios-cache-interceptor';
 ```html
 <!-- Replace VERSION with the desired version -->
 
-<script crossorigin src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@VERSION"></script>
+<script
+  crossorigin
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@VERSION"
+></script>
 <!-- or -->
 <script crossorigin src="https://unpkg.com/axios-cache-interceptor@VERSION"></script>
 ```
@@ -293,7 +296,9 @@ You can create your own implementation by implementing
 
 There are few built in storage implementations, you can use them by importing:
 
-> With the cdn served bundle, the **MemoryStorage** and **BrowserAxiosStorage** comes by default. Just get them by `window.AxiosCacheInterceptor.BrowserAxiosStorage` or `window.AxiosCacheInterceptor.MemoryAxiosStorage`.
+> With the cdn served bundle, the **MemoryStorage** and **BrowserAxiosStorage** comes by
+> default. Just get them by `window.AxiosCacheInterceptor.BrowserAxiosStorage` or
+> `window.AxiosCacheInterceptor.MemoryAxiosStorage`.
 
 ```js
 import {} from 'axios-cache-interceptor/dist/storage/{name}';
