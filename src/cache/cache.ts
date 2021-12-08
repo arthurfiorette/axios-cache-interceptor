@@ -1,5 +1,5 @@
 import type { Method } from 'axios';
-import type { Deferred } from 'typed-core/dist/promises/deferred';
+import type { Deferred } from 'fast-defer';
 import type { HeadersInterpreter } from '../header/types';
 import type { AxiosInterceptor } from '../interceptors/types';
 import type { AxiosStorage } from '../storage/storage';
@@ -101,7 +101,7 @@ export interface CacheInstance {
    *
    * Can be used to listen when a request is cached or not.
    */
-  waiting: Record<string, Deferred<CachedResponse, void>>;
+  waiting: Record<string, Deferred<CachedResponse>>;
 
   /**
    * The function to parse and interpret response headers. Only used

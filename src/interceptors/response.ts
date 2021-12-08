@@ -1,5 +1,4 @@
 import type { AxiosResponse } from 'axios';
-import { extract } from 'typed-core/dist/core/object';
 import type { AxiosCacheInstance, CacheAxiosResponse } from '../cache/axios';
 import type { CacheProperties } from '../cache/cache';
 import type { CachedStorageValue } from '../storage/types';
@@ -103,7 +102,12 @@ export class CacheResponseInterceptor<R, D>
 
             return cache.data;
           })()
-        : extract(response, ['data', 'headers', 'status', 'statusText']);
+        : {
+            data: response.data,
+            status: response.status,
+            statusText: response.statusText,
+            headers: response.headers
+          };
 
     const newCache: CachedStorageValue = {
       state: 'cached',
@@ -151,7 +155,7 @@ export class CacheResponseInterceptor<R, D>
     // Update the cache to empty to prevent infinite loading state
     await this.axios.storage.remove(key);
     // Reject the deferred if present
-    this.axios.waiting[key]?.reject();
+    this.axios.waiting[key]?.reject(null);
     delete this.axios.waiting[key];
   };
 

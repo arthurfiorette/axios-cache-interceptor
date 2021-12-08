@@ -1,5 +1,5 @@
 import type { AxiosRequestConfig, Method } from 'axios';
-import { deferred } from 'typed-core/dist/promises/deferred';
+import { deferred } from 'fast-defer';
 import type { CacheProperties } from '..';
 import type {
   AxiosCacheInstance,
@@ -100,7 +100,7 @@ export class CacheRequestInterceptor<D>
 
       try {
         cachedResponse = await deferred;
-      } catch (e) {
+      } catch {
         // The deferred is rejected when the request that we are waiting rejected cache.
         return config;
       }

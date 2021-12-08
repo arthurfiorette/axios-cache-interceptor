@@ -38,8 +38,7 @@
   "homepage": "https://github.com/ArthurFiorette/axios-cache-interceptor#readme",
   "dependencies": {
     "@tusbar/cache-control": "^0.6.0",
-    "tslib": "^2.3.1",
-    "typed-core": "^2.0.0"
+    "fast-defer": "^1.1.1"
   },
   "devDependencies": {
     "@arthurfiorette/prettier-config": "*",
