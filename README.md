@@ -9,13 +9,6 @@ Axios Cache Interceptor</h1>
   <br />
   <br />
   <code
-    ><a href="https://github.com/ArthurFiorette/axios-cache-interceptor/network/members"
-      ><img
-        src="https://img.shields.io/github/forks/ArthurFiorette/axios-cache-interceptor?logo=github&label=Forks"
-        target="_blank"
-        alt="Forks" /></a
-  ></code>
-  <code
     ><a href="https://github.com/ArthurFiorette/axios-cache-interceptor/issues"
       ><img
         src="https://img.shields.io/github/issues/ArthurFiorette/axios-cache-interceptor?logo=github&label=Issues"
