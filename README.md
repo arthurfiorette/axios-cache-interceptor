@@ -46,9 +46,16 @@ Axios Cache Interceptor</h1>
   <code
     ><a href="https://www.npmjs.com/package/axios-cache-interceptor"
       ><img
-        src="https://img.shields.io/npm/v/axios-cache-interceptor?color=CB3837&logo=npm&label=Npm"
+        src="https://img.shields.io/npm/dw/axios-cache-interceptor?style=flat"
         target="_blank"
-        alt="Npm" /></a
+        alt="Downloads" /></a
+  ></code>
+  <code
+    ><a href="https://bundlephobia.com/package/axios-cache-interceptor"
+      ><img
+        src="https://img.shields.io/bundlephobia/min/axios-cache-interceptor?style=flat"
+        target="_blank"
+        alt="Size" /></a
   ></code>
 </div>
 
@@ -86,6 +93,8 @@ const resp2 = await api.get('https://api.example.com/');
 - [Table of contents](#table-of-contents)
 - [Features](#features)
 - [Installing](#installing)
+  - [Via NPM](#via-npm)
+  - [Via CDN](#via-cdn)
 - [Support list](#support-list)
 - [Getting Started](#getting-started)
 - [Compiled code](#compiled-code)
@@ -129,14 +138,36 @@ const resp2 = await api.get('https://api.example.com/');
 
 ## Installing
 
-> Axios is a peer dependency and must be installed separately.
+> Axios must be installed separately.
+
+### Via NPM
 
 ```sh
-# Npm
 npm install --save axios axios-cache-interceptor
-
-# Yarn
+# or
 yarn add axios axios-cache-interceptor
+```
+
+```js
+const { useCache } = require('axios-cache-interceptor');
+// or
+import { useCache } from 'axios-cache-interceptor';
+```
+
+### Via CDN
+
+![Version](https://img.shields.io/npm/v/axios-cache-interceptor?style=flat)
+
+```html
+<!-- Replace VERSION with the desired version -->
+
+<script crossorigin src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@VERSION"></script>
+<!-- or -->
+<script crossorigin src="https://unpkg.com/axios-cache-interceptor@VERSION"></script>
+```
+
+```js
+const { useCache } = window.AxiosCacheInterceptor;
 ```
 
 <br />
@@ -181,14 +212,13 @@ After that, you can made your own requests normally.
 
 ## Compiled code
 
-Currently, the typescript compiler is only used to remove types from code, emitting almost
-the same output code as if this library were written in javascript. Nowadays, it is
-practically mandatory to use some pre-processor, like Babel. So for the support of
-multiple users in the browser, we recommend you to use it as well.
+The compiled code is built with Babel for npm and Webpack & Babel for the web bundle.
 
-Current target: **ES2020**
+You can see more here about compiling options:
 
-Build options: **[`tsconfig.json`](/tsconfig.json)**
+- [Webpack config](/webpack.config.js)
+- [Babel Config](/babel.config.js)
+- [Types Config](/tsconfig.types.json)
 
 <br />
 
@@ -263,14 +293,16 @@ You can create your own implementation by implementing
 
 There are few built in storage implementations, you can use them by importing:
 
+> With the cdn served bundle, the **MemoryStorage** and **BrowserAxiosStorage** comes by default. Just get them by `window.AxiosCacheInterceptor.BrowserAxiosStorage` or `window.AxiosCacheInterceptor.MemoryAxiosStorage`.
+
 ```js
-import /* ... */ 'axios-cache-interceptor/dist/storage/{name}';
+import {} from 'axios-cache-interceptor/dist/storage/{name}';
 ```
 
-- [MemoryStorage](src/storage/memory.ts)
+- [MemoryAxiosStorage](src/storage/memory.ts)
   `import 'axios-cache-interceptor/dist/storage/memory';`
-- [Session and Local Storage](src/storage/web.ts)
-  `import 'axios-cache-interceptor/dist/storage/web';`
+- [BrowserAxiosStorage](src/storage/browser.ts)
+  `import 'axios-cache-interceptor/dist/storage/browser';`
 - _Maybe your own?_ (PR's are welcome)
 
 ### config.generateKey

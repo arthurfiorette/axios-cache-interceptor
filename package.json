@@ -3,12 +3,16 @@
   "version": "0.6.3",
   "description": "Cache interceptor for axios",
   "main": "./dist/index.js",
+  "browser": "./dist/index.min.js",
   "scripts": {
-    "build": "tsc --p tsconfig.build.json",
+    "build": "concurrently 'npm:build:*'",
+    "build:node": "babel src --out-dir dist --extensions '.ts'",
+    "build:browser": "webpack",
+    "build:types": "tsc -p tsconfig.types.json",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "prettify": "prettier --write .",
+    "format": "prettier --write .",
     "lint": "tsc --noEmit && eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "version": "auto-changelog -p && git add CHANGELOG.md"
@@ -28,8 +32,8 @@
   ],
   "author": {
     "name": "Arthur Fiorette",
-    "email": "arthur.fiorette@gmail.com",
-    "url": "https://arthurfiorette.com.br"
+    "email": "npm@arthur.place",
+    "url": "https://arthur.place"
   },
   "license": "MIT",
   "bugs": {
@@ -38,16 +42,25 @@
   "homepage": "https://github.com/ArthurFiorette/axios-cache-interceptor#readme",
   "dependencies": {
     "@tusbar/cache-control": "^0.6.0",
-    "fast-defer": "^1.1.1"
+    "concurrently": "^6.4.0",
+    "fast-defer": "^1.1.2"
   },
   "devDependencies": {
     "@arthurfiorette/prettier-config": "*",
+    "@babel/cli": "^7.16.0",
+    "@babel/core": "^7.16.0",
+    "@babel/plugin-proposal-class-properties": "^7.16.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.16.0",
+    "@babel/plugin-transform-runtime": "^7.16.4",
+    "@babel/preset-env": "^7.16.4",
+    "@babel/preset-typescript": "^7.16.0",
     "@types/jest": "^27.0.2",
     "@types/node": "^16.7.10",
+    "@types/webpack": "^5.28.0",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
     "auto-changelog": "^2.3.0",
-    "axios": "^0.24.0",
+    "babel-loader": "^8.2.3",
     "eslint": "^8.3.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
@@ -55,8 +68,11 @@
     "prettier": "^2.3.2",
     "prettier-plugin-jsdoc": "^0.3.23",
     "prettier-plugin-organize-imports": "^2.3.3",
+    "terser-webpack-plugin": "^5.2.5",
     "ts-jest": "^27.1.1",
-    "typescript": "^4.4.3"
+    "typescript": "^4.4.3",
+    "webpack": "^5.65.0",
+    "webpack-cli": "^4.9.1"
   },
   "peerDependencies": {
     "axios": "~0.24.0"
