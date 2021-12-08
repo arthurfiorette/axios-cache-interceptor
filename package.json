@@ -43,6 +43,7 @@
   "homepage": "https://github.com/ArthurFiorette/axios-cache-interceptor#readme",
   "dependencies": {
     "@tusbar/cache-control": "^0.6.0",
+    "babel-runtime": "^6.26.0",
     "fast-defer": "^1.1.2"
   },
   "devDependencies": {
