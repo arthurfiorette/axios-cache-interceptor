@@ -7,5 +7,6 @@
   ],
   "comments": false,
   "compact": true,
-  "sourceMaps": true
+  "sourceMaps": true,
+  "ignore": ["index.bundle.ts"]
 }
