@@ -1,0 +1,8 @@
+// Config ignored by babel when running from webpack
+{
+  "presets": ["@babel/preset-env", "@babel/preset-typescript"],
+  "plugins": ["@babel/plugin-transform-runtime"],
+  "comments": false,
+  "compact": true,
+  "sourceMaps": true
+}

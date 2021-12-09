@@ -7,7 +7,7 @@
   "unpkg": "./dist/index.bundle.js",
   "scripts": {
     "build": "concurrently 'npm:build:*'",
-    "build:node": "babel src --out-dir dist --extensions '.ts'",
+    "build:node": "babel src --out-dir dist --extensions '.ts' --ignore src/index.bundle.ts",
     "build:browser": "webpack",
     "build:types": "tsc -p tsconfig.types.json",
     "test": "jest",
@@ -42,19 +42,18 @@
   },
   "homepage": "https://github.com/ArthurFiorette/axios-cache-interceptor#readme",
   "dependencies": {
-    "@tusbar/cache-control": "^0.6.0",
-    "babel-runtime": "^6.26.0",
+    "@tusbar/cache-control": "^0.6.1",
     "fast-defer": "^1.1.2"
   },
   "devDependencies": {
     "@arthurfiorette/prettier-config": "*",
     "@babel/cli": "^7.16.0",
     "@babel/core": "^7.16.0",
-    "@babel/plugin-proposal-class-properties": "^7.16.0",
-    "@babel/plugin-proposal-object-rest-spread": "^7.16.0",
+    "@babel/plugin-transform-modules-commonjs": "^7.16.0",
     "@babel/plugin-transform-runtime": "^7.16.4",
     "@babel/preset-env": "^7.16.4",
     "@babel/preset-typescript": "^7.16.0",
+    "@babel/runtime": "^7.16.3",
     "@types/jest": "^27.0.2",
     "@types/node": "^16.7.10",
     "@types/webpack": "^5.28.0",

@@ -28,9 +28,24 @@ const config = {
   module: {
     rules: [
       {
-        test: /\.(tsx?|jsx?)$/,
-        exclude: /node_modules\/(?!(@tusbar\/cache-control))/,
-        use: { loader: 'babel-loader' }
+        test: /\.(ts|js)$/,
+        exclude: {
+          and: [/node_modules/],
+          not: [/@tusbar[\\/]cache-control/]
+        },
+        use: {
+          loader: 'babel-loader',
+          options: {
+            babelrc: false,
+            presets: ['@babel/preset-env', '@babel/preset-typescript'],
+            plugins: [
+              '@babel/plugin-transform-runtime',
+              '@babel/plugin-transform-modules-commonjs'
+            ],
+            comments: false,
+            sourceMaps: true
+          }
+        }
       }
     ]
   },
