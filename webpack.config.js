@@ -37,7 +37,10 @@ const config = {
           loader: 'babel-loader',
           options: {
             babelrc: false,
-            presets: ['@babel/preset-env', '@babel/preset-typescript'],
+            presets: [
+              ['@babel/preset-env', { targets: 'extends browserslist-config-google' }],
+              '@babel/preset-typescript'
+            ],
             plugins: [
               '@babel/plugin-transform-runtime',
               '@babel/plugin-transform-modules-commonjs'

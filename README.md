@@ -211,13 +211,18 @@ After that, you can made your own requests normally.
 
 ## Compiled code
 
-The compiled code is built with Babel for npm and Webpack & Babel for the web bundle.
+The compiled code is built in two different ways, one as nodejs module and one as a
+browser. Both of them uses **Babel** with
+[Browserslist `default` preset](https://github.com/browserslist/browserslist#full-list).
 
 You can see more here about compiling options:
 
 - [Webpack config](/webpack.config.js)
-- [Babel Config](/babel.config.js)
+- [Babel Config](/.babelrc)
 - [Types Config](/tsconfig.types.json)
+
+If, for some reason, you have a bug with the compiled code, such as a user have an
+incompatible browser, please contact me.
 
 <br />
 

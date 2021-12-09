@@ -1869,6 +1869,11 @@ browser-process-hrtime@^1.0.0:
   resolved "https://registry.yarnpkg.com/browser-process-hrtime/-/browser-process-hrtime-1.0.0.tgz#3c9b4b7d782c8121e56f10106d84c0d0ffc94626"
   integrity sha512-9o5UecI3GhkpM6DrXr69PblIuWxPKk9Y0jHBRhdocZ2y7YECBFCsHm79Pr3OyR2AvjhDkabFJaDJMYRazHgsow==
 
+browserslist-config-google@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/browserslist-config-google/-/browserslist-config-google-3.0.1.tgz#7d78e87e049da92a5e7180438d755f8dd76100c8"
+  integrity sha512-987cIZMlj4zmA/kuMmSl4yJpJLEPTn1MhToBrnvnzdjLziW4cTbVK02SA3Omz/B1eE+pVjDUngR1FmjPEFRm1w==
+
 browserslist@^4.14.5, browserslist@^4.17.5, browserslist@^4.18.1:
   version "4.18.1"
   resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-4.18.1.tgz#60d3920f25b6860eb917c6c7b185576f4d8b017f"
