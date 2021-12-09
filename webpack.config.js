@@ -28,7 +28,8 @@ const config = {
   module: {
     rules: [
       {
-        test: /\.(ts|js)$/,
+        test: /\.(tsx?|jsx?)$/,
+        exclude: /node_modules\/(?!(@tusbar\/cache-control))/,
         use: { loader: 'babel-loader' }
       }
     ]
