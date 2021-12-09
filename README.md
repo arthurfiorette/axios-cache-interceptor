@@ -39,7 +39,7 @@ Axios Cache Interceptor</h1>
   <code
     ><a href="https://www.npmjs.com/package/axios-cache-interceptor"
       ><img
-        src="https://img.shields.io/npm/dw/axios-cache-interceptor?style=flat"
+        src="https://img.shields.io/npm/dm/axios-cache-interceptor?style=flat"
         target="_blank"
         alt="Downloads" /></a
   ></code>
