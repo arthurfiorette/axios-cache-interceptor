@@ -41,9 +41,7 @@ const config = {
               ['@babel/preset-env', { targets: 'extends browserslist-config-google' }],
               '@babel/preset-typescript'
             ],
-            plugins: [
-              '@babel/plugin-transform-modules-commonjs'
-            ],
+            plugins: ['@babel/plugin-transform-modules-commonjs'],
             comments: false,
             sourceMaps: true
           }
