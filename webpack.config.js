@@ -38,7 +38,7 @@ const config = {
           options: {
             babelrc: false,
             presets: [
-              ['@babel/preset-env', { targets: 'extends browserslist-config-google' }],
+              ['@babel/preset-env', { targets: 'defaults' }],
               '@babel/preset-typescript'
             ],
             plugins: ['@babel/plugin-transform-modules-commonjs'],
