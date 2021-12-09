@@ -4,7 +4,6 @@
     ["@babel/preset-env", { "targets": "extends browserslist-config-google" }],
     "@babel/preset-typescript"
   ],
-  "plugins": ["@babel/plugin-transform-runtime"],
   "comments": false,
   "compact": true,
   "sourceMaps": true
