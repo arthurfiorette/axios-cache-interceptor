@@ -41,9 +41,7 @@ const config = {
               ['@babel/preset-env', { targets: 'defaults' }],
               '@babel/preset-typescript'
             ],
-            plugins: ['@babel/plugin-transform-modules-commonjs'],
-            comments: false,
-            sourceMaps: true
+            plugins: ['@babel/plugin-transform-modules-commonjs']
           }
         }
       }
@@ -52,7 +50,7 @@ const config = {
 
   optimization: {
     minimize: true,
-    minimizer: [new TerserWebpackPlugin()]
+    minimizer: [new TerserWebpackPlugin({ parallel: true })]
   }
 };
 
