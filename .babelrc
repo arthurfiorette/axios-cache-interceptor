@@ -5,6 +5,5 @@
     "@babel/preset-typescript"
   ],
   "comments": false,
-  "compact": true,
-  "sourceMaps": true
+  "compact": true
 }
