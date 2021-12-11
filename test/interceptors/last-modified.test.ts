@@ -1,5 +1,5 @@
 import { Header } from '../../src/util/headers';
-import { mockAxios } from '../mocks/axios';
+import { mockAxios, XMockRandom } from '../mocks/axios';
 import { sleep } from '../utils';
 
 describe('Last-Modified handling', () => {
@@ -97,5 +97,24 @@ describe('Last-Modified handling', () => {
 
     expect(typeof milliseconds).toBe('number');
     expect(milliseconds).toBeLessThan(Date.now());
+  });
+
+  it('tests header overriding with 304', async () => {
+    const axios = mockAxios();
+
+    // First request, return x-my-header. Ttl 1 to make the cache stale
+    const firstResponse = await axios.get('', { cache: { ttl: -1 } });
+    const firstMyHeader = firstResponse.headers?.[XMockRandom];
+
+    expect(firstMyHeader).toBeDefined();
+    expect(Number(firstMyHeader)).not.toBeNaN();
+
+    // Second request with 304 Not Modified
+    const secondResponse = await axios.get('', { cache: { modifiedSince: true } });
+    const secondMyHeader = secondResponse.headers?.[XMockRandom];
+
+    expect(secondMyHeader).toBeDefined();
+    expect(Number(secondMyHeader)).not.toBeNaN();
+    expect(secondMyHeader).not.toBe(firstMyHeader);
   });
 });

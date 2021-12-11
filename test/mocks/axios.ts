@@ -3,9 +3,11 @@ import { AxiosCacheInstance, CacheProperties, useCache } from '../../src';
 import type { CacheInstance } from '../../src/cache/cache';
 import { Header } from '../../src/util/headers';
 
+export const XMockRandom = 'x-mock-random';
+
 export function mockAxios(
   options: Partial<CacheInstance> & Partial<CacheProperties> = {},
-  headers: Record<string, string> = {}
+  responseHeaders: Record<string, string> = {}
 ): AxiosCacheInstance {
   const axios = useCache(Axios.create(), options);
 
@@ -25,7 +27,11 @@ export function mockAxios(
         data: true,
         status,
         statusText: should304 ? '304 Not Modified' : '200 OK',
-        headers,
+        headers: {
+          ...responseHeaders,
+          // Random header for every request made
+          [XMockRandom]: `${Math.random()}`
+        },
         config
       };
     };

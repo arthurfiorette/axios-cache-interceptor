@@ -1,7 +1,7 @@
 import type { AxiosResponse } from 'axios';
 import type { AxiosCacheInstance, CacheAxiosResponse } from '../cache/axios';
 import type { CacheProperties } from '../cache/cache';
-import type { CachedStorageValue } from '../storage/types';
+import type { CachedResponse, CachedStorageValue } from '../storage/types';
 import { checkPredicateObject } from '../util/cache-predicate';
 import { Header } from '../util/headers';
 import { updateCache } from '../util/update-cache';
@@ -12,11 +12,11 @@ export class CacheResponseInterceptor<R, D>
 {
   constructor(readonly axios: AxiosCacheInstance) {}
 
-  public use = (): void => {
+  readonly use = (): void => {
     this.axios.interceptors.response.use(this.onFulfilled);
   };
 
-  public onFulfilled = async (
+  readonly onFulfilled = async (
     axiosResponse: AxiosResponse<R, D>
   ): Promise<CacheAxiosResponse<R, D>> => {
     const response = this.cachedResponse(axiosResponse);
@@ -40,7 +40,7 @@ export class CacheResponseInterceptor<R, D>
       // If the request interceptor had a problem
       cache.state === 'stale' ||
       cache.state === 'empty' ||
-      // Should not hit here because of later response.cached check
+      // Should not hit here because of previous response.cached check
       cache.state === 'cached'
     ) {
       return response;
@@ -50,7 +50,7 @@ export class CacheResponseInterceptor<R, D>
     if (
       // For 'loading' values (post stale), this check was already run in the past.
       !cache.data &&
-      !this.testCachePredicate(response, cacheConfig)
+      !CacheResponseInterceptor.testCachePredicate(response, cacheConfig)
     ) {
       await this.rejectResponse(response.id);
       return response;
@@ -85,29 +85,7 @@ export class CacheResponseInterceptor<R, D>
       ttl = expirationTime || expirationTime === 0 ? expirationTime : ttl;
     }
 
-    const data =
-      response.status == 304 && cache.data
-        ? (() => {
-            // Rust syntax <3
-            response.cached = true;
-            response.data = cache.data.data;
-            response.status = cache.data.status;
-            response.statusText = cache.data.statusText;
-
-            // We may have new headers.
-            response.headers = {
-              ...cache.data.headers,
-              ...response.headers
-            };
-
-            return cache.data;
-          })()
-        : {
-            data: response.data,
-            status: response.status,
-            statusText: response.statusText,
-            headers: response.headers
-          };
+    const data = CacheResponseInterceptor.createCacheData(response, cache.data);
 
     const newCache: CachedStorageValue = {
       state: 'cached',
@@ -134,7 +112,26 @@ export class CacheResponseInterceptor<R, D>
     return response;
   };
 
-  private testCachePredicate = <R>(
+  /** Rejects cache for this response. Also update the waiting list for this key by rejecting it. */
+  readonly rejectResponse = async (key: string) => {
+    // Update the cache to empty to prevent infinite loading state
+    await this.axios.storage.remove(key);
+    // Reject the deferred if present
+    this.axios.waiting[key]?.reject(null);
+    delete this.axios.waiting[key];
+  };
+
+  readonly cachedResponse = (response: AxiosResponse<R, D>): CacheAxiosResponse<R, D> => {
+    return {
+      id: this.axios.generateKey(response.config),
+      // The request interceptor response.cache will return true or undefined. And true only when the response was cached.
+
+      cached: (response as CacheAxiosResponse<R, D>).cached || false,
+      ...response
+    };
+  };
+
+  static readonly testCachePredicate = <R>(
     response: AxiosResponse<R>,
     cache: CacheProperties
   ): boolean => {
@@ -148,26 +145,36 @@ export class CacheResponseInterceptor<R, D>
   };
 
   /**
-   * Rejects cache for this response. Also update the waiting list for
-   * this key by rejecting it.
+   * Creates the new date to the cache by the provided response. Also handles possible 304
+   * Not Modified by updating response properties.
    */
-  private rejectResponse = async (key: string) => {
-    // Update the cache to empty to prevent infinite loading state
-    await this.axios.storage.remove(key);
-    // Reject the deferred if present
-    this.axios.waiting[key]?.reject(null);
-    delete this.axios.waiting[key];
-  };
+  static readonly createCacheData = <R, D>(
+    response: CacheAxiosResponse<R, D>,
+    cache?: CachedResponse
+  ): CachedResponse => {
+    if (response.status === 304 && cache) {
+      // Set the cache information into the response object
+      response.cached = true;
+      response.data = cache.data;
+      response.status = cache.status;
+      response.statusText = cache.statusText;
 
-  private cachedResponse = (response: AxiosResponse<R, D>): CacheAxiosResponse<R, D> => {
+      // Update possible new headers
+      response.headers = {
+        ...cache.headers,
+        ...response.headers
+      };
+
+      // return the old cache
+      return cache;
+    }
+
+    // New Response
     return {
-      id: this.axios.generateKey(response.config),
-      /**
-       * The request interceptor response.cache will return true or
-       * undefined. And true only when the response was cached.
-       */
-      cached: (response as CacheAxiosResponse<R, D>).cached || false,
-      ...response
+      data: response.data,
+      status: response.status,
+      statusText: response.statusText,
+      headers: response.headers
     };
   };
 }
