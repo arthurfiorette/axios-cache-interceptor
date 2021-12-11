@@ -1,12 +1,12 @@
-import { checkPredicateObject } from '../../src/util/cache-predicate';
+import { isCachePredicateValid } from '../../src/util/cache-predicate';
 import { createResponse } from '../utils';
 
 describe('tests cache predicate object', () => {
   it('tests statusCheck with tuples', () => {
     const response = createResponse({ status: 764 });
 
-    const falsyTest = checkPredicateObject(response, { statusCheck: [200, 299] });
-    const truthyTest = checkPredicateObject(response, { statusCheck: [760, 769] });
+    const falsyTest = isCachePredicateValid(response, { statusCheck: [200, 299] });
+    const truthyTest = isCachePredicateValid(response, { statusCheck: [760, 769] });
 
     expect(falsyTest).toBeFalsy();
     expect(truthyTest).toBeTruthy();
@@ -15,11 +15,11 @@ describe('tests cache predicate object', () => {
   it('tests statusCheck with a predicate', () => {
     const response = createResponse({ status: 764 });
 
-    const falsyTest = checkPredicateObject(response, {
+    const falsyTest = isCachePredicateValid(response, {
       statusCheck: (status) => status >= 200 && status <= 299
     });
 
-    const truthyTest = checkPredicateObject(response, {
+    const truthyTest = isCachePredicateValid(response, {
       statusCheck: (status) => status >= 760 && status <= 769
     });
 
@@ -32,11 +32,11 @@ describe('tests cache predicate object', () => {
       headers: { 'Content-Type': 'application/json' }
     });
 
-    const hasContentTypeLowercase = checkPredicateObject(response, {
+    const hasContentTypeLowercase = isCachePredicateValid(response, {
       containsHeaders: { 'content-type': true }
     });
 
-    const hasContentType = checkPredicateObject(response, {
+    const hasContentType = isCachePredicateValid(response, {
       containsHeaders: { 'Content-Type': true }
     });
 
@@ -49,15 +49,15 @@ describe('tests cache predicate object', () => {
       headers: { 'Content-Type': 'application/json' }
     });
 
-    const headerExists = checkPredicateObject(response, {
+    const headerExists = isCachePredicateValid(response, {
       containsHeaders: { 'content-type': 'application/json' }
     });
 
-    const isXmlContent = checkPredicateObject(response, {
+    const isXmlContent = isCachePredicateValid(response, {
       containsHeaders: { 'Content-Type': 'application/xml' }
     });
 
-    const isJsonContent = checkPredicateObject(response, {
+    const isJsonContent = isCachePredicateValid(response, {
       containsHeaders: { 'Content-Type': 'application/json' }
     });
 
@@ -71,15 +71,15 @@ describe('tests cache predicate object', () => {
       headers: { 'Content-Type': 'application/json' }
     });
 
-    const headerExists = checkPredicateObject(response, {
+    const headerExists = isCachePredicateValid(response, {
       containsHeaders: { 'content-type': (header) => header == 'application/json' }
     });
 
-    const isXmlContent = checkPredicateObject(response, {
+    const isXmlContent = isCachePredicateValid(response, {
       containsHeaders: { 'Content-Type': (header) => header == 'application/xml' }
     });
 
-    const isJsonContent = checkPredicateObject(response, {
+    const isJsonContent = isCachePredicateValid(response, {
       containsHeaders: { 'Content-Type': (header) => header == 'application/json' }
     });
 
@@ -93,11 +93,11 @@ describe('tests cache predicate object', () => {
       data: { a: true, b: 1 }
     });
 
-    const testStrict = checkPredicateObject(response, {
+    const testStrict = isCachePredicateValid(response, {
       responseMatch: (data: any) => data && data.a === true && data.b === 1
     });
 
-    const testError = checkPredicateObject(response, {
+    const testError = isCachePredicateValid(response, {
       responseMatch: (data: any) => data && (data.a !== true || data.b !== 1)
     });
 

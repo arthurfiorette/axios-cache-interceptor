@@ -1,7 +1,20 @@
 import type { AxiosResponse } from 'axios';
+import type { CacheProperties } from '..';
 import type { CachePredicateObject } from './types';
 
-export function checkPredicateObject<R>(
+/** Returns true if the response should be cached */
+export function shouldCacheResponse<R>(
+  response: AxiosResponse<R>,
+  { cachePredicate }: CacheProperties
+) {
+  if (typeof cachePredicate === 'function') {
+    return cachePredicate(response);
+  }
+
+  return isCachePredicateValid(response, cachePredicate);
+}
+
+export function isCachePredicateValid<R>(
   response: AxiosResponse<R>,
   { statusCheck, containsHeaders, responseMatch }: CachePredicateObject
 ): boolean {

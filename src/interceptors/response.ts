@@ -2,7 +2,7 @@ import type { AxiosResponse } from 'axios';
 import type { AxiosCacheInstance, CacheAxiosResponse } from '../cache/axios';
 import type { CacheProperties } from '../cache/cache';
 import type { CachedResponse, CachedStorageValue } from '../storage/types';
-import { checkPredicateObject } from '../util/cache-predicate';
+import { shouldCacheResponse } from '../util/cache-predicate';
 import { Header } from '../util/headers';
 import { updateCache } from '../util/update-cache';
 import type { AxiosInterceptor } from './types';
@@ -50,7 +50,7 @@ export class CacheResponseInterceptor<R, D>
     if (
       // For 'loading' values (post stale), this check was already run in the past.
       !cache.data &&
-      !CacheResponseInterceptor.testCachePredicate(response, cacheConfig)
+      !shouldCacheResponse(response, cacheConfig)
     ) {
       await this.rejectResponse(response.id);
       return response;
@@ -129,19 +129,6 @@ export class CacheResponseInterceptor<R, D>
       cached: (response as CacheAxiosResponse<R, D>).cached || false,
       ...response
     };
-  };
-
-  static readonly testCachePredicate = <R>(
-    response: AxiosResponse<R>,
-    cache: CacheProperties
-  ): boolean => {
-    const cachePredicate = cache.cachePredicate;
-
-    return (
-      (typeof cachePredicate === 'function' && cachePredicate(response)) ||
-      (typeof cachePredicate === 'object' &&
-        checkPredicateObject(response, cachePredicate))
-    );
   };
 
   /**
