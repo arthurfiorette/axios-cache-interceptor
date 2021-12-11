@@ -4,9 +4,7 @@
 const path = require('path');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
 
-/**
- * @type {import('webpack').Configuration}
- */
+/** @type {import('webpack').Configuration} */
 const config = {
   mode: 'production',
 

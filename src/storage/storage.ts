@@ -4,8 +4,8 @@ import type { StaleStorageValue, StorageValue } from './types';
 
 export abstract class AxiosStorage {
   /**
-   * Returns the cached value for the given key. The get method is
-   * what takes care to invalidate the values.
+   * Returns the cached value for the given key. The get method is what takes care to
+   * invalidate the values.
    */
   protected abstract readonly find: (key: string) => Promise<StorageValue>;
 
@@ -16,9 +16,7 @@ export abstract class AxiosStorage {
    */
   abstract readonly set: (key: string, value: NotEmptyStorageValue) => Promise<void>;
 
-  /**
-   * Removes the value for the given key
-   */
+  /** Removes the value for the given key */
   abstract readonly remove: (key: string) => Promise<void>;
 
   readonly get = async (key: string): Promise<StorageValue> => {
@@ -47,9 +45,7 @@ export abstract class AxiosStorage {
     return { state: 'empty' };
   };
 
-  /**
-   * Returns true if a invalid cache should still be kept
-   */
+  /** Returns true if a invalid cache should still be kept */
   static readonly keepIfStale = ({ data }: CachedStorageValue): boolean => {
     if (data?.headers) {
       return (

@@ -49,9 +49,9 @@ export class CacheRequestInterceptor<D>
     // Not cached, continue the request, and mark it as fetching
     emptyOrStale: if (cache.state == 'empty' || cache.state === 'stale') {
       /**
-       * This checks for simultaneous access to a new key. The js
-       * event loop jumps on the first await statement, so the second
-       * (asynchronous call) request may have already started executing.
+       * This checks for simultaneous access to a new key. The js event loop jumps on the
+       * first await statement, so the second (asynchronous call) request may have already
+       * started executing.
        */
       if (this.axios.waiting[key]) {
         cache = (await this.axios.storage.get(key)) as
@@ -64,8 +64,8 @@ export class CacheRequestInterceptor<D>
       this.axios.waiting[key] = deferred();
 
       /**
-       * Add a default reject handler to catch when the request is
-       * aborted without others waiting for it.
+       * Add a default reject handler to catch when the request is aborted without others
+       * waiting for it.
        */
       this.axios.waiting[key]?.catch(() => undefined);
 
@@ -110,8 +110,8 @@ export class CacheRequestInterceptor<D>
 
     config.adapter = () =>
       /**
-       * Even though the response interceptor receives this one from
-       * here, it has been configured to ignore cached responses: true
+       * Even though the response interceptor receives this one from here, it has been
+       * configured to ignore cached responses: true
        */
       Promise.resolve<CacheAxiosResponse<any, D>>({
         config: config,
@@ -167,8 +167,8 @@ export class CacheRequestInterceptor<D>
   };
 
   /**
-   * Creates a new validateStatus function that will use the one
-   * already used and also accept status code 304.
+   * Creates a new validateStatus function that will use the one already used and also
+   * accept status code 304.
    */
   static readonly createValidateStatus = (
     oldValidate?: AxiosRequestConfig['validateStatus']

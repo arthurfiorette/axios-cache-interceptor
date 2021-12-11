@@ -12,10 +12,7 @@ export type CacheUpdater =
       newData: any
     ) => CachedStorageValue | void);
 
-/**
- * Function to update all caches, from CacheProperties.update, with
- * the new data.
- */
+/** Function to update all caches, from CacheProperties.update, with the new data. */
 export async function updateCache<T = any>(
   storage: AxiosStorage,
   data: T,

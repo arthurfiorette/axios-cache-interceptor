@@ -7,9 +7,13 @@
       "request": "launch",
       "runtimeArgs": [
         "--inspect-brk",
+
         // Windows
         //"${workspaceRoot}/node_modules/jest/bin/jest.js",
+
+        // Linux
         "${workspaceRoot}/node_modules/.bin/jest",
+
         "--runInBand",
         "--watch"
       ],

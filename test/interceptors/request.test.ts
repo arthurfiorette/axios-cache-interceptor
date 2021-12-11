@@ -52,10 +52,10 @@ describe('test request interceptor', () => {
   });
 
   /**
-   * This is to test when two requests are made simultaneously. With
-   * that, the second response waits the deferred from the first one.
-   * Because the first request is not cached, the second should not be
-   * waiting forever for the deferred to be resolved with a cached response.
+   * This is to test when two requests are made simultaneously. With that, the second
+   * response waits the deferred from the first one. Because the first request is not
+   * cached, the second should not be waiting forever for the deferred to be resolved with
+   * a cached response.
    */
   it('tests concurrent requests with uncached responses', async () => {
     const axios = mockAxios();

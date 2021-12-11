@@ -2,5 +2,5 @@
 
 module.exports = require('@arthurfiorette/prettier-config')({
   tsdoc: true,
-  plugins: ['prettier-plugin-jsdoc', 'prettier-plugin-organize-imports']
+  plugins: ['prettier-plugin-organize-imports', 'prettier-plugin-jsdoc']
 });

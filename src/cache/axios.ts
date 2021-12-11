@@ -14,15 +14,10 @@ import type { CacheInstance, CacheProperties } from './cache';
 export type CacheAxiosResponse<R = any, D = any> = AxiosResponse<R, D> & {
   config: CacheRequestConfig<D>;
 
-  /**
-   * The id used for this request. if config specified an id, the id
-   * will be returned
-   */
+  /** The id used for this request. if config specified an id, the id will be returned */
   id: string;
 
-  /**
-   * A simple boolean to check whether this request was cached or not
-   */
+  /** A simple boolean to check whether this request was cached or not */
   cached: boolean;
 };
 
@@ -33,8 +28,8 @@ export type CacheAxiosResponse<R = any, D = any> = AxiosResponse<R, D> & {
  */
 export type CacheRequestConfig<D = any> = AxiosRequestConfig<D> & {
   /**
-   * An id for this request, if this request is used in cache, only
-   * the last request made with this id will be returned.
+   * An id for this request, if this request is used in cache, only the last request made
+   * with this id will be returned.
    *
    * @default undefined
    */
@@ -49,8 +44,8 @@ export type CacheRequestConfig<D = any> = AxiosRequestConfig<D> & {
 };
 
 /**
- * Same as the AxiosInstance but with CacheRequestConfig as a config
- * type and CacheAxiosResponse as response type.
+ * Same as the AxiosInstance but with CacheRequestConfig as a config type and
+ * CacheAxiosResponse as response type.
  *
  * @see AxiosInstance
  * @see CacheRequestConfig
@@ -84,9 +79,7 @@ export interface AxiosCacheInstance extends CacheInstance, AxiosInstance {
     response: AxiosInterceptorManager<CacheAxiosResponse<never, any>>;
   };
 
-  /**
-   * @template D The type that the request body use
-   */
+  /** @template D The type that the request body use */
   getUri<D>(config?: CacheRequestConfig<D>): string;
 
   /**

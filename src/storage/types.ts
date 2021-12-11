@@ -5,9 +5,7 @@ export type CachedResponse = {
   statusText: string;
 };
 
-/**
- * The value returned for a given key.
- */
+/** The value returned for a given key. */
 export type StorageValue =
   | StaleStorageValue
   | CachedStorageValue
@@ -25,10 +23,7 @@ export type StaleStorageValue = {
 
 export type CachedStorageValue = {
   data: CachedResponse;
-  /**
-   * The number in milliseconds to wait after createdAt before the
-   * value is considered stale.
-   */
+  /** The number in milliseconds to wait after createdAt before the value is considered stale. */
   ttl: number;
   createdAt: number;
   state: 'cached';
@@ -36,15 +31,13 @@ export type CachedStorageValue = {
 
 export type LoadingStorageValue = {
   /**
-   * Only present if the previous state was `stale`. So, in case the
-   * new response comes without a value, this data is used
+   * Only present if the previous state was `stale`. So, in case the new response comes
+   * without a value, this data is used
    */
   data?: CachedResponse;
   ttl?: number;
 
-  /**
-   * Defined when the state is cached
-   */
+  /** Defined when the state is cached */
   createdAt?: undefined;
   state: 'loading';
 };
@@ -53,9 +46,7 @@ export type EmptyStorageValue = {
   data?: undefined;
   ttl?: undefined;
 
-  /**
-   * Defined when the state is cached
-   */
+  /** Defined when the state is cached */
   createdAt?: undefined;
   state: 'empty';
 };

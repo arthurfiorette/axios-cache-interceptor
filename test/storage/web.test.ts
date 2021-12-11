@@ -1,6 +1,4 @@
-/**
- * @jest-environment jsdom
- */
+/** @jest-environment jsdom */
 
 import { BrowserAxiosStorage } from '../../src/storage/browser';
 import { testStorage } from './storages';
