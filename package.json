@@ -3,6 +3,7 @@
   "version": "0.7.2",
   "description": "Cache interceptor for axios",
   "main": "./dist/index.js",
+  "browser": "./dist/index.bundle.js",
   "jsdelivr": "./dist/index.bundle.js",
   "unpkg": "./dist/index.bundle.js",
   "scripts": {
