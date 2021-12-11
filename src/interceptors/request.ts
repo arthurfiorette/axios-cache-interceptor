@@ -20,11 +20,11 @@ export class CacheRequestInterceptor<D>
 {
   constructor(readonly axios: AxiosCacheInstance) {}
 
-  public use = (): void => {
+  readonly use = (): void => {
     this.axios.interceptors.request.use(this.onFulfilled);
   };
 
-  public onFulfilled = async (
+  readonly onFulfilled = async (
     config: CacheRequestConfig<D>
   ): Promise<CacheRequestConfig<D>> => {
     if (config.cache === false) {
@@ -36,7 +36,7 @@ export class CacheRequestInterceptor<D>
 
     if (
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      !this.isMethodAllowed(config.method!, config.cache)
+      !CacheRequestInterceptor.isMethodAllowed(config.method!, config.cache)
     ) {
       return config;
     }
@@ -76,7 +76,7 @@ export class CacheRequestInterceptor<D>
 
       if (cache.state === 'stale') {
         //@ts-expect-error type infer couldn't resolve this
-        this.setRevalidationHeaders(cache, config);
+        CacheRequestInterceptor.setRevalidationHeaders(cache, config);
       }
 
       config.validateStatus = CacheRequestInterceptor.createValidateStatus(
@@ -126,7 +126,7 @@ export class CacheRequestInterceptor<D>
     return config;
   };
 
-  private isMethodAllowed = (
+  static readonly isMethodAllowed = (
     method: Method,
     properties: Partial<CacheProperties>
   ): boolean => {
@@ -141,7 +141,7 @@ export class CacheRequestInterceptor<D>
     return false;
   };
 
-  private setRevalidationHeaders = (
+  static readonly setRevalidationHeaders = <D>(
     cache: StaleStorageValue,
     config: CacheRequestConfig<D> & { cache: Partial<CacheProperties> }
   ): void => {
@@ -170,7 +170,9 @@ export class CacheRequestInterceptor<D>
    * Creates a new validateStatus function that will use the one
    * already used and also accept status code 304.
    */
-  static createValidateStatus = (oldValidate?: AxiosRequestConfig['validateStatus']) => {
+  static readonly createValidateStatus = (
+    oldValidate?: AxiosRequestConfig['validateStatus']
+  ) => {
     return (status: number): boolean => {
       return oldValidate
         ? oldValidate(status) || status === 304

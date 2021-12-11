@@ -6,15 +6,15 @@ export class MemoryAxiosStorage extends AxiosStorage {
     super();
   }
 
-  public find = async (key: string): Promise<StorageValue> => {
+  readonly find = async (key: string): Promise<StorageValue> => {
     return this.storage[key] || { state: 'empty' };
   };
 
-  public set = async (key: string, value: NotEmptyStorageValue): Promise<void> => {
+  readonly set = async (key: string, value: NotEmptyStorageValue): Promise<void> => {
     this.storage[key] = value;
   };
 
-  public remove = async (key: string): Promise<void> => {
+  readonly remove = async (key: string): Promise<void> => {
     delete this.storage[key];
   };
 }

@@ -30,7 +30,7 @@ export function useCache(
 ): AxiosCacheInstance {
   const axiosCache = axios as AxiosCacheInstance;
 
-  axiosCache.storage = storage || new MemoryAxiosStorage({});
+  axiosCache.storage = storage || new MemoryAxiosStorage();
   axiosCache.generateKey = generateKey || defaultKeyGenerator;
   axiosCache.waiting = waiting || {};
   axiosCache.headerInterpreter = headerInterpreter || defaultHeaderInterpreter;

@@ -7,21 +7,21 @@ export abstract class AxiosStorage {
    * Returns the cached value for the given key. The get method is
    * what takes care to invalidate the values.
    */
-  protected abstract find: (key: string) => Promise<StorageValue>;
+  protected abstract readonly find: (key: string) => Promise<StorageValue>;
 
   /**
    * Sets a new value for the given key
    *
    * Use CacheStorage.remove(key) to define a key to 'empty' state.
    */
-  public abstract set: (key: string, value: NotEmptyStorageValue) => Promise<void>;
+  abstract readonly set: (key: string, value: NotEmptyStorageValue) => Promise<void>;
 
   /**
    * Removes the value for the given key
    */
-  public abstract remove: (key: string) => Promise<void>;
+  abstract readonly remove: (key: string) => Promise<void>;
 
-  public get = async (key: string): Promise<StorageValue> => {
+  readonly get = async (key: string): Promise<StorageValue> => {
     const value = await this.find(key);
 
     if (
@@ -50,7 +50,7 @@ export abstract class AxiosStorage {
   /**
    * Returns true if a invalid cache should still be kept
    */
-  static keepIfStale = ({ data }: CachedStorageValue): boolean => {
+  static readonly keepIfStale = ({ data }: CachedStorageValue): boolean => {
     if (data?.headers) {
       return (
         Header.ETag in data.headers ||
