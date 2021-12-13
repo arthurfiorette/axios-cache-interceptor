@@ -27,7 +27,6 @@ const config = {
     rules: [
       {
         test: /\.(ts|js)$/,
-        exclude: { and: [/node_modules/] },
         use: {
           loader: 'babel-loader',
           options: {
@@ -36,7 +35,10 @@ const config = {
               ['@babel/preset-env', { targets: 'defaults' }],
               '@babel/preset-typescript'
             ],
-            plugins: ['@babel/plugin-transform-modules-commonjs']
+            plugins: [
+              '@babel/plugin-transform-modules-commonjs',
+              '@babel/plugin-transform-runtime'
+            ]
           }
         }
       }

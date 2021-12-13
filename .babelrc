@@ -1,9 +1,0 @@
-// Config ignored by babel when running from webpack
-{
-  "presets": [
-    ["@babel/preset-env", { "targets": "defaults" }],
-    "@babel/preset-typescript"
-  ],
-  "comments": false,
-  "compact": true
-}
