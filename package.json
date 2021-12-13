@@ -43,7 +43,7 @@
   },
   "homepage": "https://github.com/ArthurFiorette/axios-cache-interceptor#readme",
   "dependencies": {
-    "cache-parser": "^1.1.0",
+    "cache-parser": "^1.1.1",
     "fast-defer": "^1.1.2"
   },
   "devDependencies": {
@@ -56,8 +56,8 @@
     "@types/jest": "^27.0.2",
     "@types/node": "^16.7.10",
     "@types/webpack": "^5.28.0",
-    "@typescript-eslint/eslint-plugin": "^5.4.0",
-    "@typescript-eslint/parser": "^5.4.0",
+    "@typescript-eslint/eslint-plugin": "^5.7.0",
+    "@typescript-eslint/parser": "^5.7.0",
     "auto-changelog": "^2.3.0",
     "axios": "~0.24.0",
     "babel-loader": "^8.2.3",
