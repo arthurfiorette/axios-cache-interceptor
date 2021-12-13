@@ -27,10 +27,7 @@ const config = {
     rules: [
       {
         test: /\.(ts|js)$/,
-        exclude: {
-          and: [/node_modules/],
-          not: [/@tusbar[\\/]cache-control/]
-        },
+        exclude: { and: [/node_modules/] },
         use: {
           loader: 'babel-loader',
           options: {

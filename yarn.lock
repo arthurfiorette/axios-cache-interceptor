@@ -1207,11 +1207,6 @@
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-1.1.2.tgz#ccb91445360179a04e7fe6aff78c00ffc1eeaf82"
   integrity sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw==
 
-"@tusbar/cache-control@^0.6.1":
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/@tusbar/cache-control/-/cache-control-0.6.1.tgz#fb125e23e68a573752b474dd359374bddb796188"
-  integrity sha512-lVONHkx/OviQ8yIJu6sGmdBJVWMKQm7EDtpvM3s2VihmaqHQocFixMd/9rfAqK5IxFL7XQMVzkpRrKjQ/JBS+Q==
-
 "@types/babel__core@^7.0.0", "@types/babel__core@^7.1.14":
   version "7.1.17"
   resolved "https://registry.yarnpkg.com/@types/babel__core/-/babel__core-7.1.17.tgz#f50ac9d20d64153b510578d84f9643f9a3afbe64"
@@ -1886,6 +1881,11 @@ buffer-from@^1.0.0:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/buffer-from/-/buffer-from-1.1.2.tgz#2b146a6fd72e80b4f55d255f35ed59a3a9a41bd5"
   integrity sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==
+
+cache-parser@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/cache-parser/-/cache-parser-1.1.0.tgz#85d2c563b4bee93369518d99eb793e54a72b46c4"
+  integrity sha512-d9WAV5EjSDh0E2GP9ym4dk9stS6pynuSgSHYdfoQV7pTdM/YRtIJ+Rk0nP2cp5ZjIGz2T1aA8siFUgs0NEd4MA==
 
 call-bind@^1.0.0:
   version "1.0.2"

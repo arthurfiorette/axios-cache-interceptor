@@ -1,4 +1,4 @@
-import { parse } from '@tusbar/cache-control';
+import { parse } from 'cache-parser';
 import { Header } from '../util/headers';
 import type { HeaderInterpreter, HeadersInterpreter } from './types';
 
