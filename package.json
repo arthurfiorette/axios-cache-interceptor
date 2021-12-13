@@ -6,6 +6,7 @@
   "browser": "./dist/index.bundle.js",
   "jsdelivr": "./dist/index.bundle.js",
   "unpkg": "./dist/index.bundle.js",
+  "runkitExampleFilename": "./examples/runkit.js",
   "scripts": {
     "build": "concurrently 'npm:build:*'",
     "build:browser": "webpack",
