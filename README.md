@@ -223,9 +223,8 @@ browser. Both of them uses **Babel** with
 
 You can see more here about compiling options:
 
-- [Webpack config](/webpack.config.js)
-- [Babel Config](/.babelrc)
-- [Types Config](/tsconfig.types.json)
+- [Browser Build config](/webpack.config.js)
+- [NodeJS Build Config](/tsconfig.build.json)
 
 If, for some reason, you have a bug with the compiled code, such as a user have an
 incompatible browser, please contact me.
