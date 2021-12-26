@@ -162,12 +162,12 @@ import { useCache } from 'axios-cache-interceptor';
 
 <script
   crossorigin
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@VERSION/dist/index.bundle.js"
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@VERSION/dist/index.min.js"
 ></script>
 <!-- or -->
 <script
   crossorigin
-  src="https://unpkg.com/axios-cache-interceptor@VERSION/dist/index.bundle.js"
+  src="https://unpkg.com/axios-cache-interceptor@VERSION/dist/index.min.js"
 ></script>
 ```
 
@@ -217,17 +217,13 @@ After that, you can made your own requests normally.
 
 ## Compiled code
 
-The compiled code is built in two different ways, one as nodejs module and one as a
-browser. Both of them uses **Babel** with
-[Browserslist `default` preset](https://github.com/browserslist/browserslist#full-list).
+The compiled code is built in two different ways, one as CommonsJS Module
+`(ES6 Compatible)` and one as a browser minified code `(ES5 Compatible)`.
 
 You can see more here about compiling options:
 
-- [Browser Build config](/webpack.config.js)
-- [NodeJS Build Config](/tsconfig.build.json)
-
-If, for some reason, you have a bug with the compiled code, such as a user have an
-incompatible browser, please contact me.
+- [Browser config](/tsconfig.browser.json) - [Webpack config](/webpack.config.js)
+- [NodeJS Config](/tsconfig.build.json)
 
 <br />
 

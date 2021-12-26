@@ -5,5 +5,5 @@
     "target": "ES6"
   },
   "include": ["src"],
-  "exclude": ["src/index.bundle.ts"]
+  "exclude": ["src/index.browser.ts"]
 }

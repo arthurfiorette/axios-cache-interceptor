@@ -1,5 +1,5 @@
 //@ts-check
-/* eslint-disable */
+/* eslint-disable @typescript-eslint/no-var-requires */
 
 const path = require('path');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
@@ -8,11 +8,11 @@ const TerserWebpackPlugin = require('terser-webpack-plugin');
 const config = {
   mode: 'production',
 
-  entry: path.resolve(__dirname, 'src', 'index.bundle.ts'),
+  entry: path.resolve(__dirname, 'src', 'index.browser.ts'),
 
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'index.bundle.js',
+    filename: 'index.min.js',
     libraryTarget: 'umd',
     library: 'AxiosCacheInterceptor'
   },
@@ -26,20 +26,11 @@ const config = {
   module: {
     rules: [
       {
+        include: path.resolve(__dirname, 'src'),
         test: /\.(ts|js)$/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            babelrc: false,
-            presets: [
-              ['@babel/preset-env', { targets: 'defaults' }],
-              '@babel/preset-typescript'
-            ],
-            plugins: [
-              '@babel/plugin-transform-modules-commonjs',
-              '@babel/plugin-transform-runtime'
-            ]
-          }
+        loader: 'ts-loader',
+        options: {
+          configFile: 'tsconfig.browser.json'
         }
       }
     ]

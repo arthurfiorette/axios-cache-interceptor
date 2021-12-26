@@ -5,7 +5,7 @@ import { AxiosStorage } from '../src/storage/storage';
 
 describe('test bundle imports', () => {
   it('should have basic storages', async () => {
-    const bundle = await import('../src/index.bundle');
+    const bundle = await import('../src/index.browser');
 
     expect(bundle.useCache).toBe(useCache);
     expect(bundle.AxiosStorage).toBe(AxiosStorage);
