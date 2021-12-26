@@ -6,16 +6,8 @@
 !README.md
 
 !package.json
-!tsconfig.json
-
-!.gitignore
-
-!.prettierrc
-!.prettierignore
-
-!.eslintrc
-!.eslintignore
+!tsconfig*.json
 
 !/src/**
 !/dist/**
-!/types/**
+!/examples/**
