@@ -16,7 +16,7 @@ export type CacheOptions = Partial<CacheInstance> & Partial<CacheProperties>;
  * @param config The config for the caching interceptors
  * @returns The same instance but with caching enabled
  */
-export function useCache(
+export function createCache(
   axios: AxiosInstance,
   {
     storage,
@@ -60,3 +60,14 @@ export function useCache(
 
   return axiosCache;
 }
+
+/**
+ * Apply the caching interceptors for a already created axios instance.
+ *
+ * @param axios The already created axios instance
+ * @param config The config for the caching interceptors
+ * @returns The same instance but with caching enabled
+ *
+ * @deprecated Prefer {@link createCache}
+ */
+export const useCache = createCache;

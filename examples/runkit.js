@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
 const Axios = require('axios');
-const { useCache } = require('axios-cache-interceptor');
+const { createCache } = require('axios-cache-interceptor');
 
 async function main() {
   const axios = Axios.create({
@@ -18,7 +18,7 @@ async function main() {
    * ```
    */
 
-  const axiosWithCache = useCache(axios, {
+  const axiosWithCache = createCache(axios, {
     ttl: 99999,
 
     // Parse the Cache-Control header to determine the cache strategy

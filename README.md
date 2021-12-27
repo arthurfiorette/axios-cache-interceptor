@@ -69,10 +69,10 @@ Axios Cache Interceptor</h1>
 
 ```ts
 import axios from 'axios';
-import { useCache, SessionCacheStorage } from 'axios-cache-interceptor';
+import { createCache, SessionCacheStorage } from 'axios-cache-interceptor';
 
 // An axios instance with modified types
-const api = useCache(axios.create(), {
+const api = createCache(axios.create(), {
   /* options */
 });
 
@@ -148,9 +148,9 @@ yarn add axios axios-cache-interceptor
 ```
 
 ```js
-const { useCache } = require('axios-cache-interceptor');
+const { createCache } = require('axios-cache-interceptor');
 // or
-import { useCache } from 'axios-cache-interceptor';
+import { createCache } from 'axios-cache-interceptor';
 ```
 
 ### Via CDN
@@ -172,7 +172,7 @@ import { useCache } from 'axios-cache-interceptor';
 ```
 
 ```js
-const { useCache } = window.AxiosCacheInterceptor;
+const { createCache } = window.AxiosCacheInterceptor;
 ```
 
 <br />
@@ -200,13 +200,13 @@ To you use this cache interceptor, you can apply to an existing instance or crea
 one.
 
 ```js
-import { useCache } from 'axios-cache-interceptor';
+import { createCache } from 'axios-cache-interceptor';
 
 // Your axios instance
 let axios;
 
 // Return the same axios instance, but with a modified Typescript type.
-axios = useCache(axios, {
+axios = createCache(axios, {
   /* options here */
 });
 ```
@@ -283,7 +283,7 @@ the internal code. Remember that, depending on the
 When applying the interceptor, you can customize some properties:
 
 ```js
-const axios = useCache(axios, {
+const axios = createCache(axios, {
   // Properties here
 });
 ```
