@@ -1,6 +1,6 @@
 /** Index file for webpack and cdn usage */
 
-export * from './cache/create';
-export * from './storage/browser';
-export * from './storage/memory';
-export * from './storage/storage';
+export { createCache, useCache } from './cache/create';
+export { BrowserAxiosStorage } from './storage/browser';
+export { MemoryAxiosStorage } from './storage/memory';
+export { AxiosStorage } from './storage/storage';

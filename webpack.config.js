@@ -12,9 +12,12 @@ const config = {
 
   output: {
     path: path.resolve(__dirname, 'dist'),
+    globalObject: `typeof self == 'undefined' ? this : self`,
     filename: 'index.min.js',
-    libraryTarget: 'umd',
-    library: 'AxiosCacheInterceptor'
+    library: {
+      type: 'umd',
+      name: 'AxiosCacheInterceptor'
+    }
   },
 
   resolve: {
