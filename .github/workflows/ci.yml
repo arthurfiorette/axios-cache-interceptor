@@ -40,6 +40,6 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Run BundlePhobia
-        uses: carlesnunez/check-my-bundlephobia
+        uses: carlesnunez/check-my-bundlephobia@v1.8.0
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
