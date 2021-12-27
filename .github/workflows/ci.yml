@@ -38,3 +38,8 @@ jobs:
         with:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Run Bundle Phobia
+        uses: carlesnunez/check-my-bundlephobia@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
