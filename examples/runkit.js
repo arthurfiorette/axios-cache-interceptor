@@ -17,7 +17,6 @@ async function main() {
    * axios === axiosWithCache;
    * ```
    */
-
   const axiosWithCache = createCache(axios, {
     ttl: 99999,
 
