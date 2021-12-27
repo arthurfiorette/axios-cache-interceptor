@@ -37,14 +37,14 @@
         alt="Downloads" /></a
   ></code>
   <code
-    ><a href="https://bundlephobia.com/package/axios-cache-interceptor"
+    ><a href="https://bundlephobia.com/package/axios-cache-interceptor@latest"
       ><img
         src="https://img.shields.io/bundlephobia/minzip/axios-cache-interceptor/latest?style=flat"
         target="_blank"
         alt="Minified Size" /></a
   ></code>
   <code
-    ><a href="https://bundlephobia.com/package/axios-cache-interceptor"
+    ><a href="https://packagephobia.com/result?p=axios-cache-interceptor@latest"
       ><img
         src="https://packagephobia.com/badge?p=axios-cache-interceptor@latest"
         target="_blank"
