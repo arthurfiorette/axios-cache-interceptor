@@ -47,7 +47,7 @@ const interpretCacheControl: HeaderInterpreter = (cacheControl, headers) => {
       return maxAge * 1000;
     }
 
-    return maxAge * 1000 - Number(age) * 1000;
+    return (maxAge - Number(age)) * 1000;
   }
 
   return undefined;

@@ -3,11 +3,13 @@ import { Header } from '../../src/util/headers';
 
 describe('tests header interpreter', () => {
   it('tests without cache-control header', () => {
-    const noHeader = defaultHeaderInterpreter();
-    expect(noHeader).toBeUndefined();
+    expect(defaultHeaderInterpreter()).toBeUndefined();
 
-    const emptyHeader = defaultHeaderInterpreter({ [Header.CacheControl]: '' });
-    expect(emptyHeader).toBeUndefined();
+    expect(defaultHeaderInterpreter({})).toBeUndefined();
+
+    expect(defaultHeaderInterpreter({ [Header.CacheControl]: '' })).toBeUndefined();
+
+    expect(defaultHeaderInterpreter({ ['x-random-header']: '' })).toBeUndefined();
   });
 
   it('tests with cache preventing headers', () => {
