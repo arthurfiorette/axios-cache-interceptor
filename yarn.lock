@@ -1205,10 +1205,10 @@ buffer-from@^1.0.0:
   resolved "https://registry.yarnpkg.com/buffer-from/-/buffer-from-1.1.2.tgz#2b146a6fd72e80b4f55d255f35ed59a3a9a41bd5"
   integrity sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==
 
-cache-parser@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/cache-parser/-/cache-parser-1.1.1.tgz#902e19895e67e73165e88bd573cc80825ff33577"
-  integrity sha512-nt3DSmIVjtdwbmr0LeOABuZg+9ftLKcgeTyFTi/EXObIibLCq5+vb4SFg36kP0bgHWHYJBSGftf+hNkK/ILwPQ==
+cache-parser@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/cache-parser/-/cache-parser-1.1.2.tgz#e7a5f1839e5e2432b4c4f4f8c9b161e09bf5c0f9"
+  integrity sha512-PDQSmcxb4vWdObv2lya3vSJmg9dv8k77gCPawJ3kXI3gqrxK6evUDp+5AzvJbyjRRorQbfCW6MPZW8E5NaDiIg==
 
 callsites@^3.0.0:
   version "3.1.0"
