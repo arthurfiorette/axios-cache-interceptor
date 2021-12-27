@@ -227,14 +227,16 @@ After that, you can made your own requests normally.
 
 ## Compiled code
 
-As axios itself requires [ES6 Promises](https://axios-http.com/docs/notes#promises), the CommonsJS module and the Browser minified version are also `>= ES6` compatibles.
+As axios itself requires [ES6 Promises](https://axios-http.com/docs/notes#promises), the
+CommonsJS module and the Browser minified version are also `>= ES6` compatibles.
 
 You can see more here about compiling options:
 
 - [Browser config](/tsconfig.browser.json) & [Webpack config](/webpack.config.js)
 - [NodeJS Config](/tsconfig.build.json)
 
-Don't forget, you can always rebuilt this library by up from it's source code or recompile the dist with lower ecma script versions.
+Don't forget, you can always rebuilt this library by up from it's source code or recompile
+the dist with lower ecma script versions.
 
 <br />
 
