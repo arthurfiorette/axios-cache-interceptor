@@ -168,16 +168,16 @@ import { createCache } from 'axios-cache-interceptor';
 ![Version](https://img.shields.io/npm/v/axios-cache-interceptor?style=flat)
 
 ```html
-<!-- Replace VERSION with the desired version -->
+<!-- Replace latest with the desired version -->
 
 <script
   crossorigin
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@VERSION/dist/index.min.js"
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@latest/dist/index.min.js"
 ></script>
 <!-- or -->
 <script
   crossorigin
-  src="https://unpkg.com/axios-cache-interceptor@VERSION/dist/index.min.js"
+  src="https://unpkg.com/axios-cache-interceptor@latest/dist/index.min.js"
 ></script>
 ```
 
@@ -197,9 +197,9 @@ by axios was it's types.**
 
 | [Version](https://github.com/ArthurFiorette/axios-cache-interceptor/releases) | [Axios](https://github.com/axios/axios/releases) |
 | ----------------------------------------------------------------------------- | ------------------------------------------------ |
-| `~v0.5`                                                                       | `>= v0.24`                                       |
-| `~v0.4`                                                                       | `>= v0.23`                                       |
-| `~v0.3`                                                                       | `>= v0.22`                                       |
+| `>= v0.5`                                                                       | `>= v0.24`                                       |
+| `~ v0.4`                                                                       | `>= v0.23`                                       |
+| `~ v0.3`                                                                       | `>= v0.22`                                       |
 | `<= v0.2`                                                                     | `v0.21`                                          |
 
 <br />
@@ -221,19 +221,36 @@ axios = createCache(axios, {
 });
 ```
 
-After that, you can made your own requests normally.
+After that, you can made your own requests normally, as this library respects axios API.
+
+Afterwards, the only thing you may need to configure is per-request configuration, you can change them with the  `cache` property.
+
+```js
+import { createCache } from 'axios-cache-interceptor';
+
+// Your axios-cache-interceptor instance
+let axios;
+
+axios.get('url', {
+  cache: {
+    /** options here */
+  }
+})
+```
+
+You will get syntax highlighting for all options and what they do. But you can also read here: [Per-request configuration](#per-request-configuration).
 
 <br />
 
 ## Compiled code
 
 As axios itself requires [ES6 Promises](https://axios-http.com/docs/notes#promises), the
-CommonsJS module and the Browser minified version are also `>= ES6` compatibles.
+CommonsJS module and the UMD module are also `>= ES6` compatibles.
 
 You can see more here about compiling options:
 
-- [Browser config](/tsconfig.browser.json) & [Webpack config](/webpack.config.js)
-- [NodeJS Config](/tsconfig.build.json)
+- `UMD` -> [Browser config](/tsconfig.browser.json) & [Webpack config](/webpack.config.js)
+- `CommonsJS` -> [NodeJS Config](/tsconfig.build.json)
 
 Don't forget, you can always rebuilt this library by up from it's source code or recompile
 the dist with lower ecma script versions.
