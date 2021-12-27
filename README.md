@@ -1,13 +1,5 @@
 <br />
 <div align="center">
-  <pre>
-  <br />
-  <h1>🗄️🔥💨
-Axios Cache Interceptor</h1>
-  <br />
-  </pre>
-  <br />
-  <br />
   <code
     ><a href="https://github.com/ArthurFiorette/axios-cache-interceptor/issues"
       ><img
@@ -36,6 +28,7 @@ Axios Cache Interceptor</h1>
         target="_blank"
         alt="Codecov" /></a
   ></code>
+  <br />
   <code
     ><a href="https://www.npmjs.com/package/axios-cache-interceptor"
       ><img
@@ -48,7 +41,14 @@ Axios Cache Interceptor</h1>
       ><img
         src="https://img.shields.io/bundlephobia/minzip/axios-cache-interceptor/latest?style=flat"
         target="_blank"
-        alt="Size" /></a
+        alt="Minified Size" /></a
+  ></code>
+  <code
+    ><a href="https://bundlephobia.com/package/axios-cache-interceptor"
+      ><img
+        src="https://packagephobia.com/badge?p=axios-cache-interceptor@latest"
+        target="_blank"
+        alt="Install Size" /></a
   ></code>
   <code
     ><a href="https://npm.runkit.com/axios-cache-interceptor"
@@ -57,6 +57,16 @@ Axios Cache Interceptor</h1>
         target="_blank"
         alt="Try on RunKit" /></a
   ></code>
+  <br />
+  <br />
+  <br />
+  <pre>
+  <br />
+  <h1>🗄️🔥💨
+Axios Cache Interceptor</h1>
+  <br />
+  </pre>
+  <br />
 </div>
 
 <h1></h1>
@@ -217,13 +227,14 @@ After that, you can made your own requests normally.
 
 ## Compiled code
 
-The compiled code is built in two different ways, one as CommonsJS Module
-`(ES6 Compatible)` and one as a browser minified code `(ES5 Compatible)`.
+As axios itself requires [ES6 Promises](https://axios-http.com/docs/notes#promises), the CommonsJS module and the Browser minified version are also `>= ES6` compatibles.
 
 You can see more here about compiling options:
 
-- [Browser config](/tsconfig.browser.json) - [Webpack config](/webpack.config.js)
+- [Browser config](/tsconfig.browser.json) & [Webpack config](/webpack.config.js)
 - [NodeJS Config](/tsconfig.build.json)
+
+Don't forget, you can always rebuilt this library by up from it's source code or recompile the dist with lower ecma script versions.
 
 <br />
 
