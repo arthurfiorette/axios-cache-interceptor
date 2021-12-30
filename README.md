@@ -107,6 +107,8 @@ const resp2 = await api.get('https://api.example.com/');
 - [Support list](#support-list)
 - [Getting Started](#getting-started)
 - [Compiled code](#compiled-code)
+  - [NodeJS](#nodejs)
+  - [Browsers](#browsers)
 - [Typescript users](#typescript-users)
 - [Basic Knowledge](#basic-knowledge)
   - [Request id](#request-id)
@@ -171,14 +173,28 @@ import { setupCache } from 'axios-cache-interceptor';
 ```html
 <!-- Replace latest with the desired version -->
 
+<!-- Development (ES2020) (~30KB) -->
+<script
+  crossorigin
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@latest/dist/index.development.js"
+></script>
+
+<!-- Production for ES6+ (~12KB) -->
 <script
   crossorigin
   src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@latest/dist/index.min.js"
 ></script>
-<!-- or -->
+
+<!-- Production for ES5+ (~22KB) -->
 <script
   crossorigin
-  src="https://unpkg.com/axios-cache-interceptor@latest/dist/index.min.js"
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@latest/dist/index.es5.min.js"
+></script>
+
+<!-- Production for ES2020+ (~9KB) -->
+<script
+  crossorigin
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@latest/dist/index.es2020.min.js"
 ></script>
 ```
 
@@ -247,16 +263,44 @@ here: [Per-request configuration](#per-request-configuration).
 
 ## Compiled code
 
-As axios itself requires [ES6 Promises](https://axios-http.com/docs/notes#promises), the
-CommonsJS module and the UMD module are also `>= ES6` compatibles.
+### NodeJS
 
-You can see more here about compiling options:
+The code is compiled with `tsc` with support to `>= ES6`. See the
+[build config](/tsconfig.build.json).
 
-- `UMD` -> [Browser config](/tsconfig.browser.json) & [Webpack config](/webpack.config.js)
-- `CommonsJS` -> [NodeJS Config](/tsconfig.build.json)
+- `axios-cache-interceptor`: Redirects to `/dist/index.js`
+- `axios-cache-interceptor/dist/index.js`: The main library file.
+- `axios-cache-interceptor/dist/index.d.ts`: The Typescript definition file.
 
-Don't forget, you can always rebuilt this library by up from it's source code or recompile
-the dist with lower ecma script versions.
+Every browser build is also compatible with CommonsJS because it builds with UMD, so you
+can use them too.
+
+### Browsers
+
+> _NOTE_: Axios itself requires [ES6 Promises](https://axios-http.com/docs/notes#promises)
+
+The UMD code is compiled with `webpack` with support to `>= ES5`. See the
+[build config](/webpack.config.js). You can import these files anywhere (Browser,
+CommonsJS and more)
+
+- `axios-cache-interceptor/dist/index.min.js`: Production file for ES6+
+- `axios-cache-interceptor/dist/index.es5.min.js`: Production file for ES5+
+- `axios-cache-interceptor/dist/index.development.js`: Development file
+
+```html
+<!-- You can use the cdn of your choice -->
+
+<!-- UNPKG -->
+<script crossorigin src="https://unpkg.com/axios-cache-interceptor@latest"></script>
+
+<!-- JSDELIVR -->
+<script
+  crossorigin
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@latest"
+></script>
+
+<!-- Etc... -->
+```
 
 <br />
 

@@ -4,16 +4,24 @@
 const path = require('path');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
 
-/** @type {import('webpack').Configuration} */
-const config = {
+/**
+ * @param {{
+ *   output: string;
+ *   entry: string;
+ *   esTarget: string;
+ *   minimize: boolean;
+ * }} options
+ * @returns {import('webpack').Configuration}
+ */
+const config = ({ output, esTarget, minimize, entry }) => ({
   mode: 'production',
 
-  entry: path.resolve(__dirname, 'src', 'index.browser.ts'),
+  entry: path.resolve(__dirname, 'src', entry),
 
   output: {
     path: path.resolve(__dirname, 'dist'),
     globalObject: `typeof self == 'undefined' ? this : self`,
-    filename: 'index.min.js',
+    filename: output,
     library: {
       type: 'umd',
       name: 'AxiosCacheInterceptor'
@@ -33,16 +41,44 @@ const config = {
         test: /\.(ts|js)$/,
         loader: 'ts-loader',
         options: {
-          configFile: 'tsconfig.browser.json'
+          configFile: path.resolve(__dirname, 'tsconfig.browser.json'),
+          compilerOptions: {
+            target: esTarget
+          }
         }
       }
     ]
   },
 
   optimization: {
-    minimize: true,
+    minimize,
     minimizer: [new TerserWebpackPlugin({ parallel: true })]
   }
-};
+});
 
-module.exports = config;
+module.exports = [
+  config({
+    esTarget: 'es2020',
+    entry: 'index.development.ts',
+    output: 'index.development.js',
+    minimize: false
+  }),
+  config({
+    esTarget: 'es2015',
+    entry: 'index.browser.ts',
+    output: 'index.min.js',
+    minimize: true
+  }),
+  config({
+    esTarget: 'es5',
+    entry: 'index.browser.ts',
+    output: 'index.es5.min.js',
+    minimize: true
+  }),
+  config({
+    esTarget: 'es2020',
+    entry: 'index.browser.ts',
+    output: 'index.es2020.min.js',
+    minimize: true
+  })
+];
