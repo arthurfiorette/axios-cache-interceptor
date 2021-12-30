@@ -25,8 +25,11 @@ const config = ({ output, esTarget, minimize, entry }) => ({
     library: {
       type: 'umd',
       name: 'AxiosCacheInterceptor'
-    }
+    },
+    chunkFormat: 'module'
   },
+
+  target: esTarget,
 
   resolve: {
     extensions: ['.ts', '.js']
