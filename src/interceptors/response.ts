@@ -85,7 +85,7 @@ export class CacheResponseInterceptor<R, D>
       ttl = expirationTime || expirationTime === 0 ? expirationTime : ttl;
     }
 
-    const data = CacheResponseInterceptor.createCacheData(response, cache.data);
+    const data = CacheResponseInterceptor.setupCacheData(response, cache.data);
 
     const newCache: CachedStorageValue = {
       state: 'cached',
@@ -135,7 +135,7 @@ export class CacheResponseInterceptor<R, D>
    * Creates the new date to the cache by the provided response. Also handles possible 304
    * Not Modified by updating response properties.
    */
-  static readonly createCacheData = <R, D>(
+  static readonly setupCacheData = <R, D>(
     response: CacheAxiosResponse<R, D>,
     cache?: CachedResponse
   ): CachedResponse => {

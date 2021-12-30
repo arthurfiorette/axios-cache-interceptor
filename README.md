@@ -79,10 +79,10 @@ Axios Cache Interceptor</h1>
 
 ```ts
 import axios from 'axios';
-import { createCache, SessionCacheStorage } from 'axios-cache-interceptor';
+import { setupCache, SessionCacheStorage } from 'axios-cache-interceptor';
 
 // An axios instance with modified types
-const api = createCache(axios.create(), {
+const api = setupCache(axios.create(), {
   /* options */
 });
 
@@ -107,6 +107,7 @@ const resp2 = await api.get('https://api.example.com/');
 - [Support list](#support-list)
 - [Getting Started](#getting-started)
 - [Compiled code](#compiled-code)
+- [Typescript users](#typescript-users)
 - [Basic Knowledge](#basic-knowledge)
   - [Request id](#request-id)
   - [Response object](#response-object)
@@ -158,9 +159,9 @@ yarn add axios axios-cache-interceptor
 ```
 
 ```js
-const { createCache } = require('axios-cache-interceptor');
+const { setupCache } = require('axios-cache-interceptor');
 // or
-import { createCache } from 'axios-cache-interceptor';
+import { setupCache } from 'axios-cache-interceptor';
 ```
 
 ### Via CDN
@@ -182,7 +183,7 @@ import { createCache } from 'axios-cache-interceptor';
 ```
 
 ```js
-const { createCache } = window.AxiosCacheInterceptor;
+const { setupCache } = window.AxiosCacheInterceptor;
 ```
 
 <br />
@@ -197,9 +198,9 @@ by axios was it's types.**
 
 | [Version](https://github.com/ArthurFiorette/axios-cache-interceptor/releases) | [Axios](https://github.com/axios/axios/releases) |
 | ----------------------------------------------------------------------------- | ------------------------------------------------ |
-| `>= v0.5`                                                                       | `>= v0.24`                                       |
-| `~ v0.4`                                                                       | `>= v0.23`                                       |
-| `~ v0.3`                                                                       | `>= v0.22`                                       |
+| `>= v0.5`                                                                     | `>= v0.24`                                       |
+| `~ v0.4`                                                                      | `>= v0.23`                                       |
+| `~ v0.3`                                                                      | `>= v0.22`                                       |
 | `<= v0.2`                                                                     | `v0.21`                                          |
 
 <br />
@@ -210,35 +211,37 @@ To you use this cache interceptor, you can apply to an existing instance or crea
 one.
 
 ```js
-import { createCache } from 'axios-cache-interceptor';
+import { setupCache } from 'axios-cache-interceptor';
 
 // Your axios instance
 let axios;
 
 // Return the same axios instance, but with a modified Typescript type.
-axios = createCache(axios, {
+axios = setupCache(axios, {
   /* options here */
 });
 ```
 
 After that, you can made your own requests normally, as this library respects axios API.
 
-Afterwards, the only thing you may need to configure is per-request configuration, you can change them with the  `cache` property.
+Afterwards, the only thing you may need to configure is per-request configuration, you can
+change them with the `cache` property.
 
 ```js
-import { createCache } from 'axios-cache-interceptor';
+import { setupCache } from 'axios-cache-interceptor';
 
 // Your axios-cache-interceptor instance
 let axios;
 
 axios.get('url', {
   cache: {
-    /** options here */
+    /** Options here */
   }
-})
+});
 ```
 
-You will get syntax highlighting for all options and what they do. But you can also read here: [Per-request configuration](#per-request-configuration).
+You will get syntax highlighting for all options and what they do. But you can also read
+here: [Per-request configuration](#per-request-configuration).
 
 <br />
 
@@ -254,6 +257,48 @@ You can see more here about compiling options:
 
 Don't forget, you can always rebuilt this library by up from it's source code or recompile
 the dist with lower ecma script versions.
+
+<br />
+
+## Typescript users
+
+This package does not pollute the global axios typings. Instead, the `setupCache` returns
+the same axios instance but with **extended** typings.
+
+```ts
+const axios = axios.create();
+axios === setupCache(axios, {});
+```
+
+In this way, we recommend you to not use a global axios instance with typescript, so you
+can use all exported types from `axios-cache-interceptor` by creating a new variable.
+
+```ts
+import Axios from 'axios';
+import { setupCache, AxiosCacheInstance } from 'axios-cache-interceptor';
+
+// instance will have our custom typings from the return of this function
+const instance = setupCache(
+  Axios.create({
+    // Axios options
+  }),
+  {
+    // Axios-cache-interceptor options
+  }
+);
+
+// OR
+
+const instance = axios.create({
+  // Axios options
+}) as AxiosCacheInstance;
+
+// As this functions returns the same axios instance but only with
+// different typings, you can ignore the function return.
+setupCache(instance, {
+  // Axios-cache-interceptor options
+});
+```
 
 <br />
 
@@ -313,7 +358,7 @@ the internal code. Remember that, depending on the
 When applying the interceptor, you can customize some properties:
 
 ```js
-const axios = createCache(axios, {
+const axios = setupCache(axios, {
   // Properties here
 });
 ```

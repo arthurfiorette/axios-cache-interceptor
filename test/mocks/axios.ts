@@ -1,5 +1,5 @@
 import Axios from 'axios';
-import { AxiosCacheInstance, CacheProperties, createCache } from '../../src';
+import { AxiosCacheInstance, CacheProperties, setupCache } from '../../src';
 import type { CacheInstance } from '../../src/cache/cache';
 import { Header } from '../../src/util/headers';
 
@@ -9,7 +9,7 @@ export function mockAxios(
   options: Partial<CacheInstance> & Partial<CacheProperties> = {},
   responseHeaders: Record<string, string> = {}
 ): AxiosCacheInstance {
-  const axios = createCache(Axios.create(), options);
+  const axios = setupCache(Axios.create(), options);
 
   // Axios interceptors are a stack, so apply this after the cache interceptor
   axios.interceptors.request.use((config) => {

@@ -12,11 +12,40 @@ export type CacheOptions = Partial<CacheInstance> & Partial<CacheProperties>;
 /**
  * Apply the caching interceptors for a already created axios instance.
  *
+ * @example
+ *
+ * ```ts
+ * import Axios from 'axios';
+ * import { setupCache, AxiosCacheInstance } from 'axios-cache-interceptor';
+ *
+ * // instance will have our custom typings from the return of this function
+ * const instance = setupCache(
+ *   Axios.create({
+ *     // Axios options
+ *   }),
+ *   {
+ *     // Axios-cache-interceptor options
+ *   }
+ * );
+ *
+ * // OR
+ *
+ * const instance = axios.create({
+ *   // Axios options
+ * }) as AxiosCacheInstance;
+ *
+ * // As this functions returns the same axios instance but only with
+ * // different typings, you can ignore the function return.
+ * setupCache(instance, {
+ *   // Axios-cache-interceptor options
+ * });
+ * ```
+ *
  * @param axios The already created axios instance
  * @param config The config for the caching interceptors
- * @returns The same instance but with caching enabled
+ * @returns The same instance with better typescript types.
  */
-export function createCache(
+export function setupCache(
   axios: AxiosInstance,
   {
     storage,
@@ -61,12 +90,7 @@ export function createCache(
   return axiosCache;
 }
 
-/**
- * Apply the caching interceptors for a already created axios instance.
- *
- * @deprecated Prefer {@link createCache}
- * @param axios The already created axios instance
- * @param config The config for the caching interceptors
- * @returns The same instance but with caching enabled
- */
-export const useCache = createCache;
+/** @deprecated */
+export const useCache = setupCache as unknown as 'use setupCache instead';
+/** @deprecated */
+export const createCache = setupCache as unknown as 'use setupCache instead';

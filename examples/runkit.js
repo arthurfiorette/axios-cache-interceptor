@@ -1,37 +1,28 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
-const Axios = require('axios');
-const { createCache } = require('axios-cache-interceptor');
+const { create: createAxios } = require('axios').default;
+const { setupCache } = require('../dist');
 
 async function main() {
-  const axios = Axios.create({
-    baseUrl: 'https://api.github.com'
-  });
+  const axios = setupCache(
+    // creating axios instance
+    createAxios({
+      baseUrl: 'https://registry.npmjs.org/'
+    }),
 
-  /**
-   * The same instance of the previous axios, but has custom Typescript types to better intellisense
-   *
-   * @example
-   *
-   * ```js
-   * axios === axiosWithCache;
-   * ```
-   */
-  const axiosWithCache = createCache(axios, {
-    ttl: 99999,
+    // configuring the cache
+    {
+      ttl: 99999,
 
-    // Parse the Cache-Control header to determine the cache strategy
-    interpretHeader: true
-  });
-
-  const fetchedResponse = await axiosWithCache.get(
-    'https://registry.npmjs.org//axios-cache-interceptor'
+      // Parse the Cache-Control header to determine the cache strategy
+      interpretHeader: true
+    }
   );
+
+  const fetchedResponse = await axios.get('/axios-cache-interceptor');
 
   // This won't made a network request, because the response is already cached
-  const cachedResponse = await axiosWithCache.get(
-    'https://registry.npmjs.org//axios-cache-interceptor'
-  );
+  const cachedResponse = await axios.get('/axios-cache-interceptor');
 
   console.log('First request was cached?');
   console.log(fetchedResponse.cached, '\n');
@@ -45,7 +36,7 @@ async function main() {
   console.log('And also the received Age header');
   console.log(fetchedResponse.headers['age'], '\n');
 
-  const cacheInformation = await axiosWithCache.storage.get(fetchedResponse.id);
+  const cacheInformation = await axios.storage.get(fetchedResponse.id);
 
   console.log(
     'As you can see, the TTL used was the maxAge cache directive minus the Age header',
@@ -59,19 +50,16 @@ async function main() {
   );
 
   // Remove the old cache by brute force
-  await axiosWithCache.storage.remove(fetchedResponse.id);
+  await axios.storage.remove(fetchedResponse.id);
 
-  const refetchedResponse = await axiosWithCache.get(
-    'https://registry.npmjs.org//axios-cache-interceptor',
-    {
-      cache: {
-        // This time with interpretHeader disabled
-        interpretHeader: false
-      }
+  const refetchedResponse = await axios.get('/axios-cache-interceptor', {
+    cache: {
+      // This time with interpretHeader disabled
+      interpretHeader: false
     }
-  );
+  });
 
-  const refetchedInformation = await axiosWithCache.storage.get(refetchedResponse.id);
+  const refetchedInformation = await axios.storage.get(refetchedResponse.id);
 
   console.log('Third request TTL:');
   console.log(refetchedInformation.ttl);
