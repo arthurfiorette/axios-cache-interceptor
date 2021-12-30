@@ -44,7 +44,7 @@
   "homepage": "https://github.com/ArthurFiorette/axios-cache-interceptor#readme",
   "dependencies": {
     "cache-parser": "^1.1.2",
-    "fast-defer": "^1.1.2"
+    "fast-defer": "^1.1.3"
   },
   "devDependencies": {
     "@arthurfiorette/prettier-config": "*",
