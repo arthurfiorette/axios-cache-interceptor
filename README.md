@@ -78,44 +78,44 @@ Axios Cache Interceptor</h1>
 <br />
 
 ```ts
-import axios from 'axios';
 import { setupCache, SessionCacheStorage } from 'axios-cache-interceptor';
 
-// An axios instance with modified types
-const api = setupCache(axios.create(), {
+// The default axios instance or your custom one
+let axios;
+
+// Apply the interceptor to the provided instance
+setupCache(axios, {
   /* options */
 });
 
 // Make a simple request, with caching support, to the api
-const resp1 = await api.get('https://api.example.com/');
+const resp1 = await axios.get('https://api.example.com/');
 // resp1.cached = false
 
-const resp2 = await api.get('https://api.example.com/');
+const resp2 = await axios.get('https://api.example.com/');
 // resp2.cached = true
 ```
 
 <br />
 <br />
 
-## Table of contents
-
-- [Table of contents](#table-of-contents)
 - [Features](#features)
 - [Installing](#installing)
   - [Via NPM](#via-npm)
   - [Via CDN](#via-cdn)
-- [Support list](#support-list)
+- [Support List](#support-list)
 - [Getting Started](#getting-started)
+- [Default Axios Instance](#default-axios-instance)
 - [Compiled code](#compiled-code)
   - [NodeJS](#nodejs)
   - [Browsers](#browsers)
-- [Typescript users](#typescript-users)
+- [Typescript Users](#typescript-users)
 - [Basic Knowledge](#basic-knowledge)
   - [Request id](#request-id)
   - [Response object](#response-object)
     - [response.cached](#responsecached)
     - [response.id](#responseid)
-- [Global configuration](#global-configuration)
+- [Global Configuration](#global-configuration)
   - [config.storage](#configstorage)
   - [config.generateKey](#configgeneratekey)
   - [config.waiting](#configwaiting)
@@ -204,7 +204,7 @@ const { setupCache } = window.AxiosCacheInterceptor;
 
 <br />
 
-## Support list
+## Support List
 
 Below you can check what version of this package is supported by your version of axios.
 But that does not mean that won't work with any version. **Most of "breaking changes" made
@@ -229,7 +229,7 @@ one.
 ```js
 import { setupCache } from 'axios-cache-interceptor';
 
-// Your axios instance
+// Your axios instance (Can also be the global one)
 let axios;
 
 // Return the same axios instance, but with a modified Typescript type.
@@ -258,6 +258,48 @@ axios.get('url', {
 
 You will get syntax highlighting for all options and what they do. But you can also read
 here: [Per-request configuration](#per-request-configuration).
+
+<br />
+
+## Default Axios Instance
+
+Sometimes, by using other libraries, frameworks and etc, you may want or need to use the
+global axios instance, (the one exported by default). That's no big deal, as the
+`setupCache` function returns the same axios instance, you can just do that:
+
+**_Attention! Using the global axios can break any other code that also uses the default
+axios instance._**
+
+```js
+// index.js
+import axios from 'axios';
+import { setupCache } from 'axios-cache-interceptor';
+
+setupCache(axios, {
+  /* options here */
+});
+```
+
+```js
+// my-other-file.js
+import axios from 'axios';
+
+// caching is enabled!
+axios.get('url');
+```
+
+But, you'll see that the typescript intellisense won't work, as the global axios instance
+has the defaults axios typings. To fix that, you'll have to override the global axios
+typings or force the type for every parameter:
+
+```ts
+import axios from 'axios';
+import { AxiosCacheInstance } from 'axios-cache-interceptor';
+
+const Axios = axios as AxiosCacheInstance;
+
+axios.defaults.cache; // works!
+```
 
 <br />
 
@@ -304,7 +346,7 @@ CommonsJS and more)
 
 <br />
 
-## Typescript users
+## Typescript Users
 
 This package does not pollute the global axios typings. Instead, the `setupCache` returns
 the same axios instance but with **extended** typings.
@@ -397,7 +439,7 @@ the internal code. Remember that, depending on the
 
 <br />
 
-## Global configuration
+## Global Configuration
 
 When applying the interceptor, you can customize some properties:
 
