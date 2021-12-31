@@ -1,4 +1,4 @@
-import { setupCache } from '../src/cache/create';
+import { isAxiosCacheInterceptor, setupCache } from '../src/cache/create';
 import { BrowserAxiosStorage } from '../src/storage/browser';
 import { MemoryAxiosStorage } from '../src/storage/memory';
 import { AxiosStorage } from '../src/storage/storage';
@@ -8,6 +8,7 @@ describe('test bundle imports', () => {
     const bundle = await import('../src/index.browser');
 
     expect(bundle.setupCache).toBe(setupCache);
+    expect(bundle.isAxiosCacheInterceptor).toBe(isAxiosCacheInterceptor);
     expect(bundle.AxiosStorage).toBe(AxiosStorage);
     expect(bundle.BrowserAxiosStorage).toBe(BrowserAxiosStorage);
     expect(bundle.MemoryAxiosStorage).toBe(MemoryAxiosStorage);
@@ -22,6 +23,7 @@ describe('test bundle imports', () => {
     expect(console.warn).toHaveBeenCalledTimes(1);
 
     expect(bundle.setupCache).toBe(setupCache);
+    expect(bundle.isAxiosCacheInterceptor).toBe(isAxiosCacheInterceptor);
     expect(bundle.AxiosStorage).toBe(AxiosStorage);
     expect(bundle.BrowserAxiosStorage).toBe(BrowserAxiosStorage);
     expect(bundle.MemoryAxiosStorage).toBe(MemoryAxiosStorage);
