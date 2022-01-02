@@ -1,9 +1,9 @@
 /** @jest-environment jsdom */
 
-import { BrowserAxiosStorage } from '../../src/storage/browser';
+import { buildWebStorage } from '../../src/storage/web-api';
 import { testStorage } from './storages';
 
 describe('tests web storages', () => {
-  testStorage('local-storage', () => new BrowserAxiosStorage(localStorage));
-  testStorage('session-storage', () => new BrowserAxiosStorage(sessionStorage));
+  testStorage('local-storage', () => buildWebStorage(sessionStorage));
+  testStorage('session-storage', () => buildWebStorage(sessionStorage));
 });

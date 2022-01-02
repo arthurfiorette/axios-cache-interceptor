@@ -1,4 +1,4 @@
-import type { AxiosStorage } from '../../src/storage/storage';
+import type { AxiosStorage } from '../../src/storage/types';
 import { EMPTY_RESPONSE } from '../utils';
 
 export function testStorage(name: string, Storage: () => AxiosStorage): void {

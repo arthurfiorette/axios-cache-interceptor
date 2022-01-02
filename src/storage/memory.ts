@@ -1,20 +1,10 @@
-import { AxiosStorage } from './storage';
-import type { NotEmptyStorageValue, StorageValue } from './types';
+import { buildStorage } from './build';
+import type { StorageValue } from './types';
 
-export class MemoryAxiosStorage extends AxiosStorage {
-  constructor(readonly storage: Record<string, StorageValue> = {}) {
-    super();
-  }
-
-  readonly find = async (key: string): Promise<StorageValue> => {
-    return this.storage[key] || { state: 'empty' };
-  };
-
-  readonly set = async (key: string, value: NotEmptyStorageValue): Promise<void> => {
-    this.storage[key] = value;
-  };
-
-  readonly remove = async (key: string): Promise<void> => {
-    delete this.storage[key];
-  };
+export function buildMemoryStorage(obj: Record<string, StorageValue> = {}) {
+  return buildStorage({
+    find: (key) => Promise.resolve(obj[key]),
+    set: (key, value) => Promise.resolve(void (obj[key] = value)),
+    remove: (key) => Promise.resolve(void delete obj[key])
+  });
 }

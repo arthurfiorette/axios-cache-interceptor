@@ -2,7 +2,7 @@ import type { AxiosInstance } from 'axios';
 import { defaultHeaderInterpreter } from '../header/interpreter';
 import { CacheRequestInterceptor } from '../interceptors/request';
 import { CacheResponseInterceptor } from '../interceptors/response';
-import { MemoryAxiosStorage } from '../storage/memory';
+import { buildMemoryStorage } from '../storage/memory';
 import { defaultKeyGenerator } from '../util/key-generator';
 import type { AxiosCacheInstance } from './axios';
 import type { CacheInstance, CacheProperties } from './cache';
@@ -61,7 +61,7 @@ export function setupCache(
 ): AxiosCacheInstance {
   const axiosCache = axios as AxiosCacheInstance;
 
-  axiosCache.storage = storage || new MemoryAxiosStorage();
+  axiosCache.storage = storage || buildMemoryStorage();
   axiosCache.generateKey = generateKey || defaultKeyGenerator;
   axiosCache.waiting = waiting || {};
   axiosCache.headerInterpreter = headerInterpreter || defaultHeaderInterpreter;

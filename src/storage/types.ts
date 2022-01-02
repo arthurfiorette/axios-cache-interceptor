@@ -50,3 +50,44 @@ export type EmptyStorageValue = {
   createdAt?: undefined;
   state: 'empty';
 };
+
+/**
+ * A storage implementation that stores data in memory.
+ *
+ * **You can create yours with {@link buildStorage} function**
+ *
+ * @example
+ * ```js
+ * const myStorage = buildStorage({
+ *  find: myFindFunction,
+ *  set: mySetFunction,
+ *  remove: myRemoveFunction,
+ * })
+ *
+ * const axios = setupCache(axios, { storage: myStorage })
+ * ```
+ */
+export type AxiosStorage = {
+  /**
+   * Returns the value for the given key. This method does not have to make checks for cache invalidation or etc. It just return what was previous saved, if present.
+   */
+  find: (key: string) => Promise<StorageValue | undefined>;
+
+  /**
+   * Sets a new value for the given key
+   *
+   * Use CacheStorage.remove(key) to define a key to 'empty' state.
+   */
+  set: (key: string, value: NotEmptyStorageValue) => Promise<void>;
+
+  /**
+   * Removes the value for the given key
+   */
+  remove: (key: string) => Promise<void>;
+
+  /**
+   * Returns the value for the given key. This method make checks for cache invalidation or etc.
+   *
+   */
+  get: (key: string) => Promise<StorageValue>;
+};

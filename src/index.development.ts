@@ -6,9 +6,9 @@ export {
   setupCache,
   useCache
 } from './cache/create';
-export { BrowserAxiosStorage } from './storage/browser';
-export { MemoryAxiosStorage } from './storage/memory';
-export { AxiosStorage } from './storage/storage';
+export { buildStorage } from './storage/build';
+export { buildMemoryStorage } from './storage/memory';
+export { buildWebStorage } from './storage/web-api';
 
 console.warn(
   'You are using a development build. Make sure to use the correct build in production\nhttps://github.com/arthurfiorette/axios-cache-interceptor#installing'

@@ -1,5 +1,5 @@
-import type { AxiosStorage } from '../storage/storage';
 import type {
+  AxiosStorage,
   CachedStorageValue,
   LoadingStorageValue,
   StorageValue

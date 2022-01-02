@@ -6,6 +6,6 @@ export {
   setupCache,
   useCache
 } from './cache/create';
-export { BrowserAxiosStorage } from './storage/browser';
-export { MemoryAxiosStorage } from './storage/memory';
-export { AxiosStorage } from './storage/storage';
+export { buildStorage } from './storage/build';
+export { buildMemoryStorage } from './storage/memory';
+export { buildWebStorage } from './storage/web-api';
