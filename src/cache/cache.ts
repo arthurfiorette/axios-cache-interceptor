@@ -11,14 +11,14 @@ export type CacheProperties = {
   /**
    * The time until the cached value is expired in milliseconds.
    *
+   * If a function is used, it will receive the complete response and waits to return a TTL value
+   *
    * When using `interpretHeader: true`, this value will only be used if the interpreter
    * can't determine their TTL value to override this
    *
-   * **Note**: a custom storage implementation may not respect this.
-   *
    * @default 1000 * 60 * 5 // 5 Minutes
    */
-  ttl: number;
+  ttl: number | (<R, D>(response: CacheAxiosResponse<R, D>) => number | Promise<number>);
 
   /**
    * If this interceptor should configure the cache from the request cache header When

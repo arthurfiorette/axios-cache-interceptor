@@ -88,6 +88,10 @@ export class CacheResponseInterceptor<R, D>
 
     const data = setupCacheData(response, cache.data);
 
+    if (typeof ttl === 'function') {
+      ttl = await ttl(response);
+    }
+
     const newCache: CachedStorageValue = {
       state: 'cached',
       ttl,

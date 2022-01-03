@@ -531,10 +531,13 @@ You can override the request id used by this property.
 
 ### request.cache.ttl
 
-The time that the request will remain in cache. Some custom storage implementations may
-not respect 100% the time.
+The time until the cached value is expired in milliseconds.
 
-When using `interpretHeader`, this value is ignored.
+If a function is used, it will receive the complete response and waits to return a TTL
+value
+
+When using `interpretHeader: true`, this value will only be used if the interpreter can't
+determine their TTL value to override this
 
 ### request.cache.interpretHeader
 
