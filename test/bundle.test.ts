@@ -1,7 +1,6 @@
 import { isAxiosCacheInterceptor, setupCache } from '../src/cache/create';
-import { BrowserAxiosStorage } from '../src/storage/browser';
-import { MemoryAxiosStorage } from '../src/storage/memory';
-import { AxiosStorage } from '../src/storage/storage';
+import { buildMemoryStorage } from '../src/storage/memory';
+import { buildWebStorage } from '../src/storage/web-api';
 
 describe('test bundle imports', () => {
   it('tests browser ', async () => {
@@ -9,12 +8,11 @@ describe('test bundle imports', () => {
 
     expect(bundle.setupCache).toBe(setupCache);
     expect(bundle.isAxiosCacheInterceptor).toBe(isAxiosCacheInterceptor);
-    expect(bundle.AxiosStorage).toBe(AxiosStorage);
-    expect(bundle.BrowserAxiosStorage).toBe(BrowserAxiosStorage);
-    expect(bundle.MemoryAxiosStorage).toBe(MemoryAxiosStorage);
+    expect(bundle.buildMemoryStorage).toBe(buildMemoryStorage);
+    expect(bundle.buildWebStorage).toBe(buildWebStorage);
   });
 
-  it('should have basic storages', async () => {
+  it('test development bundle imports', async () => {
     const oldWarn = console.warn;
     console.warn = jest.fn();
 
@@ -24,9 +22,8 @@ describe('test bundle imports', () => {
 
     expect(bundle.setupCache).toBe(setupCache);
     expect(bundle.isAxiosCacheInterceptor).toBe(isAxiosCacheInterceptor);
-    expect(bundle.AxiosStorage).toBe(AxiosStorage);
-    expect(bundle.BrowserAxiosStorage).toBe(BrowserAxiosStorage);
-    expect(bundle.MemoryAxiosStorage).toBe(MemoryAxiosStorage);
+    expect(bundle.buildMemoryStorage).toBe(buildMemoryStorage);
+    expect(bundle.buildWebStorage).toBe(buildWebStorage);
 
     console.warn = oldWarn;
   });

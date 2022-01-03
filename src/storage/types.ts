@@ -57,19 +57,21 @@ export type EmptyStorageValue = {
  * **You can create yours with {@link buildStorage} function**
  *
  * @example
+ *
  * ```js
  * const myStorage = buildStorage({
- *  find: myFindFunction,
- *  set: mySetFunction,
- *  remove: myRemoveFunction,
- * })
+ *   find: () => {...},
+ *   set: () => {...},
+ *   remove: () => {...}
+ * });
  *
- * const axios = setupCache(axios, { storage: myStorage })
+ * const axios = setupCache(axios, { storage: myStorage });
  * ```
  */
 export type AxiosStorage = {
   /**
-   * Returns the value for the given key. This method does not have to make checks for cache invalidation or etc. It just return what was previous saved, if present.
+   * Returns the value for the given key. This method does not have to make checks for
+   * cache invalidation or etc. It just return what was previous saved, if present.
    */
   find: (key: string) => Promise<StorageValue | undefined>;
 
@@ -80,14 +82,9 @@ export type AxiosStorage = {
    */
   set: (key: string, value: NotEmptyStorageValue) => Promise<void>;
 
-  /**
-   * Removes the value for the given key
-   */
+  /** Removes the value for the given key */
   remove: (key: string) => Promise<void>;
 
-  /**
-   * Returns the value for the given key. This method make checks for cache invalidation or etc.
-   *
-   */
+  /** Returns the value for the given key. This method make checks for cache invalidation or etc. */
   get: (key: string) => Promise<StorageValue>;
 };

@@ -115,6 +115,7 @@ const resp2 = await axios.get('https://api.example.com/');
   - [Response object](#response-object)
     - [response.cached](#responsecached)
     - [response.id](#responseid)
+  - [Storages](#storages)
 - [Global Configuration](#global-configuration)
   - [config.storage](#configstorage)
   - [config.generateKey](#configgeneratekey)
@@ -437,6 +438,40 @@ the internal code. Remember that, depending on the
 [config.keyGenerator](#configgeneratekey), it can be different as the provided on the
 [request.id](#requestid).
 
+### Storages
+
+A storage is the main object responsible for saving, retrieving and serializing (if
+needed) cache data. There are two simple ones that comes by default:
+
+- [In Memory](src/storage/memory.ts) with `buildMemoryStorage` (Node and Web)
+- [Web Cache](src/storage/web-api.ts) with `buildWebStorage` (Web only)
+
+Both of them are included in all bundles.
+
+You can create your own storage by using the `buildStorage` function. Take a look at this
+example with [NodeRedis](https://github.com/redis/node-redis) v4.
+
+```js
+import { createClient } from 'redis'; // 4.0.1
+import { buildStorage } from 'axios-cache-interceptor';
+
+const client = createClient();
+
+await client.connect();
+
+const myCustomStorage = buildStorage({
+  find: async (key) => {
+    return await client.get(`axios-cache:${key}`);
+  },
+  set: async (key, value) => {
+    await client.set(`axios-cache:${key}`, JSON.stringify(value));
+  },
+  remove: async (key) => {
+    await client.del(`axios-cache:${key}`);
+  }
+});
+```
+
 <br />
 
 ## Global Configuration
@@ -451,27 +486,9 @@ const axios = setupCache(axios, {
 
 ### config.storage
 
-The storage used to save the cache. Here will probably be the most changed property.
-Defaults to [MemoryStorage](src/storage/memory.ts).
+The storage used to save the cache. Defaults to a simple in-memory storage.
 
-You can create your own implementation by implementing
-[CacheStorage](src/storage/types.ts).
-
-There are few built in storage implementations, you can use them by importing:
-
-> With the cdn served bundle, the **MemoryStorage** and **BrowserAxiosStorage** comes by
-> default. Just get them by `window.AxiosCacheInterceptor.BrowserAxiosStorage` or
-> `window.AxiosCacheInterceptor.MemoryAxiosStorage`.
-
-```js
-import {} from 'axios-cache-interceptor/dist/storage/{name}';
-```
-
-- [MemoryAxiosStorage](src/storage/memory.ts)
-  `import 'axios-cache-interceptor/dist/storage/memory';`
-- [BrowserAxiosStorage](src/storage/browser.ts)
-  `import 'axios-cache-interceptor/dist/storage/browser';`
-- _Maybe your own?_ (PR's are welcome)
+See more about storages [here](#storages).
 
 ### config.generateKey
 

@@ -77,9 +77,9 @@ export type CacheProperties = {
 
 export interface CacheInstance {
   /**
-   * The storage to save the cache data.
+   * The storage to save the cache data. Defaults to an in-memory storage.
    *
-   * @default new MemoryAxiosStorage()
+   * @default buildMemoryStorage()
    */
   storage: AxiosStorage;
 

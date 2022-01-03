@@ -1,6 +1,21 @@
 import { Header } from '../util/headers';
 import type { AxiosStorage, StaleStorageValue } from './types';
 
+/**
+ * Builds a custom storage.
+ *
+ * @example
+ *
+ * ```js
+ * const myStorage = buildStorage({
+ *   find: () => {...},
+ *   set: () => {...},
+ *   remove: () => {...}
+ * });
+ *
+ * const axios = setupCache(axios, { storage: myStorage });
+ * ```
+ */
 export function buildStorage({
   set,
   find,
@@ -18,8 +33,8 @@ export function buildStorage({
       }
 
       if (
-        value.state !== 'cached' ||
         // Not cached or fresh value
+        value.state !== 'cached' ||
         value.createdAt + value.ttl > Date.now()
       ) {
         return value;
