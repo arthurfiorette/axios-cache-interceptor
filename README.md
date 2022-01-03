@@ -174,7 +174,7 @@ import { setupCache } from 'axios-cache-interceptor';
 ```html
 <!-- Replace latest with the desired version -->
 
-<!-- Development (ES2020) (~30KB) -->
+<!-- Development for ES2020+ (~30KB, use index.development.min.js for ~10KB) -->
 <script
   crossorigin
   src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@latest/dist/index.development.js"
