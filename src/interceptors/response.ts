@@ -1,11 +1,12 @@
 import type { AxiosResponse } from 'axios';
 import type { AxiosCacheInstance, CacheAxiosResponse } from '../cache/axios';
 import type { CacheProperties } from '../cache/cache';
-import type { CachedResponse, CachedStorageValue } from '../storage/types';
+import type { CachedStorageValue } from '../storage/types';
 import { shouldCacheResponse } from '../util/cache-predicate';
 import { Header } from '../util/headers';
 import { updateCache } from '../util/update-cache';
 import type { AxiosInterceptor } from './types';
+import { setupCacheData } from './util';
 
 export class CacheResponseInterceptor<R, D>
   implements AxiosInterceptor<CacheAxiosResponse<R, D>>
@@ -85,7 +86,7 @@ export class CacheResponseInterceptor<R, D>
       ttl = expirationTime || expirationTime === 0 ? expirationTime : ttl;
     }
 
-    const data = CacheResponseInterceptor.setupCacheData(response, cache.data);
+    const data = setupCacheData(response, cache.data);
 
     const newCache: CachedStorageValue = {
       state: 'cached',
@@ -128,40 +129,6 @@ export class CacheResponseInterceptor<R, D>
 
       cached: (response as CacheAxiosResponse<R, D>).cached || false,
       ...response
-    };
-  };
-
-  /**
-   * Creates the new date to the cache by the provided response. Also handles possible 304
-   * Not Modified by updating response properties.
-   */
-  static readonly setupCacheData = <R, D>(
-    response: CacheAxiosResponse<R, D>,
-    cache?: CachedResponse
-  ): CachedResponse => {
-    if (response.status === 304 && cache) {
-      // Set the cache information into the response object
-      response.cached = true;
-      response.data = cache.data;
-      response.status = cache.status;
-      response.statusText = cache.statusText;
-
-      // Update possible new headers
-      response.headers = {
-        ...cache.headers,
-        ...response.headers
-      };
-
-      // return the old cache
-      return cache;
-    }
-
-    // New Response
-    return {
-      data: response.data,
-      status: response.status,
-      statusText: response.statusText,
-      headers: response.headers
     };
   };
 }
