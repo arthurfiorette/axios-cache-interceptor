@@ -7,18 +7,26 @@ const SLASHES_REGEX = /^\/|\/+$/g;
 export const defaultKeyGenerator: KeyGenerator = ({
   baseURL = '',
   url = '',
-  method: nullableMethod,
+  method,
   params,
   id
 }) => {
-  if (id) return String(id);
+  if (id) {
+    return id;
+  }
 
   // Remove trailing slashes
   baseURL = baseURL.replace(SLASHES_REGEX, '');
   url = url.replace(SLASHES_REGEX, '');
 
-  const method = nullableMethod?.toLowerCase() || 'get';
-  const jsonParams = params ? JSON.stringify(params, Object.keys(params).sort()) : '{}';
-
-  return `${method}::${baseURL + (url && baseURL ? '/' : '') + url}::${jsonParams}`;
+  return `${
+    // method
+    method?.toLowerCase() || 'get'
+  }::${
+    // complete url
+    baseURL + (baseURL && url ? '/' : '') + url
+  }::${
+    //params
+    params ? JSON.stringify(params, Object.keys(params).sort()) : '{}'
+  }`;
 };
