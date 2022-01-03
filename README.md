@@ -61,34 +61,31 @@
   <br />
   <br />
   <pre>
-  <br />
-  <h1>🗄️🔥💨
+  <h1>📬
 Axios Cache Interceptor</h1>
-  <br />
   </pre>
   <br />
 </div>
 
-<h1></h1>
-<br />
-<br />
+<h3 align="center">
+  <code>axios-cache-interceptor</code> is a axios wrapper for caching and preventing unneeded requests
 
-### `axios-cache-interceptor` is a axios wrapper for caching and preventing unneeded requests
+  <br />
+  <br />
+</h3>
 
 <br />
 
 ```ts
-import { setupCache, SessionCacheStorage } from 'axios-cache-interceptor';
+import axios from 'axios';
+import { setupCache } from 'axios-cache-interceptor';
 
-// The default axios instance or your custom one
-let axios;
-
-// Apply the interceptor to the provided instance
+// Apply the interceptor to the global instance
 setupCache(axios, {
   /* options */
 });
 
-// Make a simple request, with caching support, to the api
+// Same as usual, but with caching enabled
 const resp1 = await axios.get('https://api.example.com/');
 // resp1.cached = false
 
@@ -96,7 +93,6 @@ const resp2 = await axios.get('https://api.example.com/');
 // resp2.cached = true
 ```
 
-<br />
 <br />
 
 - [Features](#features)
@@ -124,6 +120,7 @@ const resp2 = await axios.get('https://api.example.com/');
   - [config.requestInterceptor and config.responseInterceptor](#configrequestinterceptor-and-configresponseinterceptor)
 - [Per-request configuration](#per-request-configuration)
   - [request.id](#requestid)
+  - [request.cache](#requestcache)
   - [request.cache.ttl](#requestcachettl)
   - [request.cache.interpretHeader](#requestcacheinterpretheader)
   - [request.cache.methods](#requestcachemethods)
@@ -528,6 +525,17 @@ The inline documentation is self explanatory, but here are some examples and inf
 ### request.id
 
 You can override the request id used by this property.
+
+### request.cache
+
+This property is where you can configure cache strategies and etc. If you need to disable
+cache, you can do it by setting this property to `false`.
+
+```js
+axios.get('url', {
+  cache: false
+});
+```
 
 ### request.cache.ttl
 
