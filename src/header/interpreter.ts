@@ -35,8 +35,6 @@ export const defaultHeaderInterpreter: HeadersInterpreter = (headers) => {
 
       return (maxAge - Number(age)) * 1000;
     }
-
-    return undefined;
   }
 
   const expires = headers[Header.Expires];

@@ -1,4 +1,4 @@
-import { createValidateStatus } from '../../src/interceptors/util';
+import { createValidateStatus, isMethodIn } from '../../src/interceptors/util';
 
 describe('test util functions', () => {
   it('tests validate-status function', async () => {
@@ -18,5 +18,16 @@ describe('test util functions', () => {
     expect(randomValue(404)).toBe(false);
     expect(randomValue(405)).toBe(true);
     expect(randomValue(304)).toBe(true);
+  });
+
+  it('tests isMethodIn function', () => {
+    expect(isMethodIn('get', ['get', 'post'])).toBe(true);
+    expect(isMethodIn('get', ['get', 'post', 'put'])).toBe(true);
+    expect(isMethodIn('post', ['get', 'post', 'put'])).toBe(true);
+
+    expect(isMethodIn('get')).toBe(false);
+    expect(isMethodIn('get', [])).toBe(false);
+    expect(isMethodIn('post', ['get', 'put', 'delete'])).toBe(false);
+    expect(isMethodIn('get', ['post', 'put', 'delete'])).toBe(false);
   });
 });
