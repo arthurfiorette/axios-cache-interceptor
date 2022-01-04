@@ -1,22 +1,12 @@
-import type {
-  AxiosStorage,
-  CachedStorageValue,
-  LoadingStorageValue,
-  StorageValue
-} from '../storage/types';
-
-export type CacheUpdater =
-  | 'delete'
-  | ((
-      cached: Exclude<StorageValue, LoadingStorageValue>,
-      newData: any
-    ) => CachedStorageValue | void);
+import type { AxiosStorage } from '..';
+import type { CacheAxiosResponse } from '../cache/axios';
+import type { CacheUpdater } from './types';
 
 /** Function to update all caches, from CacheProperties.update, with the new data. */
-export async function updateCache<T = any>(
+export async function updateCache<T, D>(
   storage: AxiosStorage,
-  data: T,
-  entries: Record<string, CacheUpdater>
+  data: CacheAxiosResponse<T, D>,
+  entries: Record<string, CacheUpdater<T, D>>
 ): Promise<void> {
   for (const cacheKey in entries) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -30,16 +20,18 @@ export async function updateCache<T = any>(
     const oldValue = await storage.get(cacheKey);
 
     if (oldValue.state === 'loading') {
-      throw new Error('cannot update the cache while loading');
+      continue;
     }
 
-    const newValue = value(oldValue, data);
+    const newValue = await value(oldValue, data);
 
-    if (newValue === undefined) {
+    if (newValue === 'delete') {
       await storage.remove(cacheKey);
       continue;
     }
 
-    await storage.set(cacheKey, newValue);
+    if (newValue !== 'ignore') {
+      await storage.set(cacheKey, newValue);
+    }
   }
 }

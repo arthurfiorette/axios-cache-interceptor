@@ -1,10 +1,9 @@
-import type { AxiosResponse } from 'axios';
-import type { CacheProperties } from '..';
+import type { CacheAxiosResponse, CacheProperties } from '..';
 import type { CachePredicateObject } from './types';
 
 /** Returns true if the response should be cached */
-export function shouldCacheResponse<R>(
-  response: AxiosResponse<R>,
+export function shouldCacheResponse<R, D>(
+  response: CacheAxiosResponse<R, D>,
   { cachePredicate }: CacheProperties
 ) {
   if (typeof cachePredicate === 'function') {
@@ -14,9 +13,9 @@ export function shouldCacheResponse<R>(
   return isCachePredicateValid(response, cachePredicate);
 }
 
-export function isCachePredicateValid<R>(
-  response: AxiosResponse<R>,
-  { statusCheck, containsHeaders, responseMatch }: CachePredicateObject
+export function isCachePredicateValid<R, D>(
+  response: CacheAxiosResponse<R, D>,
+  { statusCheck, containsHeaders, responseMatch }: CachePredicateObject<R, D>
 ): boolean {
   if (statusCheck) {
     if (typeof statusCheck === 'function') {
@@ -60,7 +59,7 @@ export function isCachePredicateValid<R>(
     }
   }
 
-  if (responseMatch && !responseMatch(response.data)) {
+  if (responseMatch && !responseMatch(response)) {
     return false;
   }
 

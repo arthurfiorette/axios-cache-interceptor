@@ -1,4 +1,4 @@
-import type { AxiosResponse } from 'axios';
+import type { CacheAxiosResponse } from '../src/cache/axios';
 
 export const EMPTY_RESPONSE = {
   headers: {},
@@ -7,10 +7,16 @@ export const EMPTY_RESPONSE = {
   data: true
 };
 
-export const createResponse = <R>(
-  config: Partial<AxiosResponse<R>>
-): AxiosResponse<R> => {
-  return { ...EMPTY_RESPONSE, config: {}, data: {} as R, request: {}, ...config };
+export const createResponse = <R>(config: Partial<CacheAxiosResponse<R>>) => {
+  return {
+    ...EMPTY_RESPONSE,
+    config: {},
+    data: {} as R,
+    request: {},
+    id: 'empty-id',
+    cached: true,
+    ...config
+  };
 };
 
 export const sleep = (ms: number): Promise<void> =>

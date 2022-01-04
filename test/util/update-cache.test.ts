@@ -1,88 +1,123 @@
-import type { AxiosCacheInstance, CachedStorageValue } from '../../src';
-import { updateCache } from '../../src/util/update-cache';
+import type { CachedStorageValue } from '../../src';
+import { defaultKeyGenerator } from '../../src/util/key-generator';
 import { mockAxios } from '../mocks/axios';
-import { EMPTY_RESPONSE } from '../utils';
 
-const KEY = 'cacheKey';
-const EMPTY_STATE = { state: 'empty' };
-const DEFAULT_DATA = 'random-data';
-const INITIAL_DATA: CachedStorageValue = {
-  data: {
-    ...EMPTY_RESPONSE,
-    data: true
-  },
+const cacheKey = defaultKeyGenerator({ url: 'https://example.com/' });
+const cachedValue: CachedStorageValue = {
   createdAt: Date.now(),
-  ttl: Infinity,
-  state: 'cached'
+  state: 'cached',
+  ttl: Infinity, // never expires
+  data: {
+    data: 'value',
+    headers: {},
+    status: 200,
+    statusText: '200 OK'
+  }
 };
 
 describe('Tests update-cache', () => {
-  let axios: AxiosCacheInstance;
-
-  beforeEach(() => {
-    axios = mockAxios({});
-    axios.storage.set(KEY, INITIAL_DATA);
-  });
-
   it('tests for delete key', async () => {
-    await updateCache(axios.storage, DEFAULT_DATA, {
-      [KEY]: 'delete'
+    const axios = mockAxios({});
+    await axios.storage.set(cacheKey, cachedValue);
+
+    await axios.get('other-key', {
+      cache: { update: { [cacheKey]: 'delete' } }
     });
 
-    const response = await axios.storage.get(KEY);
+    const cacheValue1 = await axios.storage.get(cacheKey);
+    expect(cacheValue1).toStrictEqual({ state: 'empty' });
 
-    expect(response).not.toBeFalsy();
-    expect(response).toStrictEqual(EMPTY_STATE);
-  });
+    //
 
-  it('tests for returning undefined', async () => {
-    await updateCache(axios.storage, DEFAULT_DATA, {
-      [KEY]: () => undefined
-    });
+    await axios.storage.set(cacheKey, cachedValue);
 
-    const response = await axios.storage.get(KEY);
-
-    expect(response).not.toBeFalsy();
-    expect(response).toStrictEqual(EMPTY_STATE);
-  });
-
-  it('tests for returning an new value', async () => {
-    await updateCache(axios.storage, DEFAULT_DATA, {
-      [KEY]: (cached, newData) => ({
-        state: 'cached',
-        ttl: Infinity,
-        createdAt: Date.now(),
-        data: {
-          ...EMPTY_RESPONSE,
-          data: `${cached.data?.data}:${newData}`
+    await axios.get('other-key2', {
+      cache: {
+        update: {
+          [cacheKey]: () => 'delete'
         }
-      })
+      }
     });
 
-    const response = await axios.storage.get(KEY);
+    const cacheValue2 = await axios.storage.get(cacheKey);
+    expect(cacheValue2).toStrictEqual({ state: 'empty' });
 
-    expect(response).not.toBeFalsy();
-    expect(response).not.toStrictEqual(EMPTY_STATE);
+    //
 
-    expect(response.state).toBe('cached');
-    expect(response.data?.data).toBe(`${INITIAL_DATA.data?.data}:${DEFAULT_DATA}`);
+    await axios.storage.set(cacheKey, cachedValue);
+
+    await axios.get('other-key3', {
+      cache: { update: { [cacheKey]: () => Promise.resolve('delete') } }
+    });
+
+    const cacheValue3 = await axios.storage.get(cacheKey);
+    expect(cacheValue3).toStrictEqual({ state: 'empty' });
   });
 
-  it('check if the state is loading while updating', async () => {
-    axios.storage.set(KEY, { state: 'loading' });
+  it('tests for ignore key', async () => {
+    const axios = mockAxios({});
+    await axios.storage.set(cacheKey, cachedValue);
 
-    const result = updateCache(axios.storage, DEFAULT_DATA, {
-      [KEY]: (cached, newData) => ({
-        state: 'cached',
-        ttl: Infinity,
-        createdAt: Date.now(),
-        data: {
-          ...EMPTY_RESPONSE,
-          data: `${cached.data?.data}:${newData}`
-        }
-      })
+    await axios.get('other-key', {
+      cache: { update: { [cacheKey]: () => 'ignore' } }
     });
 
-    expect(result).rejects.toThrowError();
+    const cacheValue = await axios.storage.get(cacheKey);
+    expect(cacheValue).toStrictEqual(cachedValue);
+
+    //
+
+    await axios.get('other-key2', {
+      cache: { update: { [cacheKey]: async () => Promise.resolve('ignore') } }
+    });
+
+    const cacheValue2 = await axios.storage.get(cacheKey);
+    expect(cacheValue2).toStrictEqual(cachedValue);
+  });
+
+  it('tests for new cached storage value', async () => {
+    const axios = mockAxios({});
+    await axios.storage.set(cacheKey, cachedValue);
+
+    await axios.get('other-key', {
+      cache: {
+        update: {
+          [cacheKey]: (cached) => {
+            if (cached.state !== 'cached') {
+              return 'ignore';
+            }
+
+            return {
+              ...cached,
+              data: { ...cached.data, data: 1 }
+            };
+          }
+        }
+      }
+    });
+
+    const cacheValue = await axios.storage.get(cacheKey);
+    expect(cacheValue).not.toStrictEqual(cachedValue);
+    expect(cacheValue.data?.data).toBe(1);
+  });
+
+  it('tests updateCache with key is loading', async () => {
+    const axios = mockAxios({});
+    await axios.storage.set(cacheKey, { state: 'loading' });
+
+    const handler = jest.fn();
+
+    await axios.get('other-key', {
+      cache: {
+        update: {
+          [cacheKey]: handler
+        }
+      }
+    });
+
+    expect(handler).not.toHaveBeenCalled();
+
+    const cacheValue = await axios.storage.get(cacheKey);
+    expect(cacheValue.state).toBe('loading');
   });
 });

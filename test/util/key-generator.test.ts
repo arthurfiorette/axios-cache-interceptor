@@ -87,4 +87,30 @@ describe('tests key generation', () => {
 
     expect(keyABOrder).toBe(keyBAOrder);
   });
+
+  it('tests argument replacement', () => {
+    const key = defaultKeyGenerator({
+      baseURL: 'http://example.com',
+      url: '',
+      params: { a: 1, b: 2 }
+    });
+
+    expect(key).toBe('get::http://example.com::{"a":1,"b":2}');
+
+    const groups = [
+      ['http://example.com', '/http://example.com'],
+      ['http://example.com', '/http://example.com/'],
+      ['http://example.com/', '/http://example.com'],
+      ['http://example.com/', '/http://example.com/']
+    ];
+
+    for (const [first, second] of groups) {
+      expect(defaultKeyGenerator({ url: first })).toBe(
+        defaultKeyGenerator({ url: second })
+      );
+      expect(defaultKeyGenerator({ baseURL: first })).toBe(
+        defaultKeyGenerator({ baseURL: second })
+      );
+    }
+  });
 });
