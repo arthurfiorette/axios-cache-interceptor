@@ -317,10 +317,11 @@ can use them too.
 
 ### Url Imports
 
-For those who wants to import this package as a http url, the `index.es2020.min.js` is for you.
+For those who wants to import this package as a http url, the `index.es2020.min.js` is for
+you.
 
 ```ts
-import { setupCache } from 'https://cdn.jsdelivr.net/npm/axios-cache-interceptor@latest/dist/index.es2020.min.js'
+import { setupCache } from 'https://cdn.jsdelivr.net/npm/axios-cache-interceptor@latest/dist/index.es2020.min.js';
 ```
 
 ### Browsers
@@ -454,7 +455,8 @@ needed) cache data. There are two simple ones that comes by default:
 
 Both of them are included in all bundles.
 
-You can create your own storage by using the `buildStorage` function. Take a look at this example with [NodeRedis](https://github.com/redis/node-redis) v4.
+You can create your own storage by using the `buildStorage` function. Take a look at this
+example with [NodeRedis](https://github.com/redis/node-redis) v4.
 
 ```js
 import { createClient } from 'redis'; // 4.0.1

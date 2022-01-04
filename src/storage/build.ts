@@ -3,9 +3,7 @@ import type { AxiosStorage, StaleStorageValue } from './types';
 
 const storage = Symbol();
 
-/**
- * Returns true if the provided object was created from {@link buildStorage} function.
- */
+/** Returns true if the provided object was created from {@link buildStorage} function. */
 export const isStorage = (obj: any): obj is AxiosStorage => !!obj && !!obj[storage];
 
 /**
