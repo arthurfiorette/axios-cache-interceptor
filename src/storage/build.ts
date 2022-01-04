@@ -1,8 +1,17 @@
 import { Header } from '../util/headers';
 import type { AxiosStorage, StaleStorageValue } from './types';
 
+const storage = Symbol();
+
+/**
+ * Returns true if the provided object was created from {@link buildStorage} function.
+ */
+export const isStorage = (obj: any): obj is AxiosStorage => !!obj && !!obj[storage];
+
 /**
  * Builds a custom storage.
+ *
+ * **Note**: You can only create an custom storage with this function.
  *
  * @example
  *
@@ -22,6 +31,8 @@ export function buildStorage({
   remove
 }: Omit<AxiosStorage, 'get'>): AxiosStorage {
   return {
+    //@ts-expect-error - we don't want to expose this
+    [storage]: 1,
     set,
     find,
     remove,

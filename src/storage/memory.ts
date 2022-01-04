@@ -26,9 +26,9 @@ import type { StorageValue } from './types';
 export function buildMemoryStorage() {
   const data: Record<string, StorageValue> = {};
   const storage = buildStorage({
-    find: (key) => Promise.resolve(data[key]),
-    set: (key, value) => Promise.resolve(void (data[key] = value)),
-    remove: (key) => Promise.resolve(void delete data[key])
+    find: (key) => data[key],
+    set: (key, value) => void (data[key] = value),
+    remove: (key) => void delete data[key]
   });
   return { ...storage, data };
 }

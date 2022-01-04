@@ -51,6 +51,8 @@ export type EmptyStorageValue = {
   state: 'empty';
 };
 
+type MaybePromise<T> = T | Promise<T> | PromiseLike<T>;
+
 /**
  * A storage implementation that stores data in memory.
  *
@@ -73,18 +75,18 @@ export type AxiosStorage = {
    * Returns the value for the given key. This method does not have to make checks for
    * cache invalidation or etc. It just return what was previous saved, if present.
    */
-  find: (key: string) => Promise<StorageValue | undefined>;
+  find: (key: string) => MaybePromise<StorageValue | undefined>;
 
   /**
    * Sets a new value for the given key
    *
    * Use CacheStorage.remove(key) to define a key to 'empty' state.
    */
-  set: (key: string, value: NotEmptyStorageValue) => Promise<void>;
+  set: (key: string, value: NotEmptyStorageValue) => MaybePromise<void>;
 
   /** Removes the value for the given key */
-  remove: (key: string) => Promise<void>;
+  remove: (key: string) => MaybePromise<void>;
 
   /** Returns the value for the given key. This method make checks for cache invalidation or etc. */
-  get: (key: string) => Promise<StorageValue>;
+  get: (key: string) => MaybePromise<StorageValue>;
 };
