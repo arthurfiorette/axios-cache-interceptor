@@ -15,7 +15,8 @@
         "${workspaceRoot}/node_modules/.bin/jest",
 
         "--runInBand",
-        "--watch"
+        "--watch",
+        "--coverage"
       ],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
