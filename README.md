@@ -103,6 +103,7 @@ res2.cached; // true
 - [Default Axios Instance](#default-axios-instance)
 - [Compiled code](#compiled-code)
   - [NodeJS](#nodejs)
+  - [Url Imports](#url-imports)
   - [Browsers](#browsers)
 - [Typescript Users](#typescript-users)
 - [Basic Knowledge](#basic-knowledge)
@@ -290,10 +291,10 @@ has the defaults axios typings. To fix that, you'll have to override the global 
 typings or force the type for every parameter:
 
 ```ts
-import axios from 'axios';
+import Axios from 'axios';
 import { AxiosCacheInstance } from 'axios-cache-interceptor';
 
-const Axios = axios as AxiosCacheInstance;
+const axios = Axios as AxiosCacheInstance;
 
 axios.defaults.cache; // works!
 ```
@@ -314,6 +315,14 @@ The code is compiled with `tsc` with support to `>= ES6`. See the
 Every browser build is also compatible with CommonsJS because it builds with UMD, so you
 can use them too.
 
+### Url Imports
+
+For those who wants to import this package as a http url, the `index.es2020.min.js` is for you.
+
+```ts
+import { setupCache } from 'https://cdn.jsdelivr.net/npm/axios-cache-interceptor@latest/dist/index.es2020.min.js'
+```
+
 ### Browsers
 
 > _NOTE_: Axios itself requires [ES6 Promises](https://axios-http.com/docs/notes#promises)
@@ -324,6 +333,7 @@ CommonsJS and more)
 
 - `axios-cache-interceptor/dist/index.min.js`: Production file for ES6+
 - `axios-cache-interceptor/dist/index.es5.min.js`: Production file for ES5+
+- `axios-cache-interceptor/dist/index.es2020.min.js`: Production file for ES2020+
 - `axios-cache-interceptor/dist/index.development.js`: Development file
 
 ```html
@@ -350,7 +360,7 @@ the same axios instance but with **extended** typings.
 
 ```ts
 const axios = axios.create();
-axios === setupCache(axios, {});
+axios == setupCache(axios, {});
 ```
 
 In this way, we recommend you to not use a global axios instance with typescript, so you
