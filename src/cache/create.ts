@@ -65,7 +65,7 @@ export function setupCache(
   axiosCache.storage = storage || buildMemoryStorage();
 
   if (!isStorage(axiosCache.storage)) {
-    throw new Error('create an storage with buildStorage()');
+    throw new Error('Use buildStorage()');
   }
 
   axiosCache.generateKey = generateKey || defaultKeyGenerator;

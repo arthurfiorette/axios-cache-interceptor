@@ -12,7 +12,7 @@ import type { CacheInstance, CacheProperties } from './cache';
  * @template D The type that the request body was
  */
 export type CacheAxiosResponse<R = any, D = any> = AxiosResponse<R, D> & {
-  config: CacheRequestConfig<D>;
+  config: CacheRequestConfig<R, D>;
 
   /** The id used for this request. if config specified an id, the id will be returned */
   id: string;
@@ -24,9 +24,10 @@ export type CacheAxiosResponse<R = any, D = any> = AxiosResponse<R, D> & {
 /**
  * Options that can be overridden per request
  *
+ * @template R The type returned by this response
  * @template D The type for the request body
  */
-export type CacheRequestConfig<D = any> = AxiosRequestConfig<D> & {
+export type CacheRequestConfig<R = any, D = any> = AxiosRequestConfig<D> & {
   /**
    * An id for this request, if this request is used in cache, only the last request made
    * with this id will be returned.
@@ -40,7 +41,7 @@ export type CacheRequestConfig<D = any> = AxiosRequestConfig<D> & {
    *
    * False means ignore everything about cache, for this request.
    */
-  cache?: false | Partial<CacheProperties>;
+  cache?: false | Partial<CacheProperties<R, D>>;
 };
 
 /**
@@ -58,7 +59,7 @@ export interface AxiosCacheInstance extends CacheInstance, AxiosInstance {
    * @template D The type that the request body use
    */
   <T = any, D = any, R = CacheAxiosResponse<T, D>>(
-    config: CacheRequestConfig<D>
+    config: CacheRequestConfig<T, D>
   ): Promise<R>;
   /**
    * @template T The type returned by this response
@@ -67,7 +68,7 @@ export interface AxiosCacheInstance extends CacheInstance, AxiosInstance {
    */
   <T = any, D = any, R = CacheAxiosResponse<T, D>>(
     url: string,
-    config?: CacheRequestConfig<D>
+    config?: CacheRequestConfig<T, D>
   ): Promise<R>;
 
   defaults: AxiosDefaults<any> & {
@@ -75,12 +76,12 @@ export interface AxiosCacheInstance extends CacheInstance, AxiosInstance {
   };
 
   interceptors: {
-    request: AxiosInterceptorManager<CacheRequestConfig<any>>;
-    response: AxiosInterceptorManager<CacheAxiosResponse<never, any>>;
+    request: AxiosInterceptorManager<CacheRequestConfig<any, any>>;
+    response: AxiosInterceptorManager<CacheAxiosResponse<any, any>>;
   };
 
   /** @template D The type that the request body use */
-  getUri<D>(config?: CacheRequestConfig<D>): string;
+  getUri<D>(config?: CacheRequestConfig<any, D>): string;
 
   /**
    * @template T The type returned by this response
@@ -88,7 +89,7 @@ export interface AxiosCacheInstance extends CacheInstance, AxiosInstance {
    * @template D The type that the request body use
    */
   request<T = any, D = any, R = CacheAxiosResponse<T, D>>(
-    config?: CacheRequestConfig<D>
+    config?: CacheRequestConfig<T, D>
   ): Promise<R>;
 
   /**
@@ -98,7 +99,7 @@ export interface AxiosCacheInstance extends CacheInstance, AxiosInstance {
    */
   get<T = any, D = any, R = CacheAxiosResponse<T, D>>(
     url: string,
-    config?: CacheRequestConfig<D>
+    config?: CacheRequestConfig<T, D>
   ): Promise<R>;
 
   /**
@@ -108,7 +109,7 @@ export interface AxiosCacheInstance extends CacheInstance, AxiosInstance {
    */
   delete<T = any, D = any, R = CacheAxiosResponse<T, D>>(
     url: string,
-    config?: CacheRequestConfig<D>
+    config?: CacheRequestConfig<T, D>
   ): Promise<R>;
 
   /**
@@ -118,7 +119,7 @@ export interface AxiosCacheInstance extends CacheInstance, AxiosInstance {
    */
   head<T = any, D = any, R = CacheAxiosResponse<T, D>>(
     url: string,
-    config?: CacheRequestConfig<D>
+    config?: CacheRequestConfig<T, D>
   ): Promise<R>;
 
   /**
@@ -128,7 +129,7 @@ export interface AxiosCacheInstance extends CacheInstance, AxiosInstance {
    */
   options<T = any, D = any, R = CacheAxiosResponse<T, D>>(
     url: string,
-    config?: CacheRequestConfig<D>
+    config?: CacheRequestConfig<T, D>
   ): Promise<R>;
 
   /**
@@ -139,7 +140,7 @@ export interface AxiosCacheInstance extends CacheInstance, AxiosInstance {
   post<T = any, D = any, R = CacheAxiosResponse<T, D>>(
     url: string,
     data?: D,
-    config?: CacheRequestConfig<D>
+    config?: CacheRequestConfig<T, D>
   ): Promise<R>;
 
   /**
@@ -150,7 +151,7 @@ export interface AxiosCacheInstance extends CacheInstance, AxiosInstance {
   put<T = any, D = any, R = CacheAxiosResponse<T, D>>(
     url: string,
     data?: D,
-    config?: CacheRequestConfig<D>
+    config?: CacheRequestConfig<T, D>
   ): Promise<R>;
 
   /**
@@ -161,6 +162,6 @@ export interface AxiosCacheInstance extends CacheInstance, AxiosInstance {
   patch<T = any, D = any, R = CacheAxiosResponse<T, D>>(
     url: string,
     data?: D,
-    config?: CacheRequestConfig<D>
+    config?: CacheRequestConfig<T, D>
   ): Promise<R>;
 }

@@ -8,8 +8,8 @@ import { updateCache } from '../util/update-cache';
 import type { AxiosInterceptor } from './types';
 import { setupCacheData } from './util';
 
-export class CacheResponseInterceptor<R, D>
-  implements AxiosInterceptor<CacheAxiosResponse<R, D>>
+export class CacheResponseInterceptor
+  implements AxiosInterceptor<CacheAxiosResponse<unknown, unknown>>
 {
   constructor(readonly axios: AxiosCacheInstance) {}
 
@@ -18,8 +18,8 @@ export class CacheResponseInterceptor<R, D>
   };
 
   readonly onFulfilled = async (
-    axiosResponse: AxiosResponse<R, D>
-  ): Promise<CacheAxiosResponse<R, D>> => {
+    axiosResponse: AxiosResponse<unknown, unknown>
+  ): Promise<CacheAxiosResponse<unknown, unknown>> => {
     const response = this.cachedResponse(axiosResponse);
 
     // Response is already cached
@@ -101,7 +101,7 @@ export class CacheResponseInterceptor<R, D>
 
     // Update other entries before updating himself
     if (cacheConfig?.update) {
-      updateCache(this.axios.storage, response.data, cacheConfig.update);
+      updateCache(this.axios.storage, response, cacheConfig.update);
     }
 
     const deferred = this.axios.waiting[response.id];
@@ -126,12 +126,14 @@ export class CacheResponseInterceptor<R, D>
     delete this.axios.waiting[key];
   };
 
-  readonly cachedResponse = (response: AxiosResponse<R, D>): CacheAxiosResponse<R, D> => {
+  readonly cachedResponse = (
+    response: AxiosResponse<unknown, unknown>
+  ): CacheAxiosResponse<unknown, unknown> => {
     return {
       id: this.axios.generateKey(response.config),
       // The request interceptor response.cache will return true or undefined. And true only when the response was cached.
 
-      cached: (response as CacheAxiosResponse<R, D>).cached || false,
+      cached: (response as CacheAxiosResponse<unknown, unknown>).cached || false,
       ...response
     };
   };

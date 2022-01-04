@@ -17,8 +17,8 @@ import {
   setRevalidationHeaders
 } from './util';
 
-export class CacheRequestInterceptor<D>
-  implements AxiosInterceptor<CacheRequestConfig<D>>
+export class CacheRequestInterceptor
+  implements AxiosInterceptor<CacheRequestConfig<unknown, unknown>>
 {
   constructor(readonly axios: AxiosCacheInstance) {}
 
@@ -27,8 +27,8 @@ export class CacheRequestInterceptor<D>
   };
 
   readonly onFulfilled = async (
-    config: CacheRequestConfig<D>
-  ): Promise<CacheRequestConfig<D>> => {
+    config: CacheRequestConfig<unknown>
+  ): Promise<CacheRequestConfig<unknown>> => {
     if (config.cache === false) {
       return config;
     }
@@ -77,7 +77,7 @@ export class CacheRequestInterceptor<D>
       });
 
       if (cache.state === 'stale') {
-        setRevalidationHeaders(cache, config as ConfigWithCache<D>);
+        setRevalidationHeaders(cache, config as ConfigWithCache<unknown>);
       }
 
       config.validateStatus = createValidateStatus(config.validateStatus);
@@ -112,8 +112,8 @@ export class CacheRequestInterceptor<D>
        * Even though the response interceptor receives this one from here, it has been
        * configured to ignore cached responses: true
        */
-      Promise.resolve<CacheAxiosResponse<any, D>>({
-        config: config,
+      Promise.resolve<CacheAxiosResponse<unknown, unknown>>({
+        config,
         data: cachedResponse.data,
         headers: cachedResponse.headers,
         status: cachedResponse.status,

@@ -3,11 +3,14 @@ import type { Deferred } from 'fast-defer';
 import type { HeadersInterpreter } from '../header/types';
 import type { AxiosInterceptor } from '../interceptors/types';
 import type { AxiosStorage, CachedResponse } from '../storage/types';
-import type { CachePredicate, KeyGenerator } from '../util/types';
-import type { CacheUpdater } from '../util/update-cache';
+import type { CachePredicate, CacheUpdater, KeyGenerator } from '../util/types';
 import type { CacheAxiosResponse, CacheRequestConfig } from './axios';
 
-export type CacheProperties = {
+/**
+ * @template R The type returned by this response
+ * @template D The type for the request body
+ */
+export type CacheProperties<R = any, D = any> = {
   /**
    * The time until the cached value is expired in milliseconds.
    *
@@ -18,7 +21,7 @@ export type CacheProperties = {
    *
    * @default 1000 * 60 * 5 // 5 Minutes
    */
-  ttl: number | (<R, D>(response: CacheAxiosResponse<R, D>) => number | Promise<number>);
+  ttl: number | ((response: CacheAxiosResponse<R, D>) => number | Promise<number>);
 
   /**
    * If this interceptor should configure the cache from the request cache header When
@@ -40,21 +43,21 @@ export type CacheProperties = {
    *
    * @default {statusCheck: [200, 399]}
    */
-  cachePredicate: CachePredicate;
+  cachePredicate: CachePredicate<R, D>;
 
   /**
    * Once the request is resolved, this specifies what requests should we change the
    * cache. Can be used to update the request or delete other caches.
    *
-   * If the function returns nothing, the entry is deleted
-   *
    * This is independent if the request made was cached or not.
+   *
+   * If an provided id represents and loading cache, he will be ignored.
    *
    * The id used is the same as the id on `CacheRequestConfig['id']`, auto-generated or not.
    *
    * @default {{}}
    */
-  update: Record<string, CacheUpdater>;
+  update: Record<string, CacheUpdater<R, D>>;
 
   /**
    * If the request should handle ETag and If-None-Match support. Use a string to force a
@@ -104,8 +107,8 @@ export interface CacheInstance {
   headerInterpreter: HeadersInterpreter;
 
   /** The request interceptor that will be used to handle the cache. */
-  requestInterceptor: AxiosInterceptor<CacheRequestConfig<any>>;
+  requestInterceptor: AxiosInterceptor<CacheRequestConfig<unknown, unknown>>;
 
   /** The response interceptor that will be used to handle the cache. */
-  responseInterceptor: AxiosInterceptor<CacheAxiosResponse<any, any>>;
+  responseInterceptor: AxiosInterceptor<CacheAxiosResponse<unknown, unknown>>;
 }
