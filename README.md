@@ -77,20 +77,19 @@ Axios Cache Interceptor</h1>
 <br />
 
 ```ts
-import axios from 'axios';
+import Axios from 'axios';
 import { setupCache } from 'axios-cache-interceptor';
 
-// Apply the interceptor to the global instance
-setupCache(axios, {
-  /* options */
-});
+// same object, but with updated typings.
+let axios = setupCache(Axios);
 
-// Same as usual, but with caching enabled
-const resp1 = await axios.get('https://api.example.com/');
-// resp1.cached = false
+const req1 = axios.get('https://api.example.com/');
+const req2 = axios.get('https://api.example.com/');
 
-const resp2 = await axios.get('https://api.example.com/');
-// resp2.cached = true
+const [res1, res2] = await Promise.all([req1, req2]);
+
+res1.cached; // false
+res2.cached; // true
 ```
 
 <br />
@@ -445,8 +444,7 @@ needed) cache data. There are two simple ones that comes by default:
 
 Both of them are included in all bundles.
 
-You can create your own storage by using the `buildStorage` function. Take a look at this
-example with [NodeRedis](https://github.com/redis/node-redis) v4.
+You can create your own storage by using the `buildStorage` function. Take a look at this example with [NodeRedis](https://github.com/redis/node-redis) v4.
 
 ```js
 import { createClient } from 'redis'; // 4.0.1
@@ -568,24 +566,24 @@ cached. See the [inline documentation](src/util/cache-predicate.ts) for more.
 
 An simple example with all values:
 
-```js
-axios.get('url', {
+```ts
+axios.get<{ auth: { status: string } }>('url', {
   cache: {
     cachePredicate: {
       // Only cache if the response comes with a *good* status code
       statusCheck: [200, 399],
 
       // Tests against any header present in the response.
-      containsHeader: {
+      containsHeaders: {
         'x-custom-header': true,
         'x-custom-header-2': 'only if matches this string',
         'x-custom-header-3': (value) => /* some calculation */ true
       },
 
       // Check custom response body
-      responseMatch: (response) => {
+      responseMatch: ({ data }) => {
         // Sample that only caches if the response is authenticated
-        return response.auth.status === 'authenticated':
+        return data.auth.status === 'authenticated';
       }
     }
   }
