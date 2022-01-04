@@ -28,6 +28,13 @@
         target="_blank"
         alt="Codecov" /></a
   ></code>
+  <code
+    ><a href="https://twitter.com/acdlite/status/974390255393505280"
+      ><img
+        src="https://img.shields.io/badge/speed-Blazing%20%F0%9F%94%A5-brightgreen.svg"
+        target="_blank"
+        alt="Blazing Fast" /></a
+  ></code>
   <br />
   <code
     ><a href="https://www.npmjs.com/package/axios-cache-interceptor"
@@ -68,8 +75,7 @@ Axios Cache Interceptor</h1>
 </div>
 
 <h3 align="center">
-  <code>axios-cache-interceptor</code> is a axios wrapper for caching and preventing unneeded requests
-
+  <code>axios-cache-interceptor</code> is a small and efficient cache interceptor for axios.
   <br />
   <br />
 </h3>
