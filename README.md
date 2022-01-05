@@ -614,23 +614,30 @@ Once the request is resolved, this specifies what other responses should change 
 cache. Can be used to update the request or delete other caches. It is a simple `Record`
 with the request id.
 
-Example:
+Here's an example with some basic login:
 
-```js
-// Retrieved together with their responses
-let otherResponseId;
-let userInfoResponseId;
+```ts
+// Some requests id's
+let profileInfoId;
+let userInfoId;
 
-axios.get('url', {
+axios.post<{ auth: { user: User } }>('login', { username, password }, {
   cache: {
     update: {
-      // Evict the otherRequestId cache when this response arrives
-      [otherResponseId]: 'delete',
+      // Evicts the profile info cache, because now he is authenticated and the response needs to be re-fetched
+      [profileInfoId]: 'delete',
 
       // An example that update the "user info response cache" when doing a login.
       // Imagine this request is a login one.
-      [userInfoResponseId]: (cachedValue, thisResponse) => {
-        return { ...cachedValue, user: thisResponse.user.info };
+      [userInfoResponseId]: (cachedValue, response) => {
+        if(cachedValue.state !== 'cached') {
+          // Only needs to update if the response is cached
+          return 'ignore';
+        }
+
+        cachedValue.data = response.auth.user;
+
+        return cachedValue;
       }
     }
   }
