@@ -39,7 +39,7 @@
   "bugs": {
     "url": "https://github.com/ArthurFiorette/axios-cache-interceptor/issues"
   },
-  "homepage": "https://github.com/ArthurFiorette/axios-cache-interceptor#readme",
+  "homepage": "https://axios-cache-interceptor.js.org/",
   "dependencies": {
     "cache-parser": "^1.1.2",
     "fast-defer": "^1.1.3"

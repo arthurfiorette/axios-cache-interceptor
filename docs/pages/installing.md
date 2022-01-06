@@ -13,7 +13,7 @@
   /></a>
 
 At **0.7.8**, this library got tuned to be more smaller, so it provides **5** different
-bundling, ranging around `12Kb`.
+bundling options.
 
 ## With Npm
 
