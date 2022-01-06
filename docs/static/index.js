@@ -18,7 +18,7 @@ window.$docsify = {
   notFoundPage: 'config/404.html',
   homepage: 'pages/homepage.md',
 
-  themeColor: 'crimson',
+  themeColor: 'hsl(275, 100%, 50%)',
 
   subMaxLevel: 2,
 
