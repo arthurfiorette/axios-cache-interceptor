@@ -149,4 +149,13 @@ describe('test request interceptor', () => {
     expect(cache.state).toBe('cached');
     expect(cache.ttl).toBe(173);
   });
+
+  it('ensures that a request id has been generated even with cache: false', async () => {
+    const axios = mockAxios();
+
+    const { id } = await axios.get('url', { cache: false });
+
+    expect(id).toBeDefined();
+    expect(typeof id).toBe('string');
+  });
 });

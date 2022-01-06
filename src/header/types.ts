@@ -5,7 +5,7 @@
  *
  * `number` containing the number of **milliseconds** to cache the response.
  */
-type MaybeTtl = false | undefined | number;
+type MaybeTtl = 'dont cache' | 'not enough headers' | number;
 
 /**
  * Interpret all http headers to determina a time to live.
