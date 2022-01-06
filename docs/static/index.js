@@ -25,6 +25,8 @@ window.$docsify = {
   // TODO: Test if this works with F5
   routerMode: 'history',
 
+  basePath:'/axios-cache-interceptor/',
+
   search: 'auto',
   plugins: [editThisPage]
 };
