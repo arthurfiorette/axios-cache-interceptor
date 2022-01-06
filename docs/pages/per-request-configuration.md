@@ -39,9 +39,9 @@ determine their TTL value to override this
 
 If activated, when the response is received, the `ttl` property will be inferred from the
 requests headers. See the actual implementation of the
-[`interpretHeader`](https://github.com/arthurfiorette/axios-cache-interceptor/blob/main/src/header/interpreter.ts) method for more information. You can
-override the default behavior by setting the `headerInterpreter` when creating the cached
-axios client.
+[`interpretHeader`](https://github.com/arthurfiorette/axios-cache-interceptor/blob/main/src/header/interpreter.ts)
+method for more information. You can override the default behavior by setting the
+`headerInterpreter` when creating the cached axios client.
 
 ## `cache.methods`
 
@@ -52,7 +52,9 @@ Defaults to only `GET` methods.
 ## `cache.cachePredicate`
 
 An object or function that will be tested against the response to test if it can be
-cached. See the [inline documentation](https://github.com/arthurfiorette/axios-cache-interceptor/blob/main/src/util/cache-predicate.ts) for more.
+cached. See the
+[inline documentation](https://github.com/arthurfiorette/axios-cache-interceptor/blob/main/src/util/cache-predicate.ts)
+for more.
 
 An simple example with all values:
 

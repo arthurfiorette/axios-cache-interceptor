@@ -2,6 +2,7 @@
 
   - [Introduction](pages/introduction.md 'Introduction')
   - [Installing](pages/installing.md 'Installing')
+  - [Usage & Examples](pages/usage-examples.md 'Interceptor')
   - [Storages](pages/storages.md 'Custom storages')
 
 - Cache Interceptor API
