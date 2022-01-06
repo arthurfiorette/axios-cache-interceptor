@@ -15,7 +15,7 @@ window.$docsify = {
 
   coverpage: 'config/cover.md',
   loadSidebar: 'config/sidebar.md',
-  notFoundPage: 'config/404.md',
+  notFoundPage: 'config/404.html',
   homepage: 'pages/homepage.md',
 
   themeColor: 'crimson',
