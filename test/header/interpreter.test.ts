@@ -3,13 +3,17 @@ import { Header } from '../../src/util/headers';
 
 describe('tests header interpreter', () => {
   it('tests without cache-control header', () => {
-    expect(defaultHeaderInterpreter()).toBeUndefined();
+    expect(defaultHeaderInterpreter()).toBe('not enough headers');
 
-    expect(defaultHeaderInterpreter({})).toBeUndefined();
+    expect(defaultHeaderInterpreter({})).toBe('not enough headers');
 
-    expect(defaultHeaderInterpreter({ [Header.CacheControl]: '' })).toBeUndefined();
+    expect(defaultHeaderInterpreter({ [Header.CacheControl]: '' })).toBe(
+      'not enough headers'
+    );
 
-    expect(defaultHeaderInterpreter({ ['x-random-header']: '' })).toBeUndefined();
+    expect(defaultHeaderInterpreter({ ['x-random-header']: '' })).toBe(
+      'not enough headers'
+    );
   });
 
   it('tests with cache preventing headers', () => {
@@ -17,13 +21,13 @@ describe('tests header interpreter', () => {
       [Header.CacheControl]: 'no-store'
     });
 
-    expect(noStore).toBe(false);
+    expect(noStore).toBe('dont cache');
 
     const noCache = defaultHeaderInterpreter({
       [Header.CacheControl]: 'no-cache'
     });
 
-    expect(noCache).toBe(false);
+    expect(noCache).toBe('dont cache');
 
     const mustRevalidate = defaultHeaderInterpreter({
       [Header.CacheControl]: 'must-revalidate'
@@ -67,7 +71,7 @@ describe('tests header interpreter', () => {
     });
 
     // Past means cache invalid
-    expect(result).toBe(false);
+    expect(result).toBe('dont cache');
   });
 
   it('tests with immutable', () => {

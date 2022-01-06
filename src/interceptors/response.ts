@@ -78,12 +78,12 @@ export class CacheResponseInterceptor
       const expirationTime = this.axios.headerInterpreter(response.headers);
 
       // Cache should not be used
-      if (expirationTime === false) {
+      if (expirationTime === 'dont cache') {
         await this.rejectResponse(response.id);
         return response;
       }
 
-      ttl = expirationTime || expirationTime === 0 ? expirationTime : ttl;
+      ttl = expirationTime === 'not enough headers' ? ttl : expirationTime;
     }
 
     const data = setupCacheData(response, cache.data);

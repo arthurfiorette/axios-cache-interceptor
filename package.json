@@ -11,13 +11,10 @@
     "build": "concurrently 'npm:build:*'",
     "build:browser": "webpack",
     "build:node": "tsc -p tsconfig.build.json",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
+    "test": "jest --coverage",
     "escheck": "es-check es5 ./dist/index.es5.min.js && es-check es6 ./dist/index.min.js",
     "format": "prettier --write .",
     "lint": "tsc --noEmit && eslint . --ext .ts",
-    "lint:fix": "eslint . --ext .ts --fix",
     "version": "auto-changelog -p && git add CHANGELOG.md"
   },
   "repository": {
@@ -42,7 +39,7 @@
   "bugs": {
     "url": "https://github.com/ArthurFiorette/axios-cache-interceptor/issues"
   },
-  "homepage": "https://github.com/ArthurFiorette/axios-cache-interceptor#readme",
+  "homepage": "https://axios-cache-interceptor.js.org/",
   "dependencies": {
     "cache-parser": "^1.1.2",
     "fast-defer": "^1.1.3"

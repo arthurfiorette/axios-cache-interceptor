@@ -3,7 +3,7 @@ import { Header } from '../util/headers';
 import type { HeadersInterpreter } from './types';
 
 export const defaultHeaderInterpreter: HeadersInterpreter = (headers) => {
-  if (!headers) return undefined;
+  if (!headers) return 'not enough headers';
 
   const cacheControl = headers[Header.CacheControl];
 
@@ -12,7 +12,7 @@ export const defaultHeaderInterpreter: HeadersInterpreter = (headers) => {
 
     // Header told that this response should not be cached.
     if (noCache || noStore) {
-      return false;
+      return 'dont cache';
     }
 
     if (immutable) {
@@ -41,8 +41,8 @@ export const defaultHeaderInterpreter: HeadersInterpreter = (headers) => {
 
   if (expires) {
     const milliseconds = Date.parse(expires) - Date.now();
-    return milliseconds >= 0 ? milliseconds : false;
+    return milliseconds >= 0 ? milliseconds : 'dont cache';
   }
 
-  return undefined;
+  return 'not enough headers';
 };
