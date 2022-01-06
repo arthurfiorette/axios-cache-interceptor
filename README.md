@@ -621,27 +621,31 @@ Here's an example with some basic login:
 let profileInfoId;
 let userInfoId;
 
-axios.post<{ auth: { user: User } }>('login', { username, password }, {
-  cache: {
-    update: {
-      // Evicts the profile info cache, because now he is authenticated and the response needs to be re-fetched
-      [profileInfoId]: 'delete',
+axios.post<{ auth: { user: User } }>(
+  'login',
+  { username, password },
+  {
+    cache: {
+      update: {
+        // Evicts the profile info cache, because now he is authenticated and the response needs to be re-fetched
+        [profileInfoId]: 'delete',
 
-      // An example that update the "user info response cache" when doing a login.
-      // Imagine this request is a login one.
-      [userInfoResponseId]: (cachedValue, response) => {
-        if(cachedValue.state !== 'cached') {
-          // Only needs to update if the response is cached
-          return 'ignore';
+        // An example that update the "user info response cache" when doing a login.
+        // Imagine this request is a login one.
+        [userInfoResponseId]: (cachedValue, response) => {
+          if (cachedValue.state !== 'cached') {
+            // Only needs to update if the response is cached
+            return 'ignore';
+          }
+
+          cachedValue.data = data;
+
+          return cachedValue;
         }
-
-        cachedValue.data = data;
-
-        return cachedValue;
       }
     }
   }
-});
+);
 ```
 
 ### request.cache.etag

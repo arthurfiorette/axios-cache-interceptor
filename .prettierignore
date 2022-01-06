@@ -1,7 +1,10 @@
+node_modules
+
 /ignore
-/node_modules
 /coverage
 /dist
 /types
-/CHANGELOG.md
 /tsconfig.json
+
+changelog.md
+CHANGELOG.md
