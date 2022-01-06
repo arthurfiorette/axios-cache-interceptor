@@ -19,4 +19,4 @@ axios.get('...', {
 });
 ```
 
-The [default](src/util/key-generator.ts) id generation can clarify this idea.
+The [default](https://github.com/arthurfiorette/axios-cache-interceptor/blob/main/src/util/key-generator.ts) id generation can clarify this idea.

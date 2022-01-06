@@ -3,8 +3,8 @@
 A storage is the main object responsible for saving, retrieving and serializing (if
 needed) cache data. There are two simple ones that comes by default:
 
-- [In Memory](src/storage/memory.ts) with `buildMemoryStorage` (Node and Web)
-- [Web Storage API](src/storage/web-api.ts) with `buildWebStorage` (Web only)
+- [In Memory](https://github.com/arthurfiorette/axios-cache-interceptor/tree/main/src/storage/memory.ts) with `buildMemoryStorage` (Node and Web)
+- [Web Storage API](https://github.com/arthurfiorette/axios-cache-interceptor/tree/main/src/storage/web-api.ts) with `buildWebStorage` (Web only)
 
 Both of them are included in all bundles.
 
