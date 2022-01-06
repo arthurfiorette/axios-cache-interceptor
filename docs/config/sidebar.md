@@ -2,11 +2,11 @@
 
   - [Introduction](pages/introduction.md 'Introduction')
   - [Installing](pages/installing.md 'Installing')
-  - [Basic Knowledge](pages/basic-knowledge.md 'Basic Knowledge')
   - [Storages](pages/storages.md 'Custom storages')
 
 - Cache Interceptor API
 
+  - [Request ID](pages/request-id.md 'Request ID')
   - [Global configuration](pages/global-configuration.md 'Global configuration')
   - [Per request configuration](pages/per-request-configuration.md 'Per request configuration')
   - [Response object](pages/response-object.md 'Response object')

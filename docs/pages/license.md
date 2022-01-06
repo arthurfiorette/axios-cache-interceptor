@@ -1,3 +1,3 @@
 Licensed under the **MIT**.
 
-[filename](_license.md ':include :type=code')
+[LICENSE](_license.md ':include :type=code')
