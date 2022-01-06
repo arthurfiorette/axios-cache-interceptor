@@ -635,7 +635,7 @@ axios.post<{ auth: { user: User } }>('login', { username, password }, {
           return 'ignore';
         }
 
-        cachedValue.data = response.auth.user;
+        cachedValue.data = data;
 
         return cachedValue;
       }

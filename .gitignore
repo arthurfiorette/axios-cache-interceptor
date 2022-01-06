@@ -1,8 +1,10 @@
-/node_modules
-/dist
-/types
-/ignore
-/.vscode/settings.json
-/package-lock.json
-/coverage
+node_modules
+
+
+dist
+types
+ignore
+.vscode/settings.json
+package-lock.json
+coverage
 *.log
