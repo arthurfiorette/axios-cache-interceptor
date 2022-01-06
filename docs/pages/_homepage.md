@@ -66,12 +66,6 @@
   ></code>
   <br />
   <br />
-  <br />
-  <pre>
-  <h1>📬
-Axios Cache Interceptor</h1>
-  </pre>
-  <br />
 </div>
 
 <h3 align="center">
@@ -97,24 +91,3 @@ const [res1, res2] = await Promise.all([req1, req2]);
 res1.cached; // false
 res2.cached; // true
 ```
-
-<br />
-
-<h3 align=center>
-  <a href="https://axios-cache-interceptor.js.org/" target="_blank">Documentation at <code>axios-cache-interceptor.js.org</code> 🎉🎉</a>
-</h3>
-
-<br />
-
-## License
-
-Licensed under the **MIT**. See [`LICENSE`](LICENSE) for more informations.
-
-<br />
-
-## Contact
-
-See my contact information on my [github profile](https://github.com/ArthurFiorette) or
-open a new issue.
-
-<br />
