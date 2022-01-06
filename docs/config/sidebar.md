@@ -1,21 +1,26 @@
 - Getting Started
-  - [Introduction](introduction.md 'Introduction')
-  - [Installing](installing.md 'Installing')
-  - [Basic Knowledge](basic-knowledge.md 'Basic Knowledge')
-  - [Storages](storages.md 'Custom storages')
 
-- Extras
-  - [Typescript Users](typescript-users.md 'Typescript users')
-  - [Compiled code](compiled-code.md 'Compiled code')
+  - [Introduction](pages/introduction.md 'Introduction')
+  - [Installing](pages/installing.md 'Installing')
+  - [Basic Knowledge](pages/basic-knowledge.md 'Basic Knowledge')
+  - [Storages](pages/storages.md 'Custom storages')
 
 - Cache Interceptor API
-  - [Global configuration](global-configuration.md 'Global configuration')
-  - [Per request configuration](per-request-configuration.md 'Per request configuration')
-  - [Response object](response-object.md 'Response object')
+
+  - [Global configuration](pages/global-configuration.md 'Global configuration')
+  - [Per request configuration](pages/per-request-configuration.md 'Per request configuration')
+  - [Response object](pages/response-object.md 'Response object')
+
+- Extras
+
+  - [Typescript Users](pages/typescript-users.md 'Typescript users')
+  - [Compiled code](pages/compiled-code.md 'Compiled code')
 
 - Other
+
   - [License](pages/license.md 'License')
-  - [Contact & Security](contact.md 'Contact & Security')
+  - [Contact & Security](pages/contact.md 'Contact & Security')
+  - [Changelog](pages/changelog.md 'Changelog')
 
 <!-- - [Features](#features)
 - [Installing](#installing)
