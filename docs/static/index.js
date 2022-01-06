@@ -22,10 +22,9 @@ window.$docsify = {
 
   subMaxLevel: 2,
 
-  // TODO: Test if this works with F5
-  routerMode: 'history',
-
-  basePath:'/axios-cache-interceptor/',
+  // TODO: Tests if history works with .js.org domain
+  // routerMode: 'history',
+  // basePath:'/axios-cache-interceptor/',
 
   search: 'auto',
   plugins: [editThisPage]
