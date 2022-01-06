@@ -45,17 +45,6 @@
   </head>
 
   <body>
-    <!-- History router on GH Pages -->
-    <script>
-      (function(){
-        let redirect = sessionStorage.redirect;
-        delete sessionStorage.redirect;
-        if (redirect && redirect !== location.href) {
-          history.replaceState(null, null, redirect);
-        }
-      })();
-    </script>
-
     <nav style="user-select: none">
       <a href="//github.com/arthurfiorette/axios-cache-interceptor" target="_blank">
         Github

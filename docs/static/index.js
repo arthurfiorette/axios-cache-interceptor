@@ -22,10 +22,6 @@ window.$docsify = {
 
   subMaxLevel: 2,
 
-  // TODO: Tests if history works with .js.org domain
-  routerMode: 'history',
-  // basePath:'/axios-cache-interceptor/',
-
   search: 'auto',
   plugins: [editThisPage]
 };
