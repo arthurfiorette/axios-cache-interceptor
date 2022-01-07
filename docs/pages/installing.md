@@ -41,31 +41,31 @@ const { setupCache } = window.AxiosCacheInterceptor;
 ```html
 <!-- Replace latest with the desired version -->
 
-<!-- Development for ES2020+ (~30KB) -->
+<!-- Development for ES2020+ (~31KB) -->
 <script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.7.9/dist/index.development.js"
-  integrity="sha256-cc2xzKkQUWztnCDJX78AMx94lDaGvtzjO9yWiKgRX20="
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.0-beta1/dist/index.development.js"
+  integrity="sha256-3tvTnjduX0P7n9c1ljTHgTH9h5MjLARrQcpapjGMxHQ="
   crossorigin="anonymous"
 ></script>
 
-<!-- Production for ES6+ (~12KB) -->
+<!-- Production for ES6+ (~11KB) -->
 <script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.7.9/dist/index.min.js"
-  integrity="sha256-okV+KLrPdAAEelxNjua//SqIBcQvlsAy/4ukw9uegVk="
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.0-beta1/dist/index.min.js"
+  integrity="sha256-XT6/fu6h4cR9SpFiC7aUDcEyF2iBfSVPy5mNnAd1hTE="
   crossorigin="anonymous"
 ></script>
 
-<!-- Production for ES5+ (~22KB) -->
+<!-- Production for ES5+ (~19KB) -->
 <script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.7.9/dist/index.es5.min.js"
-  integrity="sha256-++wSj3PlGEihoffpOH1y5/vC44MBGYLDfp8fXZBjba4="
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.0-beta1/dist/index.es5.min.js"
+  integrity="sha256-KlR8DaezfVwSUZ+Umb5Yrj10Yrl5hDC8fl66WQga0KE="
   crossorigin="anonymous"
 ></script>
 
 <!-- Production for ES2020+ (~9KB) -->
 <script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.7.9/dist/index.es2020.min.js"
-  integrity="sha256-yAK7c5kbqsc3IP6c28fiatnYaFE8yKDTOOatiNgBM9g="
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.0-beta1/dist/index.es2020.min.js"
+  integrity="sha256-1YXEQbH9lwGpMevsMh623Bm70Ao9U7qIdJnuYzOQ25E="
   crossorigin="anonymous"
 ></script>
 ```
@@ -75,7 +75,7 @@ const { setupCache } = window.AxiosCacheInterceptor;
 You can import any [CDN Url](#with-cdns) and use it in your code. **UMD Compatible**
 
 ```js
-import { setupCache } from 'https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.7.9/dist/index.es2020.min.js';
+import { setupCache } from 'https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.0-beta1/dist/index.es2020.min.js';
 ```
 
 ## Support List
