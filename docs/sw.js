@@ -11,8 +11,7 @@ const HOSTNAME_WHITELIST = [
   self.location.hostname,
   'fonts.gstatic.com',
   'fonts.googleapis.com',
-  'cdn.jsdelivr.net',
-  'embed.runkit.com'
+  'cdn.jsdelivr.net'
 ];
 
 // The Util Function to hack URLs of intercepted requests

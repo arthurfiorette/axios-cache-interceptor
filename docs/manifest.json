@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
   "name": "Axios Cache Interceptor",
   "short_name": "Cache Interceptor",
   "description": "A small and efficient cache interceptor for axios.",
