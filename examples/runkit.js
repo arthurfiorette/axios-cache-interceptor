@@ -6,6 +6,11 @@ const { create: createAxios } = require('axios').default;
 const { setupCache } = require('axios-cache-interceptor');
 const { log } = console;
 
+//
+// Complete documentation at:
+// https://axios-cache-interceptor.js.org/
+//
+
 (async () => {
   const axios = setupCache(
     // creating axios instance

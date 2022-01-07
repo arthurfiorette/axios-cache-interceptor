@@ -5,7 +5,7 @@
   "description": "A small and efficient cache interceptor for axios.",
   "start_url": "https://axios-cache-interceptor.js.org/",
   "display": "minimal-ui",
-  "scope":"/",
+  "scope": "/",
   "theme_color": "#9500ff",
   "background_color": "#ffffff",
   "icons": [
