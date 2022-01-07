@@ -7,6 +7,10 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
     />
+    <meta
+      name="description"
+      content="A small and efficient cache interceptor for axios."
+    />
 
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://axios-cache-interceptor.js.org" />
@@ -54,6 +58,12 @@
     />
 
     <link rel="stylesheet" href="static/index.css" />
+
+    <script>
+      if (typeof navigator.serviceWorker !== 'undefined') {
+        navigator.serviceWorker.register('static/sw.js');
+      }
+    </script>
   </head>
 
   <body>

@@ -1,4 +1,4 @@
-## Try it out!
+# Try it out!
 
 ```js #runkit
 const Axios = require('axios');

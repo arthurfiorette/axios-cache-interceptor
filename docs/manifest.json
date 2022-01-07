@@ -1,5 +1,11 @@
 {
   "name": "Axios Cache Interceptor",
+  "short_name": "Cache Interceptor",
+  "description": "A small and efficient cache interceptor for axios.",
+  "start_url": "https://axios-cache-interceptor.js.org/",
+  "display": "fullscreen",
+  "theme_color": "hsl(275, 100%, 50%)",
+  "background_color": "#ffffff",
   "icons": [
     {
       "src": "/static/android-icon-36x36.png",
