@@ -69,7 +69,7 @@ export function setupCacheData<R, D>(
   if (response.status === 304 && cache) {
     // Set the cache information into the response object
     response.cached = true;
-    response.data = cache.data;
+    response.data = cache.data as R;
     response.status = cache.status;
     response.statusText = cache.statusText;
 

@@ -18,14 +18,11 @@ import { buildStorage } from './build';
  */
 export function buildWebStorage(storage: Storage, prefix = '') {
   return buildStorage({
-    find: (key: string) => {
+    find: (key) => {
       const json = storage.getItem(prefix + key);
       return json ? JSON.parse(json) : undefined;
     },
-
-    set: (key: string, value: any) =>
-      void storage.setItem(prefix + key, JSON.stringify(value)),
-
-    remove: (key: string) => void storage.removeItem(prefix + key)
+    set: (key, value) => void storage.setItem(prefix + key, JSON.stringify(value)),
+    remove: (key) => void storage.removeItem(prefix + key)
   });
 }

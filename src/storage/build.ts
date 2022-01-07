@@ -1,10 +1,19 @@
 import { Header } from '../util/headers';
-import type { AxiosStorage, StaleStorageValue } from './types';
+import type { MaybePromise } from '../util/types';
+import type { AxiosStorage, StaleStorageValue, StorageValue } from './types';
 
 const storage = Symbol();
 
 /** Returns true if the provided object was created from {@link buildStorage} function. */
 export const isStorage = (obj: any): obj is AxiosStorage => !!obj && !!obj[storage];
+
+export type BuildStorage = Omit<AxiosStorage, 'get'> & {
+  /**
+   * Returns the value for the given key. This method does not have to make checks for
+   * cache invalidation or etc. It just return what was previous saved, if present.
+   */
+  find: (key: string) => MaybePromise<StorageValue | undefined>;
+};
 
 /**
  * Builds a custom storage.
@@ -23,16 +32,11 @@ export const isStorage = (obj: any): obj is AxiosStorage => !!obj && !!obj[stora
  * const axios = setupCache(axios, { storage: myStorage });
  * ```
  */
-export function buildStorage({
-  set,
-  find,
-  remove
-}: Omit<AxiosStorage, 'get'>): AxiosStorage {
+export function buildStorage({ set, find, remove }: BuildStorage): AxiosStorage {
   return {
     //@ts-expect-error - we don't want to expose this
     [storage]: 1,
     set,
-    find,
     remove,
     get: async (key) => {
       const value = await find(key);

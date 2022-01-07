@@ -1,5 +1,7 @@
+import type { MaybePromise } from '../util/types';
+
 export type CachedResponse = {
-  data?: any;
+  data?: unknown;
   headers: Record<string, string>;
   status: number;
   statusText: string;
@@ -51,8 +53,6 @@ export type EmptyStorageValue = {
   state: 'empty';
 };
 
-type MaybePromise<T> = T | Promise<T> | PromiseLike<T>;
-
 /**
  * A storage implementation that stores data in memory.
  *
@@ -71,12 +71,6 @@ type MaybePromise<T> = T | Promise<T> | PromiseLike<T>;
  * ```
  */
 export type AxiosStorage = {
-  /**
-   * Returns the value for the given key. This method does not have to make checks for
-   * cache invalidation or etc. It just return what was previous saved, if present.
-   */
-  find: (key: string) => MaybePromise<StorageValue | undefined>;
-
   /**
    * Sets a new value for the given key
    *
