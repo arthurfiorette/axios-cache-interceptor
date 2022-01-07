@@ -1,5 +1,5 @@
-import type { AxiosStorage } from '..';
 import type { CacheAxiosResponse } from '../cache/axios';
+import type { AxiosStorage } from '../storage/types';
 import type { CacheUpdater } from './types';
 
 /** Function to update all caches, from CacheProperties.update, with the new data. */

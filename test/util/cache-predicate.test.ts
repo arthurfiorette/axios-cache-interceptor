@@ -1,4 +1,4 @@
-import type { CachedStorageValue } from '../../src';
+import type { CachedStorageValue } from '../../src/storage/types';
 import { isCachePredicateValid } from '../../src/util/cache-predicate';
 import { mockAxios } from '../mocks/axios';
 import { createResponse } from '../utils';

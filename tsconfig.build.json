@@ -2,8 +2,10 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "noEmit": false,
-    "target": "ES6"
+    "target": "ESNext",
+    "module": "ESNext",
+    "declaration": false,
+    "declarationMap": false
   },
-  "include": ["src"],
-  "exclude": ["src/index.*.ts"]
+  "include": ["src"]
 }

@@ -1,6 +1,7 @@
 import Axios from 'axios';
-import { AxiosCacheInstance, CacheProperties, setupCache } from '../../src';
-import type { CacheInstance } from '../../src/cache/cache';
+import type { AxiosCacheInstance } from '../../src/cache/axios';
+import type { CacheInstance, CacheProperties } from '../../src/cache/cache';
+import { setupCache } from '../../src/cache/create';
 import { Header } from '../../src/util/headers';
 
 export const XMockRandom = 'x-mock-random';

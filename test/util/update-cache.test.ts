@@ -1,4 +1,4 @@
-import type { CachedStorageValue } from '../../src';
+import type { CachedStorageValue } from '../../src/storage/types';
 import { defaultKeyGenerator } from '../../src/util/key-generator';
 import { mockAxios } from '../mocks/axios';
 

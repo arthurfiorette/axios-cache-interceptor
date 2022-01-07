@@ -1,8 +1,8 @@
 import type { AxiosInstance } from 'axios';
-import { isStorage } from '..';
 import { defaultHeaderInterpreter } from '../header/interpreter';
 import { CacheRequestInterceptor } from '../interceptors/request';
 import { CacheResponseInterceptor } from '../interceptors/response';
+import { isStorage } from '../storage/build';
 import { buildMemoryStorage } from '../storage/memory';
 import { defaultKeyGenerator } from '../util/key-generator';
 import type { AxiosCacheInstance } from './axios';

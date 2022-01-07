@@ -1,9 +1,8 @@
 # Compiled code
 
-## NodeJS
+## CommonJS
 
-The code is compiled with `tsc` with support to `>= ES6`. See the
-[build config](/tsconfig.build.json).
+The code is compiled with `webpack` for ES2017+.
 
 - `axios-cache-interceptor`: Redirects to `/dist/index.js`
 - `axios-cache-interceptor/dist/index.js`: The main library file.
@@ -12,7 +11,7 @@ The code is compiled with `tsc` with support to `>= ES6`. See the
 Every browser build is also compatible with CommonsJS because it builds with UMD, so you
 can use them too.
 
-## Browsers
+## UMD
 
 > _NOTE_: Axios itself requires [ES6 Promises](https://axios-http.com/docs/notes#promises)
 
@@ -23,7 +22,7 @@ CommonsJS and more)
 - `axios-cache-interceptor/dist/index.min.js`: Production file for ES6+
 - `axios-cache-interceptor/dist/index.es5.min.js`: Production file for ES5+
 - `axios-cache-interceptor/dist/index.es2020.min.js`: Production file for ES2020+
-- `axios-cache-interceptor/dist/index.development.js`: Development file
+- `axios-cache-interceptor/dist/index.development.js`: Development file (ES2020+)
 
 ```html
 <!-- You can use the cdn of your choice -->

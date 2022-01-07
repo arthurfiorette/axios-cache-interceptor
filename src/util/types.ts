@@ -31,7 +31,7 @@ export type KeyGenerator = <R = any, D = any>(
   options: CacheRequestConfig<R, D>
 ) => string;
 
-type MaybePromise<T> = T | Promise<T> | PromiseLike<T>;
+export type MaybePromise<T> = T | Promise<T> | PromiseLike<T>;
 
 export type CacheUpdater<R, D> =
   | 'delete'

@@ -1,4 +1,5 @@
-import type { CacheAxiosResponse, CacheProperties } from '..';
+import type { CacheAxiosResponse } from '../cache/axios';
+import type { CacheProperties } from '../cache/cache';
 import type { CachePredicateObject } from './types';
 
 /** Returns true if the response should be cached */
