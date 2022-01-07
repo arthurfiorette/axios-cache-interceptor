@@ -1,8 +1,7 @@
 import type { KeyGenerator } from './types';
 
 // Remove first and last '/' char, if present
-// https://regex101.com/r/ENqrFy/1
-const SLASHES_REGEX = /^\/|\/+$/g;
+const SLASHES_REGEX = /^\/|\/$/g;
 
 export const defaultKeyGenerator: KeyGenerator = ({
   baseURL = '',
