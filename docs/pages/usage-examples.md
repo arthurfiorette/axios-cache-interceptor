@@ -36,23 +36,26 @@ You can customize the behaviors of this library in two ways, in a
 [per request](pages/per-request-configuration.md) or in a
 [global](pages/global-configuration.md) way.
 
-```js
-import Axios from 'axios';
+```js #runkit
+const Axios = require('axios');
+const { setupCache } = require('axios-cache-interceptor');
 
 const instance = Axios.create({
   /** Here you can pass the axios options * */
 });
 
-// Global
+// Global options
 setupCache(instance, {
   /** Here you can pass the interceptor options * */
 });
 
-// Per request
-await instance.get('url', {
+// Per request options
+const result = await instance.get('https://jsonplaceholder.typicode.com/posts/1', {
   /** Override axios options * */
   cache: {
     /** Override cache options * */
   }
 });
+
+console.log('Result:', result.data);
 ```

@@ -11,11 +11,11 @@ function editThisPage(_, vm) {
 }
 
 window.$docsify = {
-  name: 'Axios Cache Interceptor',
+  name: '🚀 Axios Cache Interceptor',
 
   coverpage: 'config/cover.md',
   loadSidebar: 'config/sidebar.md',
-  notFoundPage: 'config/404.html',
+  notFoundPage: 'config/404.md',
   homepage: 'pages/homepage.md',
 
   themeColor: 'hsl(275, 100%, 50%)',
@@ -23,5 +23,5 @@ window.$docsify = {
   subMaxLevel: 2,
 
   search: 'auto',
-  plugins: [editThisPage]
+  plugins: [editThisPage, window.runkitDocsify]
 };

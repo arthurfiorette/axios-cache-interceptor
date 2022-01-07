@@ -10,13 +10,38 @@ needed) cache data. There are two simple ones that comes by default:
 
 Both of them are included in all bundles.
 
+## How storages works
+
+Storages are meant to be the middleware between the cache interceptor and some sort of
+storage (persistent or not).
+
+The interceptor will call his methods internally to save and retrieve cache objects. But
+you can also do that manually.
+
+```js #runkit
+const axios = require('axios');
+const { buildMemoryStorage, setupCache } = require('axios-cache-interceptor');
+
+setupCache(axios);
+
+const { id } = await axios.get('https://jsonplaceholder.typicode.com/posts/1');
+
+// Now i want to retrieve all cache saved to the request above.
+const cache = await axios.storage.get(id);
+
+console.log('Cache information:', cache);
+```
+
 ## Memory storage
+
+**This storage is the default one**.
 
 A simple storage that works everywhere. You can access his values with the `data`
 property;
 
-```js
-import { buildMemoryStorage, setupCache } from 'axios-cache-interceptor';
+```js #runkit
+const axios = require('axios');
+const { buildMemoryStorage, setupCache } = require('axios-cache-interceptor');
 
 const storage = buildMemoryStorage();
 
@@ -34,7 +59,8 @@ function. It is a persistent storage that works in conjunction with the browser'
 [Storage API](https://developer.mozilla.org/en-US/docs/Web/API/Storage).
 
 ```js
-import { buildWebStorage, setupCache } from 'axios-cache-interceptor';
+const axios = require('axios');
+const { buildWebStorage, setupCache } = require('axios-cache-interceptor');
 
 const myStorage = buildWebStorage(sessionStorage, 'axios-cache:');
 
@@ -69,9 +95,10 @@ a key and handle cache invalidation.
 
 Look at this simple [NodeRedis v4](https://github.com/redis/node-redis) example.
 
-```js
-import { createClient } from 'redis'; // v4.0.1
-import { buildStorage, setupCache } from 'axios-cache-interceptor';
+```js #runkit
+const axios = require('axios');
+const { createClient } = require('redis'); // v4.0.1
+const { buildStorage, setupCache } = require('axios-cache-interceptor');
 
 const client = createClient();
 

@@ -76,18 +76,18 @@
 
 <br />
 
-```ts
-import Axios from 'axios';
-import { setupCache } from 'axios-cache-interceptor';
+```js #runkit
+const Axios = require('axios');
+const { setupCache } = require('axios-cache-interceptor');
 
 // same object, but with updated typings.
 const axios = setupCache(Axios);
 
-const req1 = axios.get('https://api.example.com/');
-const req2 = axios.get('https://api.example.com/');
+const req1 = axios.get('https://jsonplaceholder.typicode.com/posts/1');
+const req2 = axios.get('https://jsonplaceholder.typicode.com/posts/1');
 
 const [res1, res2] = await Promise.all([req1, req2]);
 
-res1.cached; // false
-res2.cached; // true
+console.log('Request 1:', res1.cached);
+console.log('Request 2:', res2.cached);
 ```

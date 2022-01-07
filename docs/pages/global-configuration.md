@@ -12,7 +12,7 @@ const axios = setupCache(axios, {
 
 The storage used to save the cache. Defaults to a simple in-memory storage.
 
-See more about storages [here](pagers/storages).
+See more about storages [here](pages/storages).
 
 ## `generateKey`
 
@@ -41,6 +41,8 @@ The possible returns are:
 Example
 
 ```ts
+// Typescript example!
+
 import { setupCache, type HeaderInterpreter } from 'axios-cache-interceptor';
 
 const myHeaderInterpreter: HeaderInterpreter = (headers) => {
