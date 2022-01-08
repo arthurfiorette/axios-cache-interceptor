@@ -16,35 +16,6 @@ describe('tests header interpreter', () => {
     );
   });
 
-  it('tests with cache preventing headers', () => {
-    const noStore = defaultHeaderInterpreter({
-      [Header.CacheControl]: 'no-store'
-    });
-
-    expect(noStore).toBe('dont cache');
-
-    const noCache = defaultHeaderInterpreter({
-      [Header.CacheControl]: 'no-cache'
-    });
-
-    expect(noCache).toBe('dont cache');
-
-    const mustRevalidate = defaultHeaderInterpreter({
-      [Header.CacheControl]: 'must-revalidate'
-    });
-
-    expect(mustRevalidate).toBe(0);
-  });
-
-  it('tests with maxAge header for 10 seconds', () => {
-    const result = defaultHeaderInterpreter({
-      [Header.CacheControl]: 'max-age=10'
-    });
-
-    // 10 Seconds in milliseconds
-    expect(result).toBe(10 * 1000);
-  });
-
   it('tests with maxAge=10 and age=3 headers', () => {
     const result = defaultHeaderInterpreter({
       [Header.CacheControl]: 'max-age=10',
@@ -65,15 +36,6 @@ describe('tests header interpreter', () => {
     expect(result).toBe(10 * 1000);
   });
 
-  it('tests with past expires', () => {
-    const result = defaultHeaderInterpreter({
-      [Header.Expires]: new Date(new Date().getFullYear() - 1, 1, 1).toUTCString()
-    });
-
-    // Past means cache invalid
-    expect(result).toBe('dont cache');
-  });
-
   it('tests with immutable', () => {
     const result = defaultHeaderInterpreter({
       [Header.CacheControl]: 'immutable'
@@ -81,20 +43,5 @@ describe('tests header interpreter', () => {
 
     // 1 year
     expect(result).toBe(1000 * 60 * 60 * 24 * 365);
-  });
-
-  it('tests with future expires', () => {
-    const date = new Date(new Date().getFullYear() + 1, 1, 1);
-
-    const result = defaultHeaderInterpreter({
-      [Header.Expires]: date.toUTCString()
-    });
-
-    const approx = date.getTime() - Date.now();
-
-    expect(typeof result).toBe('number');
-    // the result should be what the date is in milliseconds
-    // minus the actual epoch milliseconds
-    expect(Math.abs((result as number) - approx)).toBeLessThan(1);
   });
 });

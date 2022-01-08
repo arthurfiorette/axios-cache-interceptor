@@ -107,39 +107,40 @@ describe('tests cache predicate object', () => {
     expect(testError).toBeFalsy();
   });
 
-  it('tests generics and typescript types', () => {
-    () => {
-      const axios = mockAxios();
-      axios.get<{ a: boolean; b: number }>('/', {
-        cache: {
-          ttl: ({ data }) => {
-            return data.b;
-          },
-          cachePredicate: {
-            responseMatch: ({ data }) => {
-              return data.a;
-            }
-          },
-          update: {
-            id: (
-              _,
-              { data: { a, b }, headers, status, statusText }
-            ): CachedStorageValue => {
-              return {
-                state: 'cached',
-                ttl: Infinity,
-                createdAt: Date.now(),
-                data: {
-                  headers,
-                  status,
-                  statusText,
-                  data: { a, b }
-                }
-              };
-            }
+  it('tests generics and typescript types', async () => {
+    const axios = mockAxios();
+
+    const result = await axios.get<{ a: boolean; b: number }>('url', {
+      cache: {
+        ttl: ({ data }) => {
+          return data.b;
+        },
+        cachePredicate: {
+          responseMatch: ({ data }) => {
+            return data.a;
+          }
+        },
+        update: {
+          id: (
+            _,
+            { data: { a, b }, headers, status, statusText }
+          ): CachedStorageValue => {
+            return {
+              state: 'cached',
+              ttl: Infinity,
+              createdAt: Date.now(),
+              data: {
+                headers,
+                status,
+                statusText,
+                data: { a, b }
+              }
+            };
           }
         }
-      });
-    };
+      }
+    });
+
+    expect(result).toBeDefined();
   });
 });
