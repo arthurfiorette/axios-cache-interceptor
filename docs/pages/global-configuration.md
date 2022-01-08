@@ -17,8 +17,8 @@ See more about storages [here](pages/storages).
 ## `generateKey`
 
 The function used to create different keys for each request. Defaults to a function that
-priorizes the id, and if not specified, a string is generated using the method, baseUrl,
-params, and url.
+priorizes the id, and if not specified, a string is generated using the `method`,
+`baseURL`, `params`, and `url`.
 
 ## `waiting`
 

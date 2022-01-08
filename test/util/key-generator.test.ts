@@ -36,20 +36,20 @@ describe('tests key generation', () => {
       params
     });
 
-    const keyWithBaseUrl = defaultKeyGenerator({
+    const keyWithBaseURL = defaultKeyGenerator({
       baseURL: 'http://example.com/asd/test',
       method,
       params
     });
 
-    const keyWithUrl = defaultKeyGenerator({
+    const keyWithURL = defaultKeyGenerator({
       url: 'http://example.com/asd/test',
       method,
       params
     });
 
-    expect(keyWithBoth).toEqual(keyWithBaseUrl);
-    expect(keyWithBoth).toEqual(keyWithUrl);
+    expect(keyWithBoth).toEqual(keyWithBaseURL);
+    expect(keyWithBoth).toEqual(keyWithURL);
   });
 
   it('tests against trailing slashes', () => {
