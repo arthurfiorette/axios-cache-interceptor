@@ -11,5 +11,5 @@ complexity but historically within a few days.
 
 ## Contact
 
-See my contact information on my [github profile](https://github.com/ArthurFiorette) or
+See my contact information on my [github profile](https://github.com/arthurfiorette) or
 open a new issue.

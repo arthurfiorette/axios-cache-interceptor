@@ -86,7 +86,7 @@ by axios was it's types.**
 
 > **NOTE**: Below v0.3, axios was not configured as a peer dependency
 
-| [Version](https://github.com/ArthurFiorette/axios-cache-interceptor/releases) | [Axios](https://github.com/axios/axios/releases) |
+| [Version](https://github.com/arthurfiorette/axios-cache-interceptor/releases) | [Axios](https://github.com/axios/axios/releases) |
 | ----------------------------------------------------------------------------- | ------------------------------------------------ |
 | `>= v0.5`                                                                     | `>= v0.24`                                       |
 | `~ v0.4`                                                                      | `>= v0.23`                                       |

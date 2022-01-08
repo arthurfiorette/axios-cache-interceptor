@@ -1,4 +1,4 @@
-// https://github.com/ArthurFiorette/prettier-config
+// https://github.com/arthurfiorette/prettier-config
 
 module.exports = require('@arthurfiorette/prettier-config')({
   tsdoc: true,

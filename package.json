@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ArthurFiorette/axios-cache-interceptor.git"
+    "url": "git+https://github.com/arthurfiorette/axios-cache-interceptor.git"
   },
   "keywords": [
     "axios",
@@ -36,7 +36,7 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ArthurFiorette/axios-cache-interceptor/issues"
+    "url": "https://github.com/arthurfiorette/axios-cache-interceptor/issues"
   },
   "homepage": "https://axios-cache-interceptor.js.org",
   "dependencies": {

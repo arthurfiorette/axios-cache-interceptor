@@ -1,23 +1,23 @@
 <br />
 <div align="center">
   <code
-    ><a href="https://github.com/ArthurFiorette/axios-cache-interceptor/issues"
+    ><a href="https://github.com/arthurfiorette/axios-cache-interceptor/issues"
       ><img
-        src="https://img.shields.io/github/issues/ArthurFiorette/axios-cache-interceptor?logo=github&label=Issues"
+        src="https://img.shields.io/github/issues/arthurfiorette/axios-cache-interceptor?logo=github&label=Issues"
         target="_blank"
         alt="Issues" /></a
   ></code>
   <code
-    ><a href="https://github.com/ArthurFiorette/axios-cache-interceptor/stargazers"
+    ><a href="https://github.com/arthurfiorette/axios-cache-interceptor/stargazers"
       ><img
-        src="https://img.shields.io/github/stars/ArthurFiorette/axios-cache-interceptor?logo=github&label=Stars"
+        src="https://img.shields.io/github/stars/arthurfiorette/axios-cache-interceptor?logo=github&label=Stars"
         target="_blank"
         alt="Stars" /></a
   ></code>
   <code
-    ><a href="https://github.com/ArthurFiorette/axios-cache-interceptor/blob/main/LICENSE"
+    ><a href="https://github.com/arthurfiorette/axios-cache-interceptor/blob/main/LICENSE"
       ><img
-        src="https://img.shields.io/github/license/ArthurFiorette/axios-cache-interceptor?logo=githu&label=License"
+        src="https://img.shields.io/github/license/arthurfiorette/axios-cache-interceptor?logo=githu&label=License"
         target="_blank"
         alt="License" /></a
   ></code>
@@ -114,7 +114,7 @@ Licensed under the **MIT**. See [`LICENSE`](LICENSE) for more informations.
 
 ## Contact
 
-See my contact information on my [github profile](https://github.com/ArthurFiorette) or
+See my contact information on my [github profile](https://github.com/arthurfiorette) or
 open a new issue.
 
 <br />
