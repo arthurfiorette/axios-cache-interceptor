@@ -41,31 +41,31 @@ const { setupCache } = window.AxiosCacheInterceptor;
 ```html
 <!-- Replace latest with the desired version -->
 
-<!-- Development for ES2020+ (~31KB) -->
+<!-- Development for ES2020+ (~30.0KB) -->
 <script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.0-beta1/dist/index.development.js"
-  integrity="sha256-3tvTnjduX0P7n9c1ljTHgTH9h5MjLARrQcpapjGMxHQ="
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.0/dist/index.development.js"
+  integrity="sha256-oEvQQcJv78S8QSJOY6XQ2uJ2dGwnnhAsYLDeXx0DHWA="
   crossorigin="anonymous"
 ></script>
 
-<!-- Production for ES6+ (~11KB) -->
+<!-- Production for ES6+ (~11.3KB) -->
 <script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.0-beta1/dist/index.min.js"
-  integrity="sha256-XT6/fu6h4cR9SpFiC7aUDcEyF2iBfSVPy5mNnAd1hTE="
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.0/dist/index.min.js"
+  integrity="sha256-vtHJnEYMjzfFDDPBAic56ppjVrN6ze2qi7wXM9a/BSM="
   crossorigin="anonymous"
 ></script>
 
-<!-- Production for ES5+ (~19KB) -->
+<!-- Production for ES5+ (~18.2KB) -->
 <script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.0-beta1/dist/index.es5.min.js"
-  integrity="sha256-KlR8DaezfVwSUZ+Umb5Yrj10Yrl5hDC8fl66WQga0KE="
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.0/dist/index.es5.min.js"
+  integrity="sha256-R/q1PnksvXhveo9qidplrGvGGsmFDAsal9M6bUfnNS4="
   crossorigin="anonymous"
 ></script>
 
-<!-- Production for ES2020+ (~9KB) -->
+<!-- Production for ES2020+ (~9.2KB) -->
 <script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.0-beta1/dist/index.es2020.min.js"
-  integrity="sha256-1YXEQbH9lwGpMevsMh623Bm70Ao9U7qIdJnuYzOQ25E="
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.0/dist/index.es2020.min.js"
+  integrity="sha256-amiYeGe9088KbQ+4xF0/9tNP+ks4Ze5LF6cZ7aiow3Q="
   crossorigin="anonymous"
 ></script>
 ```
@@ -75,7 +75,7 @@ const { setupCache } = window.AxiosCacheInterceptor;
 You can import any [CDN Url](#with-cdns) and use it in your code. **UMD Compatible**
 
 ```js
-import { setupCache } from 'https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.0-beta1/dist/index.es2020.min.js';
+import { setupCache } from 'https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.0/dist/index.es2020.min.js';
 ```
 
 ## Support List
