@@ -1,7 +1,7 @@
 import type { Method } from 'axios';
 import type { Deferred } from 'fast-defer';
 import type { HeadersInterpreter } from '../header/types';
-import type { AxiosInterceptor } from '../interceptors/types';
+import type { AxiosInterceptor } from '../interceptors/build';
 import type { AxiosStorage, CachedResponse } from '../storage/types';
 import type { CachePredicate, CacheUpdater, KeyGenerator } from '../util/types';
 import type { CacheAxiosResponse, CacheRequestConfig } from './axios';
@@ -89,7 +89,7 @@ export interface CacheInstance {
   /**
    * The function used to create different keys for each request. Defaults to a function
    * that priorizes the id, and if not specified, a string is generated using the method,
-   * baseUrl, params, and url
+   * baseURL, params, and url
    */
   generateKey: KeyGenerator;
 

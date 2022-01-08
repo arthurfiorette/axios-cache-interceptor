@@ -36,8 +36,7 @@ export function isCachePredicateValid<R, D>(
 
   if (containsHeaders) {
     for (const headerName in containsHeaders) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const value = containsHeaders[headerName]!;
+      const value = containsHeaders[headerName as keyof typeof containsHeaders];
       const header = response.headers[headerName];
 
       // At any case, if the header is not found, the predicate fails.

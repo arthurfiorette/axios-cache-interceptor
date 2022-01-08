@@ -1,7 +1,7 @@
 import type { AxiosInstance } from 'axios';
 import { defaultHeaderInterpreter } from '../header/interpreter';
-import { CacheRequestInterceptor } from '../interceptors/request';
-import { CacheResponseInterceptor } from '../interceptors/response';
+import { defaultRequestInterceptor } from '../interceptors/request';
+import { defaultResponseInterceptor } from '../interceptors/response';
 import { isStorage } from '../storage/build';
 import { buildMemoryStorage } from '../storage/memory';
 import { defaultKeyGenerator } from '../util/key-generator';
@@ -65,16 +65,16 @@ export function setupCache(
   axiosCache.storage = storage || buildMemoryStorage();
 
   if (!isStorage(axiosCache.storage)) {
-    throw new Error('Use buildStorage()');
+    throw new Error('Use buildStorage() function');
   }
 
   axiosCache.generateKey = generateKey || defaultKeyGenerator;
   axiosCache.waiting = waiting || {};
   axiosCache.headerInterpreter = headerInterpreter || defaultHeaderInterpreter;
   axiosCache.requestInterceptor =
-    requestInterceptor || new CacheRequestInterceptor(axiosCache);
+    requestInterceptor || defaultRequestInterceptor(axiosCache);
   axiosCache.responseInterceptor =
-    responseInterceptor || new CacheResponseInterceptor(axiosCache);
+    responseInterceptor || defaultResponseInterceptor(axiosCache);
 
   // CacheRequestConfig values
   axiosCache.defaults = {
@@ -92,8 +92,8 @@ export function setupCache(
   };
 
   // Apply interceptors
-  axiosCache.requestInterceptor.use();
-  axiosCache.responseInterceptor.use();
+  axiosCache.requestInterceptor.apply(axiosCache);
+  axiosCache.responseInterceptor.apply(axiosCache);
 
   // @ts-expect-error - internal only
   axiosCache[symbolKey] = 1;

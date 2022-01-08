@@ -25,7 +25,7 @@ describe('test util functions', () => {
     expect(isMethodIn('get', ['get', 'post', 'put'])).toBe(true);
     expect(isMethodIn('post', ['get', 'post', 'put'])).toBe(true);
 
-    expect(isMethodIn('get')).toBe(false);
+    expect(isMethodIn()).toBe(false);
     expect(isMethodIn('get', [])).toBe(false);
     expect(isMethodIn('post', ['get', 'put', 'delete'])).toBe(false);
     expect(isMethodIn('get', ['post', 'put', 'delete'])).toBe(false);
