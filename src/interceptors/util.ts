@@ -1,9 +1,5 @@
 import type { Method } from 'axios';
-import type {
-  AxiosCacheInstance,
-  CacheAxiosResponse,
-  CacheRequestConfig
-} from '../cache/axios';
+import type { CacheAxiosResponse, CacheRequestConfig } from '../cache/axios';
 import type { CacheProperties } from '../cache/cache';
 import type { CachedResponse, StaleStorageValue } from '../storage/types';
 import { Header } from '../util/headers';
@@ -21,11 +17,10 @@ export function createValidateStatus(
 }
 
 /** Checks if the given method is in the methods array */
-export function isMethodIn(requestMethod?: Method, methodList?: Method[]): boolean {
-  if (!requestMethod || !methodList) {
-    return false;
-  }
-
+export function isMethodIn(
+  requestMethod: Method = 'get',
+  methodList: Method[] = []
+): boolean {
   requestMethod = requestMethod.toLowerCase() as Lowercase<Method>;
 
   for (const method of methodList) {
@@ -98,20 +93,4 @@ export function setupCacheData<R, D>(
     statusText: response.statusText,
     headers: response.headers
   };
-}
-
-/**
- * Rejects cache for an response response.
- *
- * Also update the waiting list for this key by rejecting it.
- */
-export async function rejectResponse(
-  { storage, waiting }: AxiosCacheInstance,
-  responseId: string
-) {
-  // Update the cache to empty to prevent infinite loading state
-  await storage.remove(responseId);
-  // Reject the deferred if present
-  waiting[responseId]?.reject(null);
-  delete waiting[responseId];
 }
