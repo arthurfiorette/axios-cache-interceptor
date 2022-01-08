@@ -10,8 +10,6 @@ import type { CacheInstance, CacheProperties } from './cache';
 
 export type CacheOptions = Partial<CacheInstance> & Partial<CacheProperties>;
 
-const symbolKey = Symbol();
-
 /**
  * Apply the caching interceptors for a already created axios instance.
  *
@@ -92,11 +90,8 @@ export function setupCache(
   };
 
   // Apply interceptors
-  axiosCache.requestInterceptor.apply(axiosCache);
-  axiosCache.responseInterceptor.apply(axiosCache);
-
-  // @ts-expect-error - internal only
-  axiosCache[symbolKey] = 1;
+  axiosCache.requestInterceptor.apply();
+  axiosCache.responseInterceptor.apply();
 
   return axiosCache;
 }
@@ -105,13 +100,3 @@ export function setupCache(
 export const useCache = setupCache as unknown as 'use setupCache instead';
 /** @deprecated */
 export const createCache = setupCache as unknown as 'use setupCache instead';
-
-/**
- * Detects if the given parameter has caching enabled. The only way to this return true is
- * by using the {@link setupCache} function.
- *
- * @param axios The axios instance to use
- * @returns True if the axios instance is using the caching interceptor
- */
-export const isAxiosCacheInterceptor = (axios: any): axios is AxiosCacheInstance =>
-  !!axios && !!axios[symbolKey];

@@ -1,4 +1,4 @@
-import { isAxiosCacheInterceptor, setupCache } from '../src/cache/create';
+import { setupCache } from '../src/cache/create';
 import { buildMemoryStorage } from '../src/storage/memory';
 import { buildWebStorage } from '../src/storage/web-api';
 
@@ -12,7 +12,6 @@ describe('test bundle imports', () => {
     expect(console.warn).toHaveBeenCalledTimes(1);
 
     expect(bundle.setupCache).toBe(setupCache);
-    expect(bundle.isAxiosCacheInterceptor).toBe(isAxiosCacheInterceptor);
     expect(bundle.buildMemoryStorage).toBe(buildMemoryStorage);
     expect(bundle.buildWebStorage).toBe(buildWebStorage);
 
