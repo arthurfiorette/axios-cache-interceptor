@@ -32,7 +32,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
     let cache = await axios.storage.get(key);
 
     // Not cached, continue the request, and mark it as fetching
-    emptyOrStale: if (cache.state == 'empty' || cache.state === 'stale') {
+    emptyOrStale: if (cache.state === 'empty' || cache.state === 'stale') {
       /**
        * This checks for simultaneous access to a new key. The js event loop jumps on the
        * first await statement, so the second (asynchronous call) request may have already

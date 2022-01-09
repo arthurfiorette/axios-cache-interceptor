@@ -74,15 +74,15 @@ describe('tests cache predicate object', () => {
     });
 
     const headerExists = isCachePredicateValid(response, {
-      containsHeaders: { 'content-type': (header) => header == 'application/json' }
+      containsHeaders: { 'content-type': (header) => header === 'application/json' }
     });
 
     const isXmlContent = isCachePredicateValid(response, {
-      containsHeaders: { 'Content-Type': (header) => header == 'application/xml' }
+      containsHeaders: { 'Content-Type': (header) => header === 'application/xml' }
     });
 
     const isJsonContent = isCachePredicateValid(response, {
-      containsHeaders: { 'Content-Type': (header) => header == 'application/json' }
+      containsHeaders: { 'Content-Type': (header) => header === 'application/json' }
     });
 
     expect(headerExists).toBeFalsy();
