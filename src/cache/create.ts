@@ -81,7 +81,7 @@ export function setupCache(
       ttl: 1000 * 60 * 5,
       interpretHeader: false,
       methods: ['get'],
-      cachePredicate: { statusCheck: [200, 399] },
+      cachePredicate: { statusCheck: (status) => status >= 200 && status < 400 },
       etag: false,
       modifiedSince: false,
       update: {},

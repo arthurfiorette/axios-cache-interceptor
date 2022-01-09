@@ -53,8 +53,8 @@ Defaults to only `GET` methods.
 
 An object or function that will be tested against the response to test if it can be
 cached. See the
-[inline documentation](https://github.com/arthurfiorette/axios-cache-interceptor/blob/main/src/util/cache-predicate.ts)
-for more.
+[CachePredicate](https://github.com/arthurfiorette/axios-cache-interceptor/blob/main/src/util/types.ts)
+type for more.
 
 An simple example with all values:
 
@@ -63,12 +63,10 @@ axios.get<{ auth: { status: string } }>('url', {
   cache: {
     cachePredicate: {
       // Only cache if the response comes with a *good* status code
-      statusCheck: [200, 399],
+      statusCheck: (status) => /* some calculation */ true,
 
       // Tests against any header present in the response.
       containsHeaders: {
-        'x-custom-header': true,
-        'x-custom-header-2': 'only if matches this string',
         'x-custom-header-3': (value) => /* some calculation */ true
       },
 

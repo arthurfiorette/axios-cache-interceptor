@@ -1,91 +1,107 @@
+import { testCachePredicate } from '../../src';
 import type { CachedStorageValue } from '../../src/storage/types';
-import { isCachePredicateValid } from '../../src/util/cache-predicate';
 import { mockAxios } from '../mocks/axios';
 import { createResponse } from '../utils';
 
 describe('tests cache predicate object', () => {
-  it('tests statusCheck with tuples', () => {
-    const response = createResponse({ status: 764 });
+  it('tests some empty usage', () => {
+    const response = createResponse({ status: 200 });
 
-    const falsyTest = isCachePredicateValid(response, { statusCheck: [200, 299] });
-    const truthyTest = isCachePredicateValid(response, { statusCheck: [760, 769] });
+    expect(testCachePredicate(response, {})).toBeTruthy();
+  });
 
-    expect(falsyTest).toBeFalsy();
-    expect(truthyTest).toBeTruthy();
+  it('tests custom cased headers', () => {
+    const response = createResponse({ headers: { 'Content-Type': 'application/json' } });
+
+    expect(
+      testCachePredicate(response, {
+        containsHeaders: {
+          'Content-Type': (h) => h === 'application/json'
+        }
+      })
+    ).toBeTruthy();
   });
 
   it('tests statusCheck with a predicate', () => {
     const response = createResponse({ status: 764 });
 
-    const falsyTest = isCachePredicateValid(response, {
-      statusCheck: (status) => status >= 200 && status <= 299
-    });
+    expect(
+      testCachePredicate(response, {
+        statusCheck: (status) => status >= 200 && status <= 299
+      })
+    ).toBeFalsy();
 
-    const truthyTest = isCachePredicateValid(response, {
-      statusCheck: (status) => status >= 760 && status <= 769
-    });
-
-    expect(falsyTest).toBeFalsy();
-    expect(truthyTest).toBeTruthy();
+    expect(
+      testCachePredicate(response, {
+        statusCheck: (status) => status >= 760 && status <= 769
+      })
+    ).toBeTruthy();
   });
 
-  it('tests containsHeader with string array', () => {
+  it('tests containsHeader header casing', () => {
     const response = createResponse({
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'content-type': 'application/json' }
     });
 
-    const hasContentTypeLowercase = isCachePredicateValid(response, {
-      containsHeaders: { 'content-type': true }
-    });
+    expect(
+      testCachePredicate(response, {
+        containsHeaders: { 'content-type': () => true }
+      })
+    ).toBeTruthy();
 
-    const hasContentType = isCachePredicateValid(response, {
-      containsHeaders: { 'Content-Type': true }
-    });
+    expect(
+      testCachePredicate(response, {
+        containsHeaders: { 'Content-Type': () => true }
+      })
+    ).toBeTruthy();
 
-    expect(hasContentTypeLowercase).toBeFalsy();
-    expect(hasContentType).toBeTruthy();
+    expect(
+      testCachePredicate(response, {
+        containsHeaders: { 'Content-Type': () => true }
+      })
+    ).toBeTruthy();
   });
 
-  it('tests containsHeader with string tuple', () => {
+  it('tests containsHeader', () => {
     const response = createResponse({
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'content-type': 'application/json' }
     });
 
-    const headerExists = isCachePredicateValid(response, {
-      containsHeaders: { 'content-type': 'application/json' }
+    const isJsonLowercase = testCachePredicate(response, {
+      containsHeaders: { 'content-type': (h) => h === 'application/json' }
     });
 
-    const isXmlContent = isCachePredicateValid(response, {
-      containsHeaders: { 'Content-Type': 'application/xml' }
+    const isJsonContent = testCachePredicate(response, {
+      containsHeaders: { 'Content-Type': (h) => h === 'application/json' }
     });
 
-    const isJsonContent = isCachePredicateValid(response, {
-      containsHeaders: { 'Content-Type': 'application/json' }
+    const isXmlContent = testCachePredicate(response, {
+      containsHeaders: { 'Content-Type': (h) => h === 'application/xml' }
     });
 
-    expect(headerExists).toBeFalsy();
     expect(isXmlContent).toBeFalsy();
+    expect(isJsonLowercase).toBeTruthy();
     expect(isJsonContent).toBeTruthy();
   });
 
   it('tests containsHeader with string predicate', () => {
     const response = createResponse({
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'content-type': 'application/json' }
     });
 
-    const headerExists = isCachePredicateValid(response, {
+    const headerExists = testCachePredicate(response, {
       containsHeaders: { 'content-type': (header) => header === 'application/json' }
     });
 
-    const isXmlContent = isCachePredicateValid(response, {
+    const isXmlContent = testCachePredicate(response, {
       containsHeaders: { 'Content-Type': (header) => header === 'application/xml' }
     });
 
-    const isJsonContent = isCachePredicateValid(response, {
+    const isJsonContent = testCachePredicate(response, {
       containsHeaders: { 'Content-Type': (header) => header === 'application/json' }
     });
 
-    expect(headerExists).toBeFalsy();
+    expect(headerExists).toBeTruthy();
     expect(isXmlContent).toBeFalsy();
     expect(isJsonContent).toBeTruthy();
   });
@@ -95,16 +111,21 @@ describe('tests cache predicate object', () => {
       data: { a: true, b: 1 }
     });
 
-    const testStrict = isCachePredicateValid(response, {
-      responseMatch: ({ data }) => data && data.a === true && data.b === 1
-    });
+    expect(
+      testCachePredicate(response, {
+        responseMatch: ({ data }) => data && data.a === true && data.b === 1
+      })
+    ).toBeTruthy();
 
-    const testError = isCachePredicateValid(response, {
-      responseMatch: ({ data }) => data && (data.a !== true || data.b !== 1)
-    });
+    expect(
+      testCachePredicate(response, ({ data }) => data && data.a === true && data.b === 1)
+    ).toBeTruthy();
 
-    expect(testStrict).toBeTruthy();
-    expect(testError).toBeFalsy();
+    expect(
+      testCachePredicate(response, {
+        responseMatch: ({ data }) => data && (data.a !== true || data.b !== 1)
+      })
+    ).toBeFalsy();
   });
 
   it('tests generics and typescript types', async () => {

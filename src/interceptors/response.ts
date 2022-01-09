@@ -1,7 +1,7 @@
 import type { AxiosCacheInstance } from '../cache/axios';
 import type { CacheProperties } from '../cache/cache';
 import type { CachedStorageValue } from '../storage/types';
-import { shouldCacheResponse } from '../util/cache-predicate';
+import { testCachePredicate } from '../util/cache-predicate';
 import { Header } from '../util/headers';
 import { updateCache } from '../util/update-cache';
 import type { ResponseInterceptor } from './build';
@@ -59,7 +59,7 @@ export function defaultResponseInterceptor(
     if (
       // For 'loading' values (post stale), this check was already run in the past.
       !cache.data &&
-      !shouldCacheResponse(response, cacheConfig)
+      !testCachePredicate(response, cacheConfig.cachePredicate)
     ) {
       await rejectResponse(axios, response.id);
       return response;

@@ -5,24 +5,26 @@ import type {
   StorageValue
 } from '../storage/types';
 
-export type CachePredicate<R = any, D = any> =
-  | CachePredicateObject<R, D>
-  | (<R, D>(response: CacheAxiosResponse<R, D>) => boolean);
+export type CachePredicate<R = any, D = any> = Exclude<
+  CachePredicateObject<R, D> | CachePredicateObject<R, D>['responseMatch'],
+  undefined
+>;
 
 export type CachePredicateObject<R = any, D = any> = {
-  /**
-   * The status predicate, if a tuple is returned, the first and seconds value means the
-   * interval (inclusive) accepted. Can also be a function.
-   */
-  statusCheck?: [start: number, end: number] | ((status: number) => boolean);
+  /** Matches if this function returned true. */
+  statusCheck?: (status: number) => boolean;
 
   /**
-   * Matches if the response header container all keys. A tuple also checks for values.
-   * Can also be a predicate.
+   * Matches if all keys in this object returned true.
+   *
+   * The response does not contain all headers specified here, the specified function will
+   * be called without argument.
+   *
+   * ### Remember, all axios headers are lowercase.
    */
-  containsHeaders?: Record<string, true | string | ((header: string) => boolean)>;
+  containsHeaders?: Record<string, (header?: string) => boolean>;
 
-  /** Check if the desired response matches this predicate. */
+  /** Check if the response matches this predicate. */
   responseMatch?: (res: CacheAxiosResponse<R, D>) => boolean;
 };
 
