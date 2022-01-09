@@ -10,7 +10,7 @@ import type { CacheAxiosResponse, CacheRequestConfig } from './axios';
  * @template R The type returned by this response
  * @template D The type for the request body
  */
-export type CacheProperties<R = any, D = any> = {
+export type CacheProperties<R = unknown, D = unknown> = {
   /**
    * The time until the cached value is expired in milliseconds.
    *
