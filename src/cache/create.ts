@@ -95,8 +95,3 @@ export function setupCache(
 
   return axiosCache;
 }
-
-/** @deprecated */
-export const useCache = setupCache as unknown as 'use setupCache instead';
-/** @deprecated */
-export const createCache = setupCache as unknown as 'use setupCache instead';
