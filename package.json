@@ -11,7 +11,7 @@
   "scripts": {
     "build": "webpack",
     "test": "jest --coverage",
-    "escheck": "npx es-check es5 ./dist/index.es5.min.js && npx es-check es6 ./dist/index.min.js",
+    "escheck": "es-check es5 ./dist/index.es5.min.js && es-check es6 ./dist/index.min.js",
     "format": "prettier --write .",
     "lint": "tsc --noEmit && eslint . --ext .ts",
     "version": "auto-changelog -p && git add CHANGELOG.md"
@@ -43,6 +43,9 @@
     "cache-parser": "^1.1.2",
     "fast-defer": "^1.1.3"
   },
+  "resolutions": {
+    "colors": "1.4.0"
+  },
   "devDependencies": {
     "@arthurfiorette/prettier-config": "*",
     "@types/jest": "^27.0.2",
@@ -52,6 +55,7 @@
     "@typescript-eslint/parser": "^5.8.1",
     "auto-changelog": "^2.3.0",
     "axios": "~0.24.0",
+    "es-check": "^6.1.1",
     "eslint": "^8.3.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
