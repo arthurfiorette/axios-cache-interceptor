@@ -1,8 +1,9 @@
 import type { CacheAxiosResponse, CacheRequestConfig } from '../cache/axios';
 
+/** See {@link AxiosInterceptorManager} */
 export interface AxiosInterceptor<T> {
   onFulfilled?(value: T): T | Promise<T>;
-  onRejected?(error: any): any;
+  onRejected?(error: unknown): unknown;
   apply: () => void;
 }
 

@@ -32,7 +32,7 @@ export function isMethodIn(
   return false;
 }
 
-export type ConfigWithCache<D> = CacheRequestConfig<any, D> & {
+export type ConfigWithCache<D> = CacheRequestConfig<unknown, D> & {
   cache: Partial<CacheProperties>;
 };
 
