@@ -2,19 +2,19 @@ import type { CacheAxiosResponse } from '../cache/axios';
 import type { CachePredicate } from './types';
 
 /** Tests an response against a {@link CachePredicateObject}. */
-export function testCachePredicate<R = unknown, D = unknown>(
+export async function testCachePredicate<R = unknown, D = unknown>(
   response: CacheAxiosResponse<R, D>,
   predicate: CachePredicate<R, D>
 ) {
   if (typeof predicate === 'function') {
-    return predicate(response);
+    return await predicate(response);
   }
 
   const { statusCheck, responseMatch, containsHeaders } = predicate;
 
   if (
-    (statusCheck && !statusCheck(response.status)) ||
-    (responseMatch && !responseMatch(response))
+    (statusCheck && !(await statusCheck(response.status))) ||
+    (responseMatch && !(await responseMatch(response)))
   ) {
     return false;
   }
@@ -25,11 +25,11 @@ export function testCachePredicate<R = unknown, D = unknown>(
 
       if (
         predicate &&
-        !predicate(
+        !(await predicate(
           // Axios uses lowercase headers, but if for some reason it doesn't, we should
           // still be able to match.
           response.headers[header.toLowerCase()] ?? response.headers[header]
-        )
+        ))
       ) {
         return false;
       }

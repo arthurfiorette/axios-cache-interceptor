@@ -59,7 +59,7 @@ export function defaultResponseInterceptor(
     if (
       // For 'loading' values (post stale), this check was already run in the past.
       !cache.data &&
-      !testCachePredicate(response, cacheConfig.cachePredicate)
+      !(await testCachePredicate(response, cacheConfig.cachePredicate))
     ) {
       await rejectResponse(axios, response.id);
       return response;

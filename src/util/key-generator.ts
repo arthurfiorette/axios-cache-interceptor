@@ -6,7 +6,7 @@ const SLASHES_REGEX = /^\/|\/$/g;
 export const defaultKeyGenerator: KeyGenerator = ({
   baseURL = '',
   url = '',
-  method,
+  method = 'get',
   params,
   id
 }) => {
@@ -20,7 +20,7 @@ export const defaultKeyGenerator: KeyGenerator = ({
 
   return `${
     // method
-    method?.toLowerCase() || 'get'
+    method.toLowerCase()
   }::${
     // complete url
     baseURL + (baseURL && url ? '/' : '') + url

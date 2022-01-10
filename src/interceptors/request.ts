@@ -90,20 +90,16 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
       cachedResponse = cache.data;
     }
 
-    config.adapter = () =>
-      /**
-       * Even though the response interceptor receives this one from here, it has been
-       * configured to ignore cached responses: true
-       */
-      Promise.resolve<CacheAxiosResponse<unknown, unknown>>({
-        config,
-        data: cachedResponse.data,
-        headers: cachedResponse.headers,
-        status: cachedResponse.status,
-        statusText: cachedResponse.statusText,
-        cached: true,
-        id: key
-      });
+    //Even though the response interceptor receives this one from here, it has been configured to ignore cached responses: true
+    config.adapter = async (): Promise<CacheAxiosResponse<unknown, unknown>> => ({
+      config,
+      data: cachedResponse.data,
+      headers: cachedResponse.headers,
+      status: cachedResponse.status,
+      statusText: cachedResponse.statusText,
+      cached: true,
+      id: key
+    });
 
     return config;
   };
