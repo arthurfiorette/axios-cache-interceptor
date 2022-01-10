@@ -5,9 +5,9 @@ import type { CachePredicate } from './types';
 export async function testCachePredicate<R = unknown, D = unknown>(
   response: CacheAxiosResponse<R, D>,
   predicate: CachePredicate<R, D>
-) {
+): Promise<boolean> {
   if (typeof predicate === 'function') {
-    return await predicate(response);
+    return predicate(response);
   }
 
   const { statusCheck, responseMatch, containsHeaders } = predicate;
