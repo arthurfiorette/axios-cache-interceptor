@@ -9,7 +9,7 @@ describe('test request interceptor', () => {
     });
 
     const response = await axios.get('');
-    const cacheKey = await axios.generateKey(response.config);
+    const cacheKey = axios.generateKey(response.config);
     const cache = await axios.storage.get(cacheKey);
 
     expect(cache.state).toBe('empty');
@@ -22,7 +22,7 @@ describe('test request interceptor', () => {
     });
 
     const response = await axios.get('');
-    const cacheKey = await axios.generateKey(response.config);
+    const cacheKey = axios.generateKey(response.config);
     const cache = await axios.storage.get(cacheKey);
 
     expect(cache.state).toBe('cached');

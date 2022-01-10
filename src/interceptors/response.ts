@@ -109,13 +109,13 @@ export function defaultResponseInterceptor(
 
     // Update other entries before updating himself
     if (cacheConfig?.update) {
-      updateCache(axios.storage, response, cacheConfig.update);
+      await updateCache(axios.storage, response, cacheConfig.update);
     }
 
     const deferred = axios.waiting[response.id];
 
     // Resolve all other requests waiting for this response
-    await deferred?.resolve(newCache.data);
+    deferred?.resolve(newCache.data);
     delete axios.waiting[response.id];
 
     // Define this key as cache on the storage

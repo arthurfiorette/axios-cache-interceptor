@@ -1,7 +1,7 @@
 import { createValidateStatus, isMethodIn } from '../../src/interceptors/util';
 
 describe('test util functions', () => {
-  it('tests validate-status function', async () => {
+  it('tests validate-status function', () => {
     const def = createValidateStatus();
     expect(def(200)).toBe(true);
     expect(def(345)).toBe(false);

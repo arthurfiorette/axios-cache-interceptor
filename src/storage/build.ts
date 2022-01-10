@@ -5,6 +5,7 @@ import type { AxiosStorage, StaleStorageValue, StorageValue } from './types';
 const storage = Symbol();
 
 /** Returns true if the provided object was created from {@link buildStorage} function. */
+// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 export const isStorage = (obj: any): obj is AxiosStorage => !!obj && !!obj[storage];
 
 export type BuildStorage = Omit<AxiosStorage, 'get'> & {

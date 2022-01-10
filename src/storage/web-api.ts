@@ -1,3 +1,4 @@
+import type { StorageValue } from '..';
 import { buildStorage } from './build';
 
 /**
@@ -20,7 +21,7 @@ export function buildWebStorage(storage: Storage, prefix = '') {
   return buildStorage({
     find: (key) => {
       const json = storage.getItem(prefix + key);
-      return json ? JSON.parse(json) : undefined;
+      return json ? (JSON.parse(json) as StorageValue) : undefined;
     },
     set: (key, value) => void storage.setItem(prefix + key, JSON.stringify(value)),
     remove: (key) => void storage.removeItem(prefix + key)

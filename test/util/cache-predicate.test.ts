@@ -198,10 +198,10 @@ describe('tests cache predicate object', () => {
     );
   });
 
-  it('tests generics and typescript types', () => {
+  it('tests generics and typescript types', async () => {
     const axios = mockAxios();
 
-    const result = axios.get<{ a: boolean; b: number }>('url', {
+    const result = await axios.get<{ a: boolean; b: number }>('url', {
       cache: {
         ttl: ({ data }) => {
           return data.b;
@@ -232,6 +232,6 @@ describe('tests cache predicate object', () => {
       }
     });
 
-    expect(result).resolves.toBeDefined();
+    expect(result).toBeDefined();
   });
 });

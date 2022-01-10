@@ -1,4 +1,5 @@
 import { Axios } from 'axios';
+import type { AxiosStorage } from '../../src';
 import { isStorage } from '../../src/storage/build';
 import { buildMemoryStorage } from '../../src/storage/memory';
 import { mockAxios } from '../mocks/axios';
@@ -20,7 +21,7 @@ it('tests isStorage function', () => {
 it('tests setupCache without proper storage', () => {
   expect(() =>
     mockAxios({
-      storage: {} as any
+      storage: {} as AxiosStorage
     })
   ).toThrowError();
 });

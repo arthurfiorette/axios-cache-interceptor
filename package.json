@@ -13,7 +13,7 @@
     "test": "jest --coverage",
     "escheck": "es-check es5 ./dist/index.es5.min.js && es-check es6 ./dist/index.min.js",
     "format": "prettier --write .",
-    "lint": "tsc --noEmit && eslint . --ext .ts",
+    "lint": "eslint . --ext .ts",
     "version": "auto-changelog -p && git add CHANGELOG.md"
   },
   "repository": {

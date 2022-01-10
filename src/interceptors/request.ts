@@ -90,7 +90,9 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
       cachedResponse = cache.data;
     }
 
-    //Even though the response interceptor receives this one from here, it has been configured to ignore cached responses: true
+    //Even though the response interceptor receives this one from here,
+    // it has been configured to ignore cached responses = true
+    // eslint-disable-next-line @typescript-eslint/require-await
     config.adapter = async (): Promise<CacheAxiosResponse<unknown, unknown>> => ({
       config,
       data: cachedResponse.data,
