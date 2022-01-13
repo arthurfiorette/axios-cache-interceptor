@@ -25,7 +25,7 @@ export const defaultKeyGenerator: KeyGenerator = ({
     // complete url
     baseURL + (baseURL && url ? '/' : '') + url
   }::${
-    //params
+    // params
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     params ? JSON.stringify(params, Object.keys(params).sort()) : '{}'
   }`;

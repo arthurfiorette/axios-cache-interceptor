@@ -16,6 +16,9 @@ import { buildStorage } from './build';
  * const myStorage = new Storage();
  * const fromMyStorage = buildWebStorage(myStorage);
  * ```
+ *
+ * @param prefix The prefix to index the storage. Useful to prevent collision between
+ *   multiple places using the same storage.
  */
 export function buildWebStorage(storage: Storage, prefix = '') {
   return buildStorage({
@@ -23,7 +26,11 @@ export function buildWebStorage(storage: Storage, prefix = '') {
       const json = storage.getItem(prefix + key);
       return json ? (JSON.parse(json) as StorageValue) : undefined;
     },
-    set: (key, value) => void storage.setItem(prefix + key, JSON.stringify(value)),
-    remove: (key) => void storage.removeItem(prefix + key)
+    set: (key, value) => {
+      storage.setItem(prefix + key, JSON.stringify(value));
+    },
+    remove: (key) => {
+      storage.removeItem(prefix + key);
+    }
   });
 }
