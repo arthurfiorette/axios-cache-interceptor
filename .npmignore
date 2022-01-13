@@ -11,5 +11,6 @@
 !/umd/**
 !/cjs/**
 !/esm/**
+!/src/**
 
 !/examples/**
