@@ -2,27 +2,23 @@
 
 ## CommonJS
 
-The code is compiled with `webpack` for ES2017+.
+The code compiled with `CommonJS` is for ES2017+.
 
-- `axios-cache-interceptor`: Redirects to `/dist/index.js`
-- `axios-cache-interceptor/dist/index.js`: The main library file.
-- `axios-cache-interceptor/dist/index.d.ts`: The Typescript definition file.
-
-Every browser build is also compatible with CommonsJS because it builds with UMD, so you
-can use them too.
+```js
+import { setupCache } from 'axios-cache-interceptor'; // (Default is CJS)
+import { setupCache } from 'axios-cache-interceptor/cjs';
+```
 
 ## UMD
 
 > _NOTE_: Axios itself requires [ES6 Promises](https://axios-http.com/docs/notes#promises)
 
-The UMD code is compiled with `webpack` with support to `>= ES5`. See the
-[build config](/webpack.config.js). You can import these files anywhere (Browser,
-CommonsJS and more)
+The UMD code is compiled with `webpack` to support `>= ES5`. See the
+[build config](build/webpack.config.js). You can import these files anywhere (Browser,
+CommonsJS, ESM and more)
 
-- `axios-cache-interceptor/dist/index.min.js`: Production file for ES6+
-- `axios-cache-interceptor/dist/index.es5.min.js`: Production file for ES5+
-- `axios-cache-interceptor/dist/index.es2020.min.js`: Production file for ES2020+
-- `axios-cache-interceptor/dist/index.development.js`: Development file (ES2020+)
+- `axios-cache-interceptor/umd/es6.min.js`: Production file for ES6+
+- `axios-cache-interceptor/umd/es5.min.js`: Production file for ES5+
 
 ```html
 <!-- You can use the cdn of your choice -->
@@ -37,4 +33,20 @@ CommonsJS and more)
 ></script>
 
 <!-- Etc... -->
+```
+
+```js
+import { setupCache } from 'axios-cache-interceptor/umd';
+```
+
+## ESModule
+
+The code compiled with `ESModule` is for ES2017+.
+
+This library exports its `ESM` code at `axios-cache-interceptor/esm`. It's useful to
+enable _tree-shaking_ and other optimizations. You probably won't have to directly import
+from this folder, instead, bundlers should do that for you.
+
+```js
+import { setupCache } from 'axios-cache-interceptor/esm';
 ```

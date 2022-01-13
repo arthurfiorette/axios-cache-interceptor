@@ -1,7 +1,10 @@
 # Javascript
-dist
 coverage
 node_modules
+
+/umd
+/cjs
+/esm
 
 # Random
 /ignore

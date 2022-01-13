@@ -8,6 +8,8 @@
 !package.json
 !tsconfig*.json
 
-!/src/**
-!/dist/**
+!/umd/**
+!/cjs/**
+!/esm/**
+
 !/examples/**

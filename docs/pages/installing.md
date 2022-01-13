@@ -36,37 +36,19 @@ import { setupCache } from 'axios-cache-interceptor';
 const { setupCache } = window.AxiosCacheInterceptor;
 ```
 
-<!-- https://www.jsdelivr.com/package/npm/axios-cache-interceptor?path=dist -->
-
 ```html
 <!-- Replace latest with the desired version -->
 
-<!-- Development for ES2020+ (~30.0KB) -->
-<script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.0/dist/index.development.js"
-  integrity="sha256-oEvQQcJv78S8QSJOY6XQ2uJ2dGwnnhAsYLDeXx0DHWA="
-  crossorigin="anonymous"
-></script>
-
 <!-- Production for ES6+ (~11.3KB) -->
 <script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.0/dist/index.min.js"
-  integrity="sha256-vtHJnEYMjzfFDDPBAic56ppjVrN6ze2qi7wXM9a/BSM="
-  crossorigin="anonymous"
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.1/umd/es6.min.js"
+  crossorigin
 ></script>
 
-<!-- Production for ES5+ (~18.2KB) -->
+<!-- Production for ES5+ (~18.2KB) (Needs Promise polyfill) -->
 <script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.0/dist/index.es5.min.js"
-  integrity="sha256-R/q1PnksvXhveo9qidplrGvGGsmFDAsal9M6bUfnNS4="
-  crossorigin="anonymous"
-></script>
-
-<!-- Production for ES2020+ (~9.2KB) -->
-<script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.0/dist/index.es2020.min.js"
-  integrity="sha256-amiYeGe9088KbQ+4xF0/9tNP+ks4Ze5LF6cZ7aiow3Q="
-  crossorigin="anonymous"
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.1/umd/es5.min.js"
+  crossorigin
 ></script>
 ```
 
@@ -75,7 +57,11 @@ const { setupCache } = window.AxiosCacheInterceptor;
 You can import any [CDN Url](#with-cdns) and use it in your code. **UMD Compatible**
 
 ```js
-import { setupCache } from 'https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.0/dist/index.es2020.min.js';
+// ESM with Skypack CDN (Preferred!)
+import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor@0.8.1?dts';
+
+// UMD bundled code
+import { setupCache } from 'https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.1/umd/index.min.js';
 ```
 
 ## Support List

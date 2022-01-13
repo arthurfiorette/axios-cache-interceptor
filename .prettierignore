@@ -3,6 +3,9 @@ node_modules
 /ignore
 /coverage
 /dist
+/umd
+/cjs
+/esm
 /types
 /tsconfig.json
 
