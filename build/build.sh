@@ -16,5 +16,3 @@ tsc -p build/tsconfig.esm.json &
 wait
 
 echo "\nBuild done!"
-
-es-check es5 ./umd/es6.min.js && es-check es6 ./dist/index.min.js
