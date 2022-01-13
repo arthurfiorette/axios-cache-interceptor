@@ -12,9 +12,6 @@
       alt="Install Size"
   /></a>
 
-At **0.7.8**, this library got tuned to be more smaller, so it provides **5** different
-bundling options.
-
 ## With Npm
 
 ```sh
@@ -37,25 +34,25 @@ import { setupCache } from 'axios-cache-interceptor/esm';
 const { setupCache } = require('axios-cache-interceptor/umd');
 ```
 
-## With CDNs
+## With CDN
 
 ```js
 const { setupCache } = window.AxiosCacheInterceptor;
 ```
 
 ```html
-<!-- Replace latest with the desired version -->
-
-<!-- Production for ES6+ (~11.3KB) -->
+<!-- Production for ES6+ (~11.5KB) -->
 <script
   src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.1/umd/es6.min.js"
-  crossorigin
+  integrity="sha256-rB3Ge1Zq2HNtvbd3uBlaoyJ0li1VeFY/wsdsfu8ti8Y="
+  crossorigin="anonymous"
 ></script>
 
-<!-- Production for ES5+ (~18.2KB) (Needs polyfill) -->
+<!-- Production for ES5+ (~19.9KB) (Needs Promise polyfill) -->
 <script
   src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.1/umd/es5.min.js"
-  crossorigin
+  integrity="sha256-Vqx/sIqXaBERQA5FrqyycSsPtB/VOBnHi7uAxju+9PU="
+  crossorigin="anonymous"
 ></script>
 ```
 
@@ -64,11 +61,11 @@ const { setupCache } = window.AxiosCacheInterceptor;
 You can import any [CDN Url](#with-cdns) and use it in your code. **UMD Compatible**
 
 ```js
-// ESM with Skypack CDN (Preferred!)
-import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor@0.8.1?dts';
-
 // UMD bundled code
-import { setupCache } from 'https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.1/umd/index.min.js';
+import { setupCache } from 'https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.1/umd/es6.min.js';
+
+// ESM with Skypack CDN
+import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor@0.8.1';
 ```
 
 ## Support List
