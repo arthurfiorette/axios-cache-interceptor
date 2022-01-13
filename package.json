@@ -8,11 +8,11 @@
   "exports": {
     "import": "./esm/index.js",
     "require": "./cjs/index.js",
-    "default": "./umd/es6.min.js"
+    "default": "./umd/es6.js"
   },
-  "browser": "./umd/es6.min.js",
-  "jsdelivr": "./umd/es6.min.js",
-  "unpkg": "./umd/es6.min.js",
+  "browser": "./umd/es6.js",
+  "jsdelivr": "./umd/es6.js",
+  "unpkg": "./umd/es6.js",
   "runkitExampleFilename": "./examples/runkit.js",
   "scripts": {
     "build": "sh build/build.sh",

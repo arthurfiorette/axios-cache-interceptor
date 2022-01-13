@@ -17,8 +17,8 @@ The UMD code is compiled with `webpack` to support `>= ES5`. See the
 [build config](build/webpack.config.js). You can import these files anywhere (Browser,
 CommonsJS, ESM and more)
 
-- `axios-cache-interceptor/umd/es6.min.js`: Production file for ES6+
-- `axios-cache-interceptor/umd/es5.min.js`: Production file for ES5+
+- `axios-cache-interceptor/umd/es6.js`: Production file for ES6+
+- `axios-cache-interceptor/umd/es5.js`: Production file for ES5+
 - `axios-cache-interceptor/umd/index.js`: Production file for ES2017+
 
 ```html

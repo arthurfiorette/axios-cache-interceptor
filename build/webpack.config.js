@@ -63,11 +63,11 @@ const config = ({ output, esTarget }) => ({
 module.exports = [
   config({
     esTarget: 'es2015', //es6
-    output: 'umd/es6.min'
+    output: 'umd/es6'
   }),
   config({
     esTarget: 'es5',
-    output: 'umd/es5.min'
+    output: 'umd/es5'
   }),
   config({
     esTarget: 'es2017',

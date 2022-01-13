@@ -5,8 +5,8 @@
 
 echo "\nStarting checking...\n"
 
-es-check es5 umd/es5.min.js &
-es-check es6 umd/es6.min.js &
+es-check es5 umd/es5.js &
+es-check es6 umd/es6.js &
 
 wait
 
