@@ -3,11 +3,17 @@ import type { KeyGenerator } from './types';
 // Remove first and last '/' char, if present
 const SLASHES_REGEX = /^\/|\/$/g;
 
+const stringifyObject = (obj?: unknown) =>
+  obj !== undefined
+    ? JSON.stringify(obj, obj === null ? undefined : Object.keys(obj as object).sort())
+    : '{}';
+
 export const defaultKeyGenerator: KeyGenerator = ({
   baseURL = '',
   url = '',
   method = 'get',
   params,
+  data,
   id
 }) => {
   if (id) {
@@ -25,8 +31,11 @@ export const defaultKeyGenerator: KeyGenerator = ({
     // complete url
     baseURL + (baseURL && url ? '/' : '') + url
   }::${
-    // params
+    // query
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    params ? JSON.stringify(params, Object.keys(params).sort()) : '{}'
+    stringifyObject(params)
+  }::${
+    // request body
+    stringifyObject(data)
   }`;
 };

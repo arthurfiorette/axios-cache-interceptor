@@ -95,7 +95,7 @@ describe('tests key generation', () => {
       params: { a: 1, b: 2 }
     });
 
-    expect(key).toBe('get::http://example.com::{"a":1,"b":2}');
+    expect(key).toBe('get::http://example.com::{"a":1,"b":2}::{}');
 
     const groups = [
       ['http://example.com', '/http://example.com'],
@@ -112,5 +112,33 @@ describe('tests key generation', () => {
         defaultKeyGenerator({ baseURL: second })
       );
     }
+  });
+
+  it('tests unique data and params', () => {
+    const def = { baseURL: 'http://example.com', url: '', params: { a: 1, b: 2 } };
+
+    const dataProps = [
+      defaultKeyGenerator({ ...def, data: 23 }),
+      defaultKeyGenerator({ ...def, data: { c: 3, d: 4 } }),
+      defaultKeyGenerator({ ...def, data: -453 }),
+      defaultKeyGenerator({ ...def, data: 'string' }),
+      defaultKeyGenerator({ ...def, data: new Date() }),
+      defaultKeyGenerator({ ...def, data: null }),
+      defaultKeyGenerator({ ...def, data: undefined })
+    ];
+
+    expect(dataProps).toStrictEqual([...new Set(dataProps)]);
+
+    const paramsProps = [
+      defaultKeyGenerator({ ...def, params: 23 }),
+      defaultKeyGenerator({ ...def, params: { c: 3, d: 4 } }),
+      defaultKeyGenerator({ ...def, params: -453 }),
+      defaultKeyGenerator({ ...def, params: 'string' }),
+      defaultKeyGenerator({ ...def, params: new Date() }),
+      defaultKeyGenerator({ ...def, params: null }),
+      defaultKeyGenerator({ ...def, params: undefined })
+    ];
+
+    expect(paramsProps).toStrictEqual([...new Set(paramsProps)]);
   });
 });

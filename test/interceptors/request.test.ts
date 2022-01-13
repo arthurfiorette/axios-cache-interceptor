@@ -113,4 +113,18 @@ describe('test request interceptor', () => {
     // nothing to use for revalidation
     expect(response.cached).toBe(false);
   });
+
+  it("expect two requests with different body aren't cached", async () => {
+    const axios = mockAxios();
+
+    const url = 'https://jsonplaceholder.typicode.com/posts';
+
+    const result = await axios.get(url, { data: { a: 1 } });
+
+    expect(result.cached).toBe(false);
+
+    const result2 = await axios.get(url, { data: { a: 2 } });
+
+    expect(result2.cached).toBe(false);
+  });
 });
