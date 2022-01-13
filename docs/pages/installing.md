@@ -26,8 +26,15 @@ yarn add axios axios-cache-interceptor
 ```
 
 ```js
+// CommonJS
 const { setupCache } = require('axios-cache-interceptor');
 import { setupCache } from 'axios-cache-interceptor';
+
+// ES Modules
+import { setupCache } from 'axios-cache-interceptor/esm';
+
+// Universal
+const { setupCache } = require('axios-cache-interceptor/umd');
 ```
 
 ## With CDNs
@@ -45,7 +52,7 @@ const { setupCache } = window.AxiosCacheInterceptor;
   crossorigin
 ></script>
 
-<!-- Production for ES5+ (~18.2KB) (Needs Promise polyfill) -->
+<!-- Production for ES5+ (~18.2KB) (Needs polyfill) -->
 <script
   src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.1/umd/es5.min.js"
   crossorigin
