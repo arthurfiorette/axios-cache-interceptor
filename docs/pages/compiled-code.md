@@ -19,6 +19,7 @@ CommonsJS, ESM and more)
 
 - `axios-cache-interceptor/umd/es6.min.js`: Production file for ES6+
 - `axios-cache-interceptor/umd/es5.min.js`: Production file for ES5+
+- `axios-cache-interceptor/umd/index.js`: Production file for ES2017+
 
 ```html
 <!-- You can use the cdn of your choice -->

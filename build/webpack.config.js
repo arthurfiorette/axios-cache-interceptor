@@ -9,15 +9,14 @@ const root = (...p) => path.resolve(__dirname, '..', ...p);
 /**
  * @param {{
  *   output: string;
- *   entry: string;
  *   esTarget: string;
  * }} options
  * @returns {import('webpack').Configuration}
  */
-const config = ({ output, esTarget, entry }) => ({
+const config = ({ output, esTarget }) => ({
   mode: 'production',
 
-  entry: root('src', entry),
+  entry: root('src', 'index.ts'),
 
   output: {
     path: root(),
@@ -64,12 +63,14 @@ const config = ({ output, esTarget, entry }) => ({
 module.exports = [
   config({
     esTarget: 'es2015', //es6
-    entry: 'index.ts',
     output: 'umd/es6.min'
   }),
   config({
     esTarget: 'es5',
-    entry: 'index.ts',
     output: 'umd/es5.min'
+  }),
+  config({
+    esTarget: 'es2017',
+    output: 'umd/index'
   })
 ];
