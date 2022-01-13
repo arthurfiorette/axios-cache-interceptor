@@ -24,7 +24,7 @@ jobs:
           cache: 'yarn'
 
       - name: Install packages
-        run: yarn --prefer-offline
+        run: yarn install
 
       - name: Build
         run: npm run build
