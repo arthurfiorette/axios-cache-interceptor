@@ -22,7 +22,7 @@ jobs:
           cache: 'yarn'
 
       - name: Install packages
-        run: yarn --prefer-offline
+        run: yarn install
 
       - name: Lint
         run: yarn lint
@@ -34,7 +34,7 @@ jobs:
         run: yarn build
 
       - name: ESCheck
-        run: yarn escheck
+        run: yarn check
 
       - name: Publish to Codecov
         uses: codecov/codecov-action@v2.1.0

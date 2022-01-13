@@ -3,3 +3,6 @@
 /types
 /ignore
 /docs
+/esm
+/cjs
+/umd

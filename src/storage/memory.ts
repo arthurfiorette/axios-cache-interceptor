@@ -27,8 +27,12 @@ export function buildMemoryStorage() {
   const data: Record<string, StorageValue> = {};
   const storage = buildStorage({
     find: (key) => data[key],
-    set: (key, value) => void (data[key] = value),
-    remove: (key) => void delete data[key]
+    set: (key, value) => {
+      data[key] = value;
+    },
+    remove: (key) => {
+      delete data[key];
+    }
   });
   return { ...storage, data };
 }

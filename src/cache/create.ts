@@ -44,7 +44,7 @@ export type CacheOptions = Partial<CacheInstance> & Partial<CacheProperties>;
  *
  * @param axios The already created axios instance
  * @param config The config for the caching interceptors
- * @returns The same instance with better typescript types.
+ * @returns The same instance with extended typescript types.
  */
 export function setupCache(
   axios: AxiosInstance,

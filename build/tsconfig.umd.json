@@ -1,0 +1,13 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "module": "ESNext", // webpack converts to UMD
+    "target": "ESNext",
+    "outDir": "../umd",
+
+    // No declaration
+    "declaration": false,
+    "declarationMap": false
+  },
+  "include": ["../src"]
+}

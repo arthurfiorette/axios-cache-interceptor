@@ -1,10 +1,21 @@
+# Javascript
+coverage
 node_modules
 
+/umd
+/cjs
+/esm
 
-dist
-types
-ignore
-.vscode/settings.json
-package-lock.json
-coverage
+# Random
+/ignore
 *.log
+
+# Vscode
+.vscode/*
+!.vscode/launch.json
+
+# Npm & Yarn
+package-lock.json
+.yarn/*
+!.yarn/releases
+!.yarn/plugins

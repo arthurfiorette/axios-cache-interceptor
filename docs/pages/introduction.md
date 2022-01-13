@@ -18,3 +18,4 @@ even needing one of those fat javascript libraries for state management.
 - [x] Infinity storage options
 - [x] Cache revalidation from responses
 - [x] Support for external storages
+- [x] ESM, CJS and UMD support

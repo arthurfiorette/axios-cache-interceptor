@@ -30,8 +30,10 @@ export async function updateCache<T, D>(
       continue;
     }
 
-    if (newValue !== 'ignore') {
-      await storage.set(cacheKey, newValue);
+    if (newValue === 'ignore') {
+      continue;
     }
+
+    await storage.set(cacheKey, newValue);
   }
 }
