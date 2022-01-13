@@ -41,14 +41,14 @@ const { setupCache } = window.AxiosCacheInterceptor;
 ```
 
 ```html
-<!-- Production for ES6+ (~11.5KB) -->
+<!-- Production for ES6+ (~11.3KB) -->
 <script
   src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.1/umd/es6.min.js"
   integrity="sha256-rB3Ge1Zq2HNtvbd3uBlaoyJ0li1VeFY/wsdsfu8ti8Y="
   crossorigin="anonymous"
 ></script>
 
-<!-- Production for ES5+ (~19.9KB) (Needs Promise polyfill) -->
+<!-- Production for ES5+ (~19.5KB) (Needs Promise polyfill) -->
 <script
   src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.1/umd/es5.min.js"
   integrity="sha256-Vqx/sIqXaBERQA5FrqyycSsPtB/VOBnHi7uAxju+9PU="
