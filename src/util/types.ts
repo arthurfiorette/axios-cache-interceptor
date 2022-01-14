@@ -29,7 +29,7 @@ export type CachePredicateObject<R = unknown, D = unknown> = {
 };
 
 /** A simple function that receives a cache request config and should return a string id for it. */
-export type KeyGenerator = <R = unknown, D = unknown>(
+export type KeyGenerator<R = unknown, D = unknown> = (
   options: CacheRequestConfig<R, D>
 ) => string;
 

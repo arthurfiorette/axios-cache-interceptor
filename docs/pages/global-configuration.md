@@ -18,7 +18,11 @@ See more about storages [here](pages/storages).
 
 The function used to create different keys for each request. Defaults to a function that
 priorizes the id, and if not specified, a string is generated using the `method`,
-`baseURL`, `params`, and `url`.
+`baseURL`, `params`, `data` and `url`.
+
+The
+[default](https://github.com/arthurfiorette/axios-cache-interceptor/blob/main/src/util/key-generator.ts)
+id generation can clarify this idea.
 
 ## `waiting`
 

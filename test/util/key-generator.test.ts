@@ -1,4 +1,5 @@
-import { defaultKeyGenerator } from '../../src/util/key-generator';
+import { buildKeyGenerator, defaultKeyGenerator } from '../../src/util/key-generator';
+import { mockAxios } from '../mocks/axios';
 
 describe('tests key generation', () => {
   it('should generate different key for and id', () => {
@@ -89,14 +90,6 @@ describe('tests key generation', () => {
   });
 
   it('tests argument replacement', () => {
-    const key = defaultKeyGenerator({
-      baseURL: 'http://example.com',
-      url: '',
-      params: { a: 1, b: 2 }
-    });
-
-    expect(key).toBe('get::http://example.com::{"a":1,"b":2}::{}');
-
     const groups = [
       ['http://example.com', '/http://example.com'],
       ['http://example.com', '/http://example.com/'],
@@ -127,7 +120,7 @@ describe('tests key generation', () => {
       defaultKeyGenerator({ ...def, data: undefined })
     ];
 
-    expect(dataProps).toStrictEqual([...new Set(dataProps)]);
+    expect(new Set(dataProps).size).toBe(dataProps.length);
 
     const paramsProps = [
       defaultKeyGenerator({ ...def, params: 23 }),
@@ -135,10 +128,74 @@ describe('tests key generation', () => {
       defaultKeyGenerator({ ...def, params: -453 }),
       defaultKeyGenerator({ ...def, params: 'string' }),
       defaultKeyGenerator({ ...def, params: new Date() }),
+      defaultKeyGenerator({ ...def, params: Symbol() }),
       defaultKeyGenerator({ ...def, params: null }),
       defaultKeyGenerator({ ...def, params: undefined })
     ];
 
-    expect(paramsProps).toStrictEqual([...new Set(paramsProps)]);
+    expect(new Set(paramsProps).size).toBe(paramsProps.length);
+  });
+
+  it('tests buildKeyGenerator & hash: false', async () => {
+    const keyGenerator = buildKeyGenerator(false, ({ headers }) => {
+      return headers?.['x-req-header'] || 'not-set';
+    });
+
+    const axios = mockAxios({ generateKey: keyGenerator });
+
+    const { id } = await axios.get('random-url', {
+      data: Math.random(),
+      headers: {
+        'x-req-header': 'my-custom-id'
+      }
+    });
+
+    const { id: id2 } = await axios.get('other-url', {
+      data: Math.random() * 2,
+      headers: {
+        'x-req-header': 'my-custom-id'
+      }
+    });
+
+    const { id: id3 } = await axios.get('other-url', {
+      data: Math.random() * 2
+    });
+
+    expect(id).toBe('my-custom-id');
+    expect(id).toBe(id2);
+    expect(id3).toBe('not-set');
+  });
+
+  it('tests buildKeyGenerator & hash: true', async () => {
+    const keyGenerator = buildKeyGenerator(true, ({ headers }) => {
+      return headers?.['x-req-header'] || 'not-set';
+    });
+
+    const axios = mockAxios({ generateKey: keyGenerator });
+
+    const { id } = await axios.get('random-url', {
+      data: Math.random(),
+      headers: {
+        'x-req-header': 'my-custom-id'
+      }
+    });
+
+    const { id: id2 } = await axios.get('other-url', {
+      data: Math.random() * 2,
+      headers: {
+        'x-req-header': 'my-custom-id'
+      }
+    });
+
+    const { id: id3 } = await axios.get('other-url', {
+      data: Math.random() * 2
+    });
+
+    expect(id).toBe(id2);
+    expect(id).not.toBe('my-custom-id'); // hashed value
+
+    expect(id3).not.toBe(id);
+    expect(id3).not.toBe(id2);
+    expect(id3).not.toBe('not-set');
   });
 });

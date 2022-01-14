@@ -234,4 +234,24 @@ describe('tests cache predicate object', () => {
 
     expect(result).toBeDefined();
   });
+
+  it('request have id no matter what', async () => {
+    const axios = mockAxios({
+      methods: ['post'] // only post
+    });
+
+    const req1 = await axios.post('url', { a: 1 });
+    const req2 = await axios.post('url', { a: 1 });
+
+    const req3 = await axios.get('url-2');
+
+    expect(req1.id).toBeDefined();
+    expect(req1.cached).toBe(false);
+
+    expect(req2.id).toBeDefined();
+    expect(req2.cached).toBe(true);
+
+    expect(req3.id).toBeDefined();
+    expect(req3.cached).toBe(false);
+  });
 });
