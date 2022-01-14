@@ -27,7 +27,7 @@ export function defaultResponseInterceptor(
   };
 
   const onFulfilled: ResponseInterceptor['onFulfilled'] = async (response) => {
-    response.id ??= axios.generateKey(response.config);
+    response.id = response.config.id ??= axios.generateKey(response.config);
     response.cached ??= false;
 
     // Response is already cached

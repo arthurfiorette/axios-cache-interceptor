@@ -26,7 +26,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
       return config;
     }
 
-    const key = axios.generateKey(config);
+    const key = (config.id = axios.generateKey(config));
 
     // Assumes that the storage handled staled responses
     let cache = await axios.storage.get(key);

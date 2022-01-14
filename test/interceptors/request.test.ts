@@ -117,14 +117,36 @@ describe('test request interceptor', () => {
   it("expect two requests with different body aren't cached", async () => {
     const axios = mockAxios();
 
-    const url = 'https://jsonplaceholder.typicode.com/posts';
-
-    const result = await axios.get(url, { data: { a: 1 } });
+    const result = await axios.get('url', { data: { a: 1 } });
 
     expect(result.cached).toBe(false);
 
-    const result2 = await axios.get(url, { data: { a: 2 } });
+    const result2 = await axios.get('url', { data: { a: 2 } });
 
     expect(result2.cached).toBe(false);
+  });
+
+  it('tests a request with really long keys', async () => {
+    const axios = mockAxios();
+
+    const result = await axios.get('url', {
+      data: Array(5e3).fill({ rnd: Math.random() }),
+      params: Array(5e3).fill({ rnd: Math.random() })
+    });
+
+    expect(result).toBeDefined();
+  });
+
+  it('expect keyGenerator is called once during a single request', async () => {
+    const axios = mockAxios();
+
+    const spy = jest.spyOn(axios, 'generateKey');
+
+    await axios.get('url', {
+      // generates a long key
+      data: Array(5e3).fill({ rnd: Math.random() })
+    });
+
+    expect(spy).toHaveBeenCalledTimes(1);
   });
 });
