@@ -41,19 +41,11 @@ const { setupCache } = window.AxiosCacheInterceptor;
 ```
 
 ```html
-<!-- Production for ES6+ (~11.3KB) -->
-<script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.1/umd/es6.min.js"
-  integrity="sha256-rB3Ge1Zq2HNtvbd3uBlaoyJ0li1VeFY/wsdsfu8ti8Y="
-  crossorigin="anonymous"
-></script>
+<!-- Production for ES6+ (~12.2KB) -->
+<script src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.2/umd/es6.js" integrity="sha256-knwlPudOCSuVUXzq9OMCFjjP/jg+nYQi5oLpZTFmzAk=" crossorigin="anonymous"></script>
 
-<!-- Production for ES5+ (~19.5KB) (Needs Promise polyfill) -->
-<script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.1/umd/es5.min.js"
-  integrity="sha256-Vqx/sIqXaBERQA5FrqyycSsPtB/VOBnHi7uAxju+9PU="
-  crossorigin="anonymous"
-></script>
+<!-- Production for ES5+ (~20.5KB) (Needs Promise polyfill) -->
+<script src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.2/umd/es5.js" integrity="sha256-CKHNTt/NYMXYFQlGdJM2Uc0IWSCQBBhdIPVuFGfEBJ8=" crossorigin="anonymous"></script>
 ```
 
 ## With URL imports
@@ -62,10 +54,10 @@ You can import any [CDN Url](#with-cdns) and use it in your code. **UMD Compatib
 
 ```js
 // UMD bundled code
-import { setupCache } from 'https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.1/umd/es6.min.js';
+import { setupCache } from 'https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.2/umd/es6.js';
 
 // ESM with Skypack CDN
-import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor@0.8.1';
+import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor@0.8.2';
 ```
 
 ## Support List
