@@ -34,5 +34,5 @@ The resolved [request id](pages/request-id.md). This property represents the ID 
 throughout the internal code.
 
 Remember that, depending on the
-[Key Generator](pages/global-configuration?id=generatekey), it can be different as the
+[Key Generator](pages/global-configuration?id=generateKey), it can be different as the
 provided on the [Request Id](pages/per-request-configuration?id=id).
