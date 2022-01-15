@@ -1,6 +1,6 @@
 {
   "name": "axios-cache-interceptor",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "description": "Cache interceptor for axios",
   "main": "./cjs/index.js",
   "types": "./cjs/index.d.ts",
@@ -20,7 +20,7 @@
     "check": "sh build/check.sh",
     "format": "prettier --write .",
     "lint": "eslint . --ext .ts",
-    "version": "auto-changelog -p && git add CHANGELOG.md"
+    "changelog": "auto-changelog -p"
   },
   "repository": {
     "type": "git",
