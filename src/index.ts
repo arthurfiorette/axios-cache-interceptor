@@ -6,7 +6,7 @@ export * from './header/types';
 export * from './interceptors/build';
 export * from './interceptors/request';
 export * from './interceptors/response';
-export * as InterceptorUtil from './interceptors/util';
+export * from './interceptors/util';
 export * from './storage/build';
 export * from './storage/memory';
 export * from './storage/types';

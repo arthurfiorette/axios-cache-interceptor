@@ -5,7 +5,7 @@ import { testCachePredicate } from '../util/cache-predicate';
 import { Header } from '../util/headers';
 import { updateCache } from '../util/update-cache';
 import type { ResponseInterceptor } from './build';
-import { setupCacheData } from './util';
+import { createCacheResponse } from './util';
 
 export function defaultResponseInterceptor(
   axios: AxiosCacheInstance
@@ -94,7 +94,7 @@ export function defaultResponseInterceptor(
       ttl = expirationTime === 'not enough headers' ? ttl : expirationTime;
     }
 
-    const data = setupCacheData(response, cache.data);
+    const data = createCacheResponse(response, cache.data);
 
     if (typeof ttl === 'function') {
       ttl = await ttl(response);

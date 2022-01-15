@@ -1,4 +1,4 @@
-export enum Header {
+export const Header = {
   /**
    * ```txt
    * If-Modified-Since: <day-name>, <day> <month> <year> <hour>:<minute>:<second> GMT
@@ -6,7 +6,7 @@ export enum Header {
    *
    * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/If-Modified-Since
    */
-  IfModifiedSince = 'if-modified-since',
+  IfModifiedSince : 'if-modified-since',
 
   /**
    * ```txt
@@ -15,7 +15,7 @@ export enum Header {
    *
    * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Last-Modified
    */
-  LastModified = 'last-modified',
+  LastModified : 'last-modified',
 
   /**
    * ```txt
@@ -26,10 +26,10 @@ export enum Header {
    *
    * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/If-None-Match
    */
-  IfNoneMatch = 'if-none-match',
+  IfNoneMatch : 'if-none-match',
 
   /** @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control */
-  CacheControl = 'cache-control',
+  CacheControl : 'cache-control',
 
   /**
    * ```txt
@@ -39,7 +39,7 @@ export enum Header {
    *
    * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag
    */
-  ETag = 'etag',
+  ETag : 'etag',
 
   /**
    * ```txt
@@ -48,7 +48,7 @@ export enum Header {
    *
    * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Expires
    */
-  Expires = 'expires',
+  Expires : 'expires',
 
   /**
    * ```txt
@@ -57,7 +57,7 @@ export enum Header {
    *
    * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Age
    */
-  Age = 'age',
+  Age : 'age',
 
   /**
    * ```txt
@@ -67,7 +67,7 @@ export enum Header {
    *
    * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type
    */
-  ContentType = 'content-type',
+  ContentType : 'content-type',
 
   /**
    * Used internally to mark the cache item as being revalidatable and enabling stale
@@ -78,7 +78,7 @@ export enum Header {
    * X-Axios-Cache-Etag: "<etag_value>"
    * ```
    */
-  XAxiosCacheEtag = 'x-axios-cache-etag',
+  XAxiosCacheEtag : 'x-axios-cache-etag',
 
   /**
    * Used internally to mark the cache item as being revalidatable and enabling stale
@@ -92,5 +92,5 @@ export enum Header {
    * X-Axios-Cache-Last-Modified: use-cache-timestamp
    * ```
    */
-  XAxiosCacheLastModified = 'x-axios-cache-last-modified'
+  XAxiosCacheLastModified : 'x-axios-cache-last-modified'
 }

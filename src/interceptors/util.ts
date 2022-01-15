@@ -65,7 +65,7 @@ export function setRevalidationHeaders<D>(
  * Creates the new date to the cache by the provided response. Also handles possible 304
  * Not Modified by updating response properties.
  */
-export function setupCacheData<R, D>(
+export function createCacheResponse<R, D>(
   response: CacheAxiosResponse<R, D>,
   cache?: CachedResponse
 ): CachedResponse {

@@ -48,44 +48,35 @@ export type CacheOptions = Partial<CacheInstance> & Partial<CacheProperties>;
  */
 export function setupCache(
   axios: AxiosInstance,
-  {
-    storage,
-    generateKey,
-    waiting,
-    headerInterpreter,
-    requestInterceptor,
-    responseInterceptor,
-    ...cacheOptions
-  }: CacheOptions = {}
+  options: CacheOptions = {}
 ): AxiosCacheInstance {
   const axiosCache = axios as AxiosCacheInstance;
 
-  axiosCache.storage = storage || buildMemoryStorage();
+  axiosCache.storage = options.storage || buildMemoryStorage();
 
   if (!isStorage(axiosCache.storage)) {
     throw new Error('Use buildStorage() function');
   }
 
-  axiosCache.generateKey = generateKey || defaultKeyGenerator;
-  axiosCache.waiting = waiting || {};
-  axiosCache.headerInterpreter = headerInterpreter || defaultHeaderInterpreter;
+  axiosCache.generateKey = options.generateKey || defaultKeyGenerator;
+  axiosCache.waiting = options.waiting || {};
+  axiosCache.headerInterpreter = options.headerInterpreter || defaultHeaderInterpreter;
   axiosCache.requestInterceptor =
-    requestInterceptor || defaultRequestInterceptor(axiosCache);
+  options.requestInterceptor || defaultRequestInterceptor(axiosCache);
   axiosCache.responseInterceptor =
-    responseInterceptor || defaultResponseInterceptor(axiosCache);
+  options.responseInterceptor || defaultResponseInterceptor(axiosCache);
 
   // CacheRequestConfig values
   axiosCache.defaults = {
     ...axios.defaults,
     cache: {
-      ttl: 1000 * 60 * 5,
-      interpretHeader: false,
-      methods: ['get'],
-      cachePredicate: { statusCheck: (status) => status >= 200 && status < 400 },
-      etag: false,
-      modifiedSince: false,
-      update: {},
-      ...cacheOptions
+      ttl: options.ttl ?? 1000 * 60 * 5,
+      interpretHeader: options.interpretHeader ?? false,
+      methods: options.methods || ['get'],
+      cachePredicate: options.cachePredicate || { statusCheck: (status) => status >= 200 && status < 400 },
+      etag: options.etag ?? false,
+      modifiedSince: options.modifiedSince ?? false,
+      update: options.update || {},
     }
   };
 
