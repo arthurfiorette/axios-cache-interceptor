@@ -1184,7 +1184,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^17.0.8":
+"@types/node@npm:*":
   version: 17.0.8
   resolution: "@types/node@npm:17.0.8"
   checksum: f4cadeb9e602027520abc88c77142697e33cf6ac98bb02f8b595a398603cbd33df1f94d01c055c9f13cde0c8eaafc5e396ca72645458d42b4318b845bc7f1d0f
@@ -1865,7 +1865,6 @@ __metadata:
   dependencies:
     "@arthurfiorette/prettier-config": "*"
     "@types/jest": ^27.4.0
-    "@types/node": ^17.0.8
     "@types/webpack": ^5.28.0
     "@typescript-eslint/eslint-plugin": ^5.9.1
     "@typescript-eslint/parser": ^5.9.1
@@ -1884,6 +1883,7 @@ __metadata:
     prettier-plugin-organize-imports: ^2.3.4
     ts-jest: ^27.1.2
     ts-loader: ^9.2.6
+    tslib: ^2.3.1
     typescript: ^4.5.4
     webpack: ^5.66.0
     webpack-cli: ^4.9.1
@@ -6007,6 +6007,13 @@ __metadata:
   version: 1.14.1
   resolution: "tslib@npm:1.14.1"
   checksum: dbe628ef87f66691d5d2959b3e41b9ca0045c3ee3c7c7b906cc1e328b39f199bb1ad9e671c39025bd56122ac57dfbf7385a94843b1cc07c60a4db74795829acd
+  languageName: node
+  linkType: hard
+
+"tslib@npm:^2.3.1":
+  version: 2.3.1
+  resolution: "tslib@npm:2.3.1"
+  checksum: de17a98d4614481f7fcb5cd53ffc1aaf8654313be0291e1bfaee4b4bb31a20494b7d218ff2e15017883e8ea9626599b3b0e0229c18383ba9dce89da2adf15cb9
   languageName: node
   linkType: hard
 

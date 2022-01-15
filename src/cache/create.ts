@@ -62,9 +62,9 @@ export function setupCache(
   axiosCache.waiting = options.waiting || {};
   axiosCache.headerInterpreter = options.headerInterpreter || defaultHeaderInterpreter;
   axiosCache.requestInterceptor =
-  options.requestInterceptor || defaultRequestInterceptor(axiosCache);
+    options.requestInterceptor || defaultRequestInterceptor(axiosCache);
   axiosCache.responseInterceptor =
-  options.responseInterceptor || defaultResponseInterceptor(axiosCache);
+    options.responseInterceptor || defaultResponseInterceptor(axiosCache);
 
   // CacheRequestConfig values
   axiosCache.defaults = {
@@ -73,10 +73,12 @@ export function setupCache(
       ttl: options.ttl ?? 1000 * 60 * 5,
       interpretHeader: options.interpretHeader ?? false,
       methods: options.methods || ['get'],
-      cachePredicate: options.cachePredicate || { statusCheck: (status) => status >= 200 && status < 400 },
+      cachePredicate: options.cachePredicate || {
+        statusCheck: (status) => status >= 200 && status < 400
+      },
       etag: options.etag ?? false,
       modifiedSince: options.modifiedSince ?? false,
-      update: options.update || {},
+      update: options.update || {}
     }
   };
 

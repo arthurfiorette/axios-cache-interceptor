@@ -20,7 +20,7 @@ const config = ({ output, esTarget }) => ({
 
   output: {
     path: root(),
-    globalObject: `typeof self === 'undefined' ? this : self`,
+    globalObject: `typeof self !== 'undefined' ? self : this`,
     filename: output + '.js',
     sourceMapFilename: output + '.map',
     library: {
