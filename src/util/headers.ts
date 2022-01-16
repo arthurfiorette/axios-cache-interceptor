@@ -1,4 +1,4 @@
-export const Header = {
+export const Header = Object.freeze({
   /**
    * ```txt
    * If-Modified-Since: <day-name>, <day> <month> <year> <hour>:<minute>:<second> GMT
@@ -93,4 +93,4 @@ export const Header = {
    * ```
    */
   XAxiosCacheLastModified: 'x-axios-cache-last-modified'
-};
+});

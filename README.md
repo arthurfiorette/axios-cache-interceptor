@@ -1,6 +1,6 @@
 [![Issues](https://img.shields.io/github/issues/arthurfiorette/axios-cache-interceptor?logo=github&label=Issues)](https://github.com/arthurfiorette/axios-cache-interceptor/issues)
 [![Stars](https://img.shields.io/github/stars/arthurfiorette/axios-cache-interceptor?logo=github&label=Stars)](https://github.com/arthurfiorette/axios-cache-interceptor/stargazers)
-[![License](https://img.shields.io/github/license/arthurfiorette/axios-cache-interceptor?logo=githu&label=License)](https://github.com/arthurfiorette/axios-cache-interceptor/blob/main/LICENSE) 
+[![License](https://img.shields.io/github/license/arthurfiorette/axios-cache-interceptor?logo=githu&label=License)](https://github.com/arthurfiorette/axios-cache-interceptor/blob/main/LICENSE)
 [![Try on Runkit](https://img.shields.io/badge/try%20on-RunKit-brightgreen?logo=runkit&logoColor=e83e8c)](https://npm.runkit.com/axios-cache-interceptor)
 [![Codecov](https://codecov.io/gh/arthurfiorette/axios-cache-interceptor/branch/main/graph/badge.svg?token=ML0KGCU0VM)](https://codecov.io/gh/arthurfiorette/axios-cache-interceptor)
 [![Downloads](https://img.shields.io/npm/dw/axios-cache-interceptor?style=flat)](https://www.npmjs.com/package/axios-cache-interceptor)
