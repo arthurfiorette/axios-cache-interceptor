@@ -13,6 +13,7 @@
   "browser": "./umd/es6.js",
   "jsdelivr": "./umd/es6.js",
   "unpkg": "./umd/es6.js",
+  "sideEffects": false,
   "runkitExampleFilename": "./examples/runkit.js",
   "scripts": {
     "build": "sh build/build.sh",
@@ -34,6 +35,16 @@
     "http",
     "plugin",
     "wrapper"
+  ],
+  "files": [
+    "LICENSE",
+    "README.md",
+    "tsconfig.json",
+    "umd/",
+    "cjs/",
+    "esm/",
+    "src/",
+    "examples/"
   ],
   "author": {
     "name": "Arthur Fiorette",
