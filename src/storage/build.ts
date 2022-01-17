@@ -62,9 +62,9 @@ export function buildStorage({ set, find, remove }: BuildStorage): AxiosStorage 
           Header.XAxiosCacheLastModified in value.data.headers)
       ) {
         const stale: StaleStorageValue = {
-          data: value.data,
           state: 'stale',
-          createdAt: value.createdAt
+          createdAt: value.createdAt,
+          data: value.data
         };
         await set(key, stale);
         return stale;
