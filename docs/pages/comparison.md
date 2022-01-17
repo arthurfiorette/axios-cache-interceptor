@@ -6,6 +6,13 @@
 
 ## Cache Features
 
+```
+✅ Supported 1st-class and documented.
+🔶 Supported and documented, but requires custom user-code to implement.
+🟡 Can be done, may not be documented.
+🛑 Not officially supported or documented.
+```
+
 [Comparison table](_comparison-table.md ':include')
 
 ## Benchmark
