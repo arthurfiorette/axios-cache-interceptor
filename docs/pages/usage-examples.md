@@ -89,7 +89,7 @@ app.get('/', (req, res) => {
       res.json({ cached, data });
     },
     (error) => {
-      res.json({error});
+      res.json({ error });
     }
   );
 });
