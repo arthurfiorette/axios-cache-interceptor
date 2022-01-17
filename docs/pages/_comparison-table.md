@@ -1,0 +1,21 @@
+|                                                                              | Axios Cache Interceptor |                          Axios Cache Adapter                           |       Cachios        |
+| :--------------------------------------------------------------------------: | :---------------------: | :--------------------------------------------------------------------: | :------------------: |
+| Expiration with [TTL](https://developer.mozilla.org/en-US/docs/Glossary/TTL) |           ✅            |                                   ✅                                   |          ✅          |
+|                          Per-request configuration                           |           ✅            |                                   ✅                                   |          ✅          |
+|                          Global and custom instance                          |           ✅            |                                   ✅                                   |          ✅          |
+|                             Cache-Control header                             |           ✅            |                                   ✅                                   |          🛑          |
+|                             Expires & Age header                             |           ✅            |                                   🟡                                   |          🛑          |
+|                        ETag and If-None-Match header                         |           ✅            |                                   🛑                                   |          🛑          |
+|                           If-Modified-Size header                            |           ✅            |                                   🛑                                   |          🛑          |
+|                                 Bundle Size                                  |    **3.6Kb** (gzip)     |                             18.9Kb (gzip)                              |    19.5Kb (gzip)     |
+|                            Typescript declaration                            |  ✅ (Custom interface)  |                         ✅ (Applied globally)                          | ✅(Applied globally) |
+|                              Custom cache keys                               |           ✅            |                                   ✅                                   |          ✅          |
+|                              Multiple storages                               |           ✅            |                         🔶 (Only localForage)                          |          ✅          |
+|                            Built-in redis storage                            |     🟡 (Documented)     |                                   ✅                                   |          🟡          |
+|                              Storage size limit                              |           🔶            |                                   ✅                                   |          ✅          |
+|                            Node & Web compatible                             |           ✅            |                                   ✅                                   |          🛑          |
+|                      Invalidade cache based on response                      |           ✅            |                                   ✅                                   |          🛑          |
+|                        Update cache based on response                        |           ✅            |                                   🟡                                   |          🟡          |
+|                Predicate to test if request should be cached                 |           ✅            |                                   ✅                                   |          🛑          |
+|                             Concurrent requests                              |           ✅            | 🔶[#231](https://github.com/RasCarlito/axios-cache-adapter/issues/231) |          🛑          |
+|                       Cache fallback on network errors                       |           🛑            |                                   ✅                                   |          ✅          |

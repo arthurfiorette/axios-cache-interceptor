@@ -23,9 +23,12 @@
         const tempCodePlaceholder = document.createElement('pre');
         tempCodePlaceholder.textContent = source;
 
+        console.log(this.getAttributeNames());
+
         window.RunKit.createNotebook({
           element: wrapper,
           source,
+          mode: this.getAttribute('endpoint') ? 'endpoint' : 'default',
           onLoad: () => tempCodePlaceholder.remove()
         });
 
@@ -39,10 +42,12 @@
 
   window.runkitDocsify = function (hook) {
     const regex =
-      /<pre v-pre data-lang="js\s*#runkit\s*"><code class="lang-js\s*#runkit\s*">(.*?)<\/code><\/pre>/gs;
+      /<pre v-pre data-lang="js\s*#runkit\s*(endpoint)?\s*"><code class="lang-js\s*#runkit\s*(endpoint)?\s*">(.*?)<\/code><\/pre>/gs;
 
     hook.afterEach((html, next) =>
-      next(html.replace(regex, '<' + componentName + '>$1</' + componentName + '>'))
+      next(
+        html.replace(regex, '<' + componentName + ' $1="$2">$3</' + componentName + '>')
+      )
     );
   };
 })();

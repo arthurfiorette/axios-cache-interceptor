@@ -61,11 +61,11 @@ const { setupCache } = window.AxiosCacheInterceptor;
 You can import any [CDN Url](#with-cdns) and use it in your code. **UMD Compatible**
 
 ```js
-// UMD bundled code
-import { setupCache } from 'https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.2/umd/es6.js';
-
 // ESM with Skypack CDN
-import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor@0.8.2';
+import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor@0.8.3';
+
+// UMD with JSDeliver CDN
+import { setupCache } from 'https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.3/umd/index.js';
 ```
 
 ## Support List

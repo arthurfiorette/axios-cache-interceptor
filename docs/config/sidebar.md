@@ -17,6 +17,7 @@
 
   - [Typescript Users](pages/typescript-users.md 'Typescript users')
   - [Compiled code](pages/compiled-code.md 'Compiled code')
+  - [Comparison](pages/comparison.md 'Comparison')
 
 - Other
 

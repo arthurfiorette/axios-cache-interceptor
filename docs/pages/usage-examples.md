@@ -12,7 +12,7 @@ import { setupCache } from 'axios-cache-interceptor';
 setupCache(axios);
 ```
 
-### How to get the axios instance
+#### How to get the axios instance
 
 There are two types of axios instances, the `AxiosStatic` and the `AxiosInstance`. The
 `AxiosStatic` is the default instance of axios. The `AxiosInstance` is the instance you
@@ -58,4 +58,41 @@ const result = await instance.get('https://jsonplaceholder.typicode.com/posts/1'
 });
 
 console.log('Result:', result.data);
+```
+
+## Real world example
+
+An **NodeJS** with **ExpressJS** example to return data from another api.
+
+```js #runkit endpoint
+const express = require('express');
+const app = express();
+
+const Axios = require('axios');
+const { setupCache } = require('axios-cache-interceptor');
+
+const api = setupCache(Axios.create(), {
+  baseUrl: 'https://jsonplaceholder.typicode.com/',
+  cache: {
+    interpretHeader: true, // Cache-Control, Expires, etc.
+    ttl: 5 * 60 * 1000, // 5 seconds
+    etag: true, // Enables ETag caching
+    ifModifiedSince: true // Enables If-Modified-Since caching
+  }
+});
+
+// Every time an api call reaches here, it will
+// make another internal request and forward the response.
+app.get('/', (req, res) => {
+  api.get('https://jsonplaceholder.typicode.com/users').then(
+    ({ data, cached }) => {
+      res.json({ cached, data });
+    },
+    (error) => {
+      res.json({error});
+    }
+  );
+});
+
+app.listen(3000);
 ```
