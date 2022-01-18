@@ -6,7 +6,7 @@ describe('test request interceptor', () => {
     const axios = mockAxios();
 
     const fetch = () =>
-      axios.get('', {
+      axios.get('http://test.com', {
         cache: {
           cachePredicate: {
             responseMatch: () => false
@@ -25,8 +25,8 @@ describe('test request interceptor', () => {
     const axiosNoCache = mockAxios({}, { [Header.CacheControl]: 'no-cache' });
 
     // Make first request to cache it
-    await axiosNoCache.get('', { cache: { interpretHeader: true } });
-    const resultNoCache = await axiosNoCache.get('');
+    await axiosNoCache.get('http://test.com', { cache: { interpretHeader: true } });
+    const resultNoCache = await axiosNoCache.get('http://test.com');
 
     expect(resultNoCache.cached).toBe(false);
 
@@ -36,8 +36,8 @@ describe('test request interceptor', () => {
     );
 
     // Make first request to cache it
-    await axiosCache.get('', { cache: { interpretHeader: true } });
-    const resultCache = await axiosCache.get('');
+    await axiosCache.get('http://test.com', { cache: { interpretHeader: true } });
+    const resultCache = await axiosCache.get('http://test.com');
 
     expect(resultCache.cached).toBe(true);
   });

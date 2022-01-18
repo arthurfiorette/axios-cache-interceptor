@@ -103,7 +103,7 @@ describe('Tests update-cache', () => {
 
   it('tests updateCache with key is loading', async () => {
     const axios = mockAxios({});
-    await axios.storage.set(cacheKey, { state: 'loading' });
+    await axios.storage.set(cacheKey, { state: 'loading', previous: 'empty' });
 
     const handler = jest.fn();
 

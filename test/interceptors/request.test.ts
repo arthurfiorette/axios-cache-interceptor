@@ -8,7 +8,7 @@ describe('test request interceptor', () => {
       methods: ['post']
     });
 
-    const response = await axios.get('');
+    const response = await axios.get('http://test.com');
     const cacheKey = axios.generateKey(response.config);
     const cache = await axios.storage.get(cacheKey);
 
@@ -21,7 +21,7 @@ describe('test request interceptor', () => {
       methods: ['get']
     });
 
-    const response = await axios.get('');
+    const response = await axios.get('http://test.com');
     const cacheKey = axios.generateKey(response.config);
     const cache = await axios.storage.get(cacheKey);
 
@@ -31,7 +31,10 @@ describe('test request interceptor', () => {
   it('tests concurrent requests', async () => {
     const axios = mockAxios();
 
-    const [resp1, resp2] = await Promise.all([axios.get(''), axios.get('')]);
+    const [resp1, resp2] = await Promise.all([
+      axios.get('http://test.com'),
+      axios.get('http://test.com')
+    ]);
 
     expect(resp1.cached).toBe(false);
     expect(resp2.cached).toBe(true);
@@ -41,9 +44,9 @@ describe('test request interceptor', () => {
     const axios = mockAxios();
 
     const results = await Promise.all([
-      axios.get('', { cache: false }),
-      axios.get(''),
-      axios.get('', { cache: false })
+      axios.get('http://test.com', { cache: false }),
+      axios.get('http://test.com'),
+      axios.get('http://test.com', { cache: false })
     ]);
     for (const result of results) {
       expect(result.cached).toBe(false);
@@ -60,11 +63,11 @@ describe('test request interceptor', () => {
     const axios = mockAxios();
 
     const [, resp2] = await Promise.all([
-      axios.get('', {
+      axios.get('http://test.com', {
         // Simple predicate to ignore cache in the response step.
         cache: { cachePredicate: () => false }
       }),
-      axios.get('')
+      axios.get('http://test.com')
     ]);
 
     expect(resp2.cached).toBe(false);
@@ -73,43 +76,43 @@ describe('test request interceptor', () => {
   it('tests response.cached', async () => {
     const axios = mockAxios();
 
-    const response = await axios.get('');
+    const response = await axios.get('http://test.com');
     expect(response.cached).toBe(false);
 
-    const response2 = await axios.get('');
+    const response2 = await axios.get('http://test.com');
     expect(response2.cached).toBe(true);
 
-    const response3 = await axios.get('', { id: 'random-id' });
+    const response3 = await axios.get('http://test.com', { id: 'random-id' });
     expect(response3.cached).toBe(false);
 
-    const response4 = await axios.get('', { id: 'random-id' });
+    const response4 = await axios.get('http://test.com', { id: 'random-id' });
     expect(response4.cached).toBe(true);
   });
 
   it('test cache expiration', async () => {
     const axios = mockAxios({}, { 'cache-control': 'max-age=1' });
 
-    await axios.get('', { cache: { interpretHeader: true } });
+    await axios.get('http://test.com', { cache: { interpretHeader: true } });
 
-    const resultCache = await axios.get('');
+    const resultCache = await axios.get('http://test.com');
     expect(resultCache.cached).toBe(true);
 
     // Sleep entire max age time.
     await sleep(1000);
 
-    const response2 = await axios.get('');
+    const response2 = await axios.get('http://test.com');
     expect(response2.cached).toBe(false);
   });
 
   it('tests "must revalidate" handling without any headers to do so', async () => {
     const axios = mockAxios({}, { 'cache-control': 'must-revalidate' });
     const config = { cache: { interpretHeader: true } };
-    await axios.get('', config);
+    await axios.get('http://test.com', config);
 
     // 0ms cache
     await sleep(1);
 
-    const response = await axios.get('', config);
+    const response = await axios.get('http://test.com', config);
     // nothing to use for revalidation
     expect(response.cached).toBe(false);
   });

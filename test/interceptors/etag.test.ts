@@ -8,16 +8,16 @@ describe('ETag handling', () => {
     const config = { cache: { interpretHeader: true, etag: true } };
 
     // initial request
-    await axios.get('', config);
+    await axios.get('http://test.com', config);
 
-    const response = await axios.get('', config);
+    const response = await axios.get('http://test.com', config);
     expect(response.cached).toBe(true);
     expect(response.data).toBe(true);
 
     // Sleep entire max age time.
     await sleep(1000);
 
-    const response2 = await axios.get('', config);
+    const response2 = await axios.get('http://test.com', config);
     // from revalidation
     expect(response2.cached).toBe(true);
     // ensure value from stale cache is kept
@@ -31,16 +31,16 @@ describe('ETag handling', () => {
     );
 
     // initial request
-    await axios.get('');
+    await axios.get('http://test.com');
 
-    const response = await axios.get('');
+    const response = await axios.get('http://test.com');
     expect(response.cached).toBe(true);
     expect(response.data).toBe(true);
 
     // Sleep entire max age time.
     await sleep(1000);
 
-    const response2 = await axios.get('');
+    const response2 = await axios.get('http://test.com');
     // from revalidation
     expect(response2.cached).toBe(true);
     // ensure value from stale cache is kept
@@ -51,12 +51,12 @@ describe('ETag handling', () => {
     const axios = mockAxios({}, { etag: 'fakeEtag', 'cache-control': 'must-revalidate' });
     const config = { cache: { interpretHeader: true, etag: true } };
 
-    await axios.get('', config);
+    await axios.get('http://test.com', config);
 
     // 0ms cache
     await sleep(1);
 
-    const response = await axios.get('', config);
+    const response = await axios.get('http://test.com', config);
     // from etag revalidation
     expect(response.cached).toBe(true);
     expect(response.data).toBe(true);
@@ -66,13 +66,13 @@ describe('ETag handling', () => {
     const axios = mockAxios({ ttl: 0 }, { etag: 'fake-etag-2' });
     const config = { cache: { interpretHeader: true, etag: 'fake-etag' } };
 
-    const response = await axios.get('', config);
+    const response = await axios.get('http://test.com', config);
     expect(response.cached).toBe(false);
     expect(response.data).toBe(true);
     expect(response.config.headers?.[Header.IfModifiedSince]).toBeUndefined();
     expect(response.headers?.[Header.LastModified]).toBeUndefined();
 
-    const response2 = await axios.get('', config);
+    const response2 = await axios.get('http://test.com', config);
     expect(response2.cached).toBe(true);
     expect(response2.data).toBe(true);
     expect(response2.config.headers?.[Header.IfNoneMatch]).toBe('fake-etag');

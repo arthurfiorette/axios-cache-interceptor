@@ -5,7 +5,7 @@
     "bench": "node js/benchmark.js > pages/_comparison-benchmark.log"
   },
   "devDependencies": {
-    "axios": "^0.24.0",
+    "axios": "^0.25.0",
     "axios-cache-adapter": "^2.7.3",
     "docsify-cli": "^4.4.3",
     "express": "^4.17.2"

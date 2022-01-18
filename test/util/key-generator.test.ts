@@ -137,9 +137,9 @@ describe('tests key generation', () => {
   });
 
   it('tests buildKeyGenerator & hash: false', async () => {
-    const keyGenerator = buildKeyGenerator(false, ({ headers }) => {
-      return headers?.['x-req-header'] || 'not-set';
-    });
+    const keyGenerator = buildKeyGenerator(false, ({ headers }) =>
+      String(headers?.['x-req-header'] || 'not-set')
+    );
 
     const axios = mockAxios({ generateKey: keyGenerator });
 

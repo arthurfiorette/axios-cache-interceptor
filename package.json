@@ -17,7 +17,7 @@
   "runkitExampleFilename": "./examples/runkit.js",
   "scripts": {
     "build": "sh build/build.sh",
-    "test": "jest --coverage",
+    "test": "tsc --noEmit && jest --coverage",
     "check": "sh build/check.sh",
     "format": "prettier --write .",
     "lint": "eslint . --ext .ts",
@@ -71,7 +71,7 @@
     "@typescript-eslint/eslint-plugin": "^5.9.1",
     "@typescript-eslint/parser": "^5.9.1",
     "auto-changelog": "^2.3.0",
-    "axios": "~0.24.0",
+    "axios": "~0.25.0",
     "es-check": "^6.1.1",
     "eslint": "^8.6.0",
     "eslint-config-prettier": "^8.3.0",
@@ -88,6 +88,6 @@
     "webpack-cli": "^4.9.1"
   },
   "peerDependencies": {
-    "axios": "~0.24.0"
+    "axios": "~0.25.0"
   }
 }

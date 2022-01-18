@@ -1,3 +1,5 @@
+import type { AxiosRequestHeaders } from 'axios';
+
 export type InterpreterResult = 'dont cache' | 'not enough headers' | number;
 
 /**
@@ -8,7 +10,7 @@ export type InterpreterResult = 'dont cache' | 'not enough headers' | number;
  *   enough to determine a valid value. Or a `number` containing the number of
  *   **milliseconds** to cache the response.
  */
-export type HeadersInterpreter = (headers?: Record<string, string>) => InterpreterResult;
+export type HeadersInterpreter = (headers?: AxiosRequestHeaders) => InterpreterResult;
 
 /**
  * Interpret a single string header
@@ -20,5 +22,5 @@ export type HeadersInterpreter = (headers?: Record<string, string>) => Interpret
  */
 export type HeaderInterpreter = (
   header: string,
-  headers: Record<string, string>
+  headers: AxiosRequestHeaders
 ) => InterpreterResult;

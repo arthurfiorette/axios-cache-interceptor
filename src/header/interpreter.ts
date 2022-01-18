@@ -8,7 +8,9 @@ export const defaultHeaderInterpreter: HeadersInterpreter = (headers) => {
   const cacheControl = headers[Header.CacheControl];
 
   if (cacheControl) {
-    const { noCache, noStore, mustRevalidate, maxAge, immutable } = parse(cacheControl);
+    const { noCache, noStore, mustRevalidate, maxAge, immutable } = parse(
+      String(cacheControl)
+    );
 
     // Header told that this response should not be cached.
     if (noCache || noStore) {
@@ -40,7 +42,7 @@ export const defaultHeaderInterpreter: HeadersInterpreter = (headers) => {
   const expires = headers[Header.Expires];
 
   if (expires) {
-    const milliseconds = Date.parse(expires) - Date.now();
+    const milliseconds = Date.parse(String(expires)) - Date.now();
     return milliseconds >= 0 ? milliseconds : 'dont cache';
   }
 
