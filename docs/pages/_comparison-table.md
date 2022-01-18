@@ -18,4 +18,4 @@
 |                        Update cache based on response                        |           ✅            |                                   🟡                                   |          🟡          |
 |                Predicate to test if request should be cached                 |           ✅            |                                   ✅                                   |          🛑          |
 |                             Concurrent requests                              |           ✅            | 🔶[#231](https://github.com/RasCarlito/axios-cache-adapter/issues/231) |          🛑          |
-|                       Cache fallback on network errors                       |           🛑            |                                   ✅                                   |          ✅          |
+|                       Cache fallback on network errors                       |           ✅            |                                   ✅                                   |          ✅          |

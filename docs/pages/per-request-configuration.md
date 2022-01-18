@@ -133,3 +133,33 @@ or true to use the last cached timestamp. If never cached before, the header is 
 If `interpretHeader` is set and a `Last-Modified` header is sent then value from that
 header is used, otherwise cache creation timestamp will be sent in `If-Modified-Since`.
 Default: `true`
+
+## `cache.staleIfError`
+
+Enables cache to be returned if the response comes with an error, either by invalid status
+code, network errors and etc. You can filter the type of error that should be stale by
+using a predicate function.
+
+**Note**: If this value ends up `false`, either by default or by a predicate function and
+there was an error, the request cache will be purged.
+
+**Note**: If the response is treated as error because of invalid status code _(like from
+AxiosRequestConfig#invalidateStatus)_, and this ends up `true`, the cache will be
+preserved over the "invalid" request. So, if you want to preserve the response, you can
+use this predicate:
+
+```js
+const customPredicate = (response, cache, error) => {
+  // Blocks staleIfError if has a response
+  return !response;
+
+  // Note that, this still respects axios default implementation
+  // and throws an error, (but it has the response)
+};
+```
+
+Possible types:
+
+- `number` -> the max time (in seconds) that the cache can be reused.
+- `boolean` -> `false` disables and `true` enables with infinite time.
+- `function` -> a predicate that can return `number` or `boolean` as described above.
