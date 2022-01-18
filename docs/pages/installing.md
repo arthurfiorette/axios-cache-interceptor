@@ -41,17 +41,17 @@ const { setupCache } = window.AxiosCacheInterceptor;
 ```
 
 ```html
-<!-- Production for ES6+ (~9.5KB) -->
+<!-- Production for ES6+ (~10.5KB) -->
 <script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.3/umd/es6.js"
-  integrity="sha256-nKoAFeqfjqk/zGKrsCJbFcFAn86H12uVGosvfKzrPQA="
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.4/umd/es6.js"
+  integrity="sha256-9DBTX+qTxh2wZebm04pvXJ7heIcJCQ/9bNjwmWspFO4="
   crossorigin="anonymous"
 ></script>
 
-<!-- Production for ES5+ (~12.8KB) (Needs Promise polyfill) -->
+<!-- Production for ES5+ (~13.9KB) (Needs Promise polyfill) -->
 <script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.3/umd/es5.js"
-  integrity="sha256-K4+/MYdTXXV7Z9Y2O9CKUNIFOWOo0pjA/22UKUvq1hE="
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.4/umd/es5.js"
+  integrity="sha256-68y8g1PP7ZwbzCh69uI3RL6WFuIr/WRd0ZmgJMsemmg="
   crossorigin="anonymous"
 ></script>
 ```
@@ -62,23 +62,25 @@ You can import any [CDN Url](#with-cdns) and use it in your code. **UMD Compatib
 
 ```js
 // ESM with Skypack CDN
-import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor@0.8.3';
+import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor@0.8.4';
 
 // UMD with JSDeliver CDN
-import { setupCache } from 'https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.3/umd/index.js';
+import { setupCache } from 'https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.4/umd/index.js';
 ```
 
-## Support List
+## Official support table
 
 Below you can check what version of this package is supported by your version of axios.
-But that does not mean that won't work with any version. **Most of "breaking changes" made
-by axios was it's types.**
+**But that does not mean that it won't work.**. Axios had many "breaking changes" made
+with type declarations. But remember, new features, bug fixes and etc only comes with
+newer versions, so upgrade it <3.
 
 > **NOTE**: Below v0.3, axios was not configured as a peer dependency
 
-| [Version](https://github.com/arthurfiorette/axios-cache-interceptor/releases) | [Axios](https://github.com/axios/axios/releases) |
-| ----------------------------------------------------------------------------- | ------------------------------------------------ |
-| `>= v0.5`                                                                     | `>= v0.24`                                       |
-| `~ v0.4`                                                                      | `>= v0.23`                                       |
-| `~ v0.3`                                                                      | `>= v0.22`                                       |
-| `<= v0.2`                                                                     | `v0.21`                                          |
+| [Axios Cache Interceptor](https://github.com/arthurfiorette/axios-cache-interceptor/releases) | [Axios](https://github.com/axios/axios/releases) |
+| --------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| `>= v0.8.4`                                                                                   | `>= v0.25`                                       |
+| `>= v0.5 && <= 0.8.3`                                                                         | `>= v0.24`                                       |
+| `~ v0.4`                                                                                      | `>= v0.23`                                       |
+| `~ v0.3`                                                                                      | `>= v0.22`                                       |
+| `<= v0.2`                                                                                     | `v0.21`                                          |
