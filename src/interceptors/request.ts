@@ -10,7 +10,7 @@ import {
   ConfigWithCache,
   createValidateStatus,
   isMethodIn,
-  setRevalidationHeaders
+  updateStaleRequest
 } from './util';
 
 export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
@@ -56,11 +56,17 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
 
       await axios.storage.set(key, {
         state: 'loading',
-        data: cache.data
+        previous: cache.state,
+
+        // Eslint complains a lot :)
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
+        data: cache.data as any,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
+        createdAt: cache.createdAt as any
       });
 
       if (cache.state === 'stale') {
-        setRevalidationHeaders(cache, config as ConfigWithCache<unknown>);
+        updateStaleRequest(cache, config as ConfigWithCache<unknown>);
       }
 
       config.validateStatus = createValidateStatus(config.validateStatus);
@@ -92,7 +98,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
 
     // Even though the response interceptor receives this one from here,
     // it has been configured to ignore cached responses = true
-    config.adapter = (): Promise<CacheAxiosResponse<unknown, unknown>> =>
+    config.adapter = (): Promise<CacheAxiosResponse> =>
       Promise.resolve({
         config,
         data: cachedResponse.data,

@@ -67,19 +67,17 @@ export function setupCache(
     options.responseInterceptor || defaultResponseInterceptor(axiosCache);
 
   // CacheRequestConfig values
-  axiosCache.defaults = {
-    ...axios.defaults,
-    cache: {
-      ttl: options.ttl ?? 1000 * 60 * 5,
-      interpretHeader: options.interpretHeader ?? false,
-      methods: options.methods || ['get'],
-      cachePredicate: options.cachePredicate || {
-        statusCheck: (status) => status >= 200 && status < 400
-      },
-      etag: options.etag ?? false,
-      modifiedSince: options.modifiedSince ?? false,
-      update: options.update || {}
-    }
+  axiosCache.defaults.cache = {
+    ttl: options.ttl ?? 1000 * 60 * 5,
+    interpretHeader: options.interpretHeader ?? false,
+    methods: options.methods || ['get'],
+    cachePredicate: options.cachePredicate || {
+      statusCheck: (status) => status >= 200 && status < 400
+    },
+    etag: options.etag ?? false,
+    modifiedSince: options.modifiedSince ?? false,
+    staleIfError: options.staleIfError ?? false,
+    update: options.update || {}
   };
 
   // Apply interceptors

@@ -3,9 +3,12 @@ import type { CacheAxiosResponse, CacheRequestConfig } from '../cache/axios';
 /** See {@link AxiosInterceptorManager} */
 export interface AxiosInterceptor<T> {
   onFulfilled?(value: T): T | Promise<T>;
-  onRejected?(error: unknown): unknown;
+
+  /** Returns a successful response or re-throws the error */
+  onRejected?(error: Record<string, unknown>): T | Promise<T>;
+
   apply: () => void;
 }
 
-export type RequestInterceptor = AxiosInterceptor<CacheRequestConfig<unknown, unknown>>;
-export type ResponseInterceptor = AxiosInterceptor<CacheAxiosResponse<unknown, unknown>>;
+export type RequestInterceptor = AxiosInterceptor<CacheRequestConfig>;
+export type ResponseInterceptor = AxiosInterceptor<CacheAxiosResponse>;

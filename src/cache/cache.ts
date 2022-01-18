@@ -3,7 +3,12 @@ import type { Deferred } from 'fast-defer';
 import type { HeadersInterpreter } from '../header/types';
 import type { AxiosInterceptor } from '../interceptors/build';
 import type { AxiosStorage, CachedResponse } from '../storage/types';
-import type { CachePredicate, CacheUpdater, KeyGenerator } from '../util/types';
+import type {
+  CachePredicate,
+  CacheUpdater,
+  KeyGenerator,
+  StaleIfErrorPredicate
+} from '../util/types';
 import type { CacheAxiosResponse, CacheRequestConfig } from './axios';
 
 /**
@@ -76,6 +81,37 @@ export type CacheProperties<R = unknown, D = unknown> = {
    * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/If-Modified-Since
    */
   modifiedSince: Date | boolean;
+
+  /**
+   * Enables cache to be returned if the response comes with an error, either by invalid
+   * status code, network errors and etc. You can filter the type of error that should be
+   * stale by using a predicate function.
+   *
+   * **Note**: If this value ends up `false`, either by default or by a predicate function
+   * and there was an error, the request cache will be purged.
+   *
+   * **Note**: If the response is treated as error because of invalid status code *(like
+   * from AxiosRequestConfig#invalidateStatus)*, and this ends up `true`, the cache will
+   * be preserved over the "invalid" request. So, if you want to preserve the response,
+   * you can use this predicate:
+   *
+   * ```js
+   * const customPredicate = (response, cache, error) => {
+   *   // Return false if has a response
+   *   return !response;
+   * };
+   * ```
+   *
+   * Possible types:
+   *
+   * - `number` -> the max time (in seconds) that the cache can be reused.
+   * - `boolean` -> `false` disables and `true` enables with infinite time.
+   * - `function` -> a predicate that can return `number` or `boolean` as described above.
+   *
+   * @default false
+   * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control#stale-if-error
+   */
+  staleIfError: StaleIfErrorPredicate<R, D>;
 };
 
 export interface CacheInstance {
@@ -107,8 +143,8 @@ export interface CacheInstance {
   headerInterpreter: HeadersInterpreter;
 
   /** The request interceptor that will be used to handle the cache. */
-  requestInterceptor: AxiosInterceptor<CacheRequestConfig<unknown, unknown>>;
+  requestInterceptor: AxiosInterceptor<CacheRequestConfig>;
 
   /** The response interceptor that will be used to handle the cache. */
-  responseInterceptor: AxiosInterceptor<CacheAxiosResponse<unknown, unknown>>;
+  responseInterceptor: AxiosInterceptor<CacheAxiosResponse>;
 }

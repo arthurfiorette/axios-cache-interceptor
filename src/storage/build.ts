@@ -56,9 +56,11 @@ export function buildStorage({ set, find, remove }: BuildStorage): AxiosStorage 
 
       if (
         value.data.headers &&
+        // Any header below allows the response to stale
         (Header.ETag in value.data.headers ||
           Header.LastModified in value.data.headers ||
           Header.XAxiosCacheEtag in value.data.headers ||
+          Header.XAxiosCacheStaleIfError in value.data.headers ||
           Header.XAxiosCacheLastModified in value.data.headers)
       ) {
         const stale: StaleStorageValue = {

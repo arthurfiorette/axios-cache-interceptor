@@ -36,7 +36,11 @@ export type ConfigWithCache<D> = CacheRequestConfig<unknown, D> & {
   cache: Partial<CacheProperties>;
 };
 
-export function setRevalidationHeaders<D>(
+/**
+ * This function updates the cache when the request is stale. So, the next request to the
+ * server will be made with proper header / settings.
+ */
+export function updateStaleRequest<D>(
   cache: StaleStorageValue,
   config: ConfigWithCache<D>
 ): void {

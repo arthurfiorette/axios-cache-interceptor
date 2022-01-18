@@ -28,7 +28,13 @@ export const Header = Object.freeze({
    */
   IfNoneMatch: 'if-none-match',
 
-  /** @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control */
+  /**
+   * ```txt
+   * Cache-Control: max-age=604800
+   * ```
+   *
+   * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control
+   */
   CacheControl: 'cache-control',
 
   /**
@@ -70,8 +76,8 @@ export const Header = Object.freeze({
   ContentType: 'content-type',
 
   /**
-   * Used internally to mark the cache item as being revalidatable and enabling stale
-   * cache state Contains a string of ASCII characters that can be used as ETag for
+   * Used internally as metadata to mark the cache item as revalidatable and enabling
+   * stale cache state Contains a string of ASCII characters that can be used as ETag for
    * `If-Match` header Provided by user using `cache.etag` value.
    *
    * ```txt
@@ -81,16 +87,27 @@ export const Header = Object.freeze({
   XAxiosCacheEtag: 'x-axios-cache-etag',
 
   /**
-   * Used internally to mark the cache item as being revalidatable and enabling stale
-   * cache state may contain `'use-cache-timestamp'` if `cache.modifiedSince` is `true`,
-   * otherwise will contain a date from `cache.modifiedSince`. If a date is provided, it
-   * can be used for `If-Modified-Since` header, otherwise the cache timestamp can be used
-   * for `If-Modified-Since` header.
+   * Used internally as metadata to mark the cache item as revalidatable and enabling
+   * stale cache state may contain `'use-cache-timestamp'` if `cache.modifiedSince` is
+   * `true`, otherwise will contain a date from `cache.modifiedSince`. If a date is
+   * provided, it can be used for `If-Modified-Since` header, otherwise the cache
+   * timestamp can be used for `If-Modified-Since` header.
    *
    * ```txt
    * X-Axios-Cache-Last-Modified: <day-name>, <day> <month> <year> <hour>:<minute>:<second> GMT
    * X-Axios-Cache-Last-Modified: use-cache-timestamp
    * ```
    */
-  XAxiosCacheLastModified: 'x-axios-cache-last-modified'
+  XAxiosCacheLastModified: 'x-axios-cache-last-modified',
+
+  /**
+   * Used internally as metadata to mark the cache item able to be used if the server
+   * returns an error. The stale-if-error response directive indicates that the cache can
+   * reuse a stale response when any error occurs.
+   *
+   * ```txt
+   * XAxiosCacheStaleIfError: <seconds>
+   * ```
+   */
+  XAxiosCacheStaleIfError: 'x-axios-cache-stale-if-error'
 });

@@ -41,3 +41,20 @@ export type CacheUpdater<R, D> =
       cached: Exclude<StorageValue, LoadingStorageValue>,
       response: CacheAxiosResponse<R, D>
     ) => MaybePromise<CachedStorageValue | 'delete' | 'ignore'>);
+
+/**
+ * You can use a `number` to ensure an max time (in seconds) that the cache can be reused.
+ *
+ * You can use `true` to use the cache until a new response is received.
+ *
+ * You can use a `function` predicate to determine if the cache can be reused (`boolean`)
+ * or how much time the cache can be used (`number`)
+ */
+export type StaleIfErrorPredicate<R, D> =
+  | number
+  | boolean
+  | ((
+      networkResponse: CacheAxiosResponse<R, D> | undefined,
+      cache: LoadingStorageValue & { previous: 'stale' },
+      error: Record<string, unknown>
+    ) => MaybePromise<number | boolean>);

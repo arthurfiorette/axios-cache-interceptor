@@ -77,8 +77,8 @@ export interface AxiosCacheInstance extends CacheInstance, AxiosInstance {
   };
 
   interceptors: {
-    request: AxiosInterceptorManager<CacheRequestConfig<unknown, unknown>>;
-    response: AxiosInterceptorManager<CacheAxiosResponse<unknown, unknown>>;
+    request: AxiosInterceptorManager<CacheRequestConfig>;
+    response: AxiosInterceptorManager<CacheAxiosResponse>;
   };
 
   /** @template D The type that the request body use */

@@ -16,6 +16,12 @@ export type StorageValue =
 
 export type NotEmptyStorageValue = Exclude<StorageValue, EmptyStorageValue>;
 
+export type StorageMetadata = {
+  /** If the request can be stale */
+  shouldStale?: boolean;
+  [key: string]: unknown;
+};
+
 export type StaleStorageValue = {
   data: CachedResponse;
   ttl?: undefined;
@@ -31,18 +37,21 @@ export type CachedStorageValue = {
   state: 'cached';
 };
 
-export type LoadingStorageValue = {
-  /**
-   * Only present if the previous state was `stale`. So, in case the new response comes
-   * without a value, this data is used
-   */
-  data?: CachedResponse;
-  ttl?: number;
-
-  /** Defined when the state is cached */
-  createdAt?: undefined;
-  state: 'loading';
-};
+export type LoadingStorageValue =
+  | {
+      data?: undefined;
+      ttl?: undefined;
+      createdAt?: undefined;
+      state: 'loading';
+      previous: 'empty';
+    }
+  | {
+      state: 'loading';
+      data: CachedResponse;
+      ttl?: undefined;
+      createdAt: number;
+      previous: 'stale';
+    };
 
 export type EmptyStorageValue = {
   data?: undefined;

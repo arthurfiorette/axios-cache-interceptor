@@ -11,7 +11,8 @@
     "plugin:prettier/recommended"
   ],
   "rules": {
-    "@typescript-eslint/await-thenable": "off"
+    "@typescript-eslint/await-thenable": "off",
+    "@typescript-eslint/restrict-template-expressions": "off"
   },
   "parserOptions": {
     "ecmaVersion": "latest",
