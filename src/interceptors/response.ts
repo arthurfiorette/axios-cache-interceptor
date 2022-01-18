@@ -168,34 +168,29 @@ export function defaultResponseInterceptor(
         // staleIfError is the number of seconds that stale is allowed to be used
         (typeof staleIfError === 'number' && cache.createdAt + staleIfError > Date.now())
       ) {
-        const newCache: CachedStorageValue = {
-          state: 'cached',
-          ttl: Number(cache.data.headers[Header.XAxiosCacheStaleIfError]),
+        // Resolve all other requests waiting for this response
+        axios.waiting[config.id]?.resolve(cache.data);
+        delete axios.waiting[config.id];
+
+        // re-mark the cache as stale
+        await axios.storage.set(config.id, {
+          state: 'stale',
           createdAt: Date.now(),
           data: cache.data
-        };
+        });
 
-        const response: CacheAxiosResponse = {
+        return {
           cached: true,
           config,
           id: config.id,
-          data: cache.data?.data,
-          headers: cache.data?.headers,
+          data: cache.data.data,
+          headers: cache.data.headers,
           status: cache.data.status,
           statusText: cache.data.statusText
         };
-
-        // Resolve all other requests waiting for this response
-        axios.waiting[response.id]?.resolve(newCache.data);
-        delete axios.waiting[response.id];
-
-        // Valid response
-        return response;
       }
     }
 
-    // Reject this response and rethrows the error
-    await rejectResponse(config.id);
     throw error;
   };
 

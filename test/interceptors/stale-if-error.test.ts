@@ -285,4 +285,55 @@ describe('Last-Modified handling', () => {
     expect(newResponse.data).not.toBe(cache.data);
     expect(newResponse.status).toBe(503);
   });
+
+  it('expects that the cache is marked as stale', async () => {
+    const axios = setupCache(Axios.create(), {
+      staleIfError: true
+    });
+
+    const id = 'some-config-id';
+    const cacheData = {
+      data: true,
+      headers: {},
+      status: 200,
+      statusText: 'Ok'
+    };
+
+    // Fill the cache
+    await axios.storage.set(id, {
+      state: 'stale',
+      createdAt: Date.now(),
+      data: cacheData
+    });
+
+    const [res1, res2] = await Promise.all([
+      axios.get('http://unknown-url.lan:9090', {
+        id
+      }),
+      axios.get('http://unknown-url.lan:9090', {
+        id
+      })
+    ]);
+
+    expect(res1).toBeDefined();
+    expect(res2).toBeDefined();
+    expect(res1.id).toBe(id);
+    expect(res2.id).toBe(id);
+    expect(res1.data).toBe(cacheData.data);
+    expect(res2.data).toBe(cacheData.data);
+    expect(res1.status).toBe(cacheData.status);
+    expect(res2.status).toBe(cacheData.status);
+    expect(res1.statusText).toBe(cacheData.statusText);
+    expect(res2.statusText).toBe(cacheData.statusText);
+    expect(res1.headers).toBe(cacheData.headers);
+    expect(res2.headers).toBe(cacheData.headers);
+    expect(res1.cached).toBe(true);
+    expect(res2.cached).toBe(true);
+
+    const cache = await axios.storage.get(id);
+
+    expect(cache.state).toBe('stale');
+    expect(typeof cache.createdAt).toBe('number');
+    expect(cache.data).toBe(cacheData);
+  });
 });

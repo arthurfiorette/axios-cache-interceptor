@@ -140,9 +140,6 @@ Enables cache to be returned if the response comes with an error, either by inva
 code, network errors and etc. You can filter the type of error that should be stale by
 using a predicate function.
 
-**Note**: If this value ends up `false`, either by default or by a predicate function and
-there was an error, the request cache will be purged.
-
 **Note**: If the response is treated as error because of invalid status code _(like from
 AxiosRequestConfig#invalidateStatus)_, and this ends up `true`, the cache will be
 preserved over the "invalid" request. So, if you want to preserve the response, you can
