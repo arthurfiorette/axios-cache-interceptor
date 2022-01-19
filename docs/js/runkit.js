@@ -23,8 +23,6 @@
         const tempCodePlaceholder = document.createElement('pre');
         tempCodePlaceholder.textContent = source;
 
-        console.log(this.getAttributeNames());
-
         window.RunKit.createNotebook({
           element: wrapper,
           source,

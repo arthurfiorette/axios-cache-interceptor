@@ -125,7 +125,7 @@ code to handle cache invalidation, strategies and etc.
 With this library, you can just call any axios method without worrying about requesting
 thousands of times for every component draw. Simple as that!
 
-```tsx
+```jsx
 function Component() {
   // React component state (but can be from any other framework, library and etc)
   const [data, setData] = useState(null);
