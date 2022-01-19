@@ -60,9 +60,7 @@ const result = await instance.get('https://jsonplaceholder.typicode.com/posts/1'
 console.log('Result:', result.data);
 ```
 
-## Real world example
-
-### Nodejs Apps
+## Nodejs server example
 
 An **NodeJS** with **ExpressJS** example to return data from another api.
 
@@ -117,7 +115,7 @@ app.get('/cache/:id/get', async (req, res) => {
 app.listen(3000);
 ```
 
-### Jsx components
+## Jsx component example
 
 You shouldn't
 [store cache in state libraries](https://betterprogramming.pub/why-you-should-be-separating-your-server-cache-from-your-ui-state-1585a9ae8336),
@@ -125,7 +123,7 @@ it even is a bad practice. And even if you do so, you probably will have to writ
 code to handle cache invalidation, strategies and etc.
 
 With this library, you can just call any axios method without worrying about requesting
-thousands of times for every component redraw. Simple as that!
+thousands of times for every component draw. Simple as that!
 
 ```tsx
 function Component() {

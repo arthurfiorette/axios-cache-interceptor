@@ -18,7 +18,7 @@ Axios Cache Interceptor</h1>
 </div>
 
 <h3 align="center">
-  <code>axios-cache-interceptor</code> is a small and efficient cache interceptor for axios.
+  <code>Axios Cache Interceptor</code> is a small and efficient cache interceptor for axios.
   <br />
   <br />
 </h3>

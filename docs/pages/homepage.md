@@ -1,80 +1,35 @@
-<br />
-<div align="center">
-  <code
-    ><a href="https://github.com/arthurfiorette/axios-cache-interceptor/issues"
-      ><img
-        src="https://img.shields.io/github/issues/arthurfiorette/axios-cache-interceptor?logo=github&label=Issues"
-        target="_blank"
-        alt="Issues" /></a
-  ></code>
-  <code
-    ><a href="https://github.com/arthurfiorette/axios-cache-interceptor/stargazers"
-      ><img
-        src="https://img.shields.io/github/stars/arthurfiorette/axios-cache-interceptor?logo=github&label=Stars"
-        target="_blank"
-        alt="Stars" /></a
-  ></code>
-  <code
-    ><a href="https://github.com/arthurfiorette/axios-cache-interceptor/blob/main/LICENSE"
-      ><img
-        src="https://img.shields.io/github/license/arthurfiorette/axios-cache-interceptor?logo=githu&label=License"
-        target="_blank"
-        alt="License" /></a
-  ></code>
-  <code
-    ><a href="https://codecov.io/gh/arthurfiorette/axios-cache-interceptor"
-      ><img
-        src="https://codecov.io/gh/arthurfiorette/axios-cache-interceptor/branch/main/graph/badge.svg?token=ML0KGCU0VM"
-        target="_blank"
-        alt="Codecov" /></a
-  ></code>
-  <code
-    ><a href="https://twitter.com/acdlite/status/974390255393505280"
-      ><img
-        src="https://img.shields.io/badge/speed-Blazing%20%F0%9F%94%A5-brightgreen.svg"
-        target="_blank"
-        alt="Blazing Fast" /></a
-  ></code>
-  <br />
-  <code
-    ><a href="https://www.npmjs.com/package/axios-cache-interceptor"
-      ><img
-        src="https://img.shields.io/npm/dm/axios-cache-interceptor?style=flat"
-        target="_blank"
-        alt="Downloads" /></a
-  ></code>
-  <code
-    ><a href="https://bundlephobia.com/package/axios-cache-interceptor@latest"
-      ><img
-        src="https://img.shields.io/bundlephobia/minzip/axios-cache-interceptor/latest?style=flat"
-        target="_blank"
-        alt="Minified Size" /></a
-  ></code>
-  <code
-    ><a href="https://packagephobia.com/result?p=axios-cache-interceptor@latest"
-      ><img
-        src="https://packagephobia.com/badge?p=axios-cache-interceptor@latest"
-        target="_blank"
-        alt="Install Size" /></a
-  ></code>
-  <code
-    ><a href="https://npm.runkit.com/axios-cache-interceptor"
-      ><img
-        src="https://img.shields.io/badge/try%20on-RunKit-brightgreen"
-        target="_blank"
-        alt="Try on RunKit" /></a
-  ></code>
-  <br />
-  <br />
-</div>
-
-<h3 align="center">
-  <code>axios-cache-interceptor</code> is a small and efficient cache interceptor for axios.
-  <br />
-  <br />
-</h3>
+[![Issues](https://img.shields.io/github/issues/arthurfiorette/axios-cache-interceptor?logo=github&label=Issues)](https://github.com/arthurfiorette/axios-cache-interceptor/issues)
+[![Stars](https://img.shields.io/github/stars/arthurfiorette/axios-cache-interceptor?logo=github&label=Stars)](https://github.com/arthurfiorette/axios-cache-interceptor/stargazers)
+[![License](https://img.shields.io/github/license/arthurfiorette/axios-cache-interceptor?logo=githu&label=License)](https://github.com/arthurfiorette/axios-cache-interceptor/blob/main/LICENSE)
+[![Try on Runkit](https://img.shields.io/badge/try%20on-RunKit-brightgreen?logo=runkit&logoColor=e83e8c)](https://npm.runkit.com/axios-cache-interceptor)
+[![Codecov](https://codecov.io/gh/arthurfiorette/axios-cache-interceptor/branch/main/graph/badge.svg?token=ML0KGCU0VM)](https://codecov.io/gh/arthurfiorette/axios-cache-interceptor)
+[![Downloads](https://img.shields.io/npm/dw/axios-cache-interceptor?style=flat)](https://www.npmjs.com/package/axios-cache-interceptor)
+[![Bundlephobia](https://img.shields.io/bundlephobia/minzip/axios-cache-interceptor/latest?style=flat)](https://bundlephobia.com/package/axios-cache-interceptor@latest)
+[![Packagephobia](https://packagephobia.com/badge?p=axios-cache-interceptor@latest)](https://packagephobia.com/result?p=axios-cache-interceptor@latest)
 
 <br />
+
+## What is this library?
+
+This package is an interceptor for [axios](https://axios-http.com/) that adds caching
+capabilities to it. It is a simple, easy to use and powerful library.
+
+You can use it to optimize requests and not have to worry about duplicated requests or
+even needing one of those fat javascript libraries for state management.
+
+Axios Cache Interceptor can be understood as an intermediary that will analyze each
+request made, check if no similar request has been made before, if so, return it, if not,
+wait for the response, warn other requests if they are waiting and return the response.
+
+## Where to start?
+
+- ##### [Installing](pages/installing.md) choose the right bundle to compose in your application.
+- ##### [Comparison](pages/comparison.md) see if this package suits all your needs.
+- ##### [Nodejs example](pages/usage-examples.md?id=nodejs-server-example) to speed up your server.
+- ##### [Jsx (React) example](pages/usage-examples.md?id=jsx-component-example) and avoid state management libraries.
+- ##### [Request Configuration](pages/per-request-configuration.md) to make every request unique!
+
+## Interactive example
 
 ```js #runkit
 const Axios = require('axios');
