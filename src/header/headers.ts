@@ -66,16 +66,6 @@ export const Header = Object.freeze({
   Age: 'age',
 
   /**
-   * ```txt
-   * Content-Type: text/html; charset=UTF-8
-   * Content-Type: multipart/form-data; boundary=something
-   * ```
-   *
-   * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type
-   */
-  ContentType: 'content-type',
-
-  /**
    * Used internally as metadata to mark the cache item as revalidatable and enabling
    * stale cache state Contains a string of ASCII characters that can be used as ETag for
    * `If-Match` header Provided by user using `cache.etag` value.

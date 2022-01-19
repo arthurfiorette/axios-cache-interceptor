@@ -1,8 +1,8 @@
 import type { Method } from 'axios';
 import type { CacheAxiosResponse, CacheRequestConfig } from '../cache/axios';
 import type { CacheProperties } from '../cache/cache';
+import { Header } from '../header/headers';
 import type { CachedResponse, StaleStorageValue } from '../storage/types';
-import { Header } from '../util/headers';
 
 /**
  * Creates a new validateStatus function that will use the one already used and also

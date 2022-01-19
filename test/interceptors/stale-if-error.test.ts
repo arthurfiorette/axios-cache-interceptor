@@ -1,6 +1,6 @@
 import Axios from 'axios';
 import { setupCache } from '../../src/cache/create';
-import { Header } from '../../src/util/headers';
+import { Header } from '../../src/header/headers';
 import { mockAxios } from '../mocks/axios';
 
 describe('Last-Modified handling', () => {

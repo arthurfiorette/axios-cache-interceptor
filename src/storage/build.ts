@@ -1,4 +1,4 @@
-import { Header } from '../util/headers';
+import { Header } from '../header/headers';
 import type { MaybePromise } from '../util/types';
 import type { AxiosStorage, StaleStorageValue, StorageValue } from './types';
 

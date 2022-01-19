@@ -1,5 +1,5 @@
+import { Header } from '../../src/header/headers';
 import { defaultHeaderInterpreter } from '../../src/header/interpreter';
-import { Header } from '../../src/util/headers';
 
 describe('test Expires header', () => {
   it('tests with future expires', () => {

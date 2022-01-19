@@ -1,5 +1,5 @@
+import { Header } from '../../src/header/headers';
 import { defaultHeaderInterpreter } from '../../src/header/interpreter';
-import { Header } from '../../src/util/headers';
 
 describe('test Cache-Control header', () => {
   it('tests with cache preventing headers', () => {

@@ -4,9 +4,9 @@ import type {
   CacheAxiosResponse,
   CacheRequestConfig
 } from '../cache/axios';
+import { Header } from '../header/headers';
 import type { CachedStorageValue } from '../storage/types';
 import { testCachePredicate } from '../util/cache-predicate';
-import { Header } from '../util/headers';
 import { updateCache } from '../util/update-cache';
 import type { ResponseInterceptor } from './build';
 import { createCacheResponse } from './util';

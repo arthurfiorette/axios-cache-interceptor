@@ -1,6 +1,7 @@
 export * from './cache/axios';
 export * from './cache/cache';
 export * from './cache/create';
+export * from './header/headers';
 export * from './header/interpreter';
 export * from './header/types';
 export * from './interceptors/build';
@@ -12,7 +13,6 @@ export * from './storage/memory';
 export * from './storage/types';
 export * from './storage/web-api';
 export * from './util/cache-predicate';
-export * from './util/headers';
 export * from './util/key-generator';
 export * from './util/types';
 export * from './util/update-cache';

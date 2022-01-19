@@ -1,4 +1,4 @@
-import { Header } from '../../src/util/headers';
+import { Header } from '../../src/header/headers';
 import { mockAxios, XMockRandom } from '../mocks/axios';
 
 describe('test request interceptor', () => {

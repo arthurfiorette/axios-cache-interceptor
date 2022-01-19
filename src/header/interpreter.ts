@@ -1,5 +1,5 @@
 import { parse } from 'cache-parser';
-import { Header } from '../util/headers';
+import { Header } from './headers';
 import type { HeadersInterpreter } from './types';
 
 export const defaultHeaderInterpreter: HeadersInterpreter = (headers) => {
