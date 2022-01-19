@@ -62,6 +62,8 @@ console.log('Result:', result.data);
 
 ## Real world example
 
+### Nodejs Apps
+
 An **NodeJS** with **ExpressJS** example to return data from another api.
 
 ```js #runkit endpoint
@@ -113,4 +115,32 @@ app.get('/cache/:id/get', async (req, res) => {
 });
 
 app.listen(3000);
+```
+
+### Jsx components
+
+You shouldn't
+[store cache in state libraries](https://betterprogramming.pub/why-you-should-be-separating-your-server-cache-from-your-ui-state-1585a9ae8336),
+it even is a bad practice. And even if you do so, you probably will have to write a lot of
+code to handle cache invalidation, strategies and etc.
+
+With this library, you can just call any axios method without worrying about requesting
+thousands of times for every component redraw. Simple as that!
+
+```tsx
+function Component() {
+  // React component state (but can be from any other framework, library and etc)
+  const [data, setData] = useState(null);
+
+  // Calling this function every component redraw does not have any problems. As the response is cached in the first request. This even work with concurrent requests and for many components at the same time
+  axios.get('https://api.example.com').then((response) => {
+    setData(response.data);
+  });
+
+  return (
+    <div class=":)">
+      <div>{data}</div>
+    </div>
+  );
+}
 ```
