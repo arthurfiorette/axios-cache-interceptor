@@ -1,8 +1,9 @@
+import type { AxiosResponseHeaders } from 'axios';
 import type { MaybePromise } from '../util/types';
 
 export type CachedResponse = {
   data?: unknown;
-  headers: Record<string, string>;
+  headers: AxiosResponseHeaders;
   status: number;
   statusText: string;
 };
@@ -15,12 +16,6 @@ export type StorageValue =
   | EmptyStorageValue;
 
 export type NotEmptyStorageValue = Exclude<StorageValue, EmptyStorageValue>;
-
-export type StorageMetadata = {
-  /** If the request can be stale */
-  shouldStale?: boolean;
-  [key: string]: unknown;
-};
 
 export type StaleStorageValue = {
   data: CachedResponse;
