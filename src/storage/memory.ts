@@ -1,3 +1,4 @@
+import type { AxiosStorage } from '..';
 import { buildStorage } from './build';
 import type { StorageValue } from './types';
 
@@ -24,15 +25,21 @@ import type { StorageValue } from './types';
  * ```
  */
 export function buildMemoryStorage() {
-  const data: Record<string, StorageValue> = {};
   const storage = buildStorage({
-    find: (key) => data[key],
+    find: (key) => storage.data[key],
     set: (key, value) => {
-      data[key] = value;
+      storage.data[key] = value;
     },
     remove: (key) => {
-      delete data[key];
+      delete storage.data[key];
     }
-  });
-  return { ...storage, data };
+  }) as MemoryStorage;
+
+  storage.data = Object.create(null) as Record<string, StorageValue>;
+
+  return storage;
 }
+
+export type MemoryStorage = AxiosStorage & {
+  data: Record<string, StorageValue>;
+};
