@@ -24,9 +24,20 @@
       content="https://axios-cache-interceptor.js.org/static/preview.png"
     />
 
-    <meta name="google-site-verification" content="u9Nw6WpRrWDhdPTAv-LGIE9aJ0C15t7zkjuaUizDJnA" />
+    <!-- Analytics :( -->
+    <meta
+      name="google-site-verification"
+      content="u9Nw6WpRrWDhdPTAv-LGIE9aJ0C15t7zkjuaUizDJnA"
+    />
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-K548ZF395X"></script>
-    <script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","G-K548ZF395X");</script>
+    <script>
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      (window.dataLayer = window.dataLayer || []),
+        gtag('js', new Date()),
+        gtag('config', 'G-K548ZF395X');
+    </script>
 
     <script type="application/ld+json">
       {
@@ -115,7 +126,7 @@
       crossorigin
       src="//cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.min.js"
     ></script>
-    <!-- Typescript Syntax highlighting -->
+    <!-- Syntax highlighting -->
     <script
       crossorigin
       src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-typescript.min.js"
