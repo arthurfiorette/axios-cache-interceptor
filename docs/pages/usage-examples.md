@@ -73,9 +73,8 @@ const { setupCache } = require('axios-cache-interceptor');
 
 const api = setupCache(
   Axios.create({ baseURL: 'https://jsonplaceholder.typicode.com/' }),
-  {
-    ttl: 5 * 1000 // 5 seconds
-  }
+  // 5 seconds
+  { ttl: 5 * 1000 }
 );
 
 // Every time an api call reaches here, it will
@@ -130,7 +129,10 @@ function Component() {
   // React component state (but can be from any other framework, library and etc)
   const [data, setData] = useState(null);
 
-  // Calling this function every component redraw does not have any problems. As the response is cached in the first request. This even work with concurrent requests and for many components at the same time
+  // Calling this function every component redraw does not have any
+  // problems, as the response is cached in the first request. This
+  // even work with concurrent requests and for many components at
+  // the same time
   axios.get('https://api.example.com').then((response) => {
     setData(response.data);
   });
