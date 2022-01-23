@@ -74,7 +74,7 @@ const config = ({
   },
 
   optimization: {
-    minimize: !devBuild,
+    minimize: true,
     sideEffects: true,
     removeEmptyChunks: true,
     mergeDuplicateChunks: true,
