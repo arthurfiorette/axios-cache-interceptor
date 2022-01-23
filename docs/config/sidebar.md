@@ -1,6 +1,6 @@
 - Getting Started
 
-  - [Homepage](pages/homepage.md 'Homepage')
+  - [Homepage](/ 'Homepage')
   - [Try it out!](pages/try-it-out.md 'Try axios-cache-interceptor')
   - [Installing](pages/installing.md 'Installing')
   - [Usage & Examples](pages/usage-examples.md 'Interceptor')

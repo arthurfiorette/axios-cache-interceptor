@@ -13,7 +13,6 @@ function editThisPage(_, vm) {
 window.$docsify = {
   name: '🚀 Axios Cache Interceptor',
 
-  coverpage: 'config/cover.md',
   loadSidebar: 'config/sidebar.md',
   notFoundPage: 'config/404.md',
   homepage: 'pages/homepage.md',
