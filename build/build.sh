@@ -15,7 +15,7 @@ tsc -p build/tsconfig.types.json &
 echo "export * from '../types';" | tee \
   esm/index.d.ts esm/dev.d.ts \
   cjs/index.d.ts cjs/dev.d.ts \
-  umd/index.d.ts umd/dev.d.ts umd/es6.d.ts \
+  umd/index.d.ts umd/dev.d.ts umd/es5.d.ts \
   > /dev/null &
 
 wait
