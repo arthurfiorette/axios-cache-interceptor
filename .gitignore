@@ -6,6 +6,7 @@ node_modules
 /cjs
 /esm
 /dist
+/types
 
 # Random
 /ignore

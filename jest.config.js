@@ -10,5 +10,6 @@ module.exports = {
       isolatedModules: true,
       useESM: true
     }
-  }
+  },
+  setupFilesAfterEnv: ['<rootDir>/test/setup.ts'],
 };

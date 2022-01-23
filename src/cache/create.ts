@@ -65,6 +65,7 @@ export function setupCache(
     options.requestInterceptor || defaultRequestInterceptor(axiosCache);
   axiosCache.responseInterceptor =
     options.responseInterceptor || defaultResponseInterceptor(axiosCache);
+  axiosCache.debug = options.debug;
 
   // CacheRequestConfig values
   axiosCache.defaults.cache = {

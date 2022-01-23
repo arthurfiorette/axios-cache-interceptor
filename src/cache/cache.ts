@@ -136,12 +136,32 @@ export interface CacheInstance {
   /**
    * The function to parse and interpret response headers. Only used if
    * cache.interpretHeader is true.
+   *
+   * @default defaultHeaderInterpreter()
    */
   headerInterpreter: HeadersInterpreter;
 
-  /** The request interceptor that will be used to handle the cache. */
+  /**
+   * The request interceptor that will be used to handle the cache.
+   *
+   * @default defaultRequestInterceptor()
+   */
   requestInterceptor: AxiosInterceptor<CacheRequestConfig>;
 
-  /** The response interceptor that will be used to handle the cache. */
+  /**
+   * The response interceptor that will be used to handle the cache.
+   *
+   * @default defaultResponseInterceptor()
+   */
   responseInterceptor: AxiosInterceptor<CacheAxiosResponse>;
+
+  /**
+   * Logs useful information in the console
+   *
+   * **Note**: This is only available with development mode enabled
+   *
+   * @default console.log
+   * @see https://axios-cache-interceptor.js.org/#/pages/development-mode
+   */
+  debug: Console['log'] | undefined;
 }

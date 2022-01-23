@@ -16,3 +16,21 @@ export * from './util/cache-predicate';
 export * from './util/key-generator';
 export * from './util/types';
 export * from './util/update-cache';
+
+/** @internal */
+declare global {
+  /**
+   * Global variable defined at compile time. Use to write code that will only be executed
+   * at development time.
+   *
+   * @internal
+   */
+  const __DEV__: boolean;
+}
+
+if (__DEV__) {
+  console.error(
+    'You are using a development build. Make sure to use the correct build in production'
+  );
+  console.error('https://axios-cache-interceptor.js.org/#/pages/installing');
+}

@@ -1,13 +1,12 @@
 import Axios from 'axios';
 import type { AxiosCacheInstance } from '../../src/cache/axios';
-import type { CacheInstance, CacheProperties } from '../../src/cache/cache';
-import { setupCache } from '../../src/cache/create';
+import { CacheOptions, setupCache } from '../../src/cache/create';
 import { Header } from '../../src/header/headers';
 
 export const XMockRandom = 'x-mock-random';
 
 export function mockAxios(
-  options: Partial<CacheInstance> & Partial<CacheProperties> = {},
+  options: CacheOptions = {},
   responseHeaders: Record<string, string> = {}
 ): AxiosCacheInstance {
   const axios = setupCache(Axios.create(), options);

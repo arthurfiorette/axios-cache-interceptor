@@ -1,7 +1,7 @@
 import { Axios } from 'axios';
-import type { AxiosStorage } from '../../src';
 import { isStorage } from '../../src/storage/build';
 import { buildMemoryStorage } from '../../src/storage/memory';
+import type { AxiosStorage } from '../../src/storage/types';
 import { mockAxios } from '../mocks/axios';
 
 it('tests isStorage function', () => {
