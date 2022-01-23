@@ -1,8 +1,8 @@
 export {};
 
-describe('tests __DEV__ usage', () => {
-  it('expects importing with __DEV__ true prints a warning', async () => {
-    expect(__DEV__).toBeTruthy();
+describe('tests __ACI_DEV__ usage', () => {
+  it('expects importing with __ACI_DEV__ true prints a warning', async () => {
+    expect(__ACI_DEV__).toBeTruthy();
 
     const oldLog = console.error;
     console.error = jest.fn();

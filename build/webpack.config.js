@@ -82,7 +82,7 @@ const config = ({
     minimizer: [new TerserWebpackPlugin({ parallel: true })]
   },
 
-  plugins: [new DefinePlugin({ __DEV__: devBuild })]
+  plugins: [new DefinePlugin({ __ACI_DEV__: devBuild })]
 });
 
 module.exports = [

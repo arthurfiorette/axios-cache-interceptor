@@ -1,2 +1,2 @@
-// @ts-expect-error __DEV__ is declared as const
-global.__DEV__ = true;
+// @ts-expect-error __ACI_DEV__ is declared as const
+global.__ACI_DEV__ = true;

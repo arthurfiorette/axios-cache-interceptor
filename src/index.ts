@@ -25,10 +25,10 @@ declare global {
    *
    * @internal
    */
-  const __DEV__: boolean;
+  const __ACI_DEV__: boolean;
 }
 
-if (__DEV__) {
+if (__ACI_DEV__) {
   console.error(
     'You are using a development build. Make sure to use the correct build in production'
   );
