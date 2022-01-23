@@ -3,7 +3,6 @@
   "compilerOptions": {
     "module": "ESNext", // webpack converts to UMD
     "target": "ESNext",
-    "outDir": "../umd",
 
     // Emits all import helpers as an import to tslib
     // This allows webpack to be better at tree shaking

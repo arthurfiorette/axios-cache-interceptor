@@ -6,13 +6,13 @@
   "types": "./cjs/index.d.ts",
   "module": "./esm/index.js",
   "exports": {
-    "import": "./esm/index.js",
-    "require": "./cjs/index.js",
-    "default": "./umd/es6.js"
+      "import": "./esm/index.js",
+      "require": "./cjs/index.js",
+      "default": "./umd/index.js"
   },
-  "browser": "./umd/es6.js",
-  "jsdelivr": "./umd/es6.js",
-  "unpkg": "./umd/es6.js",
+  "browser": "./umd/index.js",
+  "jsdelivr": "./umd/index.js",
+  "unpkg": "./umd/index.js",
   "sideEffects": false,
   "runkitExampleFilename": "./examples/runkit.js",
   "scripts": {
@@ -44,6 +44,7 @@
     "cjs/",
     "esm/",
     "src/",
+    "types/",
     "examples/"
   ],
   "author": {
