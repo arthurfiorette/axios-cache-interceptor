@@ -50,12 +50,12 @@ const config = ({
   resolve: { extensions: ['.ts', '.js'] },
 
   externals: inlineDeps
-  ? {
-      'cache-parser': 'cache-parser',
-      'object-code': 'object-code',
-      'fast-defer': 'fast-defer'
-    }
-  : undefined,
+    ? {
+        'cache-parser': 'cache-parser',
+        'object-code': 'object-code',
+        'fast-defer': 'fast-defer'
+      }
+    : undefined,
 
   module: {
     rules: [

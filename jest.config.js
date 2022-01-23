@@ -11,5 +11,5 @@ module.exports = {
       useESM: true
     }
   },
-  setupFilesAfterEnv: ['<rootDir>/test/setup.ts'],
+  setupFilesAfterEnv: ['<rootDir>/test/setup.ts']
 };
