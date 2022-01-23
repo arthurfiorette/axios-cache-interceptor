@@ -33,12 +33,27 @@ export function defaultResponseInterceptor(
 
     // Response is already cached
     if (response.cached) {
+      if (__ACI_DEV__) {
+        axios.debug?.({
+          id: response.id,
+          msg: 'Returned cached response'
+        });
+      }
+
       return response;
     }
 
     // Skip cache: either false or weird behavior
     // config.cache should always exists, at least from global config merge.
     if (!response.config.cache) {
+      if (__ACI_DEV__) {
+        axios.debug?.({
+          id: response.id,
+          msg: 'Response with config.cache === false',
+          data: response
+        });
+      }
+
       return { ...response, cached: false };
     }
 
@@ -54,6 +69,14 @@ export function defaultResponseInterceptor(
       // Should not hit here because of previous response.cached check
       cache.state === 'cached'
     ) {
+      if (__ACI_DEV__) {
+        axios.debug?.({
+          id: response.id,
+          msg: 'Response not cached but storage is not loading',
+          data: { cache, response }
+        });
+      }
+
       return response;
     }
 
@@ -64,6 +87,13 @@ export function defaultResponseInterceptor(
       !(await testCachePredicate(response, cacheConfig.cachePredicate))
     ) {
       await rejectResponse(response.id);
+      if (__ACI_DEV__) {
+        axios.debug?.({
+          id: response.id,
+          msg: 'Cache predicate rejected this response'
+        });
+      }
+
       return response;
     }
 
@@ -95,6 +125,19 @@ export function defaultResponseInterceptor(
       // Cache should not be used
       if (expirationTime === 'dont cache') {
         await rejectResponse(response.id);
+
+        if (__ACI_DEV__) {
+          axios.debug?.({
+            id: response.id,
+            msg: `Cache header interpreted as 'dont cache'`,
+            data: {
+              cache,
+              response,
+              expirationTime
+            }
+          });
+        }
+
         return response;
       }
 
@@ -111,6 +154,14 @@ export function defaultResponseInterceptor(
       response.headers[Header.XAxiosCacheStaleIfError] = String(ttl);
     }
 
+    if (__ACI_DEV__) {
+      axios.debug?.({
+        id: response.id,
+        msg: 'Useful response configuration found',
+        data: { cacheConfig, ttl, cacheResponse: data }
+      });
+    }
+
     // Update other entries before updating himself
     if (cacheConfig?.update) {
       await updateCache(axios.storage, response, cacheConfig.update);
@@ -124,11 +175,30 @@ export function defaultResponseInterceptor(
     };
 
     // Resolve all other requests waiting for this response
-    axios.waiting[response.id]?.resolve(newCache.data);
-    delete axios.waiting[response.id];
+    const waiting = axios.waiting[response.id];
+    if (waiting) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      waiting.resolve(newCache.data);
+      delete axios.waiting[response.id];
+
+      if (__ACI_DEV__) {
+        axios.debug?.({
+          id: response.id,
+          msg: 'Found waiting deferred(s) and resolved them'
+        });
+      }
+    }
 
     // Define this key as cache on the storage
     await axios.storage.set(response.id, newCache);
+
+    if (__ACI_DEV__) {
+      axios.debug?.({
+        id: response.id,
+        msg: 'Response cached',
+        data: { cache: newCache, response }
+      });
+    }
 
     // Return the response with cached as false, because it was not cached at all
     return response;
@@ -138,6 +208,13 @@ export function defaultResponseInterceptor(
     const config = error['config'] as CacheRequestConfig;
 
     if (!config || config.cache === false || !config.id) {
+      if (__ACI_DEV__) {
+        axios.debug?.({
+          msg: 'Web request returned an error but cache handling is not enabled',
+          data: { error, config }
+        });
+      }
+
       throw error;
     }
 
@@ -150,6 +227,14 @@ export function defaultResponseInterceptor(
       cache.previous !== 'stale'
     ) {
       await rejectResponse(config.id);
+
+      if (__ACI_DEV__) {
+        axios.debug?.({
+          msg: 'Caught an error in the request interceptor',
+          data: { error, config }
+        });
+      }
+
       throw error;
     }
 
@@ -162,6 +247,13 @@ export function defaultResponseInterceptor(
               error
             )
           : cacheConfig.staleIfError;
+
+      if (__ACI_DEV__) {
+        axios.debug?.({
+          msg: 'Found cache if stale config for rejected response',
+          data: { error, config, staleIfError }
+        });
+      }
 
       if (
         staleIfError === true ||
@@ -179,6 +271,13 @@ export function defaultResponseInterceptor(
           data: cache.data
         });
 
+        if (__ACI_DEV__) {
+          axios.debug?.({
+            msg: 'staleIfError resolved this response with cached data',
+            data: { error, config, cache }
+          });
+        }
+
         return {
           cached: true,
           config,
@@ -189,6 +288,13 @@ export function defaultResponseInterceptor(
           statusText: cache.data.statusText
         };
       }
+    }
+
+    if (__ACI_DEV__) {
+      axios.debug?.({
+        msg: 'Received an unknown error that could not be handled',
+        data: { error, config }
+      });
     }
 
     throw error;

@@ -163,5 +163,11 @@ export interface CacheInstance {
    * @default console.log
    * @see https://axios-cache-interceptor.js.org/#/pages/development-mode
    */
-  debug: Console['log'] | undefined;
+  debug: undefined | ((msg: DebugObject) => void);
 }
+
+/**
+ * An object with any possible type that can be used to log and debug information in
+ * `development` mode (a.k.a `__ACI_DEV__ === true`)
+ */
+export type DebugObject = Partial<{ id: string; msg: string; data: unknown }>;

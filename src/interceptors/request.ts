@@ -16,6 +16,13 @@ import {
 export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
   const onFulfilled: RequestInterceptor['onFulfilled'] = async (config) => {
     if (config.cache === false) {
+      if (__ACI_DEV__) {
+        axios.debug?.({
+          msg: 'Ignoring cache because config.cache is false',
+          data: config
+        });
+      }
+
       return config;
     }
 
@@ -23,6 +30,11 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
     config.cache = { ...axios.defaults.cache, ...config.cache };
 
     if (!isMethodIn(config.method, config.cache.methods)) {
+      if (__ACI_DEV__) {
+        axios.debug?.({
+          msg: `Ignored because method (${config.method}) is not in cache.methods (${config.cache.methods})`
+        });
+      }
       return config;
     }
 
@@ -42,6 +54,14 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
         cache = (await axios.storage.get(key)) as
           | CachedStorageValue
           | LoadingStorageValue;
+
+        if (__ACI_DEV__) {
+          axios.debug?.({
+            id: key,
+            msg: 'Waiting list had an deferred for this key, waiting for it to finish'
+          });
+        }
+
         break emptyOrStale;
       }
 
@@ -67,9 +87,23 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
 
       if (cache.state === 'stale') {
         updateStaleRequest(cache, config as ConfigWithCache<unknown>);
+
+        if (__ACI_DEV__) {
+          axios.debug?.({
+            id: key,
+            msg: 'Updated stale request'
+          });
+        }
       }
 
       config.validateStatus = createValidateStatus(config.validateStatus);
+
+      if (__ACI_DEV__) {
+        axios.debug?.({
+          id: key,
+          msg: 'Sending request, waiting for response'
+        });
+      }
 
       return config;
     }
@@ -86,9 +120,24 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
         return config;
       }
 
+      if (__ACI_DEV__) {
+        axios.debug?.({
+          id: key,
+          msg: 'Detected concurrent request, waiting for it to finish'
+        });
+      }
+
       try {
         cachedResponse = await deferred;
-      } catch {
+      } catch (err) {
+        if (__ACI_DEV__) {
+          axios.debug?.({
+            id: key,
+            msg: 'Deferred rejected, requesting again',
+            data: err
+          });
+        }
+
         // The deferred is rejected when the request that we are waiting rejected cache.
         return config;
       }
@@ -108,6 +157,13 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
         cached: true,
         id: key
       });
+
+    if (__ACI_DEV__) {
+      axios.debug?.({
+        id: key,
+        msg: 'Returning cached response'
+      });
+    }
 
     return config;
   };

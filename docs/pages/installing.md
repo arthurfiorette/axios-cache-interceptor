@@ -36,10 +36,6 @@ const { setupCache } = require('axios-cache-interceptor/umd');
 
 ## With CDN
 
-```js
-const { setupCache } = window.AxiosCacheInterceptor;
-```
-
 ```html
 <!-- Production for ES6+ (~10.5KiB) -->
 <script
@@ -61,6 +57,10 @@ const { setupCache } = window.AxiosCacheInterceptor;
   integrity="sha256-68y8g1PP7ZwbzCh69uI3RL6WFuIr/WRd0ZmgJMsemmg="
   crossorigin="anonymous"
 ></script>
+```
+
+```js
+const { setupCache } = window.AxiosCacheInterceptor;
 ```
 
 ## With URL imports
