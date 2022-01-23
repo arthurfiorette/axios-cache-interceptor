@@ -21,7 +21,7 @@
     "check": "sh build/check.sh",
     "format": "prettier --write .",
     "lint": "eslint . --ext .ts",
-    "changelog": "auto-changelog -p"
+    "version": "auto-changelog -p && git add CHANGELOG.md"
   },
   "repository": {
     "type": "git",
@@ -90,5 +90,6 @@
   },
   "peerDependencies": {
     "axios": "~0.25.0"
-  }
+  },
+  "packageManager": "yarn@1.22.17"
 }
