@@ -11,26 +11,26 @@ to the same id with `{ url: 'https://a.com/b/' }`.
 Also, a custom id can be used to treat two requests as the same.
 
 ```js #runkit
-const Axios = require('axios');
+const axios = require('axios');
 const { setupCache } = require('axios-cache-interceptor');
 
 // Global
-setupCache(Axios);
+setupCache(axios);
 
-const { id } = await Axios.get('https://jsonplaceholder.typicode.com/posts/1', {
+const { id } = await axios.get('https://jsonplaceholder.typicode.com/posts/1', {
   baseURL: 'baseURL',
   query: { name: 'value' }
 });
 
 console.log('Id 1: ' + id);
-console.log('Cache 1:', await Axios.storage.get(id));
+console.log('Cache 1:', await axios.storage.get(id));
 
-const { id: id2 } = await Axios.get('https://jsonplaceholder.typicode.com/posts/1', {
+const { id: id2 } = await axios.get('https://jsonplaceholder.typicode.com/posts/1', {
   id: 'my-overridden-id'
 });
 
 console.log('Id 2: ' + id2);
-console.log('Cache 2:', await Axios.storage.get(id2));
+console.log('Cache 2:', await axios.storage.get(id2));
 ```
 
 The
