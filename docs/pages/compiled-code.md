@@ -2,10 +2,10 @@
 
 ## CommonJS
 
-The code compiled with `CommonJS` is for ES2017+.
+The code compiled with `CommonJS` is for ES6+.
 
 ```js
-import { setupCache } from 'axios-cache-interceptor'; // (Default is CJS)
+import { setupCache } from 'axios-cache-interceptor'; // (Defaults to cjs)
 import { setupCache } from 'axios-cache-interceptor/cjs';
 ```
 
@@ -17,21 +17,17 @@ The UMD code is compiled with `webpack` to support `>= ES5`. See the
 [build config](build/webpack.config.js). You can import these files anywhere (Browser,
 CommonsJS, ESM and more)
 
-- `axios-cache-interceptor/umd/es6.js`: Production file for ES6+
 - `axios-cache-interceptor/umd/es5.js`: Production file for ES5+
-- `axios-cache-interceptor/umd/index.js`: Production file for ES2017+
+- `axios-cache-interceptor/umd/index.js`: Production file for ES6+
 
 ```html
-<!-- You can use the cdn of your choice -->
+<!-- You can also use the cdn of your choice -->
 
 <!-- UNPKG -->
-<script crossorigin src="https://unpkg.com/axios-cache-interceptor@latest"></script>
+<script src="https://unpkg.com/axios-cache-interceptor"></script>
 
 <!-- JSDELIVR -->
-<script
-  crossorigin
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@latest"
-></script>
+<script src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor"></script>
 
 <!-- Etc... -->
 ```
@@ -42,7 +38,7 @@ import { setupCache } from 'axios-cache-interceptor/umd';
 
 ## ESModule
 
-The code compiled with `ESModule` is for ES2017+.
+The code compiled with `ESModule` is for ES6+.
 
 This library exports its `ESM` code at `axios-cache-interceptor/esm`. It's useful to
 enable _tree-shaking_ and other optimizations. You probably won't have to directly import
@@ -51,3 +47,18 @@ from this folder, instead, bundlers should do that for you.
 ```js
 import { setupCache } from 'axios-cache-interceptor/esm';
 ```
+
+## Development bundles
+
+All development bundles are compiled with support for ES2017+, and are available as UMD,
+CJS and ESM.
+
+```js
+import { setupCache } from 'axios-cache-interceptor/esm/dev';
+const { setupCache } = require('axios-cache-interceptor/umd/dev');
+
+// https://cdn.jsdelivr.net/npm/axios-cache-interceptor/umd/dev.js
+const { setupCache } = window.AxiosCacheInterceptor;
+```
+
+See more about them at [Development mode](pages/development-mode.md)
