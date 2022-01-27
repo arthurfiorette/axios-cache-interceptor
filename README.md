@@ -54,7 +54,7 @@ res2.cached; // true
 
 Licensed under the **MIT**. See [`LICENSE`](LICENSE) for more informations.
 
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Farthurfiorette%2Faxios-cache-interceptor.svg?type=small)](https://app.fossa.com/projects/git%2Bgithub.com%2Farthurfiorette%2Faxios-cache-interceptor?ref=badge_small)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Farthurfiorette%2Faxios-cache-interceptor.svg?type=small)](https://app.fossa.com/projects/git%2Bgithub.com%2Farthurfiorette%2Faxios-cache-interceptor?ref=badge_small) [![Join the chat at https://gitter.im/axios-cache-interceptor/community](https://badges.gitter.im/axios-cache-interceptor/community.svg)](https://gitter.im/axios-cache-interceptor/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 <br />
 
