@@ -2,12 +2,13 @@
   "private": true,
   "scripts": {
     "serve": "docsify serve",
-    "bench": "node js/benchmark.js > pages/_comparison-benchmark.log"
+    "bench": "node benchmark.js"
   },
   "devDependencies": {
     "axios": "^0.25.0",
     "axios-cache-adapter": "^2.7.3",
     "docsify-cli": "^4.4.3",
-    "express": "^4.17.2"
+    "express": "^4.17.2",
+    "benny": "^3.7.1"
   }
 }

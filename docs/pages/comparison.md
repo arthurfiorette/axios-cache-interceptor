@@ -18,8 +18,8 @@
 ## Benchmark
 
 There's an simple
-[benchmark](https://github.com/arthurfiorette/axios-cache-interceptor/blob/main/docs/js/benchmark.js)
+[benchmark](https://github.com/arthurfiorette/axios-cache-interceptor/blob/main/docs/benchmark.js)
 in form of a stress test to compare the performance of this library, `axios-cache-adapter`
 and raw axios (without cache).
 
-[Comparison benchmark](_comparison-benchmark.log ':include :type=code')
+[Results](_comparison-benchmark.md ':include :type=code')
