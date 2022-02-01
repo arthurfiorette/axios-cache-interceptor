@@ -1,6 +1,4 @@
-//@ts-check
-
-/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable */
 
 const { create: createAxios } = require('axios').default;
 const { setupCache } = require('axios-cache-interceptor');
