@@ -1,0 +1,16 @@
+# white list approach
+
+*
+
+LICENSE
+README.md
+
+src/
+
+umd/
+cjs/
+esm/
+
+types/
+
+examples/runkit.js

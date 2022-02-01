@@ -36,17 +36,6 @@
     "plugin",
     "wrapper"
   ],
-  "files": [
-    "LICENSE",
-    "README.md",
-    "tsconfig.json",
-    "umd/",
-    "cjs/",
-    "esm/",
-    "src/",
-    "types/",
-    "examples/"
-  ],
   "author": {
     "name": "Arthur Fiorette",
     "email": "npm@arthur.place",
