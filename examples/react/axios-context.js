@@ -8,9 +8,7 @@ import Axios from 'axios';
 import { createContext, useContext, useState } from 'react';
 import { setupCache } from '../../src'; // axios-cache-interceptor
 
-/**
- * @type {import('react').Context<import('../../src').AxiosCacheInstance>}
- */
+/** @type {import('react').Context<import('../../src').AxiosCacheInstance>} */
 const AxiosContext = createContext(null);
 
 export const useAxios = () => useContext(AxiosContext);

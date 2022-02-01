@@ -1,6 +1,8 @@
 # Usage and Examples
 
-There are some other examples in the [examples]([https://](https://github.com/arthurfiorette/axios-cache-interceptor/tree/main/examples), check them out! You can also make a PR to add some more.
+There are some other examples in the
+[examples]([https://](https://github.com/arthurfiorette/axios-cache-interceptor/tree/main/examples),
+check them out! You can also make a PR to add some more.
 
 ## Applying
 
