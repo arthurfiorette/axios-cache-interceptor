@@ -88,13 +88,13 @@ const config = ({
 module.exports = [
   // ESModule
   config({
-    esTarget: 'es2015',
+    esTarget: 'es2017',
     output: 'esm/index',
     libraryType: 'module',
     inlineDeps: true
   }),
   config({
-    esTarget: 'es2017',
+    esTarget: 'es2020',
     output: 'esm/dev',
     libraryType: 'module',
     inlineDeps: true,
@@ -103,13 +103,13 @@ module.exports = [
 
   // CommonJS
   config({
-    esTarget: 'es2015',
+    esTarget: 'es2017',
     output: 'cjs/index',
     libraryType: 'commonjs2',
     inlineDeps: true
   }),
   config({
-    esTarget: 'es2017',
+    esTarget: 'es2020',
     output: 'cjs/dev',
     libraryType: 'commonjs2',
     inlineDeps: true,
@@ -118,13 +118,13 @@ module.exports = [
 
   // UMD
   config({
-    esTarget: 'es2015',
+    esTarget: 'es2017',
     output: 'umd/index',
     libraryType: 'umd',
     libraryName: 'AxiosCacheInterceptor'
   }),
   config({
-    esTarget: 'es2017',
+    esTarget: 'es2020',
     output: 'umd/dev',
     libraryType: 'umd',
     libraryName: 'AxiosCacheInterceptor',

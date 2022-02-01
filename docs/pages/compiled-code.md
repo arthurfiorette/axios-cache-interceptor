@@ -2,7 +2,7 @@
 
 ## CommonJS
 
-The code compiled with `CommonJS` is for ES6+.
+The code compiled with `CommonJS` is for ES2017+.
 
 ```js
 import { setupCache } from 'axios-cache-interceptor'; // (Defaults to cjs)
@@ -17,8 +17,9 @@ The UMD code is compiled with `webpack` to support `>= ES5`. See the
 [build config](build/webpack.config.js). You can import these files anywhere (Browser,
 CommonsJS, ESM and more)
 
+- `axios-cache-interceptor/umd/index.js`: Production file for ES2017+
+- `axios-cache-interceptor/umd/dev.js`: Development file (ES2020+)
 - `axios-cache-interceptor/umd/es5.js`: Production file for ES5+
-- `axios-cache-interceptor/umd/index.js`: Production file for ES6+
 
 ```html
 <!-- You can also use the cdn of your choice -->
@@ -38,7 +39,7 @@ import { setupCache } from 'axios-cache-interceptor/umd';
 
 ## ESModule
 
-The code compiled with `ESModule` is for ES6+.
+The code compiled with `ESModule` is for ES2017+.
 
 This library exports its `ESM` code at `axios-cache-interceptor/esm`. It's useful to
 enable _tree-shaking_ and other optimizations. You probably won't have to directly import
@@ -50,7 +51,7 @@ import { setupCache } from 'axios-cache-interceptor/esm';
 
 ## Development bundles
 
-All development bundles are compiled with support for ES2017+, and are available as UMD,
+All development bundles are compiled with support for ES2020+, and are available as UMD,
 CJS and ESM.
 
 ```js
