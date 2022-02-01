@@ -1,4 +1,4 @@
-//@ts-check
+/* eslint-disable */
 
 const Benny = require('benny');
 const { execSync } = require('child_process');
