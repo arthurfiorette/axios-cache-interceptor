@@ -17,7 +17,7 @@
   "runkitExampleFilename": "./examples/runkit.js",
   "scripts": {
     "build": "sh build/build.sh",
-    "test": "tsc --noEmit && jest --coverage",
+    "test": "jest --coverage",
     "check": "sh build/check.sh",
     "format": "prettier --write .",
     "lint": "eslint . --ext .ts",
