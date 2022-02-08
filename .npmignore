@@ -2,15 +2,15 @@
 
 *
 
-LICENSE
-README.md
+!LICENSE
+!README.md
 
-src/
+!src/
 
-umd/
-cjs/
-esm/
+!umd/
+!cjs/
+!esm/
 
-types/
+!types/
 
-examples/runkit.js
+!examples/runkit.js
