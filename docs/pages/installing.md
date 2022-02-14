@@ -87,7 +87,7 @@ newer versions, so upgrade it <3.
 | [Axios Cache Interceptor](https://github.com/arthurfiorette/axios-cache-interceptor/releases) | [Axios](https://github.com/axios/axios/releases) |
 | --------------------------------------------------------------------------------------------- | ------------------------------------------------ |
 | `>= v0.8.4`                                                                                   | `>= v0.25`                                       |
-| `>= v0.5 && <= 0.8.3`                                                                         | `>= v0.24`                                       |
-| `~ v0.4`                                                                                      | `>= v0.23`                                       |
-| `~ v0.3`                                                                                      | `>= v0.22`                                       |
+| `>= v0.5 && <= 0.8.3`                                                                         | `~ v0.24`                                        |
+| `~ v0.4`                                                                                      | `~ v0.23`                                        |
+| `~ v0.3`                                                                                      | `~ v0.22`                                        | 
 | `<= v0.2`                                                                                     | `v0.21`                                          |

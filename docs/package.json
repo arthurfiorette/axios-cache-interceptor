@@ -5,10 +5,10 @@
     "bench": "node benchmark.js"
   },
   "devDependencies": {
-    "axios": "^0.25.0",
+    "axios": "^0.26.0",
     "axios-cache-adapter": "^2.7.3",
+    "benny": "^3.7.1",
     "docsify-cli": "^4.4.3",
-    "express": "^4.17.2",
-    "benny": "^3.7.1"
+    "express": "^4.17.2"
   }
 }
