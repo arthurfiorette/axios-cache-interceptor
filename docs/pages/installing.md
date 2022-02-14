@@ -39,21 +39,21 @@ const { setupCache } = require('axios-cache-interceptor/umd');
 ```html
 <!-- Development build for ES2020+ (~11.3 KiB) -->
 <script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.8/umd/dev.js"
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.9/umd/dev.js"
   integrity="sha256-SZVzXptEUxn+mOVIPQPJRnGFmFV+/8prfTx2pMyrbeM="
   crossorigin="anonymous"
 ></script>
 
 <!-- Production for ES2017+ (~9.85 KiB) -->
 <script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.8/umd/index.js"
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.9/umd/index.js"
   integrity="sha256-FUDdb76oASr8kl/6iiNlz+W0yLLcmyS4L/+CGNWKTfo="
   crossorigin="anonymous"
 ></script>
 
 <!-- Production for ES5+ (~13.9 KiB) (Needs Promise polyfill) -->
 <script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.8/umd/es5.js"
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.9/umd/es5.js"
   integrity="sha256-EzMv9XzLARcJMVDg0UrCT3r3+sMgnSriAI/nK1opXTI="
   crossorigin="anonymous"
 ></script>
@@ -69,10 +69,10 @@ You can import any [CDN Url](#with-cdns) and use it in your code. **UMD Compatib
 
 ```js
 // ESM with Skypack CDN
-import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor@0.8.8';
+import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor@0.8.9';
 
 // UMD with JSDeliver CDN
-import { setupCache } from 'https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.8/umd/index.js';
+import { setupCache } from 'https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.8.9/umd/index.js';
 ```
 
 ## Official support table
@@ -89,5 +89,5 @@ newer versions, so upgrade it <3.
 | `>= v0.8.4`                                                                                   | `>= v0.25`                                       |
 | `>= v0.5 && <= 0.8.3`                                                                         | `~ v0.24`                                        |
 | `~ v0.4`                                                                                      | `~ v0.23`                                        |
-| `~ v0.3`                                                                                      | `~ v0.22`                                        | 
+| `~ v0.3`                                                                                      | `~ v0.22`                                        |
 | `<= v0.2`                                                                                     | `v0.21`                                          |
