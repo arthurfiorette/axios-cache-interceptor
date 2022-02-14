@@ -61,7 +61,7 @@
     "@typescript-eslint/eslint-plugin": "^5.10.0",
     "@typescript-eslint/parser": "^5.11.0",
     "auto-changelog": "^2.4.0",
-    "axios": "~0.25.0",
+    "axios": "~0.26.0",
     "es-check": "^6.1.1",
     "eslint": "^8.7.0",
     "eslint-config-prettier": "^8.3.0",
@@ -78,7 +78,7 @@
     "webpack-cli": "^4.9.1"
   },
   "peerDependencies": {
-    "axios": "~0.25.0"
+    "axios": "~0.26.0"
   },
   "packageManager": "yarn@1.22.17"
 }
