@@ -59,3 +59,35 @@ export function testStorage(name: string, Storage: () => AxiosStorage): void {
     jest.useRealTimers();
   });
 }
+export function testStorageQuota(name: string, Storage: () => AxiosStorage): void {
+  it(`tests ${name} storage quota`, async () => {
+    const storage = Storage();
+
+    await storage.set('key', {
+      state: 'cached',
+      createdAt: Date.now(),
+      ttl: 1000 * 60 * 5,
+      data: { ...EMPTY_RESPONSE, data: 'data' }
+    });
+
+    const result = await storage.get('key');
+
+    expect(result).not.toBeNull();
+    expect(result.state).toBe('cached');
+    expect(result.data?.data).toBe('data');
+
+    const dataExceedingQuota = '0'.repeat(6000000);
+
+    await storage.set('key', {
+      state: 'cached',
+      createdAt: Date.now(),
+      ttl: 1000 * 60 * 5,
+      data: { ...EMPTY_RESPONSE, data: dataExceedingQuota }
+    });
+
+    const result2 = await storage.get('key');
+
+    expect(result2).not.toBeNull();
+    expect(result2.state).toBe('empty');
+  });
+}
