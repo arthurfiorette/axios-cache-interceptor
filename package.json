@@ -77,8 +77,5 @@
     "webpack": "^5.66.0",
     "webpack-cli": "^4.9.1"
   },
-  "peerDependencies": {
-    "axios": "^0.25.0"
-  },
   "packageManager": "yarn@1.22.17"
 }
