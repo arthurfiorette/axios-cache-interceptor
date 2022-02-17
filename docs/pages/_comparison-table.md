@@ -1,5 +1,6 @@
 |                                                                              | Axios Cache Interceptor |                          Axios Cache Adapter                           |       Cachios        |
 | :--------------------------------------------------------------------------: | :---------------------: | :--------------------------------------------------------------------: | :------------------: |
+|                               Compared version                               |         Latest          |                                 2.7.3                                  |        3.1.1         |
 | Expiration with [TTL](https://developer.mozilla.org/en-US/docs/Glossary/TTL) |           ✅            |                                   ✅                                   |          ✅          |
 |                          Per-request configuration                           |           ✅            |                                   ✅                                   |          ✅          |
 |                          Global and custom instance                          |           ✅            |                                   ✅                                   |          ✅          |
@@ -7,7 +8,7 @@
 |                             Expires & Age header                             |           ✅            |                                   🟡                                   |          🛑          |
 |                        ETag and If-None-Match header                         |           ✅            |                                   🛑                                   |          🛑          |
 |                           If-Modified-Size header                            |           ✅            |                                   🛑                                   |          🛑          |
-|                                 Bundle Size                                  |    **3.7Kb** (gzip)     |                             18.9Kb (gzip)                              |    19.5Kb (gzip)     |
+|                                 Bundle size                                  |    **3.7Kb** (gzip)     |                             18.9Kb (gzip)                              |    19.5Kb (gzip)     |
 |                            Typescript declaration                            |  ✅ (Custom interface)  |                         ✅ (Applied globally)                          | ✅(Applied globally) |
 |                              Custom cache keys                               |           ✅            |                                   ✅                                   |          ✅          |
 |                              Multiple storages                               |           ✅            |                         🔶 (Only localForage)                          |          ✅          |
