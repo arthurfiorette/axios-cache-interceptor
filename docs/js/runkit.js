@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 (function () {
   var componentName = 'rk-embed';
 
@@ -8,30 +10,38 @@
     document.head.appendChild(script);
   }
 
+  function createTemporaryCodeblock(textCode) {
+    const element = document.createElement('pre');
+        element.setAttribute('v-pre', true);
+        element.setAttribute('data-lang', 'js');
+
+        const code = document.createElement('code');
+        code.classList.add('lang-js');
+        code.textContent = textCode;
+
+        element.appendChild(code);
+
+        return element;
+  }
+
   loadScript('https://embed.runkit.com', function () {
     class RkEmbed extends HTMLElement {
       constructor() {
         super();
 
-        const wrapper = document.createElement('div');
-        wrapper.style = 'margin: 20pt';
-
-        const source = this.textContent;
-
+        const textContent = this.textContent;
         this.textContent = '';
 
-        const tempCodePlaceholder = document.createElement('pre');
-        tempCodePlaceholder.textContent = source;
+        const temporary = createTemporaryCodeblock(textContent);
 
         window.RunKit.createNotebook({
-          element: wrapper,
-          source,
+          element: this,
+          source: textContent,
           mode: this.getAttribute('endpoint') ? 'endpoint' : 'default',
-          onLoad: () => tempCodePlaceholder.remove()
+          onLoad: () => temporary.remove()
         });
 
-        this.appendChild(wrapper);
-        this.appendChild(tempCodePlaceholder);
+        this.appendChild(temporary);
       }
     }
 

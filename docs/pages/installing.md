@@ -1,16 +1,7 @@
 # Installing
 
-<a href="https://bundlephobia.com/package/axios-cache-interceptor@latest"
-    ><img
-      src="https://img.shields.io/bundlephobia/minzip/axios-cache-interceptor/latest?style=flat"
-      target="_blank"
-      alt="Minified Size"
-  /></a> <a href="https://packagephobia.com/result?p=axios-cache-interceptor@latest"
-    ><img
-      src="https://packagephobia.com/badge?p=axios-cache-interceptor@latest"
-      target="_blank"
-      alt="Install Size"
-  /></a>
+[![Bundle Size](https://img.shields.io/bundlephobia/minzip/axios-cache-interceptor/latest?style=flat)](https://bundlephobia.com/package/axios-cache-interceptor@latest)
+[![Install Size](https://packagephobia.com/badge?p=axios-cache-interceptor@latest)](https://packagephobia.com/result?p=axios-cache-interceptor@latest)
 
 ## With Npm
 
@@ -79,11 +70,10 @@ import { setupCache } from 'https://cdn.jsdelivr.net/npm/axios-cache-interceptor
 
 Below you can check what version of this package is supported by your version of axios.
 **But that does not mean that it won't work.**. Axios had many "breaking changes" made
-with type declarations. But remember, new features, bug fixes and etc only comes with
+with type declarations. But remember, new features and bug fixes only comes with
 newer versions. Please keep your dependencies up to date <3.
 
-> **Note**: Axios is not setup as a peer dependency, because axios has a non-stable
-> version (0.x.y).
+> **Note**: Axios is not defined as a `peerDependency`, because it has a non-stable semver version (0.x.y).
 > [See #145 (Comment)](https://github.com/arthurfiorette/axios-cache-interceptor/issues/145#issuecomment-1042710481)
 
 | [Axios Cache Interceptor](https://github.com/arthurfiorette/axios-cache-interceptor/releases) | [Axios](https://github.com/axios/axios/releases) |
