@@ -13,9 +13,7 @@ const storage = Symbol();
 export const isStorage = (obj: unknown): obj is AxiosStorage =>
   !!obj && !!(obj as Record<symbol, number>)[storage];
 
-/**
- * Returns true if this storage is expired, but it has sufficient properties to stale.
- */
+/** Returns true if this storage is expired, but it has sufficient properties to stale. */
 export function canStale(value: CachedStorageValue): boolean {
   const headers = value.data.headers;
   return (
@@ -27,9 +25,7 @@ export function canStale(value: CachedStorageValue): boolean {
   );
 }
 
-/**
- * Checks if the provided cache is expired. You should also check if the cache {@link canStale}
- */
+/** Checks if the provided cache is expired. You should also check if the cache {@link canStale} */
 export function isExpired(value: CachedStorageValue): boolean {
   return value.createdAt + value.ttl <= Date.now();
 }
