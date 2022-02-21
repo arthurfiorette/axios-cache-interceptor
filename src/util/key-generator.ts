@@ -1,5 +1,5 @@
 import type { Method } from 'axios';
-import { code } from 'object-code';
+import { hashCode } from 'object-code';
 import type { CacheRequestConfig } from '../cache/axios';
 import type { KeyGenerator } from './types';
 
@@ -53,7 +53,7 @@ export function buildKeyGenerator<R = unknown, D = unknown>(
     request.method && (request.method = request.method.toLowerCase() as Method);
 
     const result = generator(request) as string;
-    return hash ? code(result).toString() : result;
+    return hash ? hashCode(result).toString() : result;
   };
 }
 
