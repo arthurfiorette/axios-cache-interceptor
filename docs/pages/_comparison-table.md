@@ -13,7 +13,7 @@
 |                              Custom cache keys                               |           ✅            |                                   ✅                                   |          ✅          |
 |                              Multiple storages                               |           ✅            |                         🔶 (Only localForage)                          |          ✅          |
 |                            Built-in redis storage                            |           🔶            |                                   ✅                                   |          🟡          |
-|                              Storage size limit                              |           🔶            |                                   ✅                                   |          ✅          |
+|                         Handles storage quota errors                         |           ✅            |                                   ✅                                   |          ✅          |
 |                            Node & Web compatible                             |           ✅            |                                   ✅                                   |          🛑          |
 |                      Invalidade cache based on response                      |           ✅            |                                   ✅                                   |          🛑          |
 |                        Update cache based on response                        |           ✅            |                                   🟡                                   |          🟡          |
