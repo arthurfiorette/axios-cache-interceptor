@@ -10,7 +10,8 @@ const axios = setupCache(axios, {
 
 ## `storage`
 
-The storage used to save the cache. Defaults to a simple in-memory storage. [See more about storages](pages/storages).
+The storage used to save the cache. Defaults to a simple in-memory storage.
+[See more about storages](pages/storages).
 
 ## `generateKey`
 
@@ -64,9 +65,8 @@ const myHeaderInterpreter: HeaderInterpreter = (headers) => {
 
 ## `request` and `response` Interceptors
 
-These functions intercepts and modify the axios logic and objects. If you are using
-some sort of custom implementation, it is not guaranteed to any other documented thing
-work.
+These functions intercepts and modify the axios logic and objects. If you are using some
+sort of custom implementation, it is not guaranteed to any other documented thing work.
 
 At this moment, you can see their code for more information
 [here](https://github.com/arthurfiorette/axios-cache-interceptor/tree/main/src/interceptors).

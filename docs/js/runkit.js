@@ -12,16 +12,16 @@
 
   function createTemporaryCodeblock(textCode) {
     const element = document.createElement('pre');
-        element.setAttribute('v-pre', true);
-        element.setAttribute('data-lang', 'js');
+    element.setAttribute('v-pre', true);
+    element.setAttribute('data-lang', 'js');
 
-        const code = document.createElement('code');
-        code.classList.add('lang-js');
-        code.textContent = textCode;
+    const code = document.createElement('code');
+    code.classList.add('lang-js');
+    code.textContent = textCode;
 
-        element.appendChild(code);
+    element.appendChild(code);
 
-        return element;
+    return element;
   }
 
   loadScript('https://embed.runkit.com', function () {
