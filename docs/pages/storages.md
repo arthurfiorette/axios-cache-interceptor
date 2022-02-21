@@ -85,6 +85,19 @@ const withoutPrefix = buildWebStorage(localStorage);
 const withPrefix = buildWebStorage(localStorage, 'axios-cache:');
 ```
 
+### Browser quota
+
+From `v0.9.0`, the web storage is able to detect and evict entries if the browser's quota is
+reached.
+
+The eviction is done by the following algorithm:
+
+1. Saves an value and got an error. (Probably quota exceeded)
+2. Evicts all expired keys that cannot enter the `stale` state.
+3. If it fails again, evicts the oldest key.
+4. Repeat step 4 and 5 until the object could be saved or the storage is empty.
+5. If the storage is empty, ignores the key and don't save it. _(Probably because only this key is greater than the whole quota)_
+
 ## Creating your own storage
 
 There's no mystery implementing a custom storage. You can create your own storage by using

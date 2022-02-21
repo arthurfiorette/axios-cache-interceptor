@@ -1,6 +1,11 @@
 import { Header } from '../header/headers';
 import type { MaybePromise } from '../util/types';
-import type { AxiosStorage, StaleStorageValue, StorageValue } from './types';
+import type {
+  AxiosStorage,
+  CachedStorageValue,
+  StaleStorageValue,
+  StorageValue
+} from './types';
 
 const storage = Symbol();
 
@@ -8,10 +13,27 @@ const storage = Symbol();
 export const isStorage = (obj: unknown): obj is AxiosStorage =>
   !!obj && !!(obj as Record<symbol, number>)[storage];
 
+/** Returns true if this storage is expired, but it has sufficient properties to stale. */
+export function canStale(value: CachedStorageValue): boolean {
+  const headers = value.data.headers;
+  return (
+    Header.ETag in headers ||
+    Header.LastModified in headers ||
+    Header.XAxiosCacheEtag in headers ||
+    Header.XAxiosCacheStaleIfError in headers ||
+    Header.XAxiosCacheLastModified in headers
+  );
+}
+
+/** Checks if the provided cache is expired. You should also check if the cache {@link canStale} */
+export function isExpired(value: CachedStorageValue): boolean {
+  return value.createdAt + value.ttl <= Date.now();
+}
+
 export type BuildStorage = Omit<AxiosStorage, 'get'> & {
   /**
    * Returns the value for the given key. This method does not have to make checks for
-   * cache invalidation or etc. It just return what was previous saved, if present.
+   * cache invalidation or anything. It just returns what was previous saved, if present.
    */
   find: (key: string) => MaybePromise<StorageValue | undefined>;
 };
@@ -49,25 +71,18 @@ export function buildStorage({ set, find, remove }: BuildStorage): AxiosStorage 
       if (
         // Not cached or fresh value
         value.state !== 'cached' ||
-        value.createdAt + value.ttl > Date.now()
+        !isExpired(value)
       ) {
         return value;
       }
 
-      if (
-        value.data.headers &&
-        // Any header below allows the response to stale
-        (Header.ETag in value.data.headers ||
-          Header.LastModified in value.data.headers ||
-          Header.XAxiosCacheEtag in value.data.headers ||
-          Header.XAxiosCacheStaleIfError in value.data.headers ||
-          Header.XAxiosCacheLastModified in value.data.headers)
-      ) {
+      if (canStale(value)) {
         const stale: StaleStorageValue = {
           state: 'stale',
           createdAt: value.createdAt,
           data: value.data
         };
+
         await set(key, stale);
         return stale;
       }
