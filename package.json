@@ -6,9 +6,12 @@
   "types": "./cjs/index.d.ts",
   "module": "./esm/index.js",
   "exports": {
+    ".": {
     "import": "./esm/index.js",
     "require": "./cjs/index.js",
     "default": "./umd/index.js"
+    },
+    "./package.json": "./package.json"
   },
   "browser": "./umd/index.js",
   "jsdelivr": "./umd/index.js",
