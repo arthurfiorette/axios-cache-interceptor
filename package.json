@@ -1,15 +1,15 @@
 {
   "name": "axios-cache-interceptor",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "Cache interceptor for axios",
   "main": "./cjs/index.js",
   "types": "./cjs/index.d.ts",
   "module": "./esm/index.js",
   "exports": {
     ".": {
-    "import": "./esm/index.js",
-    "require": "./cjs/index.js",
-    "default": "./umd/index.js"
+      "import": "./esm/index.js",
+      "require": "./cjs/index.js",
+      "default": "./umd/index.js"
     },
     "./package.json": "./package.json"
   },
