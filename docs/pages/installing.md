@@ -28,24 +28,24 @@ const { setupCache } = require('axios-cache-interceptor/umd');
 ## With CDN
 
 ```html
-<!-- Development build for ES2020+ (~11.3 KiB) -->
+<!-- Development build for ES2020+ (~11.2 KiB) -->
 <script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.9.1/umd/dev.js"
-  integrity="sha256-nA+3+OYcRRSyBoKK3WsbAgsZ/z5xzP4lxvfq9Lzljvg="
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.9.2/umd/dev.js"
+  integrity="sha256-ppGTu7loKobC0whY8JMCs7u+f4IC25Sxy1SEdkQV8pw="
   crossorigin="anonymous"
 ></script>
 
-<!-- Production for ES2017+ (~9.85 KiB) -->
+<!-- Production for ES2017+ (~9.76 KiB) -->
 <script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.9.1/umd/index.js"
-  integrity="sha256-vJ6AYZziuIQmpLHFdXHRMqDvdGE02VGFLms86ccFh6k="
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.9.2/umd/index.js"
+  integrity="sha256-GVujhv/FjIcQS7CSJQmH4jAq0apkRyUwnhpTpmhwmrE="
   crossorigin="anonymous"
 ></script>
 
-<!-- Production for ES5+ (~13.9 KiB) (Needs Promise polyfill) -->
+<!-- Production for ES5+ (~14 KiB) (Needs Promise polyfill) -->
 <script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.9.1/umd/es5.js"
-  integrity="sha256-UZcXlY27nhpWjLsiTFyfWL2Rmx9D1XZUuPLuJZmX8kY="
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.9.2/umd/es5.js"
+  integrity="sha256-IwfbnPJdKLj4NDcX3I9yccqTBcFroIHnmuPb2zqb+6w="
   crossorigin="anonymous"
 ></script>
 ```
@@ -60,10 +60,10 @@ You can import any [CDN Url](#with-cdns) and use it in your code. **UMD Compatib
 
 ```js
 // ESM with Skypack CDN
-import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor@0.9.1';
+import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor@0.9.2';
 
 // UMD with JSDeliver CDN
-import { setupCache } from 'https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.9.1/umd/index.js';
+import { setupCache } from 'https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.9.2/umd/index.js';
 ```
 
 ## Official support table
