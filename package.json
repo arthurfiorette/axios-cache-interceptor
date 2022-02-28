@@ -50,12 +50,9 @@
   },
   "homepage": "https://axios-cache-interceptor.js.org",
   "dependencies": {
-    "cache-parser": "1.2.2",
+    "cache-parser": "^1.2.2",
     "fast-defer": "^1.1.5",
     "object-code": "^1.2.0"
-  },
-  "resolutions": {
-    "colors": "1.4.0"
   },
   "devDependencies": {
     "@arthurfiorette/prettier-config": "*",
@@ -80,5 +77,8 @@
     "webpack": "^5.66.0",
     "webpack-cli": "^4.9.1"
   },
-  "packageManager": "yarn@1.22.17"
+  "packageManager": "yarn@1.22.17",
+  "resolutions": {
+    "colors": "1.4.0"
+  }
 }
