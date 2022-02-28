@@ -1,5 +1,5 @@
 import type { Method } from 'axios';
-import { hashCode } from 'object-code';
+import { hash } from 'object-code';
 import type { CacheRequestConfig } from '../cache/axios';
 import type { KeyGenerator } from './types';
 
@@ -11,7 +11,7 @@ const SLASHES_REGEX = /^\/|\/$/g;
  * string id for it.
  */
 export function buildKeyGenerator<R = unknown, D = unknown>(
-  hash: false,
+  shouldHash: false,
   generator: KeyGenerator
 ): KeyGenerator<R, D>;
 
@@ -32,12 +32,12 @@ export function buildKeyGenerator<R = unknown, D = unknown>(
  * ```
  */
 export function buildKeyGenerator<R = unknown, D = unknown>(
-  hash: true,
+  shouldHash: true,
   generator: (options: CacheRequestConfig<R, D>) => unknown
 ): KeyGenerator<R, D>;
 
 export function buildKeyGenerator<R = unknown, D = unknown>(
-  hash: boolean,
+  shouldHash: boolean,
   generator: (options: CacheRequestConfig<R, D>) => unknown
 ): KeyGenerator<R, D> {
   return (request) => {
@@ -53,7 +53,7 @@ export function buildKeyGenerator<R = unknown, D = unknown>(
     request.method && (request.method = request.method.toLowerCase() as Method);
 
     const result = generator(request) as string;
-    return hash ? hashCode(result).toString() : result;
+    return shouldHash ? `${hash(result)}` : result;
   };
 }
 

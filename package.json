@@ -50,9 +50,9 @@
   },
   "homepage": "https://axios-cache-interceptor.js.org",
   "dependencies": {
-    "cache-parser": "1.2.0",
-    "fast-defer": "^1.1.3",
-    "object-code": "^1.1.2"
+    "cache-parser": "1.2.2",
+    "fast-defer": "^1.1.5",
+    "object-code": "^1.2.0"
   },
   "resolutions": {
     "colors": "1.4.0"
@@ -61,8 +61,8 @@
     "@arthurfiorette/prettier-config": "*",
     "@types/jest": "^27.4.0",
     "@types/webpack": "^5.28.0",
-    "@typescript-eslint/eslint-plugin": "^5.12.0",
-    "@typescript-eslint/parser": "^5.12.0",
+    "@typescript-eslint/eslint-plugin": "^5.13.0",
+    "@typescript-eslint/parser": "^5.13.0",
     "auto-changelog": "^2.4.0",
     "axios": "^0.26.0",
     "es-check": "^6.1.1",
