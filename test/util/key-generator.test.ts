@@ -1,3 +1,4 @@
+import type { CacheRequestConfig } from '../../src';
 import { buildKeyGenerator, defaultKeyGenerator } from '../../src/util/key-generator';
 import { mockAxios } from '../mocks/axios';
 
@@ -137,7 +138,7 @@ describe('tests key generation', () => {
   });
 
   it('tests buildKeyGenerator & hash: false', async () => {
-    const keyGenerator = buildKeyGenerator(false, ({ headers }) =>
+    const keyGenerator = buildKeyGenerator(({ headers }) =>
       String(headers?.['x-req-header'] || 'not-set')
     );
 
@@ -166,36 +167,56 @@ describe('tests key generation', () => {
     expect(id3).toBe('not-set');
   });
 
-  it('tests buildKeyGenerator & hash: true', async () => {
-    const keyGenerator = buildKeyGenerator(true, ({ headers }) => {
-      return headers?.['x-req-header'] || 'not-set';
-    });
-
-    const axios = mockAxios({ generateKey: keyGenerator });
-
-    const { id } = await axios.get('random-url', {
-      data: Math.random(),
-      headers: {
-        'x-req-header': 'my-custom-id'
+  it('expects that the response remains unchanged', () => {
+    const originalResponse: CacheRequestConfig = {
+      baseURL: 'http://example.com/',
+      url: '/test/path/',
+      method: 'get',
+      params: {
+        a: 1
+      },
+      data: {
+        object: true
       }
-    });
+    };
 
-    const { id: id2 } = await axios.get('other-url', {
-      data: Math.random() * 2,
-      headers: {
-        'x-req-header': 'my-custom-id'
-      }
-    });
+    const response = Object.assign({}, originalResponse);
 
-    const { id: id3 } = await axios.get('other-url', {
-      data: Math.random() * 2
-    });
+    const key = defaultKeyGenerator(response);
+    expect(key).toBeDefined();
 
-    expect(id).toBe(id2);
-    expect(id).not.toBe('my-custom-id'); // hashed value
+    expect(response).toEqual(originalResponse);
 
-    expect(id3).not.toBe(id);
-    expect(id3).not.toBe(id2);
-    expect(id3).not.toBe('not-set');
+    const key2 = defaultKeyGenerator(response);
+    expect(key2).toBeDefined();
+
+    expect(key).toBe(key2);
+
+    expect(response).toEqual(originalResponse);
+  });
+
+  it('tests when hash() is used in the response', () => {
+    const keyGenerator = buildKeyGenerator(({ data }) => data);
+
+    expect(keyGenerator({ data: 'test' })).toBe('test');
+    expect(keyGenerator({ data: 123123 })).toBe('123123');
+
+    let data: unknown = { a: 1 };
+
+    expect(keyGenerator({ data })).not.toBe(data);
+    expect(typeof keyGenerator({ data })).toBe('string');
+
+    data = true;
+
+    expect(keyGenerator({ data })).not.toBe(data);
+    expect(typeof keyGenerator({ data })).toBe('string');
+
+    data = {
+      fn: () => expect(false).toBeTruthy(),
+      test: new (class Asd {})()
+    };
+
+    expect(keyGenerator({ data })).not.toBe(data);
+    expect(typeof keyGenerator({ data })).toBe('string');
   });
 });

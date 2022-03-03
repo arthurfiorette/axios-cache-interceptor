@@ -7,24 +7,20 @@ import type { KeyGenerator } from './types';
 const SLASHES_REGEX = /^\/|\/$/g;
 
 /**
- * Builds an generator that received the {@link CacheRequestConfig} and should return a
- * string id for it.
- */
-export function buildKeyGenerator<R = unknown, D = unknown>(
-  shouldHash: false,
-  generator: KeyGenerator
-): KeyGenerator<R, D>;
-
-/**
- * Builds an generator that received the {@link CacheRequestConfig} and has it's return
- * value hashed by {@link code}.
+ * Builds an generator that receives a {@link CacheRequestConfig} and returns a value
+ * hashed by {@link hash}.
  *
- * ### You can return an object that is hashed into an unique number, example:
+ * The value is hashed into a signed integer when the returned value from the provided
+ * generator is not a `string` or a `number`.
+ *
+ * You can return any type of data structure.
+ *
+ * @example
  *
  * ```js
  * // This generator will return a hash code.
  * // The code will only be the same if url, method and data are the same.
- * const generator = buildKeyGenerator(true, ({ url, method, data }) => ({
+ * const generator = buildKeyGenerator(({ url, method, data }) => ({
  *   url,
  *   method,
  *   data
@@ -32,38 +28,36 @@ export function buildKeyGenerator<R = unknown, D = unknown>(
  * ```
  */
 export function buildKeyGenerator<R = unknown, D = unknown>(
-  shouldHash: true,
-  generator: (options: CacheRequestConfig<R, D>) => unknown
-): KeyGenerator<R, D>;
-
-export function buildKeyGenerator<R = unknown, D = unknown>(
-  shouldHash: boolean,
-  generator: (options: CacheRequestConfig<R, D>) => unknown
+  generator: (request: CacheRequestConfig<R, D>) => unknown
 ): KeyGenerator<R, D> {
   return (request) => {
     if (request.id) {
       return request.id;
     }
 
-    // Remove trailing slashes
-    request.baseURL && (request.baseURL = request.baseURL.replace(SLASHES_REGEX, ''));
-    request.url && (request.url = request.url.replace(SLASHES_REGEX, ''));
+    const key = generator(request);
 
-    // lowercase method
-    request.method && (request.method = request.method.toLowerCase() as Method);
+    if (typeof key === 'string' || typeof key === 'number') {
+      return `${key}`;
+    }
 
-    const result = generator(request) as string;
-    return shouldHash ? `${hash(result)}` : result;
+    return `${hash(key)}`;
   };
 }
 
 export const defaultKeyGenerator = buildKeyGenerator(
-  true,
   ({ baseURL = '', url = '', method = 'get', params, data }) => {
+    // Remove trailing slashes to avoid generating different keys for the "same" final url.
+    baseURL && (baseURL = baseURL.replace(SLASHES_REGEX, ''));
+    url && (url = url.replace(SLASHES_REGEX, ''));
+
+    // lowercase method
+    method && (method = method.toLowerCase() as Method);
+
     return {
       url: baseURL + (baseURL && url ? '/' : '') + url,
-      method,
       params: params as unknown,
+      method,
       data
     };
   }
