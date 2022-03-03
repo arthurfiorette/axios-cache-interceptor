@@ -59,9 +59,6 @@ const { setupCache, buildKeyGenerator } = require('axios-cache-interceptor');
 const generator = buildKeyGenerator(({ headers = {} }) => {
   // In this imaginary example, two requests will
   // be treated as the same if their x-cache-server header is the same.
-
-  // The result of this function, being a object or not, will be
-  // hashed by `object-code` library.
   return headers['x-cache-server'] || 'not-set';
 });
 
