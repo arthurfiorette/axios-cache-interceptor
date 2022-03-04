@@ -1,6 +1,6 @@
 {
   "name": "axios-cache-interceptor",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "description": "Cache interceptor for axios",
   "main": "./cjs/index.js",
   "types": "./cjs/index.d.ts",
@@ -26,10 +26,12 @@
     "lint": "eslint . --ext .ts",
     "version": "auto-changelog -p && git add CHANGELOG.md"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/arthurfiorette/axios-cache-interceptor.git"
-  },
+  "funding": "https://github.com/ArthurFiorette/axios-cache-interceptor?sponsor=1",
+  "repository": "https://github.com/arthurfiorette/axios-cache-interceptor.git",
+  "author": "Arthur Fiorette <npm@arthur.place>",
+  "bugs": "https://github.com/arthurfiorette/axios-cache-interceptor/issues",
+  "homepage": "https://axios-cache-interceptor.js.org",
+  "license": "MIT",
   "keywords": [
     "axios",
     "cache",
@@ -39,16 +41,6 @@
     "plugin",
     "wrapper"
   ],
-  "author": {
-    "name": "Arthur Fiorette",
-    "email": "npm@arthur.place",
-    "url": "https://arthur.place"
-  },
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/arthurfiorette/axios-cache-interceptor/issues"
-  },
-  "homepage": "https://axios-cache-interceptor.js.org",
   "dependencies": {
     "cache-parser": "^1.2.2",
     "fast-defer": "^1.1.5",
