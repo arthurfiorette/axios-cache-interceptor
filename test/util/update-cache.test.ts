@@ -6,7 +6,7 @@ const cacheKey = defaultKeyGenerator({ url: 'https://example.com/' });
 const cachedValue: CachedStorageValue = {
   createdAt: Date.now(),
   state: 'cached',
-  ttl: Infinity, // never expires
+  ttl: Number.MAX_SAFE_INTEGER, // never expires
   data: {
     data: 'value',
     headers: {},

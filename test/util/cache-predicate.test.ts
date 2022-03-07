@@ -218,7 +218,7 @@ describe('tests cache predicate object', () => {
           ): CachedStorageValue => {
             return {
               state: 'cached',
-              ttl: Infinity,
+              ttl: Number.MAX_SAFE_INTEGER,
               createdAt: Date.now(),
               data: {
                 headers,
