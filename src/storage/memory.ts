@@ -3,6 +3,7 @@ import type { AxiosStorage, StorageValue } from './types';
 
 /**
  * Modern function to natively deep clone
+ *
  * @link https://caniuse.com/mdn-api_structuredclone (07/03/2022 -> 59.4%)
  */
 declare const structuredClone: (<T>(value: T) => T) | undefined;
