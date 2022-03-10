@@ -42,6 +42,8 @@ A clear and concise description of what you expected to happen.
 - Axios: `E.g: v0.26.1`
 - Axios Cache Interceptor: `E.g: v0.9.3`
 - What storage is being used: `E.g: Web Storage`
+- Node Version: `E.g: v16.9.1`
+- Browser (if applicable): `E.g: Chrome 98`
 
 <!--
 Add any other context about the problem here.
