@@ -7,12 +7,15 @@
   "types": "./cjs/index.d.ts",
   "module": "./esm/index.js",
   "exports": {
+    "./package.json": "./package.json",
     ".": {
       "import": "./esm/index.js",
-      "require": "./cjs/index.js",
-      "default": "./umd/index.js"
+      "require": "./cjs/index.js"
     },
-    "./package.json": "./package.json"
+    "./dev": {
+      "import": "./dev/index.mjs",
+      "require": "./dev/index.cjs"
+    }
   },
   "browser": "./umd/index.js",
   "jsdelivr": "./umd/index.js",

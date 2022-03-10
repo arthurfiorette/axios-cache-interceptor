@@ -5,17 +5,17 @@
 
 echo "\nStarting build...\n"
 
-rm -rf cjs/ esm/ umd/ types/
-mkdir  cjs/ esm/ umd/ types/
+rm -rf cjs/ esm/ umd/ types/ dev/
+mkdir  cjs/ esm/ umd/ types/ dev/
 
 echo "Target cleared...\n"
 
 webpack --config build/webpack.config.js &
 tsc -p build/tsconfig.types.json &
 echo "export * from '../types';" | tee \
-  esm/index.d.ts esm/dev.d.ts \
-  cjs/index.d.ts cjs/dev.d.ts \
-  umd/index.d.ts umd/dev.d.ts umd/es5.d.ts \
+  esm/index.d.ts dev/index.d.mts \
+  cjs/index.d.ts dev/index.d.cts \
+  umd/index.d.ts dev/index.umd.d.ts umd/es5.d.ts \
   > /dev/null &
 
 wait

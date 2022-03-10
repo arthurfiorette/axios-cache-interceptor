@@ -4,7 +4,6 @@ about: Create a report to help us improve
 title: 'bug: something is wrong :('
 labels: bug
 assignees: arthurfiorette
-
 ---
 
 <!--

@@ -10,6 +10,7 @@
 !umd/**
 !cjs/**
 !esm/**
+!dev/**
 
 !types/**
 

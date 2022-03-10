@@ -7,8 +7,8 @@ echo "\nStarting checking...\n"
 
 es-check es5 umd/es5.js &
 es-check es6 umd/index.js cjs/index.js &
-es-check es2017 umd/dev.js cjs/dev.js &
-es-check es2017 esm/dev.js --module &
+es-check es2017 dev/index.umd.js dev/index.cjs &
+es-check es2017 dev/index.mjs --module &
 es-check es6 esm/index.js --module &
 
 wait

@@ -33,7 +33,7 @@ const config = ({
   output: {
     path: root(),
     globalObject: `typeof self !== 'undefined' ? self : this`,
-    filename: output + '.js',
+    filename: output,
     sourceMapFilename: output + '.map',
     chunkFormat: 'module',
     module: libraryType === 'module',
@@ -89,13 +89,13 @@ module.exports = [
   // ESModule
   config({
     esTarget: 'es2017',
-    output: 'esm/index',
+    output: 'esm/index.js',
     libraryType: 'module',
     inlineDeps: true
   }),
   config({
     esTarget: 'es2020',
-    output: 'esm/dev',
+    output: 'dev/index.mjs',
     libraryType: 'module',
     inlineDeps: true,
     devBuild: true
@@ -110,7 +110,7 @@ module.exports = [
   }),
   config({
     esTarget: 'es2020',
-    output: 'cjs/dev',
+    output: 'dev/index.cjs',
     libraryType: 'commonjs2',
     inlineDeps: true,
     devBuild: true
@@ -119,20 +119,20 @@ module.exports = [
   // UMD
   config({
     esTarget: 'es2017',
-    output: 'umd/index',
+    output: 'umd/index.js',
     libraryType: 'umd',
     libraryName: 'AxiosCacheInterceptor'
   }),
   config({
     esTarget: 'es2020',
-    output: 'umd/dev',
+    output: 'dev/index.umd.js',
     libraryType: 'umd',
     libraryName: 'AxiosCacheInterceptor',
     devBuild: true
   }),
   config({
     esTarget: 'es5',
-    output: 'umd/es5',
+    output: 'umd/es5.js',
     libraryType: 'umd',
     libraryName: 'AxiosCacheInterceptor'
   })
