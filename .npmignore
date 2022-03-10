@@ -7,11 +7,7 @@
 
 !src/**
 
-!umd/**
-!cjs/**
-!esm/**
+!dist/**
 !dev/**
-
-!types/**
 
 !examples/runkit.js

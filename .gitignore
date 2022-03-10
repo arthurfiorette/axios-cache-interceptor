@@ -2,11 +2,8 @@
 coverage
 node_modules
 
-/umd
-/cjs
-/esm
+# Output
 /dist
-/types
 /dev
 
 # Random

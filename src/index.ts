@@ -30,7 +30,6 @@ declare global {
 
 if (__ACI_DEV__) {
   console.error(
-    'You are using a development build. Make sure to use the correct build in production'
+    'You are using a development build. Make sure to use the correct build in production\nhttps://axios-cache-interceptor.js.org/#/pages/installing\n\n'
   );
-  console.error('https://axios-cache-interceptor.js.org/#/pages/installing');
 }

@@ -10,7 +10,7 @@ const root = (...p) => path.resolve(__dirname, '..', ...p);
 /**
  * @param {{
  *   output: string;
- *   esTarget: string;
+ *   esTarget?: string;
  *   libraryType: import('webpack').LibraryOptions['type'];
  *   libraryName?: import('webpack').LibraryOptions['name'];
  *   inlineDeps?: boolean;
@@ -20,7 +20,7 @@ const root = (...p) => path.resolve(__dirname, '..', ...p);
  */
 const config = ({
   output,
-  esTarget,
+  esTarget = 'es2017',
   libraryType,
   libraryName,
   inlineDeps = false,
@@ -60,7 +60,7 @@ const config = ({
   module: {
     rules: [
       {
-        include: root('src'),
+        include: /src|node_modules/,
         test: /\.(ts|js)$/,
         loader: 'ts-loader',
         options: {
@@ -88,13 +88,11 @@ const config = ({
 module.exports = [
   // ESModule
   config({
-    esTarget: 'es2017',
-    output: 'esm/index.js',
+    output: 'dist/index.mjs',
     libraryType: 'module',
     inlineDeps: true
   }),
   config({
-    esTarget: 'es2020',
     output: 'dev/index.mjs',
     libraryType: 'module',
     inlineDeps: true,
@@ -103,13 +101,11 @@ module.exports = [
 
   // CommonJS
   config({
-    esTarget: 'es2017',
-    output: 'cjs/index',
+    output: 'dist/index.cjs',
     libraryType: 'commonjs2',
     inlineDeps: true
   }),
   config({
-    esTarget: 'es2020',
     output: 'dev/index.cjs',
     libraryType: 'commonjs2',
     inlineDeps: true,
@@ -118,22 +114,15 @@ module.exports = [
 
   // UMD
   config({
-    esTarget: 'es2017',
-    output: 'umd/index.js',
+    esTarget: 'es5', // Use ES6 for UMD builds to support more browsers
+    output: 'dist/index.umd.js',
     libraryType: 'umd',
     libraryName: 'AxiosCacheInterceptor'
   }),
   config({
-    esTarget: 'es2020',
     output: 'dev/index.umd.js',
     libraryType: 'umd',
     libraryName: 'AxiosCacheInterceptor',
     devBuild: true
-  }),
-  config({
-    esTarget: 'es5',
-    output: 'umd/es5.js',
-    libraryType: 'umd',
-    libraryName: 'AxiosCacheInterceptor'
   })
 ];
