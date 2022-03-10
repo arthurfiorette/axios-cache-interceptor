@@ -1,7 +1,7 @@
 - Getting Started
 
   - [Homepage](/ 'Homepage')
-  - [Try it out!](pages/try-it-out.md 'Try axios-cache-interceptor in your browser!')
+  - [Getting started](pages/getting-started.md 'Getting Started')
   - [Installing](pages/installing.md 'Installing')
   - [Usage & examples](pages/usage-examples.md 'Usage and examples')
   - [Storages](pages/storages.md 'Custom storages')
@@ -17,7 +17,6 @@
 
   - [Development mode](pages/development-mode.md 'Development mode')
   - [Typescript users](pages/typescript-users.md 'Typescript users')
-  - [Compiled code](pages/compiled-code.md 'Compiled code')
   - [Comparison](pages/comparison.md 'Comparison')
 
 - Other

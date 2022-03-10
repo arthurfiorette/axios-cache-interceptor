@@ -1,6 +1,6 @@
 # Development
 
-#### TL;DR: `import { setupCache } from 'axios-cache-interceptor/dev';`
+#### TL;DR:  `import { setupCache } from 'axios-cache-interceptor/dev';`
 
 All debugging information is emitted into a different bundle, this way it's possible to
 prevent unnecessary code from being bundled into the production build.
