@@ -1,4 +1,4 @@
-import type { CacheRequestConfig } from '../../src';
+import type { CacheRequestConfig } from '../../src/cache/axios';
 import { buildKeyGenerator, defaultKeyGenerator } from '../../src/util/key-generator';
 import { mockAxios } from '../mocks/axios';
 
