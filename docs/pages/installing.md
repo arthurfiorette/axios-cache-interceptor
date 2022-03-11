@@ -3,13 +3,11 @@
 [![Bundle Size](https://img.shields.io/bundlephobia/minzip/axios-cache-interceptor/latest?style=flat)](https://bundlephobia.com/package/axios-cache-interceptor@latest)
 [![Install Size](https://packagephobia.com/badge?p=axios-cache-interceptor@latest)](https://packagephobia.com/result?p=axios-cache-interceptor@latest)
 
-## With Npm
+<br />
 
-```sh
-# Npm
-npm install --save axios axios-cache-interceptor
-
-# Yarn
+```bash
+npm install axios axios-cache-interceptor
+# or
 yarn add axios axios-cache-interceptor
 ```
 
@@ -19,9 +17,17 @@ const { setupCache } = require('axios-cache-interceptor');
 
 // EcmaScript (ES2017+)
 import { setupCache } from 'axios-cache-interceptor';
-```
 
-## With CDN
+// UMD (ES5+)
+const { setupCache } = window.AxiosCacheInterceptor;
+
+// ESM with Skypack CDN
+import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor@0.9.4';
+
+setupCache(axiosInstance, {
+  // options
+});
+```
 
 ```html
 <!-- Development build for ES2017+ (~11.2 KiB) -->
@@ -39,23 +45,9 @@ import { setupCache } from 'axios-cache-interceptor';
 ></script>
 ```
 
-```js
-const { setupCache } = window.AxiosCacheInterceptor;
-```
+<br />
 
-## With URL imports
-
-You can import any [CDN Url](#with-cdns) and use it in your code. **UMD Compatible**
-
-```js
-// ESM with Skypack CDN
-import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor@0.9.4';
-
-// UMD with JSDeliver CDN
-import { setupCache } from 'https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.9.4/dist/index.mjs';
-```
-
-## Official support table
+## Axios support table
 
 Below you can check what version of this package is supported by your version of axios.
 **But that does not mean that it won't work.**. Axios had many "breaking changes" made

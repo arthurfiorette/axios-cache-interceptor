@@ -1,22 +1,17 @@
-# Getting Started
+## Configuration
 
-This library prevents every request made from being sent over the network. This is done by
-intercepting all requests and analyzing each one to see if that request has been made
-before. If it has, it will check if its not expired and return the cached response. If it
-hasn't, it will send the request over the network, as axios would do normally, and cache
-the response received for future requests.
-
-This library preserves 100% of the axios api, so after applying it with
+This library preserves 100% the original `Axios API`, so after applying it with
 [`setupCache()`](pages/usage-examples#applying), your code won't change or break.
 
-```js #runkit
-const Axios = require('axios');
-const {
+See all properties and their default values.
+
+```js
+import {
   setupCache,
   buildMemoryStorage,
   defaultKeyGenerator,
   defaultHeaderInterpreter
-} = require('axios-cache-interceptor');
+} from 'axios-cache-interceptor';
 
 const axios = setupCache(
   // axios instance
@@ -47,8 +42,12 @@ const axios = setupCache(
     debug: undefined
   }
 );
+```
 
-const { data } = await axios.get('url', {
+And each configuration property can be overridden at request level:
+
+```js
+const response = await axios.get('https://jsonplaceholder.typicode.com/posts/1', {
   // All per-request options lives under the `cache` property.
   cache: {
     // The time until the cached value is expired in milliseconds.

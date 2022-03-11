@@ -30,3 +30,8 @@ input[type='search']:focus {
   box-shadow: 0 0 0.3rem var(--theme-color) !important;
   border: 0.1rem solid var(--theme-color) !important;
 }
+
+article,
+p {
+  max-width: min(90vw, 70rem) !important;
+}

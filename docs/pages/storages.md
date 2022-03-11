@@ -39,7 +39,7 @@ console.log('Cache information:', cache);
 A simple storage that works everywhere. You can access his values with the `data`
 property;
 
-```js #runkit
+```js
 const axios = require('axios');
 const { buildMemoryStorage, setupCache } = require('axios-cache-interceptor');
 
@@ -85,8 +85,6 @@ const withoutPrefix = buildWebStorage(localStorage);
 const withPrefix = buildWebStorage(localStorage, 'axios-cache:');
 ```
 
-### Browser quota
-
 From `v0.9.0`, the web storage is able to detect and evict entries if the browser's quota
 is reached.
 
@@ -109,26 +107,29 @@ a key and handle cache invalidation.
 
 Look at this simple [NodeRedis v4](https://github.com/redis/node-redis) example.
 
-```js #runkit
+```js
 const axios = require('axios');
-const { createClient } = require('redis'); // v4.0.1
+const { createClient } = require('redis');
 const { buildStorage, setupCache } = require('axios-cache-interceptor');
 
 const client = createClient();
 
-await client.connect();
-
 const redisStorage = buildStorage({
   find: async (key) => {
-    return await client.get(`axios-cache:${key}`);
+    const result = await client.get(`axios-cache:${key}`);
+    return JSON.parse(result);
   },
+
   set: async (key, value) => {
     await client.set(`axios-cache:${key}`, JSON.stringify(value));
   },
+
   remove: async (key) => {
     await client.del(`axios-cache:${key}`);
   }
 });
 
-setupCache(axios, { storage: redisStorage });
+setupCache(axios, {
+  storage: redisStorage
+});
 ```
