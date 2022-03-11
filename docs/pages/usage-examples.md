@@ -23,7 +23,7 @@ There are two types of axios instances, the `AxiosStatic` and the `AxiosInstance
 get when you call `axios.create()`.
 
 Both of them work seamlessly, but when messing with the axios static, your hole code,
-_including those libraries you don't know that their exists_, are also affected. **You
+_including those libraries you don't even know that they exists_, are also affected. **You
 should be careful when using it.**
 
 ```js

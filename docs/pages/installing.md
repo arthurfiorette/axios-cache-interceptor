@@ -14,38 +14,27 @@ yarn add axios axios-cache-interceptor
 ```
 
 ```js
-// CommonJS
+// CommonJS (ES2017+)
 const { setupCache } = require('axios-cache-interceptor');
+
+// EcmaScript (ES2017+)
 import { setupCache } from 'axios-cache-interceptor';
-
-// ES Modules
-import { setupCache } from 'axios-cache-interceptor/esm';
-
-// Universal (UMD)
-const { setupCache } = require('axios-cache-interceptor/umd');
 ```
 
 ## With CDN
 
 ```html
-<!-- Development build for ES2020+ (~11.2 KiB) -->
+<!-- Development build for ES2017+ (~11.2 KiB) -->
 <script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.9.3/umd/dev.js"
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.9.4/dev/index.umd.js"
   integrity="sha256-rA/FnVuUARurz1Bf4Z39FYKwRxwof9EyDXUvNXpme7Y="
   crossorigin="anonymous"
 ></script>
 
-<!-- Production for ES2017+ (~9.74 KiB) -->
+<!-- Production for ES5+ (~9.74 KiB) -->
 <script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.9.3/umd/index.js"
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.9.4/dist/index.umd.js"
   integrity="sha256-j8ypa8+fqXmln3IeNAFQt5ptzfkOettceB7qQmIDIW4="
-  crossorigin="anonymous"
-></script>
-
-<!-- Production for ES5+ (~13.9 KiB) (Needs Promise polyfill) -->
-<script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.9.3/umd/es5.js"
-  integrity="sha256-UCAsKcSsVNscI3Zydh5pmQt3QtRdLP4cF4rUwq0KLDY="
   crossorigin="anonymous"
 ></script>
 ```
@@ -60,10 +49,10 @@ You can import any [CDN Url](#with-cdns) and use it in your code. **UMD Compatib
 
 ```js
 // ESM with Skypack CDN
-import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor@0.9.3';
+import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor@0.9.4';
 
 // UMD with JSDeliver CDN
-import { setupCache } from 'https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.9.3/umd/index.js';
+import { setupCache } from 'https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.9.4/dist/index.mjs';
 ```
 
 ## Official support table

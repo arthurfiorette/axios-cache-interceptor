@@ -70,3 +70,37 @@ sort of custom implementation, it is not guaranteed to any other documented thin
 
 At this moment, you can see their code for more information
 [here](https://github.com/arthurfiorette/axios-cache-interceptor/tree/main/src/interceptors).
+
+## `debug`
+
+> This option only works when targeting a [Development](pages/development-mode.md) build.
+
+The debug option will print debug information in the console. It is good if you need to
+trace any undesired behavior or issue.
+
+You can enable it by setting `debug` to a function that receives an string.
+
+```js
+// Will print debug info in the console.
+setupCache(axios, {
+  debug: console.log
+});
+
+// own logger or whatever.
+setupCache(axios, {
+  debug: (message) => {
+    // Etc
+    myCustomLogger.emit({
+      key: 'axios-cache-interceptor',
+      log: message
+    });
+  }
+});
+
+// Disables debug.
+setupCache(axios, {
+  debug: undefined
+});
+// or
+axiosCacheInstance.debug = undefined;
+```
