@@ -10,30 +10,28 @@ export async function updateCache<T, D>(
 ): Promise<void> {
   for (const cacheKey in entries) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const value = entries[cacheKey]!;
+    const updater = entries[cacheKey]!;
 
-    if (value === 'delete') {
+    if (updater === 'delete') {
       await storage.remove(cacheKey);
       continue;
     }
 
-    const oldValue = await storage.get(cacheKey);
+    const value = await storage.get(cacheKey);
 
-    if (oldValue.state === 'loading') {
+    if (value.state === 'loading') {
       continue;
     }
 
-    const newValue = await value(oldValue, data);
+    const newValue = await updater(value, data);
 
     if (newValue === 'delete') {
       await storage.remove(cacheKey);
       continue;
     }
 
-    if (newValue === 'ignore') {
-      continue;
+    if (newValue !== 'ignore') {
+      await storage.set(cacheKey, newValue);
     }
-
-    await storage.set(cacheKey, newValue);
   }
 }

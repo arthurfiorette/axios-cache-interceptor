@@ -119,7 +119,7 @@ describe('Last-Modified handling', () => {
     expect(response.data).toBe(cache.data);
     expect(response.status).toBe(cache.status);
     expect(response.statusText).toBe(cache.statusText);
-    expect(response.headers).toBe(cache.headers);
+    expect(response.headers).toStrictEqual(cache.headers);
     expect(response.cached).toBe(true);
   });
 
@@ -240,7 +240,7 @@ describe('Last-Modified handling', () => {
     expect(response.data).toBe(cache.data);
     expect(response.status).toBe(cache.status);
     expect(response.statusText).toBe(cache.statusText);
-    expect(response.headers).toBe(cache.headers);
+    expect(response.headers).toStrictEqual(cache.headers);
     expect(response.cached).toBe(true);
   });
 
@@ -272,7 +272,7 @@ describe('Last-Modified handling', () => {
     expect(response.data).toBe(cache.data);
     expect(response.status).toBe(cache.status);
     expect(response.statusText).toBe(cache.statusText);
-    expect(response.headers).toBe(cache.headers);
+    expect(response.headers).toStrictEqual(cache.headers);
     expect(response.cached).toBe(true);
 
     const newResponse = await axios.get('https://httpbin.org/status/503', {
@@ -325,8 +325,8 @@ describe('Last-Modified handling', () => {
     expect(res2.status).toBe(cacheData.status);
     expect(res1.statusText).toBe(cacheData.statusText);
     expect(res2.statusText).toBe(cacheData.statusText);
-    expect(res1.headers).toBe(cacheData.headers);
-    expect(res2.headers).toBe(cacheData.headers);
+    expect(res1.headers).toStrictEqual(cacheData.headers);
+    expect(res2.headers).toStrictEqual(cacheData.headers);
     expect(res1.cached).toBe(true);
     expect(res2.cached).toBe(true);
 
@@ -334,6 +334,6 @@ describe('Last-Modified handling', () => {
 
     expect(cache.state).toBe('stale');
     expect(typeof cache.createdAt).toBe('number');
-    expect(cache.data).toBe(cacheData);
+    expect(cache.data).toStrictEqual(cacheData);
   });
 });

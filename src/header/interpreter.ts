@@ -18,7 +18,7 @@ export const defaultHeaderInterpreter: HeadersInterpreter = (headers) => {
     }
 
     if (immutable) {
-      // 1 year is sufficient, as Infinity may cause more problems.
+      // 1 year is sufficient, as Infinity may cause problems with certain storages.
       // It might not be the best way, but a year is better than none.
       return 1000 * 60 * 60 * 24 * 365;
     }

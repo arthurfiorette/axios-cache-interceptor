@@ -1,6 +1,12 @@
-import type { AxiosStorage } from '..';
 import { buildStorage } from './build';
-import type { StorageValue } from './types';
+import type { AxiosStorage, StorageValue } from './types';
+
+/**
+ * Modern function to natively deep clone
+ *
+ * @link https://caniuse.com/mdn-api_structuredclone (07/03/2022 -> 59.4%)
+ */
+declare const structuredClone: (<T>(value: T) => T) | undefined;
 
 /**
  * Creates a simple in-memory storage. This means that if you need to persist data between
@@ -26,12 +32,26 @@ import type { StorageValue } from './types';
  */
 export function buildMemoryStorage() {
   const storage = buildStorage({
-    find: (key) => storage.data[key],
     set: (key, value) => {
       storage.data[key] = value;
     },
     remove: (key) => {
       delete storage.data[key];
+    },
+
+    find: (key) => {
+      const value = storage.data[key];
+
+      if (value === undefined) {
+        return value;
+      }
+
+      /* istanbul ignore if 'only available on super recent browsers' */
+      if (typeof structuredClone === 'function') {
+        return structuredClone(value);
+      }
+
+      return JSON.parse(JSON.stringify(value)) as StorageValue;
     }
   }) as MemoryStorage;
 
