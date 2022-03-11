@@ -16,6 +16,8 @@ declare const structuredClone: (<T>(value: T) => T) | undefined;
  *
  * If you need to modify it's data, you can do by the `data` property.
  *
+ * @param {boolean} cloneData if the data returned by `find()` should be cloned to avoid mutating the original data outside the `set()` method.
+ *
  * @example
  *
  * ```js
@@ -30,11 +32,12 @@ declare const structuredClone: (<T>(value: T) => T) | undefined;
  * delete memoryStorage.data[id];
  * ```
  */
-export function buildMemoryStorage() {
+export function buildMemoryStorage(cloneData = false) {
   const storage = buildStorage({
     set: (key, value) => {
       storage.data[key] = value;
     },
+
     remove: (key) => {
       delete storage.data[key];
     },
@@ -42,16 +45,16 @@ export function buildMemoryStorage() {
     find: (key) => {
       const value = storage.data[key];
 
-      if (value === undefined) {
-        return value;
+      if (cloneData && value !== undefined) {
+        /* istanbul ignore if 'only available on super recent browsers' */
+        if (typeof structuredClone === 'function') {
+          return structuredClone(value);
+        }
+
+        return JSON.parse(JSON.stringify(value)) as StorageValue;
       }
 
-      /* istanbul ignore if 'only available on super recent browsers' */
-      if (typeof structuredClone === 'function') {
-        return structuredClone(value);
-      }
-
-      return JSON.parse(JSON.stringify(value)) as StorageValue;
+      return value;
     }
   }) as MemoryStorage;
 
