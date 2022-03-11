@@ -7,7 +7,7 @@ const { writeFileSync } = require('fs');
 const Axios = require('axios').default;
 const AxiosInstance = Axios.create();
 
-const AxiosCacheInterceptor = require('../cjs');
+const AxiosCacheInterceptor = require('../dist/index.cjs');
 const InterceptorInstance = AxiosCacheInterceptor.setupCache(Axios.create());
 
 const AxiosCacheAdapter = require('axios-cache-adapter');

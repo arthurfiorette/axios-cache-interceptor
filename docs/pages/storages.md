@@ -90,7 +90,7 @@ is reached.
 
 The eviction is done by the following algorithm:
 
-1. Saves an value and got an error. (Probably quota exceeded)
+1. Saves an value and got an error. _(Probably quota exceeded)_
 2. Evicts all expired keys that cannot enter the `stale` state.
 3. If it fails again, evicts the oldest key.
 4. Repeat step 4 and 5 until the object could be saved or the storage is empty.
@@ -102,9 +102,6 @@ The eviction is done by the following algorithm:
 There's no mystery implementing a custom storage. You can create your own storage by using
 the `buildStorage` function. It is also internally used to build the built-in ones.
 
-This function is needed to add a simple method `get`. It is used to retrieve the value of
-a key and handle cache invalidation.
-
 Look at this simple [NodeRedis v4](https://github.com/redis/node-redis) example.
 
 ```js
@@ -115,16 +112,16 @@ const { buildStorage, setupCache } = require('axios-cache-interceptor');
 const client = createClient();
 
 const redisStorage = buildStorage({
-  find: async (key) => {
+  async find(key) {
     const result = await client.get(`axios-cache:${key}`);
     return JSON.parse(result);
   },
 
-  set: async (key, value) => {
+  async set(key, value) {
     await client.set(`axios-cache:${key}`, JSON.stringify(value));
   },
 
-  remove: async (key) => {
+  async remove(key) {
     await client.del(`axios-cache:${key}`);
   }
 });

@@ -16,8 +16,6 @@ declare const structuredClone: (<T>(value: T) => T) | undefined;
  *
  * If you need to modify it's data, you can do by the `data` property.
  *
- * @param {boolean} cloneData if the data returned by `find()` should be cloned to avoid mutating the original data outside the `set()` method.
- *
  * @example
  *
  * ```js
@@ -31,6 +29,9 @@ declare const structuredClone: (<T>(value: T) => T) | undefined;
  *
  * delete memoryStorage.data[id];
  * ```
+ *
+ * @param {boolean} cloneData If the data returned by `find()` should be cloned to avoid
+ *   mutating the original data outside the `set()` method.
  */
 export function buildMemoryStorage(cloneData = false) {
   const storage = buildStorage({
