@@ -1,7 +1,8 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "module": "ESNext", // webpack converts to UMD
+    // webpack converts to UMD or CJS if needed
+    "module": "ESNext",
     "target": "ESNext",
 
     // Emits all import helpers as an import to tslib
@@ -10,7 +11,10 @@
 
     // No declaration
     "declaration": false,
-    "declarationMap": false
+    "declarationMap": false,
+
+    // This allow us to import javascript files from node_modules.
+    "allowJs": true
   },
   "include": ["../src"]
 }

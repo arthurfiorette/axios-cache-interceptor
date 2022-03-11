@@ -3,16 +3,22 @@
 # This script is used to check the umd's ecmascript compatibility.
 # It is intended to be run from the project's root directory.
 
-echo "\nStarting checking...\n"
+yarn es-check es2017 dist/index.cjs dev/index.cjs dev/index.umd.js
 
-es-check es2015 umd/es5.js &
+if [ $? -eq 1 ]; then
+  exit 1
+fi
 
-es-check es2017 umd/index.js cjs/index.js &
-es-check es2017 esm/index.js --module &
+yarn es-check es2017 dist/index.mjs dev/index.mjs --module
 
-es-check es2020 dev/index.umd.js dev/index.cjs &
-es-check es2020 dev/index.mjs --module &
+if [ $? -eq 1 ]; then
+  exit 1
+fi
 
-wait
+yarn es-check es5 dist/index.umd.js
 
-echo "\nCheck done!"
+if [ $? -eq 1 ]; then
+  exit 1
+fi
+
+# :)

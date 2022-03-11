@@ -5,6 +5,7 @@ const path = require('path');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
 const { DefinePlugin } = require('webpack');
 
+/** @type {(...args: string[]) => string} */
 const root = (...p) => path.resolve(__dirname, '..', ...p);
 
 /**
@@ -60,6 +61,7 @@ const config = ({
   module: {
     rules: [
       {
+        // Include node_modules to parse all javascript files imported
         include: /src|node_modules/,
         test: /\.(ts|js)$/,
         loader: 'ts-loader',

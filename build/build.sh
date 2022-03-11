@@ -14,7 +14,8 @@ webpack --config build/webpack.config.js &
 tsc -p build/tsconfig.types.json &
 
 # Add a simple index.d.ts file to type all dev builds
-echo "export * from '../dist/index.d.ts';" | tee dev/index.d.ts > /dev/null &
+echo "export * from '../dist/index';" | tee dev/index.d.ts > /dev/null &
+echo "export * from './index';" | tee dist/index.umd.d.ts > /dev/null &
 
 wait
 
