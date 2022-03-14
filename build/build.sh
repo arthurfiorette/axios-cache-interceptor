@@ -10,8 +10,8 @@ mkdir dev/ dist/
 
 echo "Target cleared...\n"
 
-webpack --config build/webpack.config.js &
 tsc -p build/tsconfig.types.json &
+webpack --config build/webpack.config.js &
 
 # Add a simple index.d.ts file to type all dev builds
 echo "export * from '../dist/index';" | tee dev/index.d.ts > /dev/null &
