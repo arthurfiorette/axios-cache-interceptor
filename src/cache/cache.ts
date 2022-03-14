@@ -87,8 +87,8 @@ export type CacheProperties<R = unknown, D = unknown> = {
    * status code, network errors and etc. You can filter the type of error that should be
    * stale by using a predicate function.
    *
-   * **Note**: If the response is treated as error because of invalid status code *(like
-   * from AxiosRequestConfig#invalidateStatus)*, and this ends up `true`, the cache will
+   * **Note**: If the response is treated as error because of invalid status code _(like
+   * from AxiosRequestConfig#invalidateStatus)_, and this ends up `true`, the cache will
    * be preserved over the "invalid" request. So, if you want to preserve the response,
    * you can use this predicate:
    *
