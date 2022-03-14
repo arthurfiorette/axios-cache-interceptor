@@ -8,7 +8,7 @@
     "axios": "^0.26.1",
     "axios-cache-adapter": "^2.7.3",
     "benny": "^3.7.1",
-    "docsify-cli": "^4.4.3",
+    "docsify-cli": "^4.4.4",
     "express": "^4.17.3"
   }
 }
