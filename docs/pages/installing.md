@@ -18,7 +18,7 @@ const { setupCache } = require('axios-cache-interceptor');
 // EcmaScript (ES2017+)
 import { setupCache } from 'axios-cache-interceptor';
 
-// UMD (ES5+) 
+// UMD (ES5+)
 const { setupCache } = window.AxiosCacheInterceptor;
 
 // ESM with Skypack CDN
@@ -31,14 +31,10 @@ setupCache(axiosInstance, {
 
 ```html
 <!-- Development UMD build for ES2017+ (~12.4 KiB) -->
-<script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.10.1/dev/index.bundle.js"
-></script>
+<script src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.10.1/dev/index.bundle.js"></script>
 
 <!-- Production UMD build for ES5+ (~14.1 KiB) -->
-<script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.10.1/dist/index.bundle.js"
-></script>
+<script src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.10.1/dist/index.bundle.js"></script>
 ```
 
 <br />
