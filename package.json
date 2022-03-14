@@ -1,6 +1,6 @@
 {
   "name": "axios-cache-interceptor",
-  "version": "0.9.3",
+  "version": "0.10.0",
   "description": "Cache interceptor for axios",
   "license": "MIT",
   "main": "./dist/index.cjs",
