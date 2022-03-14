@@ -32,7 +32,7 @@ export type CacheProperties<R = unknown, D = unknown> = {
    * If this interceptor should configure the cache from the request cache header When
    * used, the ttl property is ignored
    *
-   * @default false
+   * @default true
    */
   interpretHeader: boolean;
 
@@ -65,19 +65,19 @@ export type CacheProperties<R = unknown, D = unknown> = {
   update: Record<string, CacheUpdater<R, D>>;
 
   /**
-   * If the request should handle ETag and If-None-Match support. Use a string to force a
-   * custom value or true to use the response ETag
+   * If the request should handle `ETag` and `If-None-Match` support. Use a string to
+   * force a custom value or true to use the response ETag
    *
-   * @default false
+   * @default true
    * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag
    */
   etag: string | boolean;
 
   /**
-   * Use If-Modified-Since header in this request. Use a date to force a custom value or
+   * Use `If-Modified-Since` header in this request. Use a date to force a custom value or
    * true to use the last cached timestamp. If never cached before, the header is not set.
    *
-   * @default false
+   * @default false // The opposite of the resulting `etag` option.
    * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/If-Modified-Since
    */
   modifiedSince: Date | boolean;
@@ -105,7 +105,7 @@ export type CacheProperties<R = unknown, D = unknown> = {
    * - `boolean` -> `false` disables and `true` enables with infinite time.
    * - `function` -> a predicate that can return `number` or `boolean` as described above.
    *
-   * @default false
+   * @default true
    * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control#stale-if-error
    */
   staleIfError: StaleIfErrorPredicate<R, D>;

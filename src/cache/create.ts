@@ -58,27 +58,40 @@ export function setupCache(
     throw new Error('Use buildStorage() function');
   }
 
-  axiosCache.generateKey = options.generateKey || defaultKeyGenerator;
   axiosCache.waiting = options.waiting || {};
+
+  axiosCache.generateKey = options.generateKey || defaultKeyGenerator;
+
   axiosCache.headerInterpreter = options.headerInterpreter || defaultHeaderInterpreter;
+
   axiosCache.requestInterceptor =
     options.requestInterceptor || defaultRequestInterceptor(axiosCache);
+
   axiosCache.responseInterceptor =
     options.responseInterceptor || defaultResponseInterceptor(axiosCache);
   axiosCache.debug = options.debug;
 
   // CacheRequestConfig values
   axiosCache.defaults.cache = {
+    update: options.update || {},
+
     ttl: options.ttl ?? 1000 * 60 * 5,
-    interpretHeader: options.interpretHeader ?? false,
+
     methods: options.methods || ['get'],
+
     cachePredicate: options.cachePredicate || {
       statusCheck: (status) => status >= 200 && status < 400
     },
-    etag: options.etag ?? false,
-    modifiedSince: options.modifiedSince ?? false,
-    staleIfError: options.staleIfError ?? false,
-    update: options.update || {}
+
+    etag: options.etag ?? true,
+
+    // This option is going to be ignored by servers when ETag is enabled
+    // Checks strict equality to false to avoid undefined-ish values
+    modifiedSince: options.modifiedSince ?? options.etag === false,
+
+    interpretHeader: options.interpretHeader ?? true,
+
+    staleIfError: options.staleIfError ?? true
   };
 
   // Apply interceptors
