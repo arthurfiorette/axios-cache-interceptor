@@ -31,10 +31,18 @@ setupCache(axiosInstance, {
 
 ```html
 <!-- Development UMD build for ES2017+ (~12.4 KiB) -->
-<script src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.10.1/dev/index.bundle.js"></script>
+<script
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.10.1/dev/index.bundle.js"
+  integrity="sha256-9Fw/Yu1PZlKJehoHtB6TqEt46OrJ8Z0tX3XwyRXqipM="
+  crossorigin="anonymous"
+></script>
 
 <!-- Production UMD build for ES5+ (~14.1 KiB) -->
-<script src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.10.1/dist/index.bundle.js"></script>
+<script
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.10.1/dist/index.bundle.js"
+  integrity="sha256-WPZ329lW5cxPoDRkG4su9cK7qqj9uOYbA+/WSJCvaCw="
+  crossorigin="anonymous"
+></script>
 ```
 
 <br />
