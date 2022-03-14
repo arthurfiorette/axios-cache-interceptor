@@ -8,6 +8,8 @@ prevent unnecessary code from being bundled into the production build.
 Checkout how it helps debugging:
 
 ```js #runkit
+// Change your playground runkit to use Node >= 11.0.0
+
 const Axios = require('axios');
 const { setupCache } = require('axios-cache-interceptor/dev');
 
