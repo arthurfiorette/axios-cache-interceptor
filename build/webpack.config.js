@@ -114,15 +114,15 @@ module.exports = [
     devBuild: true
   }),
 
-  // UMD
+  // Browser Bundle
   config({
-    esTarget: 'es5', // Use ES6 for UMD builds to support more browsers
-    output: 'dist/index.umd.js',
+    esTarget: 'es5', // Use ES5 for UMD builds to support more browsers
+    output: 'dist/index.bundle.js',
     libraryType: 'umd',
     libraryName: 'AxiosCacheInterceptor'
   }),
   config({
-    output: 'dev/index.umd.js',
+    output: 'dev/index.bundle.js',
     libraryType: 'umd',
     libraryName: 'AxiosCacheInterceptor',
     devBuild: true

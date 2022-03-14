@@ -18,9 +18,8 @@
       "require": "./dev/index.cjs"
     }
   },
-  "browser": "./dist/index.umd.js",
-  "jsdelivr": "./dist/index.umd.js",
-  "unpkg": "./dist/index.umd.js",
+  "jsdelivr": "./dist/index.bundle.js",
+  "unpkg": "./dist/index.bundle.js",
   "sideEffects": false,
   "runkitExampleFilename": "./examples/runkit.js",
   "scripts": {
