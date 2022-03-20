@@ -3157,9 +3157,9 @@ nwsapi@^2.2.0:
   integrity sha512-h2AatdwYH+JHiZpv7pt/gSX1XoRGb7L/qSIeuqA6GwYoF9w1vP1cw42TO0aI2pNyshRK5893hNSl+1//vHK7hQ==
 
 object-code@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/object-code/-/object-code-1.2.0.tgz#aaa1ddc9bb69c1bbd9d2102e3553c541a099076e"
-  integrity sha512-VFYjh8+8Bfk5AuvVsqhoi36033g0NJ7/V4YS/RjhMFtfUdCrO5SjS57yUsDeGjKff8qKnJvdYYXBDSEI2eOIAQ==
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/object-code/-/object-code-1.2.2.tgz#ac0133813ae570555c51e47b9beee73494a39a6a"
+  integrity sha512-ZSbEQdei4ElzuDM4BmazKSwINacocBf3/8rte25aNqXzvT/8dSaNVY9egsjAaBL/UhW55JNxAvXOKPIsL2MwWQ==
 
 once@^1.3.0:
   version "1.4.0"
