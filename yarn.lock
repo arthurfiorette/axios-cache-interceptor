@@ -1913,9 +1913,9 @@ fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
   integrity sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==
 
 fast-defer@^1.1.5:
-  version "1.1.5"
-  resolved "https://registry.yarnpkg.com/fast-defer/-/fast-defer-1.1.5.tgz#0103cb248483e9b6cb931ffd9f56edf1ee1b62f3"
-  integrity sha512-5URGfQbNb+IJXv4AWvFldxvaMHXQdfvKVQGIrJ5PaJq+s9fFWtDSB+EhuCpvH608kXIxuulHkwrsWH33ONplnw==
+  version "1.1.7"
+  resolved "https://registry.yarnpkg.com/fast-defer/-/fast-defer-1.1.7.tgz#943bc3c7a876d437360318ab1e1f269a29f31ba4"
+  integrity sha512-tJ01ulDWT2WhqxMKS20nXX6wyX2iInBYpbN3GO7yjKwXMY4qvkdBRxak9IFwBLlFDESox+SwSvqMCZDfe1tqeg==
 
 fast-diff@^1.1.2:
   version "1.2.0"
