@@ -1298,9 +1298,9 @@ buffer-from@^1.0.0:
   integrity sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==
 
 cache-parser@^1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/cache-parser/-/cache-parser-1.2.2.tgz#bd92b28c14d84716e96d55ea8bcad8fe19328eff"
-  integrity sha512-fYyjfGESPFxpiWyfkuC4Ox7GargvOohtKmGnXMIID1WBfFIxMkwwfNH5xavwwn3jMCuge/krb2nXzAvQ5dHlvQ==
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/cache-parser/-/cache-parser-1.2.4.tgz#60975135ef2330e6a1d60895279d7237a2a9b398"
+  integrity sha512-O0KwuHuJnbHUrghHi2kGp0SxnWSIBXTYt7M8WVhW0kbPRUNUKoE/Of6e1rRD6AAxmfxFunKnt90yEK09D+sc5g==
 
 callsites@^3.0.0:
   version "3.1.0"
