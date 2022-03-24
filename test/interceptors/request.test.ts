@@ -1,3 +1,4 @@
+import type { CacheRequestConfig } from '../../src/cache/axios';
 import { mockAxios } from '../mocks/axios';
 import { sleep } from '../utils';
 
@@ -151,5 +152,39 @@ describe('test request interceptor', () => {
     });
 
     expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+  it('Deleting a cache in the middle of a request should be fine', async () => {
+    const ID = 'custom-id';
+    const axios = mockAxios();
+
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    await axios.get('url', {
+      id: ID,
+
+      // A simple adapter that deletes the current cache
+      // before resolving the adapter. Simulates when a user
+      // manually deletes this key before it can be resolved.
+      adapter: async (config: CacheRequestConfig) => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        await axios.storage.remove(config.id!);
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return axios.defaults.adapter!(config);
+      }
+    });
+
+    // Expects that the cache is empty (deleted above) and
+    // it still has a waiting entry.
+    const { state } = await axios.storage.get(ID);
+    expect(state).toBe('empty');
+    expect(axios.waiting[ID]).toBeDefined();
+
+    // This line should throw an error if this bug isn't fixed.
+    await axios.get('url', { id: ID });
+
+    const { state: newState } = await axios.storage.get(ID);
+
+    expect(newState).not.toBe('empty');
+    expect(axios.waiting[ID]).toBeUndefined();
   });
 });

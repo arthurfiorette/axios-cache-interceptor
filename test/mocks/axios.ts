@@ -12,32 +12,28 @@ export function mockAxios(
   const axios = setupCache(Axios.create(), options);
 
   // Axios interceptors are a stack, so apply this after the cache interceptor
-  axios.interceptors.request.use((config) => {
-    config.adapter = async (config) => {
-      await 0; // Jumps to next tick of nodejs event loop
+  axios.defaults.adapter = async (config) => {
+    await 0; // Jumps to next tick of nodejs event loop
 
-      const should304 =
-        config.headers?.[Header.IfNoneMatch] || config.headers?.[Header.IfModifiedSince];
-      const status = should304 ? 304 : 200;
+    const should304 =
+      config.headers?.[Header.IfNoneMatch] || config.headers?.[Header.IfModifiedSince];
+    const status = should304 ? 304 : 200;
 
-      // real axios would throw an error here.
-      config.validateStatus?.(status);
+    // real axios would throw an error here.
+    config.validateStatus?.(status);
 
-      return {
-        data: true,
-        status,
-        statusText: should304 ? '304 Not Modified' : '200 OK',
-        headers: {
-          ...responseHeaders,
-          // Random header for every request made
-          [XMockRandom]: `${Math.random()}`
-        },
-        config
-      };
+    return {
+      data: true,
+      status,
+      statusText: should304 ? '304 Not Modified' : '200 OK',
+      headers: {
+        ...responseHeaders,
+        // Random header for every request made
+        [XMockRandom]: `${Math.random()}`
+      },
+      config
     };
-
-    return config;
-  });
+  };
 
   return axios;
 }
