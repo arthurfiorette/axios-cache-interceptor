@@ -22,25 +22,21 @@ import { setupCache } from 'axios-cache-interceptor';
 const { setupCache } = window.AxiosCacheInterceptor;
 
 // ESM with Skypack CDN
-import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor@0.10.1';
-
-setupCache(axiosInstance, {
-  // options
-});
+import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor@0.10.2';
 ```
 
 ```html
 <!-- Development UMD build for ES2017+ (~12.4 KiB) -->
 <script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.10.1/dev/index.bundle.js"
-  integrity="sha256-9Fw/Yu1PZlKJehoHtB6TqEt46OrJ8Z0tX3XwyRXqipM="
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.10.2/dev/index.bundle.js"
+  integrity="sha256-2iD0vHRnHR4za6LT4/EpOBBh0FWHST04gDv2XqReRhs="
   crossorigin="anonymous"
 ></script>
 
 <!-- Production UMD build for ES5+ (~14.1 KiB) -->
 <script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.10.1/dist/index.bundle.js"
-  integrity="sha256-WPZ329lW5cxPoDRkG4su9cK7qqj9uOYbA+/WSJCvaCw="
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.10.2/dist/index.bundle.js"
+  integrity="sha256-erplbwgo9k9IPosc8Esc8ZlniNsTc5vDdvjchHYVPf4="
   crossorigin="anonymous"
 ></script>
 ```
