@@ -115,7 +115,7 @@ export interface CacheInstance {
   /**
    * The storage to save the cache data. Defaults to an in-memory storage.
    *
-   * @default buildMemoryStorage()
+   * @default buildMemoryStorage
    */
   storage: AxiosStorage;
 
@@ -137,21 +137,21 @@ export interface CacheInstance {
    * The function to parse and interpret response headers. Only used if
    * cache.interpretHeader is true.
    *
-   * @default defaultHeaderInterpreter()
+   * @default defaultHeaderInterpreter
    */
   headerInterpreter: HeadersInterpreter;
 
   /**
    * The request interceptor that will be used to handle the cache.
    *
-   * @default defaultRequestInterceptor()
+   * @default defaultRequestInterceptor
    */
   requestInterceptor: AxiosInterceptor<CacheRequestConfig>;
 
   /**
    * The response interceptor that will be used to handle the cache.
    *
-   * @default defaultResponseInterceptor()
+   * @default defaultResponseInterceptor
    */
   responseInterceptor: AxiosInterceptor<CacheAxiosResponse>;
 
@@ -160,7 +160,7 @@ export interface CacheInstance {
    *
    * **Note**: This is only available with development mode enabled
    *
-   * @default console.log
+   * @default {console.log}
    * @see https://axios-cache-interceptor.js.org/#/pages/development-mode
    */
   debug: undefined | ((msg: DebugObject) => void);
