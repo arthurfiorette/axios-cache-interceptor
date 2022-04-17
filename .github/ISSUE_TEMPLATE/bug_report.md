@@ -31,7 +31,7 @@ steps or a minimum reproduction repository.
 https://minimum-reproduction.wtf/
 -->
 
-## Expected behavior
+### Expected behavior
 
 <!--
 A clear and concise description of what you expected to happen.
