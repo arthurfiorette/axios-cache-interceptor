@@ -1,4 +1,4 @@
-import type { AxiosRequestConfig, AxiosResponseHeaders } from 'axios';
+import type { AxiosResponseHeaders } from 'axios';
 import type { MaybePromise } from '../util/types';
 
 export type CachedResponse = {
@@ -87,8 +87,4 @@ export type AxiosStorage = {
 
   /** Returns the value for the given key. This method make checks for cache invalidation or etc. */
   get: (key: string) => MaybePromise<StorageValue>;
-};
-
-export type AxiosStorageBuilder = {
-  (config: AxiosRequestConfig): AxiosStorage;
 };

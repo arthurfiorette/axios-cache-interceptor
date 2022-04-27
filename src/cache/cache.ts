@@ -2,7 +2,7 @@ import type { Method } from 'axios';
 import type { Deferred } from 'fast-defer';
 import type { HeadersInterpreter } from '../header/types';
 import type { AxiosInterceptor } from '../interceptors/build';
-import type { AxiosStorage, AxiosStorageBuilder, CachedResponse } from '../storage/types';
+import type { AxiosStorage, CachedResponse } from '../storage/types';
 import type {
   CachePredicate,
   CacheUpdater,
@@ -112,7 +112,6 @@ export type CacheProperties<R = unknown, D = unknown> = {
 };
 
 export interface CacheInstance {
-  storageBuilder?: AxiosStorageBuilder;
   /**
    * The storage to save the cache data. Defaults to an in-memory storage.
    *
