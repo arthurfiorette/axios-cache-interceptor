@@ -1,4 +1,5 @@
 import type { AxiosResponseHeaders } from 'axios';
+import type { CacheRequestConfig } from '../cache/axios';
 import type { MaybePromise } from '../util/types';
 
 export type CachedResponse = {
@@ -78,13 +79,17 @@ export type AxiosStorage = {
   /**
    * Sets a new value for the given key
    *
-   * Use CacheStorage.remove(key) to define a key to 'empty' state.
+   * Use {@link AxiosStorage.remove} to define a key to 'empty' state.
    */
-  set: (key: string, value: NotEmptyStorageValue) => MaybePromise<void>;
+  set: (
+    key: string,
+    value: NotEmptyStorageValue,
+    currentRequest: CacheRequestConfig
+  ) => MaybePromise<void>;
 
   /** Removes the value for the given key */
-  remove: (key: string) => MaybePromise<void>;
+  remove: (key: string, currentRequest: CacheRequestConfig) => MaybePromise<void>;
 
   /** Returns the value for the given key. This method make checks for cache invalidation or etc. */
-  get: (key: string) => MaybePromise<StorageValue>;
+  get: (key: string, currentRequest: CacheRequestConfig) => MaybePromise<StorageValue>;
 };

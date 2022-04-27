@@ -1,3 +1,4 @@
+import type { CacheRequestConfig } from '../cache/axios';
 import { Header } from '../header/headers';
 import type { MaybePromise } from '../util/types';
 import type {
@@ -35,7 +36,10 @@ export type BuildStorage = Omit<AxiosStorage, 'get'> & {
    * Returns the value for the given key. This method does not have to make checks for
    * cache invalidation or anything. It just returns what was previous saved, if present.
    */
-  find: (key: string) => MaybePromise<StorageValue | undefined>;
+  find: (
+    key: string,
+    config: CacheRequestConfig
+  ) => MaybePromise<StorageValue | undefined>;
 };
 
 /**
@@ -61,8 +65,8 @@ export function buildStorage({ set, find, remove }: BuildStorage): AxiosStorage 
     [storage]: 1,
     set,
     remove,
-    get: async (key) => {
-      const value = await find(key);
+    get: async (key, config) => {
+      const value = await find(key, config);
 
       if (!value) {
         return { state: 'empty' };
@@ -83,11 +87,11 @@ export function buildStorage({ set, find, remove }: BuildStorage): AxiosStorage 
           data: value.data
         };
 
-        await set(key, stale);
+        await set(key, stale, config);
         return stale;
       }
 
-      await remove(key);
+      await remove(key, config);
       return { state: 'empty' };
     }
   };
