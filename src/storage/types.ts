@@ -1,4 +1,4 @@
-import type { AxiosResponseHeaders } from 'axios';
+import type { AxiosResponse, AxiosResponseHeaders } from 'axios';
 import type { MaybePromise } from '../util/types';
 
 export type CachedResponse = {
@@ -80,7 +80,11 @@ export type AxiosStorage = {
    *
    * Use CacheStorage.remove(key) to define a key to 'empty' state.
    */
-  set: (key: string, value: NotEmptyStorageValue) => MaybePromise<void>;
+  set: (
+    key: string,
+    value: NotEmptyStorageValue,
+    response?: AxiosResponse
+  ) => MaybePromise<void>;
 
   /** Removes the value for the given key */
   remove: (key: string) => MaybePromise<void>;

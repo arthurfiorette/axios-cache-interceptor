@@ -191,7 +191,7 @@ export function defaultResponseInterceptor(
     }
 
     // Define this key as cache on the storage
-    await axios.storage.set(id, newCache);
+    await axios.storage.set(id, newCache, response);
 
     if (__ACI_DEV__) {
       axios.debug?.({
