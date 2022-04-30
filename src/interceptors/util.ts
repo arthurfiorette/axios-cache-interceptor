@@ -18,7 +18,7 @@ export function createValidateStatus(
 
 /** Checks if the given method is in the methods array */
 export function isMethodIn(
-  requestMethod: Method = 'get',
+  requestMethod: Method | string = 'get',
   methodList: Method[] = []
 ): boolean {
   requestMethod = requestMethod.toLowerCase() as Lowercase<Method>;
