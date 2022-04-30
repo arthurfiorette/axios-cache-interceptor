@@ -60,6 +60,7 @@ export function defaultResponseInterceptor(
     // Request interceptor merges defaults with per request configuration
     const cacheConfig = response.config.cache as CacheProperties;
     const config = response.config;
+
     const cache = await axios.storage.get(id, config);
 
     if (
@@ -202,7 +203,7 @@ export function defaultResponseInterceptor(
   };
 
   const onRejected: ResponseInterceptor['onRejected'] = async (error) => {
-    const config = error['config'] as CacheRequestConfig;
+    const config = error.config as CacheRequestConfig;
 
     if (!config || config.cache === false || !config.id) {
       if (__ACI_DEV__) {
@@ -215,8 +216,8 @@ export function defaultResponseInterceptor(
       throw error;
     }
 
-    const cacheConfig = config.cache;
     const cache = await axios.storage.get(config.id, config);
+    const cacheConfig = config.cache;
 
     if (
       // This will only not be loading if the interceptor broke

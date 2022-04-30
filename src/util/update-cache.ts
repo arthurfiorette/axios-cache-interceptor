@@ -13,11 +13,11 @@ export async function updateCache<T, D>(
     const updater = entries[cacheKey]!;
 
     if (updater === 'delete') {
-      await storage.remove(cacheKey);
+      await storage.remove(cacheKey, data.config);
       continue;
     }
 
-    const value = await storage.get(cacheKey);
+    const value = await storage.get(cacheKey, data.config);
 
     if (value.state === 'loading') {
       continue;
@@ -26,12 +26,12 @@ export async function updateCache<T, D>(
     const newValue = await updater(value, data);
 
     if (newValue === 'delete') {
-      await storage.remove(cacheKey);
+      await storage.remove(cacheKey, data.config);
       continue;
     }
 
     if (newValue !== 'ignore') {
-      await storage.set(cacheKey, newValue);
+      await storage.set(cacheKey, newValue, data.config);
     }
   }
 }

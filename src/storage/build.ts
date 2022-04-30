@@ -35,10 +35,13 @@ export type BuildStorage = Omit<AxiosStorage, 'get'> & {
   /**
    * Returns the value for the given key. This method does not have to make checks for
    * cache invalidation or anything. It just returns what was previous saved, if present.
+   *
+   * @param key The key to look for
+   * @param currentRequest The current {@link CacheRequestConfig}, if any
    */
   find: (
     key: string,
-    config: CacheRequestConfig
+    currentRequest?: CacheRequestConfig
   ) => MaybePromise<StorageValue | undefined>;
 };
 
