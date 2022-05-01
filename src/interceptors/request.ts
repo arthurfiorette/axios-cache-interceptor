@@ -41,7 +41,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
     const key = (config.id = axios.generateKey(config));
 
     // Assumes that the storage handled staled responses
-    let cache = await axios.storage.get(key);
+    let cache = await axios.storage.get(key, config);
 
     // Not cached, continue the request, and mark it as fetching
     emptyOrStale: if (cache.state === 'empty' || cache.state === 'stale') {
@@ -51,7 +51,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
        * started executing.
        */
       if (axios.waiting[key]) {
-        cache = (await axios.storage.get(key)) as
+        cache = (await axios.storage.get(key, config)) as
           | CachedStorageValue
           | LoadingStorageValue;
 
@@ -83,17 +83,21 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
        */
       axios.waiting[key]?.catch(() => undefined);
 
-      await axios.storage.set(key, {
-        state: 'loading',
-        previous: cache.state,
+      await axios.storage.set(
+        key,
+        {
+          state: 'loading',
+          previous: cache.state,
 
-        // Eslint complains a lot :)
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
-        data: cache.data as any,
+          // Eslint complains a lot :)
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
+          data: cache.data as any,
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
-        createdAt: cache.createdAt as any
-      });
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
+          createdAt: cache.createdAt as any
+        },
+        config
+      );
 
       if (cache.state === 'stale') {
         updateStaleRequest(cache, config as ConfigWithCache<unknown>);
@@ -126,7 +130,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
       // Just in case, the deferred doesn't exists.
       /* istanbul ignore if 'really hard to test' */
       if (!deferred) {
-        await axios.storage.remove(key);
+        await axios.storage.remove(key, config);
         return config;
       }
 

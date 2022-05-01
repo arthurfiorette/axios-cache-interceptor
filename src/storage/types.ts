@@ -1,4 +1,5 @@
 import type { AxiosResponseHeaders } from 'axios';
+import type { CacheRequestConfig } from '../cache/axios';
 import type { MaybePromise } from '../util/types';
 
 export type CachedResponse = {
@@ -78,13 +79,34 @@ export type AxiosStorage = {
   /**
    * Sets a new value for the given key
    *
-   * Use CacheStorage.remove(key) to define a key to 'empty' state.
+   * Use {@link AxiosStorage.remove} to define a key with `'empty'` state.
+   *
+   * @param key The key to look for
+   * @param value The value to save.
+   * @param currentRequest The current {@link CacheRequestConfig}, if any
    */
-  set: (key: string, value: NotEmptyStorageValue) => MaybePromise<void>;
+  set: (
+    key: string,
+    value: NotEmptyStorageValue,
+    currentRequest?: CacheRequestConfig
+  ) => MaybePromise<void>;
 
-  /** Removes the value for the given key */
-  remove: (key: string) => MaybePromise<void>;
+  /**
+   * Removes the value for the given key
+   *
+   * @param key The key to look for
+   * @param currentRequest The current {@link CacheRequestConfig}, if any
+   */
+  remove: (key: string, currentRequest?: CacheRequestConfig) => MaybePromise<void>;
 
-  /** Returns the value for the given key. This method make checks for cache invalidation or etc. */
-  get: (key: string) => MaybePromise<StorageValue>;
+  /**
+   * Returns the value for the given key. This method make checks for cache invalidation or etc.
+   *
+   * If the provided `find()` method returned null, this will map it to a `'empty'` storage value.
+   *
+   * @param key The key to look for
+   * @param currentRequest The current {@link CacheRequestConfig}, if any
+   * @returns The saved value for the given key.
+   */
+  get: (key: string, currentRequest?: CacheRequestConfig) => MaybePromise<StorageValue>;
 };

@@ -19,9 +19,9 @@ export function defaultResponseInterceptor(
    *
    * Also update the waiting list for this key by rejecting it.
    */
-  const rejectResponse = async (responseId: string) => {
+  const rejectResponse = async (responseId: string, config: CacheRequestConfig) => {
     // Update the cache to empty to prevent infinite loading state
-    await axios.storage.remove(responseId);
+    await axios.storage.remove(responseId, config);
     // Reject the deferred if present
     axios.waiting[responseId]?.reject(null);
     delete axios.waiting[responseId];
@@ -59,8 +59,9 @@ export function defaultResponseInterceptor(
 
     // Request interceptor merges defaults with per request configuration
     const cacheConfig = response.config.cache as CacheProperties;
+    const config = response.config;
 
-    const cache = await axios.storage.get(id);
+    const cache = await axios.storage.get(id, config);
 
     if (
       // If the request interceptor had a problem
@@ -86,7 +87,7 @@ export function defaultResponseInterceptor(
       !cache.data &&
       !(await testCachePredicate(response, cacheConfig.cachePredicate))
     ) {
-      await rejectResponse(id);
+      await rejectResponse(id, config);
 
       if (__ACI_DEV__) {
         axios.debug?.({
@@ -125,17 +126,13 @@ export function defaultResponseInterceptor(
 
       // Cache should not be used
       if (expirationTime === 'dont cache') {
-        await rejectResponse(id);
+        await rejectResponse(id, config);
 
         if (__ACI_DEV__) {
           axios.debug?.({
             id,
             msg: `Cache header interpreted as 'dont cache'`,
-            data: {
-              cache,
-              response,
-              expirationTime
-            }
+            data: { cache, response, expirationTime }
           });
         }
 
@@ -191,7 +188,7 @@ export function defaultResponseInterceptor(
     }
 
     // Define this key as cache on the storage
-    await axios.storage.set(id, newCache);
+    await axios.storage.set(id, newCache, config);
 
     if (__ACI_DEV__) {
       axios.debug?.({
@@ -206,7 +203,7 @@ export function defaultResponseInterceptor(
   };
 
   const onRejected: ResponseInterceptor['onRejected'] = async (error) => {
-    const config = error['config'] as CacheRequestConfig;
+    const config = error.config as CacheRequestConfig;
 
     // config.cache should always exists, at least from global config merge.
     if (!config?.cache || !config.id) {
@@ -220,7 +217,7 @@ export function defaultResponseInterceptor(
       throw error;
     }
 
-    const cache = await axios.storage.get(config.id);
+    const cache = await axios.storage.get(config.id, config);
     const cacheConfig = config.cache;
 
     if (
@@ -228,7 +225,7 @@ export function defaultResponseInterceptor(
       cache.state !== 'loading' ||
       cache.previous !== 'stale'
     ) {
-      await rejectResponse(config.id);
+      await rejectResponse(config.id, config);
 
       if (__ACI_DEV__) {
         axios.debug?.({
@@ -267,11 +264,15 @@ export function defaultResponseInterceptor(
         delete axios.waiting[config.id];
 
         // re-mark the cache as stale
-        await axios.storage.set(config.id, {
-          state: 'stale',
-          createdAt: Date.now(),
-          data: cache.data
-        });
+        await axios.storage.set(
+          config.id,
+          {
+            state: 'stale',
+            createdAt: Date.now(),
+            data: cache.data
+          },
+          config
+        );
 
         if (__ACI_DEV__) {
           axios.debug?.({
