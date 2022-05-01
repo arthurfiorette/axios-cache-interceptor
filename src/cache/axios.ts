@@ -54,6 +54,9 @@ export type CacheRequestConfig<R = any, D = any> = AxiosRequestConfig<D> & {
  * @see CacheInstance
  */
 export interface AxiosCacheInstance extends CacheInstance, AxiosInstance {
+  // eslint-disable-next-line @typescript-eslint/no-misused-new
+  new (config?: CacheRequestConfig): AxiosCacheInstance;
+
   /**
    * @template T The type returned by this response
    * @template R The custom response type that the request can return
@@ -149,6 +152,17 @@ export interface AxiosCacheInstance extends CacheInstance, AxiosInstance {
    * @template R The custom response type that the request can return
    * @template D The type that the request body use
    */
+  postForm<T = any, D = any, R = CacheAxiosResponse<T, D>>(
+    url: string,
+    data?: D,
+    config?: CacheRequestConfig<T, D>
+  ): Promise<R>;
+
+  /**
+   * @template T The type returned by this response
+   * @template R The custom response type that the request can return
+   * @template D The type that the request body use
+   */
   put<T = any, D = any, R = CacheAxiosResponse<T, D>>(
     url: string,
     data?: D,
@@ -160,7 +174,29 @@ export interface AxiosCacheInstance extends CacheInstance, AxiosInstance {
    * @template R The custom response type that the request can return
    * @template D The type that the request body use
    */
+  putForm<T = any, D = any, R = CacheAxiosResponse<T, D>>(
+    url: string,
+    data?: D,
+    config?: CacheRequestConfig<T, D>
+  ): Promise<R>;
+
+  /**
+   * @template T The type returned by this response
+   * @template R The custom response type that the request can return
+   * @template D The type that the request body use
+   */
   patch<T = any, D = any, R = CacheAxiosResponse<T, D>>(
+    url: string,
+    data?: D,
+    config?: CacheRequestConfig<T, D>
+  ): Promise<R>;
+
+  /**
+   * @template T The type returned by this response
+   * @template R The custom response type that the request can return
+   * @template D The type that the request body use
+   */
+  patchForm<T = any, D = any, R = CacheAxiosResponse<T, D>>(
     url: string,
     data?: D,
     config?: CacheRequestConfig<T, D>
