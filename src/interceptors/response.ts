@@ -208,11 +208,12 @@ export function defaultResponseInterceptor(
   const onRejected: ResponseInterceptor['onRejected'] = async (error) => {
     const config = error['config'] as CacheRequestConfig;
 
-    if (!config || config.cache === false || !config.id) {
+    // config.cache should always exists, at least from global config merge.
+    if (!config?.cache || !config.id) {
       if (__ACI_DEV__) {
         axios.debug?.({
           msg: 'Web request returned an error but cache handling is not enabled',
-          data: { error, config }
+          data: { error }
         });
       }
 
