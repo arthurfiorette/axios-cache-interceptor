@@ -22,21 +22,22 @@ import { setupCache } from 'axios-cache-interceptor';
 const { setupCache } = window.AxiosCacheInterceptor;
 
 // ESM with Skypack CDN
-import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor@0.10.2';
+import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor@0.10.3';
 ```
 
 ```html
 <!-- Development UMD build for ES2017+ (~12.4 KiB) -->
+
 <script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.10.2/dev/index.bundle.js"
-  integrity="sha256-2iD0vHRnHR4za6LT4/EpOBBh0FWHST04gDv2XqReRhs="
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.10.3/dev/index.bundle.js"
+  integrity="sha256-ShnvhLLdbHr4VLCoFXoSJj74Cvbqk1bMUZDc4tvcWUU="
   crossorigin="anonymous"
 ></script>
 
 <!-- Production UMD build for ES5+ (~14.1 KiB) -->
 <script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.10.2/dist/index.bundle.js"
-  integrity="sha256-erplbwgo9k9IPosc8Esc8ZlniNsTc5vDdvjchHYVPf4="
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.10.3/dist/index.bundle.js"
+  integrity="sha256-rDoNp6Qw8J8YJij992DDKUY8DsxlFiWdw2fNmiiQ1mI="
   crossorigin="anonymous"
 ></script>
 ```
@@ -56,6 +57,7 @@ versions. Please keep your dependencies up to date <3.
 
 | [Axios Cache Interceptor](https://github.com/arthurfiorette/axios-cache-interceptor/releases) | [Axios](https://github.com/axios/axios/releases) |
 | --------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| `>= v0.10.3`                                                                                  | `>= v0.27`                                       |
 | `>= v0.8.4`                                                                                   | `>= v0.26`                                       |
 | `~ v0.8.4`                                                                                    | `~ v0.25`                                        |
 | `>= v0.5 && <= 0.8.3`                                                                         | `~ v0.24`                                        |
