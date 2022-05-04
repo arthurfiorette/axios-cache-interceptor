@@ -8,11 +8,9 @@ import type {
   StorageValue
 } from './types';
 
-const storage = Symbol();
-
 /** Returns true if the provided object was created from {@link buildStorage} function. */
 export const isStorage = (obj: unknown): obj is AxiosStorage =>
-  !!obj && !!(obj as Record<symbol, number>)[storage];
+  !!obj && !!(obj as Record<string, boolean>)['is-storage'];
 
 /** Returns true if this storage is expired, but it has sufficient properties to stale. */
 export function canStale(value: CachedStorageValue): boolean {
@@ -64,8 +62,8 @@ export type BuildStorage = Omit<AxiosStorage, 'get'> & {
  */
 export function buildStorage({ set, find, remove }: BuildStorage): AxiosStorage {
   return {
-    //@ts-expect-error - we don't want to expose this
-    [storage]: 1,
+    //@ts-expect-error - we don't want to expose thi
+    ['is-storage']: 1,
     set,
     remove,
     get: async (key, config) => {
