@@ -15,6 +15,7 @@ export const isStorage = (obj: unknown): obj is AxiosStorage =>
 /** Returns true if this storage is expired, but it has sufficient properties to stale. */
 export function canStale(value: CachedStorageValue): boolean {
   const headers = value.data.headers;
+
   return (
     Header.ETag in headers ||
     Header.LastModified in headers ||

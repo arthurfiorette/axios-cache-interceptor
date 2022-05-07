@@ -22,8 +22,10 @@ export function defaultResponseInterceptor(
   const rejectResponse = async (responseId: string, config: CacheRequestConfig) => {
     // Update the cache to empty to prevent infinite loading state
     await axios.storage.remove(responseId, config);
+
     // Reject the deferred if present
-    axios.waiting[responseId]?.reject(null);
+    axios.waiting[responseId]?.reject();
+
     delete axios.waiting[responseId];
   };
 
@@ -43,9 +45,12 @@ export function defaultResponseInterceptor(
       return response;
     }
 
+    // Request interceptor merges defaults with per request configuration
+    const cacheConfig = response.config.cache as CacheProperties;
+
     // Skip cache: either false or weird behavior
     // config.cache should always exists, at least from global config merge.
-    if (!response.config.cache) {
+    if (!cacheConfig) {
       if (__ACI_DEV__) {
         axios.debug?.({
           id,
@@ -57,18 +62,12 @@ export function defaultResponseInterceptor(
       return { ...response, cached: false };
     }
 
-    // Request interceptor merges defaults with per request configuration
-    const cacheConfig = response.config.cache as CacheProperties;
     const config = response.config;
-
     const cache = await axios.storage.get(id, config);
 
     if (
-      // If the request interceptor had a problem
-      cache.state === 'stale' ||
-      cache.state === 'empty' ||
-      // Should not hit here because of previous response.cached check
-      cache.state === 'cached'
+      // If the request interceptor had a problem or it wasn't cached
+      cache.state !== 'loading'
     ) {
       if (__ACI_DEV__) {
         axios.debug?.({

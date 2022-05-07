@@ -20,14 +20,10 @@ export async function testCachePredicate<R = unknown, D = unknown>(
   }
 
   if (containsHeaders) {
-    for (const header in containsHeaders) {
-      const predicate = containsHeaders[header];
-
+    for (const [header, predicate] of Object.entries(containsHeaders)) {
       if (
-        predicate &&
         !(await predicate(
-          // Axios uses lowercase headers, but if for some reason it doesn't, we should
-          // still be able to match.
+          // Axios response headers are in lowercase, but check both just in case.
           response.headers[header.toLowerCase()] ?? response.headers[header]
         ))
       ) {

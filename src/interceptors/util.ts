@@ -22,14 +22,7 @@ export function isMethodIn(
   methodList: Method[] = []
 ): boolean {
   requestMethod = requestMethod.toLowerCase() as Lowercase<Method>;
-
-  for (const method of methodList) {
-    if (method.toLowerCase() === requestMethod) {
-      return true;
-    }
-  }
-
-  return false;
+  return methodList.some((method) => method === requestMethod);
 }
 
 export type ConfigWithCache<D> = CacheRequestConfig<unknown, D> & {
@@ -50,9 +43,7 @@ export function updateStaleRequest<D>(
 
   if (etag) {
     const etagValue = etag === true ? cache.data?.headers[Header.ETag] : etag;
-    if (etagValue) {
-      config.headers[Header.IfNoneMatch] = etagValue;
-    }
+    etagValue && (config.headers[Header.IfNoneMatch] = etagValue);
   }
 
   if (modifiedSince) {
@@ -71,23 +62,23 @@ export function updateStaleRequest<D>(
  */
 export function createCacheResponse<R, D>(
   response: CacheAxiosResponse<R, D>,
-  cache?: CachedResponse
+  previousCache?: CachedResponse
 ): CachedResponse {
-  if (response.status === 304 && cache) {
+  if (response.status === 304 && previousCache) {
     // Set the cache information into the response object
     response.cached = true;
-    response.data = cache.data as R;
-    response.status = cache.status;
-    response.statusText = cache.statusText;
+    response.data = previousCache.data as R;
+    response.status = previousCache.status;
+    response.statusText = previousCache.statusText;
 
     // Update possible new headers
     response.headers = {
-      ...cache.headers,
+      ...previousCache.headers,
       ...response.headers
     };
 
     // return the old cache
-    return cache;
+    return previousCache;
   }
 
   // New Response

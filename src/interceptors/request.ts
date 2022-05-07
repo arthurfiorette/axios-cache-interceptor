@@ -15,6 +15,8 @@ import {
 
 export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
   const onFulfilled: RequestInterceptor['onFulfilled'] = async (config) => {
+    const key = (config.id = axios.generateKey(config));
+
     if (config.cache === false) {
       if (__ACI_DEV__) {
         axios.debug?.({
@@ -35,10 +37,9 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
           msg: `Ignored because method (${config.method}) is not in cache.methods (${config.cache.methods})`
         });
       }
+
       return config;
     }
-
-    const key = (config.id = axios.generateKey(config));
 
     // Assumes that the storage handled staled responses
     let cache = await axios.storage.get(key, config);

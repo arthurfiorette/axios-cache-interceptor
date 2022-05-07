@@ -41,33 +41,33 @@ export function buildWebStorage(storage: Storage, prefix = '') {
         const allValues: [string, StorageValue][] = Object.entries(
           storage as Record<string, string>
         )
-          .filter(([key]) => key.startsWith(prefix) && storage.getItem(key))
-          .map(([key, val]) => [key, JSON.parse(val) as StorageValue]);
+          .filter((item) => item[0].startsWith(prefix))
+          .map((item) => [item[0], JSON.parse(item[1]) as StorageValue]);
 
         // Remove all expired values
-        for (const [prefixedKey, value] of allValues) {
-          if (value.state === 'cached' && isExpired(value) && !canStale(value)) {
-            storage.removeItem(prefixedKey);
+        for (const value of allValues) {
+          if (value[1].state === 'cached' && isExpired(value[1]) && !canStale(value[1])) {
+            storage.removeItem(value[0]);
           }
         }
 
         // Try save again after removing expired values
         try {
           return save();
-        } catch (_) {
+        } catch {
           // Storage still full, try removing the oldest value until it can be saved
 
           // Descending sort by createdAt
           const sortedItems = allValues.sort(
-            ([, valueA], [, valueB]) => (valueA.createdAt || 0) - (valueB.createdAt || 0)
+            (a, b) => (a[1].createdAt || 0) - (b[1].createdAt || 0)
           );
 
-          for (const [prefixedKey] of sortedItems) {
-            storage.removeItem(prefixedKey);
+          for (const item of sortedItems) {
+            storage.removeItem(item[0]);
 
             try {
               return save();
-            } catch (_) {
+            } catch {
               // This key didn't free all the required space
             }
           }
