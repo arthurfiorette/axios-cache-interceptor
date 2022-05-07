@@ -8,15 +8,11 @@ describe('tests web storages', () => {
   testStorage('local-storage', () => buildWebStorage(localStorage));
   testStorage('session-storage', () => buildWebStorage(sessionStorage));
 
-  testStorageQuota('local-storage', () => {
-    // Clear previous values
-    localStorage.clear();
-    return localStorage;
-  });
+  testStorageQuota('local-storage', () => localStorage);
+  testStorageQuota('session-storage', () => sessionStorage);
 
-  testStorageQuota('session-storage', () => {
-    // Clear previous values
+  afterEach(() => {
+    localStorage.clear();
     sessionStorage.clear();
-    return sessionStorage;
   });
 });
