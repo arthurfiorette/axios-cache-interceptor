@@ -1,3 +1,9 @@
+<p align="center">
+  Help axios-cache-interceptor grow! Star and share this amazing repo with your friends and co-workers!
+</p>
+
+<br />
+
 [![Issues](https://img.shields.io/github/issues/arthurfiorette/axios-cache-interceptor?logo=github&label=Issues)](https://github.com/arthurfiorette/axios-cache-interceptor/issues)
 [![Stars](https://img.shields.io/github/stars/arthurfiorette/axios-cache-interceptor?logo=github&label=Stars)](https://github.com/arthurfiorette/axios-cache-interceptor/stargazers)
 [![License](https://img.shields.io/github/license/arthurfiorette/axios-cache-interceptor?logo=githu&label=License)](https://github.com/arthurfiorette/axios-cache-interceptor/blob/main/LICENSE)
