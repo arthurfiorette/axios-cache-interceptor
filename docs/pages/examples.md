@@ -6,7 +6,7 @@
 >
 > Please, don't hesitate to open an PR with your own examples and use cases.
 
-## Nodejs server example
+## Nodejs Server
 
 An **NodeJS** with **ExpressJS** example to return data from another api.
 
@@ -60,32 +60,54 @@ app.get('/cache/:id/get', async (req, res) => {
 app.listen(3000);
 ```
 
-## Jsx component example
+## React Component
 
-You shouldn't
-[store cache in state libraries](https://betterprogramming.pub/why-you-should-be-separating-your-server-cache-from-your-ui-state-1585a9ae8336),
-it even is a bad practice. And even if you do so, you probably will have to write a lot of
-code to handle cache invalidation, strategies and etc.
+> You shouldn't
+> [store cache in state libraries](https://betterprogramming.pub/why-you-should-be-separating-your-server-cache-from-your-ui-state-1585a9ae8336),
+> it even is a bad practice. And even if you do so, you are going to write a lot of error
+> prone code to handle cache invalidation, caching strategies and so on.
 
-With this library, you can just call any axios method without worrying about requesting
-thousands of times for every component draw. Simple as that!
+I'm also the maintainer of
+[`Axios Cache Hooks`](https://tinylibs.js.org/packages/axios-cache-hooks/), a
+[**950B**](https://bundlephobia.com/package/axios-cache-hooks) library that just provide
+you a simple and complete react hook to use with your axios cached instance.
 
-```jsx
+It is a super powerful hook, because it will share the same updatable piece of data for
+every request with the same [id](pages/request-id.md). By using a
+[web storage](pages/storages.md?id=Web-storage) with it, you are up to **share component
+level data in a micro frontend scale**.
+
+```ts
+import Axios from 'axios';
+import { createAxiosHooks } from 'axios-cache-hooks';
+import { setupCache } from 'axios-cache-interceptor';
+
+const axios = setupCache(Axios);
+const { useQuery, useMutation } = createAxiosHooks();
+
 function Component() {
-  // React component state (but can be from any other framework, library and etc)
-  const [data, setData] = useState(null);
+  const [user, { loading, error }] = useQuery<User>(() => axios.get('/users/123'));
 
-  // Calling this function every component redraw does not have any
-  // problems, as the response is cached in the first request. This
-  // even work with concurrent requests and for many components at
-  // the same time
-  axios.get('https://api.example.com').then((response) => {
-    setData(response.data);
-  });
+  if (loading)
+    return (
+      <div class=":)">
+        <p>Loading...</p>
+      </div>
+    );
+
+  if (error) {
+    console.error(error);
+
+    return (
+      <div class=":(">
+        <p>Error!</p>
+      </div>
+    );
+  }
 
   return (
     <div class=":)">
-      <div>{data}</div>
+      <div>{user.name}</div>
     </div>
   );
 }

@@ -1,10 +1,11 @@
 - Getting Started
 
-  - [Homepage](/ 'Homepage')
+  - [Introduction](/ 'Introduction')
   - [Installing](pages/installing.md 'Installing')
   - [Configuration](pages/configuration.md 'Configuration')
   - [Storages](pages/storages.md 'Custom storages')
   - [Request Id](pages/request-id.md 'Request Id')
+  - [Invalidating Cache](pages/invalidating-cache.md 'Invalidating Cache')
   - [Development mode](pages/development-mode.md 'Development mode')
 
 - API Reference

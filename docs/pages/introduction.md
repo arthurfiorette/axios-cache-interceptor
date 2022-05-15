@@ -10,3 +10,11 @@ Axios Cache Interceptor can be understood as an intermediary that will analyze e
 request made, check if no similar request has been made before, if so, return it, if not,
 wait for the response, warn other requests if they are waiting and return the response to
 the original caller.
+
+## Where to start
+
+- [Installing](pages/installing.md)
+- [Configuration](pages/configuration.md)
+- [Per request configuration](pages/per-request-configuration)
+- [A NodeJS Server example](pages/examples?id=nodejs-server)
+- [A React Component example](pages/examples?id=react-server)

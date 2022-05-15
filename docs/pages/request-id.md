@@ -1,14 +1,18 @@
 # Request id
 
-A good thing to know is that every request passed through this interceptor, has an id.
-**This does not mean that is a unique id**. The id is used in a number of ways, but the
-most important is to bind a request to its cache.
+Every request passed through this interceptor, has an id. **This doesn't mean its a UNIQUE
+ID**.
+
+Each request id are responsible for binding a request to its cache, for referencing (or
+invalidating) it later and to make the interceptor treat each request with the same id as
+the same request.
 
 The id generation is good enough to generate the same id for theoretically sames requests.
 A simple example is a request with `{ baseURL: 'https://a.com/', url: '/b' }` results to
 the same id with `{ url: 'https://a.com/b/' }`.
 
-Also, a custom id can be used to treat two requests as the same.
+> If you send two completely different requests with the same id, the interceptor will
+> treat them as the same request, sharing its cache and every other as.
 
 ```js #runkit
 const axios = require('axios');

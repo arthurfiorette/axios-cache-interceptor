@@ -3,7 +3,7 @@ window.$docsify = {
 
   loadSidebar: 'config/sidebar.md',
   notFoundPage: 'config/404.md',
-  homepage: 'pages/homepage.md',
+  homepage: 'pages/introduction.md',
 
   subMaxLevel: 2,
 
