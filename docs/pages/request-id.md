@@ -78,6 +78,6 @@ const generator = buildKeyGenerator(({ headers = {} }) => {
 });
 
 const axios = mockAxios({
-  generateKey: keyGenerator
+  generateKey: generator
 });
 ```
