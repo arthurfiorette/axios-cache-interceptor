@@ -32,7 +32,7 @@ export function testStorage(name: string, Storage: () => AxiosStorage): void {
   });
 
   it(`tests ${name} storage staling`, async () => {
-    jest.useFakeTimers('modern');
+    jest.useFakeTimers();
     const storage = Storage();
 
     await storage.set('key', {
