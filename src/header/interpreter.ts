@@ -28,7 +28,7 @@ export const defaultHeaderInterpreter: HeadersInterpreter = (headers) => {
       return 0;
     }
 
-    if (maxAge) {
+    if (maxAge !== undefined) {
       const age = headers[Header.Age];
 
       if (!age) {
