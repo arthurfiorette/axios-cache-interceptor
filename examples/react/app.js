@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useAxios } from './axios-context';
 
 export const App = () => {
