@@ -34,9 +34,9 @@ describe('test Cache-Control header', () => {
   it('tests with max-age of 0', () => {
     const result = defaultHeaderInterpreter({
       [Header.CacheControl]: 'max-age=0'
-    })
+    });
 
     expect(result).toBe(0);
-    expect(result).not.toBe('not enough headers')
-  })
+    expect(result).not.toBe('not enough headers');
+  });
 });
