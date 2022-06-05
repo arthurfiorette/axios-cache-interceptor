@@ -166,8 +166,8 @@ Possible types:
 This option bypasses the current cache and always make a new http request. This will not
 delete the current cache, it will just replace the cache when the response arrives.
 
-Unlike from `cache: false`, this will not disable the cache, it will just ignore the cache
-checks before making the request. This way, all options are still available and will work
-as expected.
+Unlike as `cache: false`, this will not disable the cache, it will just ignore the
+pre-request cache checks before making the request. This way, all post-request options are
+still available and will work as expected.
 
 Default: `false`
