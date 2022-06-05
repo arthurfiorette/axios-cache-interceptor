@@ -8,10 +8,7 @@ export async function updateCache<T, D>(
   data: CacheAxiosResponse<T, D>,
   entries: Record<string, CacheUpdater<T, D>>
 ): Promise<void> {
-  for (const cacheKey in entries) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const updater = entries[cacheKey]!;
-
+  for (const [cacheKey, updater] of Object.entries(entries)) {
     if (updater === 'delete') {
       await storage.remove(cacheKey, data.config);
       continue;

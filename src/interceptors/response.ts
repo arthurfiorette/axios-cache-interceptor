@@ -54,7 +54,7 @@ export function defaultResponseInterceptor(
       if (__ACI_DEV__) {
         axios.debug?.({
           id,
-          msg: 'Response with config.cache === false',
+          msg: 'Response with config.cache falsy',
           data: response
         });
       }
@@ -82,7 +82,7 @@ export function defaultResponseInterceptor(
 
     // Config told that this response should be cached.
     if (
-      // For 'loading' values (post stale), this check was already run in the past.
+      // For 'loading' values (previous: stale), this check already ran in the past.
       !cache.data &&
       !(await testCachePredicate(response, cacheConfig.cachePredicate))
     ) {
@@ -98,13 +98,11 @@ export function defaultResponseInterceptor(
       return response;
     }
 
-    // avoid remnant headers from remote server to break implementation
-    for (const header in Header) {
-      if (!header.startsWith('XAxiosCache')) {
-        continue;
+    // Avoid remnant headers from remote server to break implementation
+    for (const header of Object.keys(response.headers)) {
+      if (header.startsWith('x-axios-cache')) {
+        delete response.headers[header];
       }
-
-      delete response.headers[header];
     }
 
     if (cacheConfig.etag && cacheConfig.etag !== true) {

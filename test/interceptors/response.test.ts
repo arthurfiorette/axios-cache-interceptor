@@ -158,4 +158,23 @@ describe('test request interceptor', () => {
     expect(id).toBeDefined();
     expect(typeof id).toBe('string');
   });
+
+  it('It expects that any X-axios-cache gets removed', async () => {
+    const headerValue = '23asdf8ghd';
+
+    const axios = mockAxios(
+      {},
+      {
+        [Header.XAxiosCacheEtag]: headerValue,
+        [Header.XAxiosCacheLastModified]: headerValue,
+        [Header.XAxiosCacheStaleIfError]: headerValue
+      }
+    );
+
+    const { headers } = await axios.get('url');
+
+    expect(headers[Header.XAxiosCacheEtag]).not.toBe(headerValue);
+    expect(headers[Header.XAxiosCacheLastModified]).not.toBe(headerValue);
+    expect(headers[Header.XAxiosCacheStaleIfError]).not.toBe(headerValue);
+  });
 });

@@ -48,13 +48,16 @@ describe('Last-Modified handling', () => {
   });
 
   it('expects that XAxiosCacheStaleIfError is defined', async () => {
-    const axios = mockAxios();
+    const axios = mockAxios({
+      ttl: 127910 // random number
+    });
 
     const { headers } = await axios.get('url', {
       cache: { staleIfError: true }
     });
 
     expect(headers).toHaveProperty(Header.XAxiosCacheStaleIfError);
+    expect(headers[Header.XAxiosCacheStaleIfError]).toBe('127910');
   });
 
   it('expects staleIfError is ignore if config.cache is false', async () => {
