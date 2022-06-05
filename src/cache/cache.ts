@@ -109,6 +109,15 @@ export type CacheProperties<R = unknown, D = unknown> = {
    * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control#stale-if-error
    */
   staleIfError: StaleIfErrorPredicate<R, D>;
+
+  /**
+   * This options makes the interceptors ignore the available cache and always make a new
+   * request. But, different from `cache: false`, this will not delete the current cache
+   * and will update the cache when the request is successful.
+   *
+   * @default false
+   */
+  override: boolean;
 };
 
 export interface CacheInstance {

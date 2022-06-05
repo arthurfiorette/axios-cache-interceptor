@@ -20,7 +20,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
     if (config.cache === false) {
       if (__ACI_DEV__) {
         axios.debug?.({
-          msg: 'Ignoring cache because config.cache is false',
+          msg: 'Ignoring cache because config.cache === false',
           data: config
         });
       }
@@ -43,15 +43,20 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
 
     // Assumes that the storage handled staled responses
     let cache = await axios.storage.get(key, config);
+    const overrideCache = config.cache.override;
 
     // Not cached, continue the request, and mark it as fetching
-    emptyOrStale: if (cache.state === 'empty' || cache.state === 'stale') {
+    ignoreAndRequest: if (
+      cache.state === 'empty' ||
+      cache.state === 'stale' ||
+      overrideCache
+    ) {
       /**
        * This checks for simultaneous access to a new key. The js event loop jumps on the
        * first await statement, so the second (asynchronous call) request may have already
        * started executing.
        */
-      if (axios.waiting[key]) {
+      if (axios.waiting[key] && !overrideCache) {
         cache = (await axios.storage.get(key, config)) as
           | CachedStorageValue
           | LoadingStorageValue;
@@ -71,7 +76,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
             });
           }
 
-          break emptyOrStale;
+          break ignoreAndRequest;
         }
       }
 
@@ -88,14 +93,24 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
         key,
         {
           state: 'loading',
-          previous: cache.state,
+          previous: overrideCache
+            ? // Simply determine if the request is stale or not
+              // based if it had previous data or not
+              cache.data
+              ? 'stale'
+              : 'empty'
+            : // Typescript doesn't know that cache.state here can only be 'empty' or 'stale'
+              (cache.state as 'stale'),
 
           // Eslint complains a lot :)
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
           data: cache.data as any,
 
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
-          createdAt: cache.createdAt as any
+          // If the cache is empty and asked to override it, use the current timestamp
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          createdAt:
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            overrideCache && !cache.createdAt ? Date.now() : (cache.createdAt as any)
         },
         config
       );
@@ -116,7 +131,11 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
       if (__ACI_DEV__) {
         axios.debug?.({
           id: key,
-          msg: 'Sending request, waiting for response'
+          msg: 'Sending request, waiting for response',
+          data: {
+            overrideCache,
+            state: cache.state
+          }
         });
       }
 

@@ -1,3 +1,5 @@
+import { setTimeout } from 'timers/promises';
+import type { LoadingStorageValue } from '../../src';
 import type { CacheRequestConfig } from '../../src/cache/axios';
 import { mockAxios } from '../mocks/axios';
 import { sleep } from '../utils';
@@ -186,5 +188,119 @@ describe('test request interceptor', () => {
 
     expect(newState).not.toBe('empty');
     expect(axios.waiting[ID]).toBeUndefined();
+  });
+
+  it('tests cache.override = true with previous cache', async () => {
+    const axios = mockAxios();
+
+    // First normal request to populate cache
+    const { id, ...initialResponse } = await axios.get('url');
+
+    expect(initialResponse.cached).toBe(false);
+
+    // Ensure cache was populated
+    const c1 = await axios.storage.get(id);
+    expect(c1.state).toBe('cached');
+
+    // Make a request with cache.override = true
+    const promise = axios.get('url', {
+      id,
+      cache: { override: true },
+
+      // Simple adapter that resolves after the deferred is completed.
+      adapter: async (config: CacheRequestConfig) => {
+        await setTimeout(150);
+
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const response = await axios.defaults.adapter!(config);
+
+        // Changes the response to be different from `true` (default)
+        response.data = 'overridden response';
+
+        return response;
+      }
+    });
+
+    // These two setTimeouts is to ensure this code is executed after
+    // the request interceptor, but before the response interceptor.
+    // Leading to test the intermediate loading state.
+
+    {
+      await setTimeout(50);
+
+      const c2 = (await axios.storage.get(id)) as LoadingStorageValue;
+
+      expect(c2.state).toBe('loading');
+      expect(c2.previous).toBe('stale');
+      expect(c2.data).toBe(c1.data);
+      expect(c2.createdAt).toBe(c1.createdAt);
+    }
+
+    // Waits for the promise completion
+    const newResponse = await promise;
+
+    // This step is after the cache was updated with the new response.
+    {
+      const c3 = await axios.storage.get(id);
+
+      expect(newResponse.cached).toBe(false);
+      expect(c3.state).toBe('cached');
+      expect(c3.data).not.toBe(c1.data); // `'overridden response'`, not `true`
+      expect(c3.createdAt).not.toBe(c1.createdAt);
+    }
+  });
+
+  it('tests cache.override = true without previous cache', async () => {
+    const id = 'CUSTOM_RANDOM_ID';
+
+    const axios = mockAxios();
+
+    const c1 = await axios.storage.get(id);
+
+    expect(c1.state).toBe('empty');
+
+    // Make a request with cache.override = true
+    const promise = axios.get('url', {
+      id,
+      cache: { override: true },
+
+      // Simple adapter that resolves after the deferred is completed.
+      adapter: async (config: CacheRequestConfig) => {
+        await setTimeout(150);
+
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return axios.defaults.adapter!(config);
+      }
+    });
+
+    // These two setTimeouts is to ensure this code is executed after
+    // the request interceptor, but before the response interceptor.
+    // Leading to test the intermediate loading state.
+
+    {
+      await setTimeout(50);
+
+      const c2 = (await axios.storage.get(id)) as LoadingStorageValue;
+
+      expect(c2.state).toBe('loading');
+      expect(c2.previous).toBe('empty');
+
+      expect(c2.data).toBeUndefined();
+      expect(c2.createdAt).not.toBe(c1.createdAt);
+    }
+
+    // Waits for the promise completion
+    const newResponse = await promise;
+
+    // This step is after the cache was updated with the new response.
+    {
+      const c3 = await axios.storage.get(id);
+
+      expect(newResponse.cached).toBe(false);
+      expect(c3.state).toBe('cached');
+
+      expect(c3.data).not.toBeUndefined();
+      expect(c3.createdAt).not.toBe(c1.createdAt);
+    }
   });
 });

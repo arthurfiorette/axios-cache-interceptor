@@ -153,7 +153,7 @@ export function defaultResponseInterceptor(
       axios.debug?.({
         id,
         msg: 'Useful response configuration found',
-        data: { cacheConfig, ttl, cacheResponse: data }
+        data: { cacheConfig, cacheResponse: data }
       });
     }
 

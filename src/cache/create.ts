@@ -92,7 +92,9 @@ export function setupCache(
 
     interpretHeader: options.interpretHeader ?? true,
 
-    staleIfError: options.staleIfError ?? true
+    staleIfError: options.staleIfError ?? true,
+
+    override: false
   };
 
   // Apply interceptors
