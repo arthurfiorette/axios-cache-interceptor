@@ -77,7 +77,7 @@ export function defaultResponseInterceptor(
       if (__ACI_DEV__) {
         axios.debug?.({
           id,
-          msg: 'Response not cached but storage is not loading',
+          msg: "Response not cached and storage isn't loading",
           data: { cache, response }
         });
       }
@@ -171,6 +171,7 @@ export function defaultResponseInterceptor(
 
     // Resolve all other requests waiting for this response
     const waiting = axios.waiting[id];
+
     if (waiting) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       waiting.resolve(newCache.data);
