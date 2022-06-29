@@ -65,6 +65,11 @@ export function defaultResponseInterceptor(
     const config = response.config;
     const cache = await axios.storage.get(id, config);
 
+    // Update other entries before updating himself
+    if (cacheConfig?.update) {
+      await updateCache(axios.storage, response, cacheConfig.update);
+    }
+
     if (
       // If the request interceptor had a problem or it wasn't cached
       cache.state !== 'loading'
@@ -155,11 +160,6 @@ export function defaultResponseInterceptor(
         msg: 'Useful response configuration found',
         data: { cacheConfig, cacheResponse: data }
       });
-    }
-
-    // Update other entries before updating himself
-    if (cacheConfig?.update) {
-      await updateCache(axios.storage, response, cacheConfig.update);
     }
 
     const newCache: CachedStorageValue = {
