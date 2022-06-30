@@ -120,4 +120,24 @@ describe('Tests update-cache', () => {
     const cacheValue = await axios.storage.get(cacheKey);
     expect(cacheValue.state).toBe('loading');
   });
+
+  it('tests updateCache with non cached updater', async () => {
+    const ID = 'cache-id';
+
+    const axios = mockAxios({ methods: ['get'] });
+
+    await axios.get('url', { id: ID });
+
+    // post isn't inside `methods`
+    await axios.post('url', true, {
+      cache: {
+        update: { [ID]: 'delete' }
+      }
+    });
+
+    // if the update did not get executed, the cache shouldn't be empty
+    const cacheValue = await axios.storage.get(ID);
+
+    expect(cacheValue.state).toBe('empty');
+  });
 });

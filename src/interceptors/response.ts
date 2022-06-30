@@ -65,6 +65,11 @@ export function defaultResponseInterceptor(
     const config = response.config;
     const cache = await axios.storage.get(id, config);
 
+    // Update other entries before updating himself
+    if (cacheConfig?.update) {
+      await updateCache(axios.storage, response, cacheConfig.update);
+    }
+
     if (
       // If the request interceptor had a problem or it wasn't cached
       cache.state !== 'loading'
@@ -72,7 +77,7 @@ export function defaultResponseInterceptor(
       if (__ACI_DEV__) {
         axios.debug?.({
           id,
-          msg: 'Response not cached but storage is not loading',
+          msg: "Response not cached and storage isn't loading",
           data: { cache, response }
         });
       }
@@ -157,11 +162,6 @@ export function defaultResponseInterceptor(
       });
     }
 
-    // Update other entries before updating himself
-    if (cacheConfig?.update) {
-      await updateCache(axios.storage, response, cacheConfig.update);
-    }
-
     const newCache: CachedStorageValue = {
       state: 'cached',
       ttl,
@@ -171,6 +171,7 @@ export function defaultResponseInterceptor(
 
     // Resolve all other requests waiting for this response
     const waiting = axios.waiting[id];
+
     if (waiting) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       waiting.resolve(newCache.data);
