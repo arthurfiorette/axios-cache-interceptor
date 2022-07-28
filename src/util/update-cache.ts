@@ -3,12 +3,17 @@ import type { AxiosStorage } from '../storage/types';
 import type { CacheUpdater } from './types';
 
 /** Function to update all caches, from CacheProperties.update, with the new data. */
-export async function updateCache<T, D>(
+export async function updateCache<R, D>(
   storage: AxiosStorage,
-  data: CacheAxiosResponse<T, D>,
-  entries: Record<string, CacheUpdater<T, D>>
+  data: CacheAxiosResponse<R, D>,
+  cacheUpdater: CacheUpdater<R, D>
 ): Promise<void> {
-  for (const [cacheKey, updater] of Object.entries(entries)) {
+  // Global cache update function.
+  if (typeof cacheUpdater === `function`) {
+    return cacheUpdater(data);
+  }
+
+  for (const [cacheKey, updater] of Object.entries(cacheUpdater)) {
     if (updater === 'delete') {
       await storage.remove(cacheKey, data.config);
       continue;
