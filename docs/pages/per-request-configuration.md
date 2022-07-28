@@ -88,6 +88,10 @@ with the request id.
 
 Here's an example with some basic login:
 
+Using a function instead of an object is supported but not recommended, as it's better to
+just consume the response normally and write your own code after it. But it`s here in case
+you need it.
+
 ```ts
 // Some requests id's
 let profileInfoId;
@@ -112,6 +116,7 @@ axios.post<{ auth: { user: User } }>(
 
           cachedValue.data = data;
 
+          // This returned value will be returned in next calls to the cache.
           return cachedValue;
         }
       }
