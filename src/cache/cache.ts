@@ -60,9 +60,13 @@ export type CacheProperties<R = unknown, D = unknown> = {
    *
    * The id used is the same as the id on `CacheRequestConfig['id']`, auto-generated or not.
    *
+   * **Using a function instead of an object is supported but not recommended, as it's
+   * better to just consume the response normally and write your own code after it. But
+   * it`s here in case you need it.**
+   *
    * @default {{}}
    */
-  update: Record<string, CacheUpdater<R, D>>;
+  update: CacheUpdater<R, D>;
 
   /**
    * If the request should handle `ETag` and `If-None-Match` support. Use a string to

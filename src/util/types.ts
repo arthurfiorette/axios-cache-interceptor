@@ -35,13 +35,6 @@ export type KeyGenerator<R = unknown, D = unknown> = (
 
 export type MaybePromise<T> = T | Promise<T> | PromiseLike<T>;
 
-export type CacheUpdater<R, D> =
-  | 'delete'
-  | ((
-      cached: Exclude<StorageValue, LoadingStorageValue>,
-      response: CacheAxiosResponse<R, D>
-    ) => MaybePromise<CachedStorageValue | 'delete' | 'ignore'>);
-
 /**
  * You can use a `number` to ensure an max time (in seconds) that the cache can be reused.
  *
@@ -58,3 +51,29 @@ export type StaleIfErrorPredicate<R, D> =
       cache: LoadingStorageValue & { previous: 'stale' },
       error: Record<string, unknown>
     ) => MaybePromise<number | boolean>);
+
+export type CacheUpdaterFn<R, D> = (
+  response: CacheAxiosResponse<R, D>
+) => MaybePromise<void>;
+
+/**
+ * A record for a custom cache updater for each specified request id.
+ *
+ * `delete` -> Deletes the request cache `predicate()` -> Determines if the cache can be
+ * reused, deleted or modified.
+ */
+export type CacheUpdaterRecord<R, D> = {
+  [requestId: string]:
+    | 'delete'
+    | ((
+        cached: Exclude<StorageValue, LoadingStorageValue>,
+        response: CacheAxiosResponse<R, D>
+      ) => MaybePromise<CachedStorageValue | 'delete' | 'ignore'>);
+};
+
+/**
+ * Updates any specified request cache by applying the response for this network call.
+ *
+ * You can use a function to implement your own cache updater function.
+ */
+export type CacheUpdater<R, D> = CacheUpdaterFn<R, D> | CacheUpdaterRecord<R, D>;
