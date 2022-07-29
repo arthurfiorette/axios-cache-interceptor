@@ -28,15 +28,15 @@ import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor@0.10
 ```html
 <!-- Development UMD build for ES2017+ (~12.6 KiB) -->
 <script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.10.6/dev/index.bundle.js"
-  integrity="sha256-LGlGEg6regUeSdKir1yYXDGQEAtSz/cCyJrIBzU1bYg="
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.10.7/dev/index.bundle.js"
+  integrity="sha256-oTqUncNoX9DcUWIb5sLS2tscPHKqUPL0yLlOXSSXzSY="
   crossorigin="anonymous"
 ></script>
 
 <!-- Production UMD build for ES5+ (~14.2 KiB) -->
 <script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.10.6/dist/index.bundle.js"
-  integrity="sha256-yJbSlTxKmgU+sjlMx48OSjoiUsboy18gXTxUBniEEO0="
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.10.7/dist/index.bundle.js"
+  integrity="sha256-Dc3BSxOZSDmoVoB11lhxkqH8VdBQjxWkHUmmDotiKJ4="
   crossorigin="anonymous"
 ></script>
 ```
