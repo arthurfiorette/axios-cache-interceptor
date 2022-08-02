@@ -22,7 +22,7 @@ import { setupCache } from 'axios-cache-interceptor';
 const { setupCache } = window.AxiosCacheInterceptor;
 
 // ESM with Skypack CDN
-import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor@0.10.6';
+import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor@0.10.7';
 ```
 
 ```html
