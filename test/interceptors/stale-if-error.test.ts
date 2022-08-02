@@ -287,7 +287,9 @@ describe('Last-Modified handling', () => {
     expect(newResponse.id).toBe(id);
     expect(newResponse.data).not.toBe(cache.data);
     expect(newResponse.status).toBe(503);
-  });
+
+    // Increase the maximum time because some CI services may have slow internet.
+  }, 10_000);
 
   it('expects that the cache is marked as stale', async () => {
     const axios = setupCache(Axios.create(), {
