@@ -177,4 +177,21 @@ describe('test request interceptor', () => {
     expect(headers[Header.XAxiosCacheLastModified]).not.toBe(headerValue);
     expect(headers[Header.XAxiosCacheStaleIfError]).not.toBe(headerValue);
   });
+
+  // https://github.com/arthurfiorette/axios-cache-interceptor/issues/317
+  // it('Expects that aborted requests clears its cache', async () => {
+  //   const id = 'abort-request-id';
+  //   const { signal, abort } = new AbortController();
+  //   const axios = mockAxios();
+  //
+  //   const promise = axios.get('url', { id, signal });
+  //
+  //   abort();
+  //
+  //   await expect(promise).rejects.toThrow(Error);
+  //
+  //   const cache = await axios.storage.get(id);
+  //   expect(cache.state).not.toBe('loading');
+  //   expect(cache.state).toBe('empty');
+  // });
 });
