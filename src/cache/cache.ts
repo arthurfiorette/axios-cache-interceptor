@@ -19,7 +19,8 @@ export type CacheProperties<R = unknown, D = unknown> = {
   /**
    * The time until the cached value is expired in milliseconds.
    *
-   * If a function is used, it will receive the complete response and waits to return a TTL value
+   * If a function is used, it will receive the complete response and waits to return a
+   * TTL value
    *
    * When using `interpretHeader: true`, this value will only be used if the interpreter
    * can't determine their TTL value to override this
@@ -58,7 +59,8 @@ export type CacheProperties<R = unknown, D = unknown> = {
    *
    * If an provided id represents and loading cache, he will be ignored.
    *
-   * The id used is the same as the id on `CacheRequestConfig['id']`, auto-generated or not.
+   * The id used is the same as the id on `CacheRequestConfig['id']`, auto-generated or
+   * not.
    *
    * **Using a function instead of an object is supported but not recommended, as it's
    * better to just consume the response normally and write your own code after it. But
@@ -79,7 +81,8 @@ export type CacheProperties<R = unknown, D = unknown> = {
 
   /**
    * Use `If-Modified-Since` header in this request. Use a date to force a custom value or
-   * true to use the last cached timestamp. If never cached before, the header is not set.
+   * true to use the last cached timestamp. If never cached before, the header is not
+   * set.
    *
    * @default false // The opposite of the resulting `etag` option.
    * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/If-Modified-Since
@@ -116,7 +119,8 @@ export type CacheProperties<R = unknown, D = unknown> = {
 
   /**
    * This option bypasses the current cache and always make a new http request. This will
-   * not delete the current cache, it will just replace the cache when the response arrives.
+   * not delete the current cache, it will just replace the cache when the response
+   * arrives.
    *
    * Unlike as `cache: false`, this will not disable the cache, it will just ignore the
    * pre-request cache checks before making the request. This way, all post-request

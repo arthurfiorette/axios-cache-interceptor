@@ -1,9 +1,9 @@
-import type { CacheProperties } from '..';
 import type {
   AxiosCacheInstance,
   CacheAxiosResponse,
   CacheRequestConfig
 } from '../cache/axios';
+import type { CacheProperties } from '../cache/cache';
 import { Header } from '../header/headers';
 import type { CachedStorageValue } from '../storage/types';
 import { testCachePredicate } from '../util/cache-predicate';
@@ -20,10 +20,10 @@ export function defaultResponseInterceptor(
    * Also update the waiting list for this key by rejecting it.
    */
   const rejectResponse = async (responseId: string, config: CacheRequestConfig) => {
-    // Update the cache to empty to prevent infinite loading state
+    // Updates the cache to empty to prevent infinite loading state
     await axios.storage.remove(responseId, config);
 
-    // Reject the deferred if present
+    // Rejects the deferred, if present
     axios.waiting[responseId]?.reject();
 
     delete axios.waiting[responseId];

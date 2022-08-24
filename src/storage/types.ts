@@ -27,7 +27,10 @@ export type StaleStorageValue = {
 
 export type CachedStorageValue = {
   data: CachedResponse;
-  /** The number in milliseconds to wait after createdAt before the value is considered stale. */
+  /**
+   * The number in milliseconds to wait after createdAt before the value is considered
+   * stale.
+   */
   ttl: number;
   createdAt: number;
   state: 'cached';
@@ -100,9 +103,11 @@ export type AxiosStorage = {
   remove: (key: string, currentRequest?: CacheRequestConfig) => MaybePromise<void>;
 
   /**
-   * Returns the value for the given key. This method make checks for cache invalidation or etc.
+   * Returns the value for the given key. This method make checks for cache invalidation
+   * or etc.
    *
-   * If the provided `find()` method returned null, this will map it to a `'empty'` storage value.
+   * If the provided `find()` method returned null, this will map it to a `'empty'`
+   * storage value.
    *
    * @param key The key to look for
    * @param currentRequest The current {@link CacheRequestConfig}, if any

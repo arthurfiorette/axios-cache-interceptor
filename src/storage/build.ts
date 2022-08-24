@@ -25,7 +25,10 @@ export function canStale(value: CachedStorageValue): boolean {
   );
 }
 
-/** Checks if the provided cache is expired. You should also check if the cache {@link canStale} */
+/**
+ * Checks if the provided cache is expired. You should also check if the cache
+ * {@link canStale}
+ */
 export function isExpired(value: CachedStorageValue): boolean {
   return value.createdAt + value.ttl <= Date.now();
 }

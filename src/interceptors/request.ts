@@ -84,10 +84,11 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
       axios.waiting[key] = deferred();
 
       /**
-       * Add a default reject handler to catch when the request is aborted without others
-       * waiting for it.
+       * Adds a default reject handler to catch when the request gets aborted without
+       * others waiting for it.
        */
-      axios.waiting[key]?.catch(() => undefined);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      axios.waiting[key]!.catch(() => undefined);
 
       await axios.storage.set(
         key,
