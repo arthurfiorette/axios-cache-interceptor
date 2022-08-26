@@ -62,7 +62,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "jest": "^28.1.2",
-    "jest-environment-jsdom": "^28.1.2",
+    "jest-environment-jsdom": "^29.0.0",
     "prettier": "^2.5.1",
     "prettier-plugin-jsdoc": "^0.4.2",
     "prettier-plugin-organize-imports": "^3.0.0",
