@@ -3621,9 +3621,9 @@ prettier-plugin-jsdoc@^0.4.2:
     mdast-util-from-markdown "^1.2.0"
 
 prettier-plugin-organize-imports@^3.0.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/prettier-plugin-organize-imports/-/prettier-plugin-organize-imports-3.1.0.tgz#00420affd69f21926dbf29bf94a152f37e859d5e"
-  integrity sha512-eufD78FKdkDTyyY9oKxuwEMrfz4/AXrGeyeyjqiRtSBr01DAdGFTq4SgIKvLeqlLkq+ZPJ2H0+BK0e6flRUwJQ==
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/prettier-plugin-organize-imports/-/prettier-plugin-organize-imports-3.1.1.tgz#e581cb6fa528cf72f7d95b807ce38c3e51c3c27c"
+  integrity sha512-6bHIQzybqA644h0WGUW3gpWEVbMBvzui5wCMRBi7qA++d5ov2xjjfDk8pxJJ/ardfZrGAwizKMq/fQMFdJ+0Zw==
 
 prettier@^2.5.1:
   version "2.7.1"
