@@ -1,4 +1,4 @@
-name: auto-merge
+name: Dependabot Auto Merge
 
 on:
   pull_request_target:
@@ -12,6 +12,6 @@ jobs:
     steps:
       - uses: ahmadnassri/action-dependabot-auto-merge@v2.4
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.AUTOMERGE_TOKEN }}
           command: "squash and merge"
           target: minor
