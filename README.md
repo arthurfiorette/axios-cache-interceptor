@@ -1,3 +1,9 @@
+<h3 align="center">This branch is only for security and important fixes for v0</h3>
+<p align="center">It won't receive any new features and we strongly recommend upgrading to axios and axios-cache-interceptor v1</p>
+
+<hr />
+<br />
+
 <p align="center">
   Help axios-cache-interceptor grow! Star and share this amazing repo with your friends and co-workers!
 </p>
