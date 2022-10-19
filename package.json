@@ -76,5 +76,8 @@
   "packageManager": "yarn@1.22.17",
   "resolutions": {
     "colors": "1.4.0"
+  },
+  "engines": {
+    "node": ">=12"
   }
 }
