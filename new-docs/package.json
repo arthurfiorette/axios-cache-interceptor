@@ -10,10 +10,16 @@
   "repository": "https://github.com/arthurfiorette/axios-cache-interceptor/@aci/docs",
   "scripts": {
     "dev": "vuepress dev src",
-    "build": "vuepress build src"
+    "build": "vuepress build src",
+    "bench": "node benchmark.js"
   },
   "license": "MIT",
   "devDependencies": {
-    "vuepress": "^1.5.3"
+    "@vuepress/plugin-google-analytics": "^1.9.7",
+    "vuepress": "^1.5.3",
+    "axios": "^0.27.2",
+    "axios-cache-adapter": "^2.7.3",
+    "benny": "^3.7.1",
+    "express": "^4.18.1"
   }
 }

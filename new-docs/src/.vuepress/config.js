@@ -51,7 +51,8 @@ module.exports = defineConfig({
             '/guide/debugging',
             '/guide/storages',
             '/guide/request-id',
-            '/guide/invalidating-cache'
+            '/guide/invalidating-cache',
+            '/guide/comparison'
           ]
         }
       ],
@@ -70,5 +71,10 @@ module.exports = defineConfig({
   },
 
   /** Apply plugins，ref：https://v1.vuepress.vuejs.org/zh/plugin/ */
-  plugins: ['@vuepress/plugin-back-to-top', '@vuepress/plugin-medium-zoom']
+  plugins: [
+    //
+    '@vuepress/plugin-back-to-top',
+    '@vuepress/plugin-medium-zoom',
+    ['@vuepress/plugin-google-analytics', { ga: 'G-K548ZF395X' }]
+  ]
 });
