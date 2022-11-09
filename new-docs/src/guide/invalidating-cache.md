@@ -78,9 +78,9 @@ we do not contact the server again and update ourselves the cache.
 
 ### Updating cache through network
 
-Sometimes, the mutation you made is not simple enough and would need a lot of copy-paste
-service code to replicate all changes the backend made, turning it into a maintenance
-nightmare.
+Sometimes, the mutation you made is not simple enough and would need a lot of copied
+service code to replicate all changes the backend made, turning it into a duplication and
+maintenance nightmare.
 
 In those cases, you can just invalidate the cache and let the next request be forwarded to
 the server, and updating the cache with the new network response.
