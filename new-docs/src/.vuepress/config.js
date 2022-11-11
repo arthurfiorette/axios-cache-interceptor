@@ -58,11 +58,11 @@ module.exports = defineConfig({
       ],
       '/config/': [
         {
-          title: 'Config reference',
+          title: 'Config',
           collapsable: false,
           children: [
             '/config/',
-            '/config/per-request-configuration',
+            '/config/request-specifics',
             '/config/response-object'
           ]
         }

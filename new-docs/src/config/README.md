@@ -1,24 +1,31 @@
-# Global Configuration
+# Global
 
-These are properties that are used by the entire application.
+These are properties that are used and shared by the entire application.
 
 ```js
 const axios = setupCache(axios, OPTIONS);
 ```
 
-## storage
+::: tip
+
+The `setupCache` function receives global options and all [request specifics](./request-specifics.md) ones too. This
+way, you can customize the defaults for all requests.
+
+:::
+
+## storage <Badge text="optional" type="warning"/>
 
 - Type: `AxiosStorage`
-- default: `buildMemoryStorage()`
+- Default: `buildMemoryStorage()`
 
 The object responsible to save, retrieve and serialize (if needed) cache data.
 
 See the [Storages](../guide/storages.md) page for more information.
 
-## generateKey
+## generateKey <Badge text="optional" type="warning"/>
 
 - Type: `KeyGenerator<unknown, unknown>`
-- default: `defaultKeyGenerator`
+- Default: `defaultKeyGenerator`
 
 The function used to create different keys for each request. Defaults to a function that
 priorizes the id, and if not specified, a string is generated using the `method`,
@@ -27,10 +34,10 @@ priorizes the id, and if not specified, a string is generated using the `method`
 You can learn on how to use them on the
 [Request ID](../guide/request-id.md#custom-generator) page.
 
-## waiting
+## waiting <Badge text="optional" type="warning"/>
 
-- type: `Record<string, Deferred<CachedResponse>>`
-- default: `{}`
+- Type: `Record<string, Deferred<CachedResponse>>`
+- Default: `{}`
 
 A simple object that will hold a promise for each pending request. Used to handle
 concurrent requests.
@@ -38,10 +45,10 @@ concurrent requests.
 You'd normally not need to change this, but it is exposed in case you need to use it as
 some sort of listener of know when a request is waiting for other to finish.
 
-## headerInterpreter
+## headerInterpreter <Badge text="optional" type="warning"/>
 
-- type: `HeadersInterpreter`
-- default: `defaultHeaderInterpreter`
+- Type: `HeadersInterpreter`
+- Default: `defaultHeaderInterpreter`
 
 The function used to interpret all headers from a request and determine a time to live
 (`ttl`) number.
@@ -74,10 +81,10 @@ const myHeaderInterpreter: HeaderInterpreter = (headers) => {
 
 :::
 
-## requestInterceptor
+## requestInterceptor <Badge text="optional" type="warning"/>
 
-- type: `AxiosInterceptor<CacheRequestConfig<unknown, unknown>>`
-- default: `defaultRequestInterceptor()`
+- Type: `AxiosInterceptor<CacheRequestConfig<unknown, unknown>>`
+- Default: `defaultRequestInterceptor()`
 
 The function that will be used to intercept the request before it is sent to the axios
 adapter.
@@ -91,10 +98,10 @@ to this property.
 See its code for more information
 [here](https://github.com/arthurfiorette/axios-cache-interceptor/tree/main/src/interceptors).
 
-## responseInterceptor
+## responseInterceptor <Badge text="optional" type="warning"/>
 
-- type: `AxiosInterceptor<CacheAxiosResponse<unknown, unknown>>`
-- default: `defaultResponseInterceptor()`
+- Type: `AxiosInterceptor<CacheAxiosResponse<unknown, unknown>>`
+- Default: `defaultResponseInterceptor()`
 
 The function that will be used to intercept the request after it is returned by the axios
 adapter.
@@ -108,10 +115,10 @@ to this property.
 See its code for more information
 [here](https://github.com/arthurfiorette/axios-cache-interceptor/tree/main/src/interceptors).
 
-## debug
+## debug <Badge text="optional" type="warning"/> <Badge text="dev only" type="error"/>
 
-- type: `(msg: { id?: string; msg?: string; data?: unknown }) => void` or `undefined`
-- default: `undefined`
+- Type: `(msg: { id?: string; msg?: string; data?: unknown }) => void` or `undefined`
+- Default: `undefined`
 
 ::: warning
 
