@@ -6,6 +6,8 @@ export default defineConfig({
   description:
     'Small and efficient cache interceptor for axios. Etag, Cache-Contol, TTL, HTTP headers and more!.',
 
+  head: [['link', { rel: 'icon', href: '/favicon.ico' }]],
+
   themeConfig: {
     socialLinks: [
       {
