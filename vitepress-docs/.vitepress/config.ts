@@ -16,8 +16,14 @@ export default defineConfig({
       }
     ],
 
+    // Temp link for testing, will be changed to the real one before merged to production
+    editLink: {
+      pattern:
+        'https://github.com/cainthebest/axios-cache-interceptor/edit/feat/axios-v1.0.0/vitepress-docs/:path'
+    },
+
     footer: {
-      message: 'MIT Licensed',
+      message: 'Made with ❤️',
       copyright: 'Copyright © 2021-present Arthur Fiorette & Contributors'
     },
 
