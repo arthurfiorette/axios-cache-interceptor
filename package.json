@@ -29,7 +29,7 @@
     "format": "prettier --write .",
     "lint": "eslint . --ext .ts",
     "version": "auto-changelog -p && git add CHANGELOG.md",
-    "docs:dev": "vitepress dev vitepress-docs",
+    "docs:dev": "vitepress dev vitepress-docs --port 1227",
     "docs:build": "vitepress build vitepress-docs",
     "docs:serve": "vitepress serve vitepress-docs"
   },
