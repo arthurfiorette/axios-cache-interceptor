@@ -7,7 +7,7 @@ export default defineConfig({
   title: 'Axios Cache Interceptor',
   // Description for the site. This will render as a <meta> tag in the page HTML
   description:
-    'Small and efficient cache interceptor for axios. Etag, Cache-Contol, TTL, HTTP headers and more!.',
+    'Small and efficient cache interceptor for axios. Etag, Cache-Control, TTL, HTTP headers and more!.',
 
   // The directory where the markdown pages are stored
   srcDir: './src',
@@ -37,20 +37,60 @@ export default defineConfig({
     ],
 
     nav: [
-      //! Just for testing nav bar
       { text: 'Guide', link: '/guide' },
-      { text: 'API', link: '/api' }
+      { text: 'Config', link: '/config' }
     ],
 
     //! Temp link for testing, will be changed to the real one before merged to production
     editLink: {
       pattern:
-        'https://github.com/cainthebest/axios-cache-interceptor/edit/feat/axios-v1.0.0/vitepress-docs/:path'
+        // TODO: Check if this is the correct link when released.
+        'https://github.com/arthurfiorette/axios-cache-interceptor/edit/main/docs/:path'
     },
 
     footer: {
       message: 'Made with ❤️',
       copyright: 'Copyright © 2021-present Arthur Fiorette & Contributors'
+    },
+
+    // TODO: Change this to the real one
+    algolia: {
+      appId: '8J64VVRP8K',
+      apiKey: 'a18e2f4cc5665f6602c5631fd868adfd',
+      indexName: 'vitepress'
+    },
+
+    // TODO: Change this to the real one
+    carbonAds: {
+      code: 'CEBDT27Y',
+      placement: 'vuejsorg'
+    },
+
+    sidebar: {
+      '/guide': [
+        {
+          text: 'Guide',
+          items: [
+            { text: 'Introduction', link: '/guide' },
+            { text: 'Getting Started', link: '/guide/getting-started' },
+            { text: 'Debugging', link: '/guide/debugging' },
+            { text: 'Storages', link: '/guide/storages' },
+            { text: 'Request Id', link: '/guide/request-id' },
+            { text: 'Invalidating Cache', link: '/guide/invalidating-cache' },
+            { text: 'Comparison', link: '/guide/comparison' }
+          ]
+        }
+      ],
+      '/config': [
+        {
+          text: 'Config',
+          items: [
+            { text: 'Global Configuration', link: '/config' },
+            { text: 'Request Specifics', link: '/config/request-specifics' },
+            { text: 'Response Object', link: '/config/response-object' }
+          ]
+        }
+      ]
     }
   }
 });

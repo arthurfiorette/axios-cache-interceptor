@@ -1,8 +1,9 @@
 :root {
-  --vp-c-brand: #5a29e4;
-  --vp-c-brand-light: #5b29e45d;
-  --vp-c-brand-lighter: #5b29e45d;
-  --vp-c-brand-dark: #5a29e4;
-  --vp-c-brand-darker: #5a29e4;
-  --vp-c-brand-dimm: #363636;
+  /* TODO: Different brightness for light and dark mode :) */
+  --vp-c-brand: hsl(255, 78%, 53%);
+  --vp-c-brand-light: hsla(255, 78%, 53%, 36.5%);
+  --vp-c-brand-lighter: hsla(255, 78%, 53%, 36.5%);
+  --vp-c-brand-dark: hsl(255, 78%, 53%);
+  --vp-c-brand-darker: hsl(255, 78%, 53%);
+  --vp-c-brand-dimm: hsl(0, 0%, 21%);
 }
