@@ -9,6 +9,7 @@ hero:
     - theme: brand
       text: Get Started
       link: /example
+
     - theme: alt
       text: View on GitHub
       link: https://github.com/arthurfiorette/axios-cache-interceptor
