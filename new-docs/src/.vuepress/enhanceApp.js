@@ -11,4 +11,4 @@ export default ({
   siteData // site metadata
 }) => {
   // ...apply enhancements for the site.
-}
+};

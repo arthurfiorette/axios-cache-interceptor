@@ -1,11 +1,11 @@
 # Request Id
 
-We can distinguish requests from each other by assigning an **non unique** `id` to
-each request. Theses IDs are the same provided to the storages as keys.
+We can distinguish requests from each other by assigning an **non unique** `id` to each
+request. Theses IDs are the same provided to the storages as keys.
 
-Each ID is responsible for binding a cache to its request, for referencing or
-invalidating it later and to make the interceptor use the same cache for requests to the
-same endpoint and parameters.
+Each ID is responsible for binding a cache to its request, for referencing or invalidating
+it later and to make the interceptor use the same cache for requests to the same endpoint
+and parameters.
 
 The default id generator is smart enough to generate the same ID for theoretically same
 requests. E.g. `{ baseURL: 'https://a.com/', url: '/b' }` results to the same ID as

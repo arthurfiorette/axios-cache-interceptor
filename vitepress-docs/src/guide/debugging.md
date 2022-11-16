@@ -10,15 +10,15 @@ with debug logs enabled. You can use it by changing the `setupCache` import to:
 ```ts{2,5}
 const Axios = require('axios');
 const { setupCache } = require('axios-cache-interceptor/dev');
- 
+
 // same object, but with updated typings.
 const axios = setupCache(Axios, { debug: console.log });
- 
+
 const req1 = axios.get('https://jsonplaceholder.typicode.com/posts/1');
 const req2 = axios.get('https://jsonplaceholder.typicode.com/posts/1');
- 
+
 const [res1, res2] = await Promise.all([req1, req2]);
- 
+
 res1.cached; // false
 res2.cached; // true
 ```
@@ -30,18 +30,19 @@ res2.cached; // true
 ```ts{2,5}
 import Axios from 'axios';
 import { setupCache } from 'axios-cache-interceptor/dev';
- 
+
 // same object, but with updated typings.
 const axios = setupCache(Axios, { debug: console.log });
- 
+
 const req1 = axios.get('https://jsonplaceholder.typicode.com/posts/1');
 const req2 = axios.get('https://jsonplaceholder.typicode.com/posts/1');
- 
+
 const [res1, res2] = await Promise.all([req1, req2]);
- 
+
 res1.cached; // false
-res2.cached; // true 
+res2.cached; // true
 ```
+
 </code-block>
 
 <code-block title="Browser">
@@ -50,19 +51,20 @@ res2.cached; // true
 
 const Axios = window.axios;
 const { setupCache } = window.AxiosCacheInterceptor; /* choose development bundle */
- 
+
 // same object, but with updated typings.
 const axios = setupCache(Axios, { debug: console.log });
- 
+
 const req1 = axios.get('https://jsonplaceholder.typicode.com/posts/1');
 const req2 = axios.get('https://jsonplaceholder.typicode.com/posts/1');
- 
+
 const [res1, res2] = await Promise.all([req1, req2]);
- 
+
 res1.cached; // false
 res2.cached; // true
 
 ```
+
 </code-block>
 
 <code-block title="Skypack">
@@ -70,15 +72,15 @@ res2.cached; // true
 ```ts{2,5}
 import Axios from 'https://cdn.skypack.dev/axios';
 import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor/dev';
- 
+
 // same object, but with updated typings.
 const axios = setupCache(Axios, { debug: console.log });
- 
+
 const req1 = axios.get('https://jsonplaceholder.typicode.com/posts/1');
 const req2 = axios.get('https://jsonplaceholder.typicode.com/posts/1');
- 
+
 const [res1, res2] = await Promise.all([req1, req2]);
- 
+
 res1.cached; // false
 res2.cached; // true
 ```

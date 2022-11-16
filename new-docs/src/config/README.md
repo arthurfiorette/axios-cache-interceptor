@@ -8,8 +8,9 @@ const axios = setupCache(axios, OPTIONS);
 
 ::: tip
 
-The `setupCache` function receives global options and all [request specifics](./request-specifics.md) ones too. This
-way, you can customize the defaults for all requests.
+The `setupCache` function receives global options and all
+[request specifics](./request-specifics.md) ones too. This way, you can customize the
+defaults for all requests.
 
 :::
 

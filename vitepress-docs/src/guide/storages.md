@@ -54,7 +54,7 @@ to get this behavior. It works by connecting our storage API to the browser's
 ```ts{7}
 import Axios from 'axios';
 import { setupCache, buildWebStorage } from 'axios-cache-interceptor';
- 
+
 setupCache(axios, {
   // As localStorage is a public storage, you can add a prefix
   // to all keys to avoid collisions with other code.
@@ -69,13 +69,14 @@ setupCache(axios, {
 ```ts{7}
 import Axios from 'axios';
 import { setupCache, buildWebStorage } from 'axios-cache-interceptor';
- 
+
 setupCache(axios, {
   // As sessionStorage is a public storage, you can add a prefix
   // to all keys to avoid collisions with other code.
   storage: buildWebStorage(sessionStorage, 'axios-cache:')
 });
 ```
+
 </code-block>
 
 <code-block title="Custom Storage">
@@ -83,9 +84,9 @@ setupCache(axios, {
 ```ts{4,7}
 import Axios from 'axios';
 import { setupCache, buildWebStorage } from 'axios-cache-interceptor';
- 
+
 const myStorage = new Storage();
- 
+
 setupCache(axios, {
   storage: buildWebStorage(myStorage)
 });

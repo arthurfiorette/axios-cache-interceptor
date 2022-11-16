@@ -7,8 +7,6 @@ overloading the network or coding himself a simple and buggy cache system.
 Each request goes through an interceptor applied to your axios instance. There, we handle
 each request and decide if we should send it to the network or return a cached response.
 
-
-
 ## How it works
 
 By using axios interceptors instead of adapters, each request is passed through the
