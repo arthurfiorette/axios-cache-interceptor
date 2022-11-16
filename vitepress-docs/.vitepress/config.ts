@@ -1,4 +1,7 @@
+import fs from 'fs';
 import { defineConfig } from 'vitepress';
+
+const read = (relative) => fs.readFileSync(require.resolve(relative), 'utf-8');
 
 export default defineConfig({
   // The language of the site. This will be used to set the `lang` attribute on the <html> element
@@ -33,6 +36,22 @@ export default defineConfig({
       {
         icon: 'github',
         link: 'https://github.com/arthurfiorette/axios-cache-interceptor'
+      },
+      {
+        icon: { svg: read('../public/npm.svg') },
+        link: 'https://npmjs.com/package/axios-cache-interceptor'
+      },
+      {
+        icon: { svg: read('../public/jsdelivr.svg') },
+        link: 'https://www.jsdelivr.com/package/npm/axios-token-interceptor'
+      },
+      {
+        icon: { svg: read('../public/bundlephobia.svg') },
+        link: 'https://bundlephobia.com/package/axios-cache-interceptor'
+      },
+      {
+        icon: { svg: read('../public/packagephobia.svg') },
+        link: 'https://packagephobia.com/result?p=axios-cache-interceptor'
       }
     ],
 
