@@ -90,7 +90,7 @@ const myHeaderInterpreter: HeaderInterpreter = (headers) => {
 The function that will be used to intercept the request before it is sent to the axios
 adapter.
 
-It is the main function of this library, as it is the brigde between the axios request and
+It is the main function of this library, as it is the bridge between the axios request and
 the cache.
 
 It wasn't meant to be changed, but if you need to, you can do it by passing a new function
@@ -107,7 +107,7 @@ See its code for more information
 The function that will be used to intercept the request after it is returned by the axios
 adapter.
 
-It is the second most important function of this library, as it is the brigde between the
+It is the second most important function of this library, as it is the bridge between the
 axios response and the cache.
 
 It wasn't meant to be changed, but if you need to, you can do it by passing a new function
@@ -116,7 +116,7 @@ to this property.
 See its code for more information
 [here](https://github.com/arthurfiorette/axios-cache-interceptor/tree/main/src/interceptors).
 
-## debug <Badge text="optional" type="warning"/> <Badge text="dev only" type="error"/>
+## debug <Badge text="dev only" type="danger"/> <Badge text="optional" type="warning"/>
 
 - Type: `(msg: { id?: string; msg?: string; data?: unknown }) => void` or `undefined`
 - Default: `undefined`

@@ -4,7 +4,7 @@ I'm certainly sure that along the way you will find some cache behavior that is 
 expected to the current situation. To help with that, the library has a separate build
 with debug logs enabled. You can use it by changing the `setupCache` import to:
 
-<code-group>
+<!-- <code-group>
 <code-block title="CommonJS">
 
 ```ts{2,5}
@@ -87,7 +87,30 @@ res2.cached; // true
 
 </code-block>
 
-</code-group>
+</code-group> -->
+
+```ts {5,11}
+import Axios from 'axios';
+// import Axios from 'https://cdn.skypack.dev/axios';
+// const Axios = window.axios;
+
+import { setupCache } from 'axios-cache-interceptor/dev';
+// import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor/dev';
+// const { setupCache } = window.AxiosCacheInterceptor; /* choose development bundle */
+
+// same object, but with updated typings.
+const axios = setupCache(Axios, {
+  debug: console.log
+});
+
+const req1 = axios.get('https://jsonplaceholder.typicode.com/posts/1');
+const req2 = axios.get('https://jsonplaceholder.typicode.com/posts/1');
+
+const [res1, res2] = await Promise.all([req1, req2]);
+
+res1.cached; // false
+res2.cached; // true
+```
 
 ::: tip
 

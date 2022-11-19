@@ -2,10 +2,10 @@
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/) (>= 12) _Lower version requires a custom build with
+- [Node.js](https://nodejs.org/) `(>= 12)` _Lower version requires a custom build with
   polyfills._
 
-- [Axios](https://axios-http.com/) (>= 0.21 or >= 1.1) _Lower version requires a custom
+- [Axios](https://axios-http.com/) `(>= 0.21 or >= 1.1)` _Lower version requires a custom
   build with polyfills._
 
 ## Quick Start
@@ -13,7 +13,28 @@
 The fastest way to get axios with cache set up and running is to install it with npm or
 yarn
 
-<code-group>
+```bash
+yarn    add     axios@1  axios-cache-interceptor@1
+npm   install   axios@1  axios-cache-interceptor@1
+```
+
+```html
+<!-- Development UMD build for ES2017+ (~12.6 KiB) -->
+<script
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.10.7/dev/index.bundle.js"
+  integrity="sha256-oTqUncNoX9DcUWIb5sLS2tscPHKqUPL0yLlOXSSXzSY="
+  crossorigin="anonymous"
+></script>
+
+<!-- Production UMD build for ES5+ (~14.2 KiB) -->
+<script
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.10.7/dist/index.bundle.js"
+  integrity="sha256-Dc3BSxOZSDmoVoB11lhxkqH8VdBQjxWkHUmmDotiKJ4="
+  crossorigin="anonymous"
+></script>
+```
+
+<!-- <code-group>
 <code-block title="YARN" active>
 
 ```bash
@@ -33,14 +54,14 @@ npm install axios@1 axios-cache-interceptor@1
 <code-block title="Browser">
 
 ```html
-<!-- Development UMD build for ES2017+ (~12.6 KiB) -->
+< !-- Development UMD build for ES2017+ (~12.6 KiB) -- >
 <script
   src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.10.7/dev/index.bundle.js"
   integrity="sha256-oTqUncNoX9DcUWIb5sLS2tscPHKqUPL0yLlOXSSXzSY="
   crossorigin="anonymous"
 ></script>
 
-<!-- Production UMD build for ES5+ (~14.2 KiB) -->
+< !-- Production UMD build for ES5+ (~14.2 KiB) -- >
 <script
   src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.10.7/dist/index.bundle.js"
   integrity="sha256-Dc3BSxOZSDmoVoB11lhxkqH8VdBQjxWkHUmmDotiKJ4="
@@ -50,12 +71,35 @@ npm install axios@1 axios-cache-interceptor@1
 
 </code-block>
 
-</code-group>
+</code-group> -->
 
 After installing, you can import the package and apply the interceptor to your axios
 instance, as shown below:
 
-<code-group>
+```ts
+import Axios from 'axios';
+// const Axios = require('axios');
+// const Axios = window.axios;
+// import Axios from 'https://cdn.skypack.dev/axios';
+
+import { setupCache } from 'axios-cache-interceptor';
+// const { setupCache } = require('axios-cache-interceptor');
+// const { setupCache } = window.AxiosCacheInterceptor;
+// import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor';
+
+// same object, but with updated typings.
+const axios = setupCache(Axios);
+
+const req1 = axios.get('https://api.example.com/');
+const req2 = axios.get('https://api.example.com/');
+
+const [res1, res2] = await Promise.all([req1, req2]);
+
+res1.cached; // false
+res2.cached; // true
+```
+
+<!-- <code-group>
 <code-block title="CommonJS">
 
 ```ts
@@ -136,7 +180,7 @@ res2.cached; // true
 
 </code-block>
 
-</code-group>
+</code-group> -->
 
 Just the above is sufficient for most use cases. However, you can also customiza each
 cache behavior by passing a configuration object to the `setupCache` function. And you can
@@ -167,8 +211,8 @@ Axios and Axios Cache Interceptor v1**
 
 Some useful links to get you more familiar with the library:
 
-- [Debugging requests](/guide/debugging.md)
-- [Storages](/guide/storages.md)
-- [Global config](/config/global.md)
-- [Per request config](/config/per-request.md)
-- [Response object](/config/per-request.md)
+- [Debugging requests](./debugging.md)
+- [Storages](./storages.mdd)
+- [Global config](../config.md/re)
+- [Per request config](../config/request-specifics.md)
+- [Response object](../config/response-object.md)

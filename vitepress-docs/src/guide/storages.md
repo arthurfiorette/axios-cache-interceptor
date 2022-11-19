@@ -12,7 +12,7 @@ Currently, two storages are included in the library by default:
 
 - [Memory Storage](#memory-storage) accessible with `buildMemoryStorage` _(works on Node
   and Web)_
-- [Web Storage API](#web-storage-api) accesible with `buildWebStorage` _(works on Web
+- [Web Storage API](#web-storage-api) accessible with `buildWebStorage` _(works on Web
   only)_
 
 ## Memory Storage
@@ -48,7 +48,52 @@ If you need persistent caching between page refreshes, you can use the `buildWeb
 to get this behavior. It works by connecting our storage API to the browser's
 [Storage API](https://developer.mozilla.org/en-US/docs/Web/API/Storage).
 
-<code-group>
+::: details Local Storage
+
+```ts{7}
+import Axios from 'axios';
+import { setupCache, buildWebStorage } from 'axios-cache-interceptor';
+
+setupCache(axios, {
+  // As localStorage is a public storage, you can add a prefix
+  // to all keys to avoid collisions with other code.
+  storage: buildWebStorage(localStorage, 'axios-cache:')
+});
+```
+
+:::
+
+::: details Session Storage
+
+```ts{7}
+import Axios from 'axios';
+import { setupCache, buildWebStorage } from 'axios-cache-interceptor';
+
+setupCache(axios, {
+  // As sessionStorage is a public storage, you can add a prefix
+  // to all keys to avoid collisions with other code.
+  storage: buildWebStorage(sessionStorage, 'axios-cache:')
+});
+```
+
+:::
+
+::: details Custom Storage
+
+```ts{4,7}
+import Axios from 'axios';
+import { setupCache, buildWebStorage } from 'axios-cache-interceptor';
+
+const myStorage = new Storage();
+
+setupCache(axios, {
+  storage: buildWebStorage(myStorage)
+});
+```
+
+:::
+
+<!-- <code-group>
 <code-block title="Local Storage">
 
 ```ts{7}
@@ -94,7 +139,7 @@ setupCache(axios, {
 
 </code-block>
 
-</code-group>
+</code-group> -->
 
 ### Browser quota
 
