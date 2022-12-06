@@ -1,5 +1,7 @@
 <p align="center">
-  Help axios-cache-interceptor grow! Star and share this amazing repo with your friends and co-workers!
+  <i>
+    Help axios-cache-interceptor grow! Star and share this amazing repo with your friends and co-workers!
+  </i>
 </p>
 
 <br />
@@ -17,16 +19,8 @@
 
 <br />
 
-<div align="center">
-  <pre>
-  <h1>⚡
-Axios Cache Interceptor</h1>
-  </pre>
-  <br />
-</div>
-
 <h3 align="center">
-  <code>Axios Cache Interceptor</code> is a small and efficient cache interceptor for axios.
+  <b>⚡Axios Cache Interceptor</b> is a small and efficient cache interceptor for axios.
   <br />
   <br />
 </h3>
