@@ -330,8 +330,12 @@ describe('Last-Modified handling', () => {
     expect(res2.status).toBe(cacheData.status);
     expect(res1.statusText).toBe(cacheData.statusText);
     expect(res2.statusText).toBe(cacheData.statusText);
-    expect(res1.headers).toStrictEqual(cacheData.headers);
-    expect(res2.headers).toStrictEqual(cacheData.headers);
+
+    // res1 and res2.headers are instance of AxiosHeaders
+    // and cacheData.headers is a plain object.
+    expect(res1.headers).toMatchObject(cacheData.headers);
+    expect(res2.headers).toMatchObject(cacheData.headers);
+
     expect(res1.cached).toBe(true);
     expect(res2.cached).toBe(true);
 

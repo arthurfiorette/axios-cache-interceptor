@@ -6,6 +6,9 @@ node_modules
 /dist
 /dev
 
+# Documentation output
+docs/.vitepress/dist
+
 # Random
 /ignore
 *.log

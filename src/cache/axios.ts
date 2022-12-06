@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type {
-  AxiosDefaults,
   AxiosInstance,
   AxiosInterceptorManager,
   AxiosRequestConfig,
@@ -75,7 +74,7 @@ export interface AxiosCacheInstance extends CacheInstance, AxiosInstance {
     config?: CacheRequestConfig<T, D>
   ): Promise<R>;
 
-  defaults: AxiosDefaults<any> & {
+  defaults: AxiosInstance['defaults'] & {
     cache: CacheProperties;
   };
 

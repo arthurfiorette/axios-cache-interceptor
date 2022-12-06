@@ -166,14 +166,14 @@ export interface CacheInstance {
    *
    * @default defaultRequestInterceptor
    */
-  requestInterceptor: AxiosInterceptor<CacheRequestConfig>;
+  requestInterceptor: AxiosInterceptor<CacheRequestConfig<unknown, unknown>>;
 
   /**
    * The response interceptor that will be used to handle the cache.
    *
    * @default defaultResponseInterceptor
    */
-  responseInterceptor: AxiosInterceptor<CacheAxiosResponse>;
+  responseInterceptor: AxiosInterceptor<CacheAxiosResponse<unknown, unknown>>;
 
   /**
    * Logs useful information in the console

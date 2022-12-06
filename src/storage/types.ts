@@ -1,10 +1,9 @@
-import type { AxiosResponseHeaders } from 'axios';
 import type { CacheRequestConfig } from '../cache/axios';
 import type { MaybePromise } from '../util/types';
 
 export type CachedResponse = {
   data?: unknown;
-  headers: AxiosResponseHeaders;
+  headers: Record<string, string | undefined>;
   status: number;
   statusText: string;
 };

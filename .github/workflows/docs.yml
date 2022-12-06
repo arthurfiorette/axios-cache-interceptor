@@ -1,0 +1,59 @@
+name: Deploy docs
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Publish as version:'
+        required: true
+      latest:
+        description: 'Override latest version:'
+        required: true
+
+
+permissions:
+  contents: write
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+
+      - name: Setup node and restore cached dependencies
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          registry-url: 'https://registry.npmjs.org/'
+          cache: 'yarn'
+
+      - name: Install packages
+        run: yarn install --prefer-offline
+
+      - name: Build
+        run: npm run docs:build
+  
+      - name: Deploy to ${{ github.event.inputs.version }}
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: ./docs/.vitepress/dist
+          branch: gh-pages
+          target-folder: ${{ github.event.inputs.version }}
+          clean: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Deploy docs for ${{ github.event.inputs.version }}"
+
+      - name: Deploy to latest
+        if: ${{ github.event.inputs.latest == 'true' }}
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: ./docs/.vitepress/dist
+          target-folder: docs # To use the docs folder of github pages
+          clean: true
+          branch: gh-pages
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Deploy docs for latest"
