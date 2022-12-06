@@ -1,3 +1,4 @@
+import type { AxiosAdapter, AxiosResponse } from 'axios';
 import { setTimeout } from 'timers/promises';
 import type { LoadingStorageValue } from '../../src';
 import type { CacheRequestConfig } from '../../src/cache/axios';
@@ -170,8 +171,7 @@ describe('test request interceptor', () => {
       adapter: async (config: CacheRequestConfig) => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         await axios.storage.remove(config.id!);
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        return axios.defaults.adapter!(config);
+        return (axios.defaults.adapter as AxiosAdapter)(config);
       }
     });
 
@@ -211,8 +211,9 @@ describe('test request interceptor', () => {
       adapter: async (config: CacheRequestConfig) => {
         await setTimeout(150);
 
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const response = await axios.defaults.adapter!(config);
+        const response = (await (axios.defaults.adapter as AxiosAdapter)(
+          config
+        )) as AxiosResponse;
 
         // Changes the response to be different from `true` (default)
         response.data = 'overridden response';
@@ -268,8 +269,7 @@ describe('test request interceptor', () => {
       adapter: async (config: CacheRequestConfig) => {
         await setTimeout(150);
 
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        return axios.defaults.adapter!(config);
+        return (axios.defaults.adapter as AxiosAdapter)(config);
       }
     });
 
