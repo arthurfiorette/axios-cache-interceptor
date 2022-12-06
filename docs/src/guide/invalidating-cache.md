@@ -5,6 +5,17 @@ major problem. That occurs because **you** can mutate data in the server and **o
 also can too. Becoming impossible to really know what is the current state of the data at
 real time without communicating with the server.
 
+::: warning
+
+**All available revalidation methods only works when the request is successful.**
+
+If you are wanting to revalidate with a non standard `2XX` status code, make sure to
+enable it on the [`validateStatus`](https://axios-http.com/docs/handling_errors) axios
+option or revalidate it manually as shown
+[below](#updating-cache-through-external-sources).
+
+:::
+
 Take a look at this simple example:
 
 1. User list all available posts, server return an empty array.

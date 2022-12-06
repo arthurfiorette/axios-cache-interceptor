@@ -2,19 +2,21 @@
 
 These are properties that are used and shared by the entire application.
 
-```js
+```ts
 const axios = setupCache(axios, OPTIONS);
 ```
 
 ::: tip
 
 The `setupCache` function receives global options and all
-[request specifics](./config/request-specifics.md) ones too. This way, you can customize the
-defaults for all requests.
+[request specifics](./config/request-specifics.md) ones too. This way, you can customize
+the defaults for all requests.
 
 :::
 
-## storage <Badge text="optional" type="warning"/>
+## storage
+
+<Badge text="optional" type="warning"/>
 
 - Type: `AxiosStorage`
 - Default: `buildMemoryStorage()`
@@ -23,7 +25,9 @@ The object responsible to save, retrieve and serialize (if needed) cache data.
 
 See the [Storages](./guide/storages.md) page for more information.
 
-## generateKey <Badge text="optional" type="warning"/>
+## generateKey
+
+ <Badge text="optional" type="warning"/>
 
 - Type: `KeyGenerator<unknown, unknown>`
 - Default: `defaultKeyGenerator`
@@ -35,7 +39,9 @@ priorizes the id, and if not specified, a string is generated using the `method`
 You can learn on how to use them on the
 [Request ID](./guide/request-id.md#custom-generator) page.
 
-## waiting <Badge text="optional" type="warning"/>
+## waiting
+
+<Badge text="optional" type="warning"/>
 
 - Type: `Record<string, Deferred<CachedResponse>>`
 - Default: `{}`
@@ -46,7 +52,9 @@ concurrent requests.
 You'd normally not need to change this, but it is exposed in case you need to use it as
 some sort of listener of know when a request is waiting for other to finish.
 
-## headerInterpreter <Badge text="optional" type="warning"/>
+## headerInterpreter
+
+ <Badge text="optional" type="warning"/>
 
 - Type: `HeadersInterpreter`
 - Default: `defaultHeaderInterpreter`
@@ -82,7 +90,9 @@ const myHeaderInterpreter: HeaderInterpreter = (headers) => {
 
 :::
 
-## requestInterceptor <Badge text="optional" type="warning"/>
+## requestInterceptor
+
+<Badge text="optional" type="warning"/>
 
 - Type: `AxiosInterceptor<CacheRequestConfig<unknown, unknown>>`
 - Default: `defaultRequestInterceptor()`
@@ -99,7 +109,9 @@ to this property.
 See its code for more information
 [here](https://github.com/arthurfiorette/axios-cache-interceptor/tree/main/src/interceptors).
 
-## responseInterceptor <Badge text="optional" type="warning"/>
+## responseInterceptor
+
+<Badge text="optional" type="warning"/>
 
 - Type: `AxiosInterceptor<CacheAxiosResponse<unknown, unknown>>`
 - Default: `defaultResponseInterceptor()`
@@ -116,7 +128,9 @@ to this property.
 See its code for more information
 [here](https://github.com/arthurfiorette/axios-cache-interceptor/tree/main/src/interceptors).
 
-## debug <Badge text="dev only" type="danger"/> <Badge text="optional" type="warning"/>
+## debug
+
+<Badge text="dev only" type="danger"/> <Badge text="optional" type="warning"/>
 
 - Type: `(msg: { id?: string; msg?: string; data?: unknown }) => void` or `undefined`
 - Default: `undefined`

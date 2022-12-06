@@ -2,37 +2,42 @@
 
 Every response that came from our custom axios instance will have some extras properties.
 
-```js #runkit
-const axios = require('axios');
-const { setupCache } = require('axios-cache-interceptor');
-
-setupCache(axios);
-
+```ts
 const response = await axios.get('https://jsonplaceholder.typicode.com/posts/1');
 
-console.log(response);
+// response.data
+// response.cached
+// response.id
+// ...
 ```
 
 Every response that came from our custom axios instance, will have some extras properties,
 that you can retrieve like that:
 
-```js
+```ts
 const result = await cache.get(/* ... */);
 const id = result['propertyName'];
 ```
 
 ## `cached`
 
-A simple boolean to check whether this request was cached or not.
+- Type: `boolean`
 
-**NOTE**: The first response of a request capable of being cached will return
-`cached: false`, as only your next requests will return `cached: true`.
+A simple boolean that tells you if this request came from the cache or through the
+network.
+
+::: tip
+
+This is not a boolean to check wether this request is capable of being cached or not.
+
+:::
 
 ## `id`
+
+- Type: `string`
 
 The resolved [request id](../guide/request-id.md). This property represents the ID used
 throughout the internal code.
 
-Remember that, depending on the
-[Key Generator](../guide/request-id.md#custom-generator), it can be different as the
-provided on the [Request Id](../guide/request-id.md).
+Depending on the [Key Generator](../guide/request-id.md#custom-generator), it can differ
+from provided example on the [Request Id](../guide/request-id.md).
