@@ -7,7 +7,7 @@ node_modules
 /dev
 
 # Documentation output
-/vitepress-docs/.vitepress/dist
+docs/.vitepress/dist
 
 # Random
 /ignore
