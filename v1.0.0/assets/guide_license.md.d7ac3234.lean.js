@@ -1,0 +1,1 @@
+import{_ as e,c as t,o as s,d as a}from"./app.bfbb50cb.js";const u=JSON.parse('{"title":"","description":"","frontmatter":{},"headers":[],"relativePath":"guide/license.md","lastUpdated":1670290591000}'),o={name:"guide/license.md"},c=a("",3),n=[c];function r(p,i,l,_,d,g){return s(),t("div",null,n)}const f=e(o,[["render",r]]);export{u as __pageData,f as default};
