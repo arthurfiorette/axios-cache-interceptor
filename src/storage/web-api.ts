@@ -21,7 +21,7 @@ import type { StorageValue } from './types';
  * @param prefix The prefix to index the storage. Useful to prevent collision between
  *   multiple places using the same storage.
  */
-export function buildWebStorage(storage: Storage, prefix = '') {
+export function buildWebStorage(storage: Storage, prefix = 'axios-cache') {
   return buildStorage({
     find: (key) => {
       const json = storage.getItem(prefix + key);
