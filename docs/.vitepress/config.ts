@@ -3,6 +3,14 @@ import { defineConfig } from 'vitepress';
 
 const read = (relative) => fs.readFileSync(require.resolve(relative), 'utf-8');
 
+const isVersion = process.argv.indexOf('--base');
+const VERSION = isVersion > -1 ? process.argv[isVersion + 1].slice(1, -1) : 'Latest';
+const BASE_URL = isVersion > -1 ? process.argv[isVersion + 1] : '/';
+
+console.log(
+  isVersion > -1 ? `Building docs for version ${VERSION}` : 'Building docs for latest version'
+)
+
 export default defineConfig({
   // The language of the site. This will be used to set the `lang` attribute on the <html> element
   lang: 'en-US',
@@ -14,6 +22,7 @@ export default defineConfig({
 
   // The directory where the markdown pages are stored
   srcDir: './src',
+  base: BASE_URL,
 
   //! Experimental
   // Allows removing trailing .html from URLs
@@ -27,30 +36,62 @@ export default defineConfig({
   // Additional elements to render in the <head> tag in the page HTML
   head: [
     // Attach a custom favicon
-    ['link', { rel: 'icon', href: '/favicon.ico', type: 'image/x-icon' }],
-    ['link', { rel: 'apple-touch-icon', sizes: '57x57', href: '/apple-icon-57x57.png' }],
-    ['link', { rel: 'apple-touch-icon', sizes: '60x60', href: '/apple-icon-60x60.png' }],
-    ['link', { rel: 'apple-touch-icon', sizes: '72x72', href: '/apple-icon-72x72.png' }],
-    ['link', { rel: 'apple-touch-icon', sizes: '76x76', href: '/apple-icon-76x76.png' }],
+    ['link', { rel: 'icon', href: `${BASE_URL}favicon.ico', type: 'image/x-icon` }],
     [
       'link',
-      { rel: 'apple-touch-icon', sizes: '114x114', href: '/apple-icon-114x114.png' }
+      { rel: 'apple-touch-icon', sizes: '57x57', href: `${BASE_URL}apple-icon-57x57.png` }
     ],
     [
       'link',
-      { rel: 'apple-touch-icon', sizes: '120x120', href: '/apple-icon-120x120.png' }
+      { rel: 'apple-touch-icon', sizes: '60x60', href: `${BASE_URL}apple-icon-60x60.png` }
     ],
     [
       'link',
-      { rel: 'apple-touch-icon', sizes: '144x144', href: '/apple-icon-144x144.png' }
+      { rel: 'apple-touch-icon', sizes: '72x72', href: `${BASE_URL}apple-icon-72x72.png` }
     ],
     [
       'link',
-      { rel: 'apple-touch-icon', sizes: '152x152', href: '/apple-icon-152x152.png' }
+      { rel: 'apple-touch-icon', sizes: '76x76', href: `${BASE_URL}apple-icon-76x76.png` }
     ],
     [
       'link',
-      { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-icon-180x180.png' }
+      {
+        rel: 'apple-touch-icon',
+        sizes: '114x114',
+        href: `${BASE_URL}apple-icon-114x114.png`
+      }
+    ],
+    [
+      'link',
+      {
+        rel: 'apple-touch-icon',
+        sizes: '120x120',
+        href: `${BASE_URL}apple-icon-120x120.png`
+      }
+    ],
+    [
+      'link',
+      {
+        rel: 'apple-touch-icon',
+        sizes: '144x144',
+        href: `${BASE_URL}apple-icon-144x144.png`
+      }
+    ],
+    [
+      'link',
+      {
+        rel: 'apple-touch-icon',
+        sizes: '152x152',
+        href: `${BASE_URL}apple-icon-152x152.png`
+      }
+    ],
+    [
+      'link',
+      {
+        rel: 'apple-touch-icon',
+        sizes: '180x180',
+        href: `${BASE_URL}apple-icon-180x180.png`
+      }
     ],
     [
       'link',
@@ -58,24 +99,42 @@ export default defineConfig({
         rel: 'icon',
         type: 'image/png',
         sizes: '192x192',
-        href: '/android-icon-192x192.png'
+        href: `${BASE_URL}android-icon-192x192.png`
       }
     ],
     [
       'link',
-      { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon-32x32.png' }
+      {
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '32x32',
+        href: `${BASE_URL}favicon-32x32.png`
+      }
     ],
     [
       'link',
-      { rel: 'icon', type: 'image/png', sizes: '96x96', href: '/favicon-96x96.png' }
+      {
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '96x96',
+        href: `${BASE_URL}favicon-96x96.png`
+      }
     ],
     [
       'link',
-      { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicon-16x16.png' }
+      {
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '16x16',
+        href: `${BASE_URL}favicon-16x16.png`
+      }
     ],
-    ['link', { rel: 'manifest', href: '/manifest.json' }],
+    ['link', { rel: 'manifest', href: `${BASE_URL}manifest.json` }],
     ['meta', { name: 'msapplication-TileColor', content: '#e5972a' }],
-    ['meta', { name: 'msapplication-TileImage', content: '/ms-icon-144x144.png' }],
+    [
+      'meta',
+      { name: 'msapplication-TileImage', content: `${BASE_URL}ms-icon-144x144.png` }
+    ],
     ['meta', { name: 'theme-color', content: '#e5972a' }],
 
     // OG
@@ -93,7 +152,7 @@ export default defineConfig({
       'meta',
       {
         property: 'og:image',
-        content: 'https://axios-cache-interceptor.js.org/preview.png'
+        content: `${BASE_URL}preview.png`
       }
     ],
 
@@ -164,15 +223,21 @@ export default defineConfig({
     ],
 
     nav: [
-      { text: 'Guide', link: '/guide' },
-      { text: 'Config', link: '/config' }
+      { text: 'Guide', link: `${BASE_URL}guide` },
+      { text: 'Config', link: `${BASE_URL}config` },
+      {
+        text: VERSION,
+        items: [
+          { text: 'v1.x', link: '/v1/' },
+          { text: 'v0.x', link: '/v0/' }
+        ].filter((i) => !BASE_URL.startsWith(i.link))
+      }
     ],
 
     //! Temp link for testing, will be changed to the real one before merged to production
     editLink: {
       pattern:
-        // TODO: Check if this is the correct link when released.
-        'https://github.com/arthurfiorette/axios-cache-interceptor/edit/main/docs/:path'
+        'https://github.com/arthurfiorette/axios-cache-interceptor/edit/main/docs/src/:path'
     },
 
     footer: {

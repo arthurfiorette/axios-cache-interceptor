@@ -33,8 +33,8 @@ jobs:
       - name: Install packages
         run: yarn install --prefer-offline
 
-      - name: Build
-        run: npm run docs:build
+      - name: Build for ${{ github.event.inputs.version }}
+        run: yarn docs:build --base /${{ github.event.inputs.version }}/
   
       - name: Deploy to ${{ github.event.inputs.version }}
         uses: JamesIves/github-pages-deploy-action@v4
@@ -46,6 +46,9 @@ jobs:
           clean: true
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "Deploy docs for ${{ github.event.inputs.version }}"
+
+      - name: Build for main
+        run: yarn docs:build
 
       - name: Deploy to latest
         if: ${{ github.event.inputs.latest == 'true' }}
