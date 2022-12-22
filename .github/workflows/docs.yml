@@ -7,9 +7,8 @@ on:
         description: 'Publish as version:'
         required: true
       latest:
-        description: 'Override latest version:'
-        required: true
-
+        description: 'Override latest version[true/FALSE]:'
+        default: false
 
 permissions:
   contents: write
@@ -42,6 +41,7 @@ jobs:
         with:
           folder: ./docs/.vitepress/dist
           branch: gh-pages
+          # Specific folder for this version
           target-folder: ${{ github.event.inputs.version }}
           clean: true
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -52,8 +52,8 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: ./docs/.vitepress/dist
-          target-folder: docs # To use the docs folder of github pages
           clean: true
+          clean-exclude: v*
           branch: gh-pages
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "Deploy docs for latest"
