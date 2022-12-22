@@ -1,4 +1,0 @@
-This is a Brave Rewards publisher verification file.
-
-Domain: axios-cache-interceptor.js.org
-Token: 7993261576dabb9dbef2eb7126654f2aeb97b074f968a6d1e09bf963762e738c
