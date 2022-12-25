@@ -20,7 +20,7 @@ export default defineConfig({
   title: 'Axios Cache Interceptor',
   // Description for the site. This will render as a <meta> tag in the page HTML
   description:
-    'Small and efficient cache interceptor for axios. Etag, Cache-Control, TTL, HTTP headers and more!.',
+    'Small and efficient cache interceptor for axios. Etag, Cache-Control, TTL, HTTP headers and more!',
 
   // The directory where the markdown pages are stored
   srcDir: './src',
@@ -247,7 +247,7 @@ export default defineConfig({
 
     footer: {
       message: 'Made with ❤️',
-      copyright: 'Copyright © 2021-present Arthur Fiorette & Contributors'
+      copyright: 'Copyright (c) 2021-present Arthur Fiorette & Contributors'
     },
 
     // TODO: Change this to the real one
@@ -263,31 +263,27 @@ export default defineConfig({
     //   placement: 'vuejsorg'
     // },
 
-    sidebar: {
-      '/guide': [
-        {
-          text: 'Guide',
-          items: [
-            { text: 'Introduction', link: '/guide' },
-            { text: 'Getting Started', link: '/guide/getting-started' },
-            { text: 'Debugging', link: '/guide/debugging' },
-            { text: 'Storages', link: '/guide/storages' },
-            { text: 'Request Id', link: '/guide/request-id' },
-            { text: 'Invalidating Cache', link: '/guide/invalidating-cache' },
-            { text: 'Comparison', link: '/guide/comparison' }
-          ]
-        }
-      ],
-      '/config': [
-        {
-          text: 'Config',
-          items: [
-            { text: 'Global Configuration', link: '/config' },
-            { text: 'Request Specifics', link: '/config/request-specifics' },
-            { text: 'Response Object', link: '/config/response-object' }
-          ]
-        }
-      ]
-    }
+    sidebar: [
+      {
+        text: 'Guide',
+        items: [
+          { text: 'Introduction', link: '/guide' },
+          { text: 'Getting Started', link: '/guide/getting-started' },
+          { text: 'Debugging', link: '/guide/debugging' },
+          { text: 'Storages', link: '/guide/storages' },
+          { text: 'Request Id', link: '/guide/request-id' },
+          { text: 'Invalidating Cache', link: '/guide/invalidating-cache' },
+          { text: 'Comparison', link: '/guide/comparison' }
+        ]
+      },
+      {
+        text: 'Config',
+        items: [
+          { text: 'Global Configuration', link: '/config' },
+          { text: 'Request Specifics', link: '/config/request-specifics' },
+          { text: 'Response Object', link: '/config/response-object' }
+        ]
+      }
+    ]
   }
 });
