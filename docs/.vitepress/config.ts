@@ -8,8 +8,10 @@ const VERSION = isVersion > -1 ? process.argv[isVersion + 1].slice(1, -1) : 'Lat
 const BASE_URL = isVersion > -1 ? process.argv[isVersion + 1] : '/';
 
 console.log(
-  isVersion > -1 ? `Building docs for version ${VERSION}` : 'Building docs for latest version'
-)
+  isVersion > -1
+    ? `Building docs for version ${VERSION}`
+    : 'Building docs for latest version'
+);
 
 export default defineConfig({
   // The language of the site. This will be used to set the `lang` attribute on the <html> element
@@ -228,9 +230,12 @@ export default defineConfig({
       {
         text: VERSION,
         items: [
+          { text: 'Latest', link: 'https://axios-cache-interceptor.js.org/' },
           { text: 'v1.x', link: 'https://axios-cache-interceptor.js.org/v1/' },
           { text: 'v0.x', link: 'https://axios-cache-interceptor.js.org/v0/' }
-        ].filter((i) => !BASE_URL.startsWith(i.link))
+        ].filter((i) =>
+          BASE_URL === '/' ? i.text !== 'Latest' : !i.link.includes(BASE_URL)
+        )
       }
     ],
 
