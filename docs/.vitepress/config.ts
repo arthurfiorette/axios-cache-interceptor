@@ -223,13 +223,13 @@ export default defineConfig({
     ],
 
     nav: [
-      { text: 'Guide', link: `${BASE_URL}guide` },
-      { text: 'Config', link: `${BASE_URL}config` },
+      { text: 'Guide', link: `/guide` },
+      { text: 'Config', link: `/config` },
       {
         text: VERSION,
         items: [
-          { text: 'v1.x', link: '/v1/' },
-          { text: 'v0.x', link: '/v0/' }
+          { text: 'v1.x', link: 'https://axios-cache-interceptor.js.org/v1/' },
+          { text: 'v0.x', link: 'https://axios-cache-interceptor.js.org/v0/' }
         ].filter((i) => !BASE_URL.startsWith(i.link))
       }
     ],
