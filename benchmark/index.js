@@ -74,10 +74,10 @@ ${summary.results
   .sort((a, b) => a.percentSlower - b.percentSlower)
   .map(
     (options) => `
-${options.name.split('-').join(' ').toUpperCase()}
-  Operations: ${options.ops}/s
-  Network requests: ${data[options.name]} of ${runs[options.name]}
-  Performance: ${(100 - options.percentSlower).toFixed(2)}%`
+## ${options.name.split('-').join(' ').toUpperCase()}
+-  Operations: ${options.ops}/s
+-  Network requests: ${data[options.name]} of ${runs[options.name]}
+-  Performance: ${(100 - options.percentSlower).toFixed(2)}%`
   )
   .join('\n')}
 `

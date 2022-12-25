@@ -33,7 +33,7 @@ finally returns the response to the original caller.
 - Memory, LocalStorage and SessionStorage built-in storages.
 - Less than 4.3Kb minified and gzipped.
 - Development mode to debug your requests.
-- 23.2% faster than using axios and 1.2% faster than axios-cache-adapter.
+- 22 times faster than using axios and 8% faster than axios-cache-adapter.
 - And much more...
 
 ## Why not...?
