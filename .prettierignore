@@ -2,7 +2,7 @@ node_modules
 
 /ignore
 /coverage
-# /dist
+/dist
 /dev
 /tsconfig.json
 
