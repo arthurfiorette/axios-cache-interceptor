@@ -4,6 +4,10 @@
 const path = require('path');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
 const { DefinePlugin } = require('webpack');
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+const { version } = require('../package.json');
+
+const COPYRIGHT = `// Axios Cache Interceptor v${version} MIT License Copyright (c) 2021-present Arthur Fiorette & Contributors\n`;
 
 /** @type {(...args: string[]) => string} */
 const root = (...p) => path.resolve(__dirname, '..', ...p);
@@ -84,7 +88,29 @@ const config = ({
     minimizer: [new TerserWebpackPlugin({ parallel: true })]
   },
 
-  plugins: [new DefinePlugin({ __ACI_DEV__: devBuild })]
+  plugins: [
+    // Chooses the right environment
+    new DefinePlugin({ __ACI_DEV__: devBuild }),
+
+    // Add a banner to the top of each file
+    {
+      apply: (compiler) => {
+        compiler.hooks.emit.tapAsync('FileListPlugin', (comp, cb) => {
+          for (const chunk of comp.chunks) {
+            for (const filename of chunk.files) {
+              const assets = comp.assets[filename];
+
+              // @ts-expect-error - _value is not a public property
+              // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+              assets._value = COPYRIGHT + assets._value;
+            }
+          }
+
+          cb();
+        });
+      }
+    }
+  ]
 });
 
 module.exports = [
