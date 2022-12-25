@@ -38,6 +38,14 @@ export type CacheProperties<R = unknown, D = unknown> = {
   interpretHeader: boolean;
 
   /**
+   * If this interceptor should include some headers in the request to tell any possible
+   * adapter / client that only we should use cache mechanisms to this request.
+   *
+   * @default true
+   */
+  cacheTakeover: boolean;
+
+  /**
    * All methods that should be cached.
    *
    * @default ['get']

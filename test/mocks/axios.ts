@@ -31,7 +31,8 @@ export function mockAxios(
         // Random header for every request made
         [XMockRandom]: `${Math.random()}`
       },
-      config
+      config,
+      request: { config }
     };
   };
 

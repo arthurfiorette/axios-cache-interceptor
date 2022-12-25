@@ -92,6 +92,8 @@ export function setupCache(
 
     interpretHeader: options.interpretHeader ?? true,
 
+    cacheTakeover: options.cacheTakeover ?? true,
+
     staleIfError: options.staleIfError ?? true,
 
     override: false

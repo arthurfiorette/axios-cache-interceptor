@@ -87,6 +87,41 @@ See the actual implementation of the
 [`interpretHeader`](https://github.com/arthurfiorette/axios-cache-interceptor/blob/main/src/header/interpreter.ts)
 method for more information.
 
+## cache.cacheTakeover
+
+<Badge text="optional" type="warning"/>
+
+- Type: `boolean`
+- Default: `true`
+
+As most of our cache strategies depends on well known defined HTTP headers, most browsers
+also use those headers to define their own cache strategies and storages.
+
+::: details This can be seen when opening network tab in your browser's dev tools.
+
+![Network tab in Chrome Dev Tools](../assets/disk-cache-screenshot.png 'A network disk-cache example')
+
+:::
+
+When your requested routes includes `Cache-Control` in their responses, you may end up
+with we and your browser caching the response, resulting in a **double layer of cache**.
+
+This option solves this by including some predefined headers in the request, that should
+tell any client / adapter to not cache the response, thus only we will cache it.
+
+**These are headers used in our specific request, it won't affect any other request or
+response that the server may handle.**
+
+Headers included:
+
+- `Cache-Control: no-cache`
+- `Pragma: no-cache`
+- `Expires: 0`
+
+Learn more at
+[#437](https://github.com/arthurfiorette/axios-cache-interceptor/issues/437#issuecomment-1361262194)
+and in this [StackOverflow](https://stackoverflow.com/a/62781874/14681561) answer.
+
 ## cache.methods
 
 <Badge text="optional" type="warning"/>

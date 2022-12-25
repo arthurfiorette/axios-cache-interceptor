@@ -12,6 +12,7 @@ docs/.vitepress/dist
 # Random
 /ignore
 *.log
+benchmark/yarn.lock
 
 # Vscode
 .vscode/*

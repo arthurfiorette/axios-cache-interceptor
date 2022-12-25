@@ -179,9 +179,7 @@ describe('Last-Modified handling', () => {
     });
 
     try {
-      await axios.get('http://unknown-url.lan:9090', {
-        id
-      });
+      await axios.get('http://unknown-url.lan:9090', { id });
     } catch (error) {
       expect(Axios.isAxiosError(error)).toBe(true);
     }

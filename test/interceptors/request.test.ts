@@ -1,7 +1,8 @@
 import type { AxiosAdapter, AxiosResponse } from 'axios';
 import { setTimeout } from 'timers/promises';
-import type { LoadingStorageValue } from '../../src';
 import type { CacheRequestConfig } from '../../src/cache/axios';
+import { Header } from '../../src/header/headers';
+import type { LoadingStorageValue } from '../../src/storage/types';
 import { mockAxios } from '../mocks/axios';
 import { sleep } from '../utils';
 
@@ -302,5 +303,28 @@ describe('test request interceptor', () => {
       expect(c3.data).not.toBeUndefined();
       expect(c3.createdAt).not.toBe(c1.createdAt);
     }
+  });
+
+  it('expect requests are made with cache-control=no-cache', async () => {
+    const axios = mockAxios({ cacheTakeover: true });
+
+    const req1 = await axios.get('url');
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    expect(req1.request.config.headers).toMatchObject({
+      [Header.CacheControl]: 'no-cache',
+      [Header.Pragma]: 'no-cache',
+      [Header.Expires]: '0'
+    });
+
+    const req2 = await axios.get('url2', {
+      cache: { cacheTakeover: false }
+    });
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    const headers2 = req2.request.config.headers as CacheRequestConfig;
+    expect(headers2).not.toHaveProperty(Header.CacheControl);
+    expect(headers2).not.toHaveProperty(Header.Pragma);
+    expect(headers2).not.toHaveProperty(Header.Expires);
   });
 });

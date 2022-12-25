@@ -39,6 +39,15 @@ export const Header = Object.freeze({
 
   /**
    * ```txt
+   * Pragma: no - cache;
+   * ```
+   *
+   * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Pragma
+   */
+  Pragma: 'pragma',
+
+  /**
+   * ```txt
    * ETag: W / '<etag_value>';
    * ETag: '<etag_value>';
    * ```

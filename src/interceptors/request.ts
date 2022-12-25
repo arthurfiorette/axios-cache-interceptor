@@ -1,5 +1,6 @@
 import { deferred } from 'fast-defer';
 import type { AxiosCacheInstance, CacheAxiosResponse } from '../cache/axios';
+import { Header } from '../header/headers';
 import type {
   CachedResponse,
   CachedStorageValue,
@@ -15,7 +16,7 @@ import {
 
 export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
   const onFulfilled: RequestInterceptor['onFulfilled'] = async (config) => {
-    const key = (config.id = axios.generateKey(config));
+    const id = (config.id = axios.generateKey(config));
 
     if (config.cache === false) {
       if (__ACI_DEV__) {
@@ -31,6 +32,17 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
     // merge defaults with per request configuration
     config.cache = { ...axios.defaults.cache, ...config.cache };
 
+    // Applies sufficient headers to prevent other cache systems to work along with this one
+    //
+    // Its currently used before isMethodIn because if the isMethodIn returns false, the request
+    // shouldn't be cached an therefore neither in the browser.
+    if (config.cache.cacheTakeover) {
+      config.headers ??= {};
+      config.headers[Header.CacheControl] ??= 'no-cache';
+      config.headers[Header.Pragma] ??= 'no-cache';
+      config.headers[Header.Expires] ??= '0';
+    }
+
     if (!isMethodIn(config.method, config.cache.methods)) {
       if (__ACI_DEV__) {
         axios.debug?.({
@@ -42,7 +54,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
     }
 
     // Assumes that the storage handled staled responses
-    let cache = await axios.storage.get(key, config);
+    let cache = await axios.storage.get(id, config);
     const overrideCache = config.cache.override;
 
     // Not cached, continue the request, and mark it as fetching
@@ -56,8 +68,8 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
        * first await statement, so the second (asynchronous call) request may have already
        * started executing.
        */
-      if (axios.waiting[key] && !overrideCache) {
-        cache = (await axios.storage.get(key, config)) as
+      if (axios.waiting[id] && !overrideCache) {
+        cache = (await axios.storage.get(id, config)) as
           | CachedStorageValue
           | LoadingStorageValue;
 
@@ -71,7 +83,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
         if (cache.state !== 'empty') {
           if (__ACI_DEV__) {
             axios.debug?.({
-              id: key,
+              id,
               msg: 'Waiting list had an deferred for this key, waiting for it to finish'
             });
           }
@@ -81,17 +93,17 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
       }
 
       // Create a deferred to resolve other requests for the same key when it's completed
-      axios.waiting[key] = deferred();
+      axios.waiting[id] = deferred();
 
       /**
        * Adds a default reject handler to catch when the request gets aborted without
        * others waiting for it.
        */
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      axios.waiting[key]!.catch(() => undefined);
+      axios.waiting[id]!.catch(() => undefined);
 
       await axios.storage.set(
-        key,
+        id,
         {
           state: 'loading',
           previous: overrideCache
@@ -121,7 +133,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
 
         if (__ACI_DEV__) {
           axios.debug?.({
-            id: key,
+            id,
             msg: 'Updated stale request'
           });
         }
@@ -131,7 +143,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
 
       if (__ACI_DEV__) {
         axios.debug?.({
-          id: key,
+          id,
           msg: 'Sending request, waiting for response',
           data: {
             overrideCache,
@@ -146,18 +158,18 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
     let cachedResponse: CachedResponse;
 
     if (cache.state === 'loading') {
-      const deferred = axios.waiting[key];
+      const deferred = axios.waiting[id];
 
       // Just in case, the deferred doesn't exists.
       /* istanbul ignore if 'really hard to test' */
       if (!deferred) {
-        await axios.storage.remove(key, config);
+        await axios.storage.remove(id, config);
         return config;
       }
 
       if (__ACI_DEV__) {
         axios.debug?.({
-          id: key,
+          id,
           msg: 'Detected concurrent request, waiting for it to finish'
         });
       }
@@ -167,7 +179,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
       } catch (err) {
         if (__ACI_DEV__) {
           axios.debug?.({
-            id: key,
+            id,
             msg: 'Deferred rejected, requesting again',
             data: err
           });
@@ -190,12 +202,12 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
         status: cachedResponse.status,
         statusText: cachedResponse.statusText,
         cached: true,
-        id: key
+        id
       });
 
     if (__ACI_DEV__) {
       axios.debug?.({
-        id: key,
+        id,
         msg: 'Returning cached response'
       });
     }
