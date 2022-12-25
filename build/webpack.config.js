@@ -147,5 +147,11 @@ module.exports = [
     output: 'dist/index.bundle.js',
     libraryType: 'umd',
     libraryName: 'AxiosCacheInterceptor'
+  }),
+  config({
+    output: 'dev/index.bundle.js',
+    libraryType: 'umd',
+    libraryName: 'AxiosCacheInterceptor',
+    devBuild: true
   })
 ];

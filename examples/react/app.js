@@ -15,10 +15,12 @@ export const App = () => {
     error: null
   });
 
-  axios.get('https://jsonplaceholder.typicode.com/users').then(
-    ({ data }) => setResponse({ data, loading: false, error: null }),
-    (error) => setResponse({ data: [], loading: false, error })
-  );
+  useEffect(() => {
+    axios.get('https://jsonplaceholder.typicode.com/users').then(
+      ({ data }) => setResponse({ data, loading: false, error: null }),
+      (error) => setResponse({ data: [], loading: false, error })
+    );
+  }, []);
 
   if (loading) {
     return <div>Loading...</div>;
