@@ -3,7 +3,7 @@
 # This script is used to check the umd's ecmascript compatibility.
 # It is intended to be run from the project's root directory.
 
-yarn es-check es2017 dist/index.cjs dev/index.cjs dev/index.bundle.js
+yarn es-check es2017 dist/index.cjs dev/index.cjs
 
 if [ $? -eq 1 ]; then
   exit 1
