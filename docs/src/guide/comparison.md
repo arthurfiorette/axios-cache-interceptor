@@ -1,3 +1,11 @@
+::: warning
+
+<h1 align="center">This documentation is for the v0 axios and axios-cache-interceptor branch</h1>
+
+[Click here to go to our latest version](https://axios-cache-interceptor.js.org/)
+
+:::
+
 # Comparison
 
 > This comparison page aims to be detailed, unbiased, and up-to-date. <br/>If you see any
@@ -15,7 +23,7 @@
 
 |                                                                              | Axios Cache Interceptor |                          Axios Cache Adapter                           |       Cachios        |
 | :--------------------------------------------------------------------------: | :---------------------: | :--------------------------------------------------------------------: | :------------------: |
-|                               Compared version                               |         Latest          |                                 2.7.3                                  |        3.1.1         |
+|                               Compared version                               |           v0            |                                 2.7.3                                  |        3.1.1         |
 | Expiration with [TTL](https://developer.mozilla.org/en-US/docs/Glossary/TTL) |           ✅            |                                   ✅                                   |          ✅          |
 |                          Per-request configuration                           |           ✅            |                                   ✅                                   |          ✅          |
 |                          Global and custom instance                          |           ✅            |                                   ✅                                   |          ✅          |

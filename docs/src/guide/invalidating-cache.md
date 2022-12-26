@@ -1,3 +1,11 @@
+::: warning
+
+<h1 align="center">This documentation is for the v0 axios and axios-cache-interceptor branch</h1>
+
+[Click here to go to our latest version](https://axios-cache-interceptor.js.org/)
+
+:::
+
 # Invalidating Cache
 
 When using cache-first approaches to improve performance, data inconsistency becomes your

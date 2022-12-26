@@ -1,3 +1,11 @@
+::: warning
+
+<h1 align="center">This documentation is for the v0 axios and axios-cache-interceptor branch</h1>
+
+[Click here to go to our latest version](https://axios-cache-interceptor.js.org/)
+
+:::
+
 # Debugging
 
 I'm certainly sure that along the way you will find some cache behavior that is not the

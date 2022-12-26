@@ -17,7 +17,7 @@ export default defineConfig({
   // The language of the site. This will be used to set the `lang` attribute on the <html> element
   lang: 'en-US',
   // Title for the site. This will be displayed in the nav bar also used as the suffix for all page titles
-  title: 'Axios Cache Interceptor',
+  title: 'Axios Cache Interceptor v0',
   // Description for the site. This will render as a <meta> tag in the page HTML
   description:
     'Small and efficient cache interceptor for axios. Etag, Cache-Control, TTL, HTTP headers and more!',

@@ -1,3 +1,11 @@
+::: warning
+
+<h1 align="center">This documentation is for the v0 axios and axios-cache-interceptor branch</h1>
+
+[Click here to go to our latest version](https://axios-cache-interceptor.js.org/)
+
+:::
+
 # Introduction
 
 Axios Cache Interceptor is a, as it name says, a interceptor for axios to handle caching.

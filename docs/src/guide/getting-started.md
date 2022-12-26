@@ -1,3 +1,11 @@
+::: warning
+
+<h1 align="center">This documentation is for the v0 axios and axios-cache-interceptor branch</h1>
+
+[Click here to go to our latest version](https://axios-cache-interceptor.js.org/)
+
+:::
+
 # Getting Started
 
 ## Prerequisites
@@ -5,7 +13,7 @@
 - [Node.js](https://nodejs.org/) `(>= 12)` _Lower version requires a custom build with
   polyfills._
 
-- [Axios](https://axios-http.com/) `(>= 0.21 or >= 1.1)` _Lower version requires a custom
+- [Axios](https://axios-http.com/) `(>= 0.21 and < 1)` _Lower version requires a custom
   build with polyfills._
 
 ## Quick Start
@@ -14,8 +22,8 @@ The fastest way to get axios with cache set up and running is to install it with
 yarn
 
 ```bash
-yarn    add     axios@1  axios-cache-interceptor@1
-npm   install   axios@1  axios-cache-interceptor@1
+yarn    add     axios@^0.27.2  axios-cache-interceptor@^0.10.7
+npm   install   axios@^0.27.2  axios-cache-interceptor@^0.10.7
 ```
 
 ```html
@@ -199,8 +207,7 @@ Axios and Axios Cache Interceptor v1**
 
 | [Axios](https://github.com/axios/axios/releases) | [Axios Cache Interceptor](https://github.com/arthurfiorette/axios-cache-interceptor/releases) |
 | ------------------------------------------------ | --------------------------------------------------------------------------------------------- |
-| `>= v1.2`                                        | `>= v1`                                                                                       |
-| `>= v0.27`                                       | `>= v0.10.3`                                                                                  |
+| `>= v0.27 && < v1.0.0`                           | `>= v0.10.3`                                                                                  |
 | `>= v0.26`                                       | `>= v0.8.4`                                                                                   |
 | `~ v0.25`                                        | `~ v0.8.4`                                                                                    |
 | `~ v0.24`                                        | `>= v0.5 && <= 0.8.3`                                                                         |
