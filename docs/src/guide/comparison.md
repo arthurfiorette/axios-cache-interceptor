@@ -23,7 +23,7 @@
 |                             Expires & Age header                             |           ✅            |                                   🟡                                   |          🛑          |
 |                        ETag and If-None-Match header                         |           ✅            |                                   🛑                                   |          🛑          |
 |                           If-Modified-Size header                            |           ✅            |                                   🛑                                   |          🛑          |
-|                                 Bundle size                                  |    **4.3Kb** (gzip)     |                             18.9Kb (gzip)                              |    19.5Kb (gzip)     |
+|                                 Bundle size                                  |    **4.4Kb** (gzip)     |                             18.9Kb (gzip)                              |    19.5Kb (gzip)     |
 |                            Typescript declaration                            |  ✅ (Custom interface)  |                         ✅ (Applied globally)                          | ✅(Applied globally) |
 |                              Custom cache keys                               |           ✅            |                                   ✅                                   |          ✅          |
 |                              Multiple storages                               |           ✅            |                         🔶 (Only localForage)                          |          ✅          |

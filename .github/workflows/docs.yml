@@ -35,7 +35,7 @@ jobs:
 
       - name: Build for ${{ github.event.inputs.version }}
         run: yarn docs:build --base /${{ github.event.inputs.version }}/
-  
+
       - name: Deploy to ${{ github.event.inputs.version }}
         uses: JamesIves/github-pages-deploy-action@v4
         with:
@@ -45,7 +45,7 @@ jobs:
           target-folder: ${{ github.event.inputs.version }}
           clean: true
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "Deploy docs for ${{ github.event.inputs.version }}"
+          commit-message: 'Deploy docs for ${{ github.event.inputs.version }}'
 
       - name: Build for main
         run: yarn docs:build
@@ -59,4 +59,4 @@ jobs:
           clean-exclude: v*
           branch: gh-pages
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "Deploy docs for latest"
+          commit-message: 'Deploy docs for latest'

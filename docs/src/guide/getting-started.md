@@ -14,22 +14,22 @@ The fastest way to get axios with cache set up and running is to install it with
 yarn
 
 ```bash
-yarn    add     axios@1  axios-cache-interceptor@1
-npm   install   axios@1  axios-cache-interceptor@1
+yarn    add     axios  axios-cache-interceptor
+npm   install   axios  axios-cache-interceptor
 ```
 
 ```html
-<!-- Development UMD build for ES2017+ (~12.6 KiB) -->
+<!-- Development UMD build for ES2017+ (~13 KiB) -->
 <script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.10.7/dev/index.bundle.js"
-  integrity="sha256-oTqUncNoX9DcUWIb5sLS2tscPHKqUPL0yLlOXSSXzSY="
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@1.0.0/dev/index.bundle.js"
+  integrity="sha256-IQeFXs7Q4XpPQAqvXrq5dSFOespi25XswgB9lTP3lbI="
   crossorigin="anonymous"
 ></script>
 
-<!-- Production UMD build for ES5+ (~14.2 KiB) -->
+<!-- Production UMD build for ES5+ (~14.6 KiB) -->
 <script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.10.7/dist/index.bundle.js"
-  integrity="sha256-Dc3BSxOZSDmoVoB11lhxkqH8VdBQjxWkHUmmDotiKJ4="
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@1.0.0/dist/index.bundle.js"
+  integrity="sha256-4N58khN2nV+P1NTUwRznqALDjhfl6ERO99Cltk3AN4Y="
   crossorigin="anonymous"
 ></script>
 ```
