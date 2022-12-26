@@ -30,10 +30,10 @@ finally returns the response to the original caller.
 - Return previous cached request if the new one failed.
 - Handles parallel requests
 - 100% Customizable
-- Memory, LocalStorage and SessionStorage built-in storages.
+- Built-in storages like In-Memory, Local Storage and Session Storage.
 - Less than 4.3Kb minified and gzipped.
 - Development mode to debug your requests.
-- 22 times faster than using axios and 8% faster than axios-cache-adapter.
+- 22 times faster than using axios and 8% faster than `axios-cache-adapter`.
 - And much more...
 
 ## Why not...?
@@ -50,4 +50,4 @@ As this library was built to be used with axios and to handle storage itself, I 
 that it is more performant that any glued code you may find and/or write yourself. About
 state management libraries and other similar things,
 [this blog post](https://arthur.place/implications-of-cache-or-state) explains why cache
-is mroe correct, architectural way, instead of state.
+is more correct, architectural way, instead of state.
