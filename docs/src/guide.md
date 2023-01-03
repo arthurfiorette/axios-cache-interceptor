@@ -16,8 +16,8 @@ choosing to use interceptors, we create a minimally invasive approach that allow
 still use the axios adapter of your choice.
 
 Before the request is delivered to the adapter, our request interceptor checks if the
-request have already been cached and is is a valid one, checks if the request should be
-cached (sometimes you don't want cache at all, and its ok), if there's already a request
+request have already been cached and if it's a valid one, checks if the request should be
+cached (sometimes you don't want cache at all, and it's ok), if there's already a request
 sent to the network that we can wait for it and many more other checks.
 
 After the adapter gets the response, we check if it belongs to a _cacheable_ request,
