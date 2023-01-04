@@ -52,6 +52,10 @@ export function setupCache(
 ): AxiosCacheInstance {
   const axiosCache = axios as AxiosCacheInstance;
 
+  if (axiosCache.defaults.cache) {
+    throw new Error('setupCache() should be called only once');
+  }
+
   axiosCache.storage = options.storage || buildMemoryStorage();
 
   if (!isStorage(axiosCache.storage)) {

@@ -1,4 +1,7 @@
 import { createValidateStatus, isMethodIn } from '../../src/interceptors/util';
+import { mockAxios } from '../mocks/axios';
+
+import Axios from 'axios';
 
 describe('test util functions', () => {
   it('tests validate-status function', () => {
@@ -29,5 +32,38 @@ describe('test util functions', () => {
     expect(isMethodIn('get', [])).toBe(false);
     expect(isMethodIn('post', ['get', 'put', 'delete'])).toBe(false);
     expect(isMethodIn('get', ['post', 'put', 'delete'])).toBe(false);
+  });
+
+  it('the correct order of axios interceptors', async () => {
+    const axios = Axios.create();
+
+    const order = [] as number[];
+
+    axios.interceptors.request.use((cfg) => {
+      order.push(1);
+      return cfg;
+    });
+
+    axios.interceptors.response.use((res) => {
+      order.push(2);
+      return res;
+    });
+
+    // setupCache registers internal interceptors
+    mockAxios(undefined, undefined, axios);
+
+    axios.interceptors.request.use((cfg) => {
+      order.push(3);
+      return cfg;
+    });
+
+    axios.interceptors.response.use((res) => {
+      order.push(4);
+      return res;
+    });
+
+    await axios.get('url');
+
+    expect(order).toEqual([3, 1, 2, 4]);
   });
 });

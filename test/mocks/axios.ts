@@ -7,9 +7,10 @@ export const XMockRandom = 'x-mock-random';
 
 export function mockAxios(
   options: CacheOptions = {},
-  responseHeaders: Record<string, string> = {}
+  responseHeaders: Record<string, string> = {},
+  instance = Axios.create()
 ): AxiosCacheInstance {
-  const axios = setupCache(Axios.create(), options);
+  const axios = setupCache(instance, options);
 
   // Axios interceptors are a stack, so apply this after the cache interceptor
   axios.defaults.adapter = async (config) => {
