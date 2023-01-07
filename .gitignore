@@ -8,6 +8,7 @@ node_modules
 
 # Documentation output
 docs/.vitepress/dist
+docs/.vitepress/cache
 
 # Random
 /ignore
