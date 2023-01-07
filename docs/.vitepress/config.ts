@@ -273,7 +273,8 @@ export default defineConfig({
           { text: 'Storages', link: '/guide/storages' },
           { text: 'Request Id', link: '/guide/request-id' },
           { text: 'Invalidating Cache', link: '/guide/invalidating-cache' },
-          { text: 'Comparison', link: '/guide/comparison' }
+          { text: 'Comparison', link: '/guide/comparison' },
+          { text: 'Other Interceptors', link: '/guide/interceptors' }
         ]
       },
       {
