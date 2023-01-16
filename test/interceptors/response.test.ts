@@ -1,7 +1,61 @@
+import Axios from 'axios';
+import { setupCache } from '../../src/cache/create';
 import { Header } from '../../src/header/headers';
 import { mockAxios, XMockRandom } from '../mocks/axios';
 
-describe('test request interceptor', () => {
+describe('test response interceptor', () => {
+  it('tests for storage.get call against specified methods', async () => {
+    const axios = mockAxios({
+      // only cache post methods
+      methods: ['post']
+    });
+
+    const spy = jest.spyOn(axios.storage, 'get');
+    await axios.get('http://test.com');
+
+    expect(spy).not.toHaveBeenCalled();
+  });
+
+  it('tests for storage.get call with specified methods', async () => {
+    const axios = mockAxios({
+      // only cache get methods
+      methods: ['get']
+    });
+
+    const spy = jest.spyOn(axios.storage, 'get');
+    await axios.get('http://test.com');
+
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('tests on error for storage.get call against specified methods', async () => {
+    const instance = Axios.create({});
+    const axios = setupCache(instance, {});
+    // only cache post methods
+    axios.defaults.cache.methods = ['post'];
+
+    const spy = jest.spyOn(axios.storage, 'get');
+    try {
+      await axios.get('http://unknown.url.lan:1234');
+    } catch (error) {
+      expect(spy).not.toHaveBeenCalled();
+    }
+  });
+
+  it('tests on error for storage.get call with specified methods', async () => {
+    const instance = Axios.create({});
+    const axios = setupCache(instance, {});
+    // only cache get methods
+    axios.defaults.cache.methods = ['get'];
+
+    const spy = jest.spyOn(axios.storage, 'get');
+    try {
+      await axios.get('http://unknown.url.lan:1234');
+    } catch (error) {
+      expect(spy).toHaveBeenCalled();
+    }
+  });
+
   it('tests cache predicate integration', async () => {
     const axios = mockAxios();
 
