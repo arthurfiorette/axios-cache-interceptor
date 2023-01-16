@@ -133,7 +133,7 @@ export function defaultResponseInterceptor(
 
     let ttl = cacheConfig.ttl || -1; // always set from global config
 
-    if (cacheConfig?.interpretHeader) {
+    if (cacheConfig.interpretHeader) {
       const expirationTime = axios.headerInterpreter(response.headers);
 
       // Cache should not be used
@@ -212,9 +212,10 @@ export function defaultResponseInterceptor(
 
   const onRejected: ResponseInterceptor['onRejected'] = async (error) => {
     const config = error.config as CacheRequestConfig;
+    const cacheConfig = config.cache as CacheProperties;
 
     // config.cache should always exists, at least from global config merge.
-    if (!config?.cache || !config.id) {
+    if (!cacheConfig || !config.id) {
       if (__ACI_DEV__) {
         axios.debug?.({
           msg: 'Web request returned an error but cache handling is not enabled',
@@ -225,8 +226,17 @@ export function defaultResponseInterceptor(
       throw error;
     }
 
+    if (!isMethodIn(config.method, cacheConfig.methods)) {
+      if (__ACI_DEV__) {
+        axios.debug?.({
+          msg: `Ignored because method (${config.method}) is not in cache.methods (${cacheConfig.methods})`
+        });
+      }
+
+      throw error;
+    }
+
     const cache = await axios.storage.get(config.id, config);
-    const cacheConfig = config.cache;
 
     if (
       // This will only not be loading if the interceptor broke
@@ -245,7 +255,7 @@ export function defaultResponseInterceptor(
       throw error;
     }
 
-    if (cacheConfig?.staleIfError) {
+    if (cacheConfig.staleIfError) {
       const staleIfError =
         typeof cacheConfig.staleIfError === 'function'
           ? await cacheConfig.staleIfError(
