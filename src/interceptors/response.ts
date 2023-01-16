@@ -62,7 +62,7 @@ export function defaultResponseInterceptor(
 
       return { ...response, cached: false };
     }
-    
+
     if (!isMethodIn(config.method, cacheConfig.methods)) {
       if (__ACI_DEV__) {
         axios.debug?.({
