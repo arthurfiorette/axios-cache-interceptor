@@ -64,7 +64,7 @@ export function defaultResponseInterceptor(
     }
 
     // Update other entries before updating himself
-    if (cacheConfig?.update) {
+    if (cacheConfig.update) {
       await updateCache(axios.storage, response, cacheConfig.update);
     }
 
