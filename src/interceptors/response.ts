@@ -45,8 +45,9 @@ export function defaultResponseInterceptor(
       return response;
     }
 
+    const config = response.config;
     // Request interceptor merges defaults with per request configuration
-    const cacheConfig = response.config.cache as CacheProperties;
+    const cacheConfig = config.cache as CacheProperties;
 
     // Skip cache: either false or weird behavior
     // config.cache should always exists, at least from global config merge.
@@ -61,8 +62,17 @@ export function defaultResponseInterceptor(
 
       return { ...response, cached: false };
     }
+    
+    if (!isMethodIn(config.method, cacheConfig.methods)) {
+      if (__ACI_DEV__) {
+        axios.debug?.({
+          msg: `Ignored because method (${config.method}) is not in cache.methods (${cacheConfig.methods})`
+        });
+      }
 
-    const config = response.config;
+      return response;
+    }
+
     const cache = await axios.storage.get(id, config);
 
     // Update other entries before updating himself
