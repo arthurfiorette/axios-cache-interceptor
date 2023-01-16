@@ -9,7 +9,7 @@ import type { CachedStorageValue } from '../storage/types';
 import { testCachePredicate } from '../util/cache-predicate';
 import { updateCache } from '../util/update-cache';
 import type { ResponseInterceptor } from './build';
-import { createCacheResponse } from './util';
+import { createCacheResponse, isMethodIn } from './util';
 
 export function defaultResponseInterceptor(
   axios: AxiosCacheInstance
