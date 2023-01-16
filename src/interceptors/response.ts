@@ -63,6 +63,11 @@ export function defaultResponseInterceptor(
       return { ...response, cached: false };
     }
 
+    // Update other entries before updating himself
+    if (cacheConfig?.update) {
+      await updateCache(axios.storage, response, cacheConfig.update);
+    }
+
     if (!isMethodIn(config.method, cacheConfig.methods)) {
       if (__ACI_DEV__) {
         axios.debug?.({
@@ -74,11 +79,6 @@ export function defaultResponseInterceptor(
     }
 
     const cache = await axios.storage.get(id, config);
-
-    // Update other entries before updating himself
-    if (cacheConfig?.update) {
-      await updateCache(axios.storage, response, cacheConfig.update);
-    }
 
     if (
       // If the request interceptor had a problem or it wasn't cached
