@@ -71,7 +71,9 @@ export function defaultResponseInterceptor(
     if (!isMethodIn(config.method, cacheConfig.methods)) {
       if (__ACI_DEV__) {
         axios.debug?.({
-          msg: `Ignored because method (${config.method}) is not in cache.methods (${cacheConfig.methods})`
+          id,
+          msg: `Ignored because method (${config.method}) is not in cache.methods (${cacheConfig.methods})`,
+          data: { config, cacheConfig }
         });
       }
 
@@ -212,10 +214,11 @@ export function defaultResponseInterceptor(
 
   const onRejected: ResponseInterceptor['onRejected'] = async (error) => {
     const config = error.config as CacheRequestConfig;
+    const id = config.id;
     const cacheConfig = config.cache as CacheProperties;
 
-    // config.cache should always exists, at least from global config merge.
-    if (!cacheConfig || !config.id) {
+    // config.cache should always exist, at least from global config merge.
+    if (!cacheConfig || !id) {
       if (__ACI_DEV__) {
         axios.debug?.({
           msg: 'Web request returned an error but cache handling is not enabled',
@@ -229,24 +232,27 @@ export function defaultResponseInterceptor(
     if (!isMethodIn(config.method, cacheConfig.methods)) {
       if (__ACI_DEV__) {
         axios.debug?.({
-          msg: `Ignored because method (${config.method}) is not in cache.methods (${cacheConfig.methods})`
+          id,
+          msg: `Ignored because method (${config.method}) is not in cache.methods (${cacheConfig.methods})`,
+          data: { config, cacheConfig }
         });
       }
 
       throw error;
     }
 
-    const cache = await axios.storage.get(config.id, config);
+    const cache = await axios.storage.get(id, config);
 
     if (
       // This will only not be loading if the interceptor broke
       cache.state !== 'loading' ||
       cache.previous !== 'stale'
     ) {
-      await rejectResponse(config.id, config);
+      await rejectResponse(id, config);
 
       if (__ACI_DEV__) {
         axios.debug?.({
+          id,
           msg: 'Caught an error in the request interceptor',
           data: { error, config }
         });
@@ -267,6 +273,7 @@ export function defaultResponseInterceptor(
 
       if (__ACI_DEV__) {
         axios.debug?.({
+          id,
           msg: 'Found cache if stale config for rejected response',
           data: { error, config, staleIfError }
         });
@@ -278,12 +285,12 @@ export function defaultResponseInterceptor(
         (typeof staleIfError === 'number' && cache.createdAt + staleIfError > Date.now())
       ) {
         // Resolve all other requests waiting for this response
-        axios.waiting[config.id]?.resolve(cache.data);
-        delete axios.waiting[config.id];
+        axios.waiting[id]?.resolve(cache.data);
+        delete axios.waiting[id];
 
         // re-mark the cache as stale
         await axios.storage.set(
-          config.id,
+          id,
           {
             state: 'stale',
             createdAt: Date.now(),
@@ -294,6 +301,7 @@ export function defaultResponseInterceptor(
 
         if (__ACI_DEV__) {
           axios.debug?.({
+            id,
             msg: 'staleIfError resolved this response with cached data',
             data: { error, config, cache }
           });
@@ -302,7 +310,7 @@ export function defaultResponseInterceptor(
         return {
           cached: true,
           config,
-          id: config.id,
+          id,
           data: cache.data.data,
           headers: cache.data.headers,
           status: cache.data.status,
@@ -313,6 +321,7 @@ export function defaultResponseInterceptor(
 
     if (__ACI_DEV__) {
       axios.debug?.({
+        id,
         msg: 'Received an unknown error that could not be handled',
         data: { error, config }
       });
