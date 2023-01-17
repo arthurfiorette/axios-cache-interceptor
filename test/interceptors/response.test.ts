@@ -34,6 +34,8 @@ describe('test response interceptor', () => {
     // only cache post methods
     axios.defaults.cache.methods = ['post'];
 
+    expect.assertions(1);
+
     const spy = jest.spyOn(axios.storage, 'get');
     try {
       await axios.get('http://unknown.url.lan:1234');
@@ -47,6 +49,8 @@ describe('test response interceptor', () => {
     const axios = setupCache(instance, {});
     // only cache get methods
     axios.defaults.cache.methods = ['get'];
+
+    expect.assertions(1);
 
     const spy = jest.spyOn(axios.storage, 'get');
     try {
