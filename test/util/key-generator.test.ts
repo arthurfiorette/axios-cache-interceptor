@@ -1,4 +1,4 @@
-import type { CacheRequestConfig } from '../../src/cache/axios';
+import type { AxiosRequestHeaders } from 'axios';
 import { buildKeyGenerator, defaultKeyGenerator } from '../../src/util/key-generator';
 import { mockAxios } from '../mocks/axios';
 
@@ -13,7 +13,8 @@ describe('tests key generation', () => {
       baseURL,
       url,
       method,
-      params
+      params,
+      headers: {} as AxiosRequestHeaders
     });
 
     const keyWithId = defaultKeyGenerator({
@@ -21,6 +22,7 @@ describe('tests key generation', () => {
       url,
       method,
       params,
+      headers: {} as AxiosRequestHeaders,
       id: 'random-id'
     });
 
@@ -35,19 +37,22 @@ describe('tests key generation', () => {
       baseURL: 'http://example.com',
       url: '/asd/test',
       method,
-      params
+      params,
+      headers: {} as AxiosRequestHeaders
     });
 
     const keyWithBaseURL = defaultKeyGenerator({
       baseURL: 'http://example.com/asd/test',
       method,
-      params
+      params,
+      headers: {} as AxiosRequestHeaders
     });
 
     const keyWithURL = defaultKeyGenerator({
       url: 'http://example.com/asd/test',
       method,
-      params
+      params,
+      headers: {} as AxiosRequestHeaders
     });
 
     expect(keyWithBoth).toEqual(keyWithBaseURL);
@@ -68,7 +73,7 @@ describe('tests key generation', () => {
     ];
 
     const allSame = keysArr
-      .map(([baseURL, url]) => ({ baseURL, url }))
+      .map(([baseURL, url]) => ({ baseURL, url, headers: {} as AxiosRequestHeaders }))
       .map((key) => defaultKeyGenerator(key))
       .every((k, _, arr) => k === arr[0]);
 
@@ -79,12 +84,14 @@ describe('tests key generation', () => {
     const keyABOrder = defaultKeyGenerator({
       baseURL: 'http://example.com',
       url: 'asd/test',
-      params: { a: 1, b: 2 }
+      params: { a: 1, b: 2 },
+      headers: {} as AxiosRequestHeaders
     });
     const keyBAOrder = defaultKeyGenerator({
       baseURL: 'http://example.com',
       url: 'asd/test',
-      params: { b: 2, a: 1 }
+      params: { b: 2, a: 1 },
+      headers: {} as AxiosRequestHeaders
     });
 
     expect(keyABOrder).toBe(keyBAOrder);
@@ -99,17 +106,24 @@ describe('tests key generation', () => {
     ];
 
     for (const [first, second] of groups) {
-      expect(defaultKeyGenerator({ url: first })).toBe(
-        defaultKeyGenerator({ url: second })
-      );
-      expect(defaultKeyGenerator({ baseURL: first })).toBe(
-        defaultKeyGenerator({ baseURL: second })
+      expect(
+        defaultKeyGenerator({ url: first, headers: {} as AxiosRequestHeaders })
+      ).toBe(defaultKeyGenerator({ url: second, headers: {} as AxiosRequestHeaders }));
+      expect(
+        defaultKeyGenerator({ baseURL: first, headers: {} as AxiosRequestHeaders })
+      ).toBe(
+        defaultKeyGenerator({ baseURL: second, headers: {} as AxiosRequestHeaders })
       );
     }
   });
 
   it('tests unique data and params', () => {
-    const def = { baseURL: 'http://example.com', url: '', params: { a: 1, b: 2 } };
+    const def = {
+      baseURL: 'http://example.com',
+      headers: {} as AxiosRequestHeaders,
+      url: '',
+      params: { a: 1, b: 2 }
+    };
 
     const dataProps = [
       defaultKeyGenerator({ ...def, data: 23 }),
@@ -168,7 +182,7 @@ describe('tests key generation', () => {
   });
 
   it('expects that the response remains unchanged', () => {
-    const originalResponse: CacheRequestConfig = {
+    const originalReq = {
       baseURL: 'http://example.com/',
       url: '/test/path/',
       method: 'get',
@@ -177,46 +191,57 @@ describe('tests key generation', () => {
       },
       data: {
         object: true
-      }
+      },
+      headers: {} as AxiosRequestHeaders
     };
 
-    const response = Object.assign({}, originalResponse);
+    const request = Object.assign({}, originalReq);
 
-    const key = defaultKeyGenerator(response);
+    const key = defaultKeyGenerator(request);
     expect(key).toBeDefined();
 
-    expect(response).toEqual(originalResponse);
+    expect(request).toEqual(originalReq);
 
-    const key2 = defaultKeyGenerator(response);
+    const key2 = defaultKeyGenerator(request);
     expect(key2).toBeDefined();
 
     expect(key).toBe(key2);
 
-    expect(response).toEqual(originalResponse);
+    expect(request).toEqual(originalReq);
   });
 
   it('tests when hash() is used in the response', () => {
     const keyGenerator = buildKeyGenerator(({ data }) => data);
 
-    expect(keyGenerator({ data: 'test' })).toBe('test');
-    expect(keyGenerator({ data: 123123 })).toBe('123123');
+    expect(keyGenerator({ data: 'test', headers: {} as AxiosRequestHeaders })).toBe(
+      'test'
+    );
+    expect(keyGenerator({ data: 123123, headers: {} as AxiosRequestHeaders })).toBe(
+      '123123'
+    );
 
     let data: unknown = { a: 1 };
 
-    expect(keyGenerator({ data })).not.toBe(data);
-    expect(typeof keyGenerator({ data })).toBe('string');
+    expect(keyGenerator({ data, headers: {} as AxiosRequestHeaders })).not.toBe(data);
+    expect(typeof keyGenerator({ data, headers: {} as AxiosRequestHeaders })).toBe(
+      'string'
+    );
 
     data = true;
 
-    expect(keyGenerator({ data })).not.toBe(data);
-    expect(typeof keyGenerator({ data })).toBe('string');
+    expect(keyGenerator({ data, headers: {} as AxiosRequestHeaders })).not.toBe(data);
+    expect(typeof keyGenerator({ data, headers: {} as AxiosRequestHeaders })).toBe(
+      'string'
+    );
 
     data = {
       fn: () => expect(false).toBeTruthy(),
       test: new (class Asd {})()
     };
 
-    expect(keyGenerator({ data })).not.toBe(data);
-    expect(typeof keyGenerator({ data })).toBe('string');
+    expect(keyGenerator({ data, headers: {} as AxiosRequestHeaders })).not.toBe(data);
+    expect(typeof keyGenerator({ data, headers: {} as AxiosRequestHeaders })).toBe(
+      'string'
+    );
   });
 });

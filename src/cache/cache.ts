@@ -1,7 +1,10 @@
 import type { Method } from 'axios';
 import type { Deferred } from 'fast-defer';
 import type { HeadersInterpreter } from '../header/types';
-import type { AxiosInterceptor } from '../interceptors/build';
+import type {
+  CacheRequestInterceptor,
+  CacheResponseInterceptor
+} from '../interceptors/build';
 import type { AxiosStorage, CachedResponse } from '../storage/types';
 import type {
   CachePredicate,
@@ -9,7 +12,7 @@ import type {
   KeyGenerator,
   StaleIfErrorPredicate
 } from '../util/types';
-import type { CacheAxiosResponse, CacheRequestConfig } from './axios';
+import type { CacheAxiosResponse } from './axios';
 
 /**
  * @template R The type returned by this response
@@ -174,14 +177,14 @@ export interface CacheInstance {
    *
    * @default defaultRequestInterceptor
    */
-  requestInterceptor: AxiosInterceptor<CacheRequestConfig<unknown, unknown>>;
+  requestInterceptor: CacheRequestInterceptor;
 
   /**
    * The response interceptor that will be used to handle the cache.
    *
    * @default defaultResponseInterceptor
    */
-  responseInterceptor: AxiosInterceptor<CacheAxiosResponse<unknown, unknown>>;
+  responseInterceptor: CacheResponseInterceptor;
 
   /**
    * Logs useful information in the console

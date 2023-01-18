@@ -3,7 +3,8 @@ import type {
   AxiosInstance,
   AxiosInterceptorManager,
   AxiosRequestConfig,
-  AxiosResponse
+  AxiosResponse,
+  RawAxiosRequestConfig
 } from 'axios';
 import type { CacheInstance, CacheProperties } from './cache';
 
@@ -27,7 +28,7 @@ export type CacheAxiosResponse<R = any, D = any> = AxiosResponse<R, D> & {
  * @template R The type returned by this response
  * @template D The type for the request body
  */
-export type CacheRequestConfig<R = any, D = any> = AxiosRequestConfig<D> & {
+export type CacheRequestConfig<R = any, D = any> = RawAxiosRequestConfig<D> & {
   /**
    * An id for this request, if this request is used in cache, only the last request made
    * with this id will be returned.
@@ -43,6 +44,18 @@ export type CacheRequestConfig<R = any, D = any> = AxiosRequestConfig<D> & {
    */
   cache?: false | Partial<CacheProperties<R, D>>;
 };
+
+/**
+ * Same as CacheRequestConfig but with all the properties from AxiosRequestConfig
+ *
+ * @template R The type returned by this response
+ * @template D The type for the request body
+ */
+export type FullCacheRequestConfig<R = any, D = any> = Omit<
+  CacheRequestConfig<R, D>,
+  keyof RawAxiosRequestConfig<D>
+> &
+  AxiosRequestConfig<D>;
 
 /**
  * Same as the AxiosInstance but with CacheRequestConfig as a config type and
@@ -79,7 +92,7 @@ export interface AxiosCacheInstance extends CacheInstance, AxiosInstance {
   };
 
   interceptors: {
-    request: AxiosInterceptorManager<CacheRequestConfig>;
+    request: AxiosInterceptorManager<FullCacheRequestConfig>;
     response: AxiosInterceptorManager<CacheAxiosResponse>;
   };
 

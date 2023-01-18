@@ -1,4 +1,4 @@
-import type { CacheAxiosResponse, CacheRequestConfig } from '../cache/axios';
+import type { CacheAxiosResponse, FullCacheRequestConfig } from '../cache/axios';
 import type {
   CachedStorageValue,
   LoadingStorageValue,
@@ -33,7 +33,7 @@ export type CachePredicateObject<R = unknown, D = unknown> = {
  * for it.
  */
 export type KeyGenerator<R = unknown, D = unknown> = (
-  options: CacheRequestConfig<R, D>
+  options: FullCacheRequestConfig<R, D>
 ) => string;
 
 export type MaybePromise<T> = T | Promise<T> | PromiseLike<T>;

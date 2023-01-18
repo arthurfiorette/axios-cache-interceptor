@@ -1,5 +1,9 @@
 import type { Method } from 'axios';
-import type { CacheAxiosResponse, CacheRequestConfig } from '../cache/axios';
+import type {
+  CacheAxiosResponse,
+  CacheRequestConfig,
+  FullCacheRequestConfig
+} from '../cache/axios';
 import type { CacheProperties } from '../cache/cache';
 import { Header } from '../header/headers';
 import type { CachedResponse, StaleStorageValue } from '../storage/types';
@@ -25,7 +29,7 @@ export function isMethodIn(
   return methodList.some((method) => method === requestMethod);
 }
 
-export type ConfigWithCache<D> = CacheRequestConfig<unknown, D> & {
+export type ConfigWithCache<D> = FullCacheRequestConfig<unknown, D> & {
   cache: Partial<CacheProperties>;
 };
 
@@ -37,8 +41,6 @@ export function updateStaleRequest<D>(
   cache: StaleStorageValue,
   config: ConfigWithCache<D>
 ): void {
-  config.headers ||= {};
-
   const { etag, modifiedSince } = config.cache;
 
   if (etag) {

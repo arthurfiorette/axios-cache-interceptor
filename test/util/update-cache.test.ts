@@ -1,8 +1,12 @@
+import type { AxiosRequestHeaders } from 'axios';
 import type { CachedStorageValue } from '../../src/storage/types';
 import { defaultKeyGenerator } from '../../src/util/key-generator';
 import { mockAxios } from '../mocks/axios';
 
-const CACHE_KEY = defaultKeyGenerator({ url: 'https://example.com/' });
+const CACHE_KEY = defaultKeyGenerator({
+  url: 'https://example.com/',
+  headers: {} as AxiosRequestHeaders
+});
 const CACHED_VALUE: CachedStorageValue = Object.freeze({
   createdAt: Date.now(),
   state: 'cached',

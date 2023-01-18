@@ -1,6 +1,6 @@
 import type { Method } from 'axios';
 import { hash } from 'object-code';
-import type { CacheRequestConfig } from '../cache/axios';
+import type { CacheRequestConfig, FullCacheRequestConfig } from '../cache/axios';
 import type { KeyGenerator } from './types';
 
 // Remove first and last '/' char, if present
@@ -28,7 +28,7 @@ const SLASHES_REGEX = /^\/|\/$/g;
  * ```
  */
 export function buildKeyGenerator<R = unknown, D = unknown>(
-  generator: (request: CacheRequestConfig<R, D>) => unknown
+  generator: (request: FullCacheRequestConfig<R, D>) => unknown
 ): KeyGenerator<R, D> {
   return (request) => {
     if (request.id) {

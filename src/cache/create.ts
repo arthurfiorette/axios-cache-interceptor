@@ -104,8 +104,15 @@ export function setupCache(
   };
 
   // Apply interceptors
-  axiosCache.requestInterceptor.apply();
-  axiosCache.responseInterceptor.apply();
+  axiosCache.interceptors.request.use(
+    axiosCache.requestInterceptor.onFulfilled,
+    axiosCache.requestInterceptor.onRejected
+  );
+
+  axiosCache.interceptors.response.use(
+    axiosCache.responseInterceptor.onFulfilled,
+    axiosCache.responseInterceptor.onRejected
+  );
 
   return axiosCache;
 }
