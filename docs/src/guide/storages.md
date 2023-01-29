@@ -48,43 +48,35 @@ If you need persistent caching between page refreshes, you can use the `buildWeb
 to get this behavior. It works by connecting our storage API to the browser's
 [Storage API](https://developer.mozilla.org/en-US/docs/Web/API/Storage).
 
-::: details Local Storage
+::: code-group
 
-```ts{7}
+```ts{7} [Local Storage]
 import Axios from 'axios';
 import { setupCache, buildWebStorage } from 'axios-cache-interceptor';
 
-setupCache(axios, {
+setupCache(axios, { // [!code focus:5]
   // As localStorage is a public storage, you can add a prefix
   // to all keys to avoid collisions with other code.
   storage: buildWebStorage(localStorage, 'axios-cache:')
 });
 ```
 
-:::
-
-::: details Session Storage
-
-```ts{7}
+```ts{7} [Session Storage]
 import Axios from 'axios';
 import { setupCache, buildWebStorage } from 'axios-cache-interceptor';
 
-setupCache(axios, {
+setupCache(axios, { // [!code focus:5]
   // As sessionStorage is a public storage, you can add a prefix
   // to all keys to avoid collisions with other code.
   storage: buildWebStorage(sessionStorage, 'axios-cache:')
 });
 ```
 
-:::
-
-::: details Custom Storage
-
-```ts{4,7}
+```ts{4,7} [Custom Storage]
 import Axios from 'axios';
 import { setupCache, buildWebStorage } from 'axios-cache-interceptor';
 
-const myStorage = new Storage();
+const myStorage = new Storage(); // [!code focus:5]
 
 setupCache(axios, {
   storage: buildWebStorage(myStorage)
@@ -92,54 +84,6 @@ setupCache(axios, {
 ```
 
 :::
-
-<!-- <code-group>
-<code-block title="Local Storage">
-
-```ts{7}
-import Axios from 'axios';
-import { setupCache, buildWebStorage } from 'axios-cache-interceptor';
-
-setupCache(axios, {
-  // As localStorage is a public storage, you can add a prefix
-  // to all keys to avoid collisions with other code.
-  storage: buildWebStorage(localStorage, 'axios-cache:')
-});
-```
-
-</code-block>
-
-<code-block title="Session Storage">
-
-```ts{7}
-import Axios from 'axios';
-import { setupCache, buildWebStorage } from 'axios-cache-interceptor';
-
-setupCache(axios, {
-  // As sessionStorage is a public storage, you can add a prefix
-  // to all keys to avoid collisions with other code.
-  storage: buildWebStorage(sessionStorage, 'axios-cache:')
-});
-```
-
-</code-block>
-
-<code-block title="Custom Storage">
-
-```ts{4,7}
-import Axios from 'axios';
-import { setupCache, buildWebStorage } from 'axios-cache-interceptor';
-
-const myStorage = new Storage();
-
-setupCache(axios, {
-  storage: buildWebStorage(myStorage)
-});
-```
-
-</code-block>
-
-</code-group> -->
 
 ### Browser quota
 

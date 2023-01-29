@@ -1,128 +1,72 @@
 # Debugging
 
 I'm certainly sure that along the way you will find some cache behavior that is not the
-expected to the current situation. To help with that, the library has a separate build
-with debug logs enabled. You can use it by changing the `setupCache` import to:
+expected to the current situation. To help with that, the library has a separate robust
+build with support to debug logs enabled.
 
-<!-- <code-group>
-<code-block title="CommonJS">
+You can use it by changing the `setupCache` import:
 
-```ts{2,5}
-const Axios = require('axios');
-const { setupCache } = require('axios-cache-interceptor/dev');
+::: code-group
 
-// same object, but with updated typings.
-const axios = setupCache(Axios, { debug: console.log });
-
-const req1 = axios.get('https://jsonplaceholder.typicode.com/posts/1');
-const req2 = axios.get('https://jsonplaceholder.typicode.com/posts/1');
-
-const [res1, res2] = await Promise.all([req1, req2]);
-
-res1.cached; // false
-res2.cached; // true
-```
-
-</code-block>
-
-<code-block title="EcmaScript">
-
-```ts{2,5}
+```ts [EcmaScript]
 import Axios from 'axios';
-import { setupCache } from 'axios-cache-interceptor/dev';
 
-// same object, but with updated typings.
-const axios = setupCache(Axios, { debug: console.log });
-
-const req1 = axios.get('https://jsonplaceholder.typicode.com/posts/1');
-const req2 = axios.get('https://jsonplaceholder.typicode.com/posts/1');
-
-const [res1, res2] = await Promise.all([req1, req2]);
-
-res1.cached; // false
-res2.cached; // true
-```
-
-</code-block>
-
-<code-block title="Browser">
-
-```ts{2,5}
-
-const Axios = window.axios;
-const { setupCache } = window.AxiosCacheInterceptor; /* choose development bundle */
-
-// same object, but with updated typings.
-const axios = setupCache(Axios, { debug: console.log });
-
-const req1 = axios.get('https://jsonplaceholder.typicode.com/posts/1');
-const req2 = axios.get('https://jsonplaceholder.typicode.com/posts/1');
-
-const [res1, res2] = await Promise.all([req1, req2]);
-
-res1.cached; // false
-res2.cached; // true
-
-```
-
-</code-block>
-
-<code-block title="Skypack">
-
-```ts{2,5}
-import Axios from 'https://cdn.skypack.dev/axios';
-import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor/dev';
-
-// same object, but with updated typings.
-const axios = setupCache(Axios, { debug: console.log });
-
-const req1 = axios.get('https://jsonplaceholder.typicode.com/posts/1');
-const req2 = axios.get('https://jsonplaceholder.typicode.com/posts/1');
-
-const [res1, res2] = await Promise.all([req1, req2]);
-
-res1.cached; // false
-res2.cached; // true
-```
-
-</code-block>
-
-</code-group> -->
-
-```ts {5,11}
-import Axios from 'axios';
-// import Axios from 'https://cdn.skypack.dev/axios';
-// const Axios = window.axios;
-
-import { setupCache } from 'axios-cache-interceptor/dev';
-// import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor/dev';
-// const { setupCache } = window.AxiosCacheInterceptor; /* choose development bundle */
+import { setupCache } from 'axios-cache-interceptor'; // [!code --]
+import { setupCache } from 'axios-cache-interceptor/dev'; // [!code ++]
 
 // same object, but with updated typings.
 const axios = setupCache(Axios, {
-  debug: console.log
+  debug: console.log // [!code ++]
 });
-
-const req1 = axios.get('https://jsonplaceholder.typicode.com/posts/1');
-const req2 = axios.get('https://jsonplaceholder.typicode.com/posts/1');
-
-const [res1, res2] = await Promise.all([req1, req2]);
-
-res1.cached; // false
-res2.cached; // true
 ```
 
-::: tip
+```ts [Common JS]
+const Axios = require('axios');
 
-You can change the import where you use `setupCache`. Types from `axios-cache-interceptor`
-and `axios-cache-interceptor/dev` literally comes from the same file, so you can use them
-interchangeably.
+const { setupCache } = require('axios-cache-interceptor'); // [!code --]
+const { setupCache } = require('axios-cache-interceptor/dev'); // [!code ++]
+
+// same object, but with updated typings.
+const axios = setupCache(Axios, {
+  debug: console.log // [!code ++]
+});
+```
+
+```ts{3,4} [Browser]
+const Axios = window.axios;
+
+// Choose development bundle. // [!code ++]
+const { setupCache } = window.AxiosCacheInterceptor;
+
+// same object, but with updated typings.
+const axios = setupCache(Axios, {
+  debug: console.log // [!code ++]
+});
+```
+
+```ts {5,11} [Skypack]
+import Axios from 'https://cdn.skypack.dev/axios';
+
+import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor'; // [!code --]
+import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor/dev'; // [!code ++]
+
+// same object, but with updated typings.
+const axios = setupCache(Axios, {
+  debug: console.log // [!code ++]
+});
+```
 
 :::
 
-::: details When running the above code, these logs will be printed to the console:
+::: tip
 
-```json
+You only need to import from `/dev` where you import the `setupCache` function.
+
+:::
+
+::: details Sample of logs sent to console.
+
+```json 
 [
   {
     "id": "-644704205",

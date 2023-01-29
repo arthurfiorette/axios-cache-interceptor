@@ -5,6 +5,7 @@ hero:
   name: Axios Cache Interceptor
   text: Performant, small and powerful
   tagline: A cache interceptor for axios made with developers and performance in mind.
+  image: /rocket.png
   actions:
     - theme: brand
       text: Get Started

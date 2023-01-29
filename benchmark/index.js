@@ -69,6 +69,7 @@ Benny.suite(
       `# Result
 
 Run at ${new Date().toUTCString()}
+
 Commit: ${execSync('git rev-parse HEAD').toString()}
 ${summary.results
   .sort((a, b) => a.percentSlower - b.percentSlower)

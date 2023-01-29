@@ -13,39 +13,6 @@ inconsistences. Which is explained in the next section.
   <strong style="color: var(--vp-c-yellow-light)">after</strong> are ran
   <strong style="color: var(--vp-c-yellow-light)">before</strong>.
 
-::: details Example
-
-```ts
-import Axios from 'axios';
-import { setupCache } from 'axios-cache-adapter';
-
-const axios = Axios.create();
-
-// This will be ran BEFORE the cache interceptor
-axios.interceptors.request.use((req) => {
-  return req;
-});
-
-// This will be ran AFTER the cache interceptor
-axios.interceptors.response.use((res) => {
-  return res;
-});
-
-setupCache(axios);
-
-// This will be ran AFTER the cache interceptor
-axios.interceptors.request.use((req) => {
-  return req;
-});
-
-// This will be ran BEFORE the cache interceptor
-axios.interceptors.response.use((res) => {
-  return res;
-});
-```
-
-:::
-
 ## Explanation
 
 Axios interceptors are ran differently for the request and response ones.
@@ -57,33 +24,18 @@ As explained better in the
 [Axios documentation](https://github.com/axios/axios#interceptors) and in
 [this issue](https://github.com/arthurfiorette/axios-cache-interceptor/issues/449#issuecomment-1370327566).
 
-::: details Another example
-
 ```ts
-axios.interceptors.request.use((req) => {
-  console.log(1);
-  return req;
-});
+// This will be ran BEFORE the cache interceptor
+axios.interceptors.request.use((req) => req);
 
-axios.interceptors.response.use((res) => {
-  console.log(2);
-  return res;
-});
+// This will be ran AFTER the cache interceptor
+axios.interceptors.response.use((res) => res);
 
-// setupCache registers internal interceptors
 setupCache(axios);
 
-axios.interceptors.request.use((req) => {
-  console.log(3);
-  return req;
-});
+// This will be ran AFTER the cache interceptor
+axios.interceptors.request.use((req) => req);
 
-axios.interceptors.response.use((res) => {
-  console.log(4);
-  return res;
-});
+// This will be ran BEFORE the cache interceptor
+axios.interceptors.response.use((res) => res);
 ```
-
-Which prints out `3`, `1`, `2`, `4` when the request is made.
-
-:::

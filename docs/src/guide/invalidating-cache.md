@@ -51,25 +51,28 @@ cache and we are good to go.
 
 ```ts
 // Uses `list-posts` id to be able to reference it later.
-function listPosts() {
-  return axios.get('/posts', {
+function listPosts() { 
+  return axios.get('/posts', { // [!code focus:3]
     id: 'list-posts'
   });
 }
 
 function createPost(data) {
-  return axios.post('/posts', data, {
+  return axios.post('/posts', data, { // [!code focus:22]
     cache: {
       update: {
-        // Will perform a cache update for the `list-posts` respective cache entry.
+        // Will perform a cache update for the `list-posts` respective
+        // cache entry.
         'list-posts': (listPostsCache, createPostResponse) => {
-          // If the cache is does not has a cached state, we don't need to update it
+          // If the cache is does not has a cached state, we don't need
+          // to update it
           if (listPostsCache.state !== 'cached') {
             return 'ignore';
           }
 
-          // Imagine the server response for the `list-posts` request is: { posts: Post[]; }
-          // And the `create-post` response comes with the newly created post.
+          // Imagine the server response for the `list-posts` request 
+          // is: { posts: Post[]; }, and the `create-post` response
+          // comes with the newly created post.
 
           // Adds the created post to the end of the post's list
           listPostsCache.data.posts.push(createPostResponse.data);
@@ -99,17 +102,18 @@ the server, and updating the cache with the new network response.
 ```ts
 // Uses `list-posts` id to be able to reference it later.
 function listPosts() {
-  return axios.get('/posts', {
+  return axios.get('/posts', { // [!code focus:3]
     id: 'list-posts'
   });
 }
 
 function createPost(data) {
-  return axios.post('/posts', data, {
+  return axios.post('/posts', data, { // [!code focus:9]
     cache: {
       update: {
-        // Will, internally, call storage.remove('list-posts') and let the next request
-        // be forwarded to the server without you having to do any checks.
+        // Will, internally, call storage.remove('list-posts') and let the
+        // next request be forwarded to the server without you having to
+        // do any checks.
         'list-posts': 'delete'
       }
     }

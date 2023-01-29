@@ -44,4 +44,4 @@ There's an simple
 in form of a stress test to compare the performance of this library, `axios-cache-adapter`
 and axios as it is.
 
-<<< @/generated/benchmark.md
+<<< @/generated/benchmark.md {5,11,17}

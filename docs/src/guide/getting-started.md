@@ -13,12 +13,17 @@
 The fastest way to get axios with cache set up and running is to install it with npm or
 yarn
 
-```bash
-yarn    add     axios  axios-cache-interceptor
-npm   install   axios  axios-cache-interceptor
+::: code-group
+
+```bash [Yarn]
+yarn add axios@1 axios-cache-interceptor@1
 ```
 
-```html
+```bash [NPM]
+npm install axios@1 axios-cache-interceptor@1
+```
+
+```html [Browser]
 <!-- Development UMD build for ES2017+ (~13 KiB) -->
 <script
   src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@1.0.0/dev/index.bundle.js"
@@ -34,153 +39,83 @@ npm   install   axios  axios-cache-interceptor
 ></script>
 ```
 
-<!-- <code-group>
-<code-block title="YARN" active>
-
-```bash
-yarn add axios@1 axios-cache-interceptor@1
+```ts [Skypack]
+import Axios from 'https://cdn.skypack.dev/axios';
+import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor';
 ```
 
-</code-block>
-
-<code-block title="NPM">
-
-```bash
-npm install axios@1 axios-cache-interceptor@1
-```
-
-</code-block>
-
-<code-block title="Browser">
-
-```html
-< !-- Development UMD build for ES2017+ (~12.6 KiB) -- >
-<script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.10.7/dev/index.bundle.js"
-  integrity="sha256-oTqUncNoX9DcUWIb5sLS2tscPHKqUPL0yLlOXSSXzSY="
-  crossorigin="anonymous"
-></script>
-
-< !-- Production UMD build for ES5+ (~14.2 KiB) -- >
-<script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@0.10.7/dist/index.bundle.js"
-  integrity="sha256-Dc3BSxOZSDmoVoB11lhxkqH8VdBQjxWkHUmmDotiKJ4="
-  crossorigin="anonymous"
-></script>
-```
-
-</code-block>
-
-</code-group> -->
+:::
 
 After installing, you can import the package and apply the interceptor to your axios
 instance, as shown below:
 
-```ts
-import Axios from 'axios';
-// const Axios = require('axios');
-// const Axios = window.axios;
-// import Axios from 'https://cdn.skypack.dev/axios';
+::: code-group
 
+```ts [EcmaScript]
+import Axios from 'axios';
 import { setupCache } from 'axios-cache-interceptor';
-// const { setupCache } = require('axios-cache-interceptor');
-// const { setupCache } = window.AxiosCacheInterceptor;
-// import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor';
 
 // same object, but with updated typings.
-const axios = setupCache(Axios);
+const axios = setupCache(Axios); // [!code focus]
 
-const req1 = axios.get('https://api.example.com/');
-const req2 = axios.get('https://api.example.com/');
+const req1 = axios.get('https://api.example.com/'); // [!code focus]
+const req2 = axios.get('https://api.example.com/'); // [!code focus]
 
 const [res1, res2] = await Promise.all([req1, req2]);
 
-res1.cached; // false
-res2.cached; // true
+res1.cached; // false // [!code focus]
+res2.cached; // true // [!code focus]
 ```
 
-<!-- <code-group>
-<code-block title="CommonJS">
-
-```ts
+```ts [CommonJS]
 const Axios = require('axios');
 const { setupCache } = require('axios-cache-interceptor');
 
 // same object, but with updated typings.
-const axios = setupCache(Axios);
+const axios = setupCache(Axios); // [!code focus]
 
-const req1 = axios.get('https://api.example.com/');
-const req2 = axios.get('https://api.example.com/');
-
-const [res1, res2] = await Promise.all([req1, req2]);
-
-res1.cached; // false
-res2.cached; // true
-```
-
-</code-block>
-
-<code-block title="EcmaScript">
-
-```ts
-import Axios from 'axios';
-import { setupCache } from 'axios-cache-interceptor';
-
-// same object, but with updated typings.
-const axios = setupCache(Axios);
-
-const req1 = axios.get('https://api.example.com/');
-const req2 = axios.get('https://api.example.com/');
+const req1 = axios.get('https://api.example.com/'); // [!code focus]
+const req2 = axios.get('https://api.example.com/'); // [!code focus]
 
 const [res1, res2] = await Promise.all([req1, req2]);
 
-res1.cached; // false
-res2.cached; // true
+res1.cached; // false // [!code focus]
+res2.cached; // true // [!code focus]
 ```
 
-</code-block>
-
-<code-block title="Browser">
-
-```ts
+```ts [Browser]
 const Axios = window.axios;
 const { setupCache } = window.AxiosCacheInterceptor;
 
 // same object, but with updated typings.
-const axios = setupCache(Axios);
+const axios = setupCache(Axios); // [!code focus]
 
-const req1 = axios.get('https://api.example.com/');
-const req2 = axios.get('https://api.example.com/');
+const req1 = axios.get('https://api.example.com/'); // [!code focus]
+const req2 = axios.get('https://api.example.com/'); // [!code focus]
 
 const [res1, res2] = await Promise.all([req1, req2]);
 
-res1.cached; // false
-res2.cached; // true
+res1.cached; // false // [!code focus]
+res2.cached; // true // [!code focus]
 ```
 
-</code-block>
-
-<code-block title="Skypack">
-
-```ts
+```ts [Skypack]
 import Axios from 'https://cdn.skypack.dev/axios';
 import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor';
 
 // same object, but with updated typings.
-const axios = setupCache(Axios);
+const axios = setupCache(Axios); // [!code focus]
 
-const req1 = axios.get('https://api.example.com/');
-const req2 = axios.get('https://api.example.com/');
+const req1 = axios.get('https://api.example.com/'); // [!code focus]
+const req2 = axios.get('https://api.example.com/'); // [!code focus]
 
 const [res1, res2] = await Promise.all([req1, req2]);
 
-res1.cached; // false
-res2.cached; // true
+res1.cached; // false // [!code focus]
+res2.cached; // true // [!code focus]
 ```
 
-</code-block>
-
-</code-group> -->
+:::
 
 Just the above is sufficient for most use cases. However, you can also customiza each
 cache behavior by passing a configuration object to the `setupCache` function. And you can
