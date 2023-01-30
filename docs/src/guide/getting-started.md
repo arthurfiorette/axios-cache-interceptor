@@ -117,7 +117,7 @@ res2.cached; // true // [!code focus]
 
 :::
 
-Just the above is sufficient for most use cases. However, you can also customiza each
+Just the above is sufficient for most use cases. However, you can also customize each
 cache behavior by passing a configuration object to the `setupCache` function. And you can
 also customize some behaviors each request by using the `cache` option in the request
 config.
