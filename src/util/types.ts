@@ -22,7 +22,10 @@ export type CachePredicateObject<R = unknown, D = unknown> = {
    *
    * ### Remember, all axios headers are lowercase.
    */
-  containsHeaders?: Record<string, (header?: string) => MaybePromise<boolean>>;
+  containsHeaders?: Record<
+    string,
+    (header?: CacheAxiosResponse['headers'][string]) => MaybePromise<boolean>
+  >;
 
   /** Check if the response matches this predicate. */
   responseMatch?: (res: CacheAxiosResponse<R, D>) => MaybePromise<boolean>;

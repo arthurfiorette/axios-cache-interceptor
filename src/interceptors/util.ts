@@ -42,15 +42,19 @@ export function updateStaleRequest<D>(
   const { etag, modifiedSince } = config.cache;
 
   if (etag) {
-    const etagValue = etag === true ? cache.data?.headers[Header.ETag] : etag;
-    etagValue && (config.headers[Header.IfNoneMatch] = etagValue);
+    const etagValue =
+      etag === true ? (cache.data?.headers[Header.ETag] as unknown) : etag;
+
+    if (etagValue) {
+      config.headers[Header.IfNoneMatch] = etagValue;
+    }
   }
 
   if (modifiedSince) {
     config.headers[Header.IfModifiedSince] =
       modifiedSince === true
         ? // If last-modified is not present, use the createdAt timestamp
-          cache.data.headers[Header.LastModified] ||
+          (cache.data.headers[Header.LastModified] as unknown) ||
           new Date(cache.createdAt).toUTCString()
         : modifiedSince.toUTCString();
   }

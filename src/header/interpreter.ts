@@ -5,7 +5,7 @@ import type { HeadersInterpreter } from './types';
 export const defaultHeaderInterpreter: HeadersInterpreter = (headers) => {
   if (!headers) return 'not enough headers';
 
-  const cacheControl = headers[Header.CacheControl];
+  const cacheControl: unknown = headers[Header.CacheControl];
 
   if (cacheControl) {
     const { noCache, noStore, mustRevalidate, maxAge, immutable } = parse(
@@ -29,7 +29,7 @@ export const defaultHeaderInterpreter: HeadersInterpreter = (headers) => {
     }
 
     if (maxAge !== undefined) {
-      const age = headers[Header.Age];
+      const age: unknown = headers[Header.Age];
 
       if (!age) {
         return maxAge * 1000;
@@ -39,7 +39,7 @@ export const defaultHeaderInterpreter: HeadersInterpreter = (headers) => {
     }
   }
 
-  const expires = headers[Header.Expires];
+  const expires: unknown = headers[Header.Expires];
 
   if (expires) {
     const milliseconds = Date.parse(String(expires)) - Date.now();

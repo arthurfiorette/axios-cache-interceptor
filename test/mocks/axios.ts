@@ -16,7 +16,7 @@ export function mockAxios(
   axios.defaults.adapter = async (config) => {
     await 0; // Jumps to next tick of nodejs event loop
 
-    const should304 =
+    const should304: unknown =
       config.headers?.[Header.IfNoneMatch] || config.headers?.[Header.IfModifiedSince];
     const status = should304 ? 304 : 200;
 

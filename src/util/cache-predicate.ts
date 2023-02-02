@@ -1,5 +1,6 @@
 import type { CacheAxiosResponse } from '../cache/axios';
-import type { CachePredicate } from './types';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import type { CachePredicate, CachePredicateObject } from './types';
 
 /** Tests an response against a {@link CachePredicateObject}. */
 export async function testCachePredicate<R = unknown, D = unknown>(
@@ -24,6 +25,9 @@ export async function testCachePredicate<R = unknown, D = unknown>(
       if (
         !(await predicate(
           // Axios response headers are in lowercase, but check both just in case.
+
+          // FIXME: https://github.com/axios/axios/pull/5525
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           response.headers[header.toLowerCase()] ?? response.headers[header]
         ))
       ) {

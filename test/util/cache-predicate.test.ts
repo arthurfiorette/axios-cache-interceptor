@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import type { CachedStorageValue } from '../../src/storage/types';
 import { testCachePredicate } from '../../src/util/cache-predicate';
 import { mockAxios } from '../mocks/axios';

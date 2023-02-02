@@ -104,7 +104,7 @@ describe('Last-Modified handling', () => {
 
     // First request, return x-my-header. Ttl 1 to make the cache stale
     const firstResponse = await axios.get('http://test.com', { cache: { ttl: -1 } });
-    const firstMyHeader = firstResponse.headers?.[XMockRandom];
+    const firstMyHeader: unknown = firstResponse.headers?.[XMockRandom];
 
     expect(firstMyHeader).toBeDefined();
     expect(Number(firstMyHeader)).not.toBeNaN();
@@ -113,7 +113,7 @@ describe('Last-Modified handling', () => {
     const secondResponse = await axios.get('http://test.com', {
       cache: { modifiedSince: true }
     });
-    const secondMyHeader = secondResponse.headers?.[XMockRandom];
+    const secondMyHeader: unknown = secondResponse.headers?.[XMockRandom];
 
     expect(secondMyHeader).toBeDefined();
     expect(Number(secondMyHeader)).not.toBeNaN();
