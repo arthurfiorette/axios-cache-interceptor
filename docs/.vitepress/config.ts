@@ -28,7 +28,7 @@ export default defineConfig({
 
   //! Experimental
   // Allows removing trailing .html from URLs
-  cleanUrls: 'without-subfolders',
+  cleanUrls: true,
 
   // The default theme will be determined by the user's preferred color scheme
   appearance: true,
