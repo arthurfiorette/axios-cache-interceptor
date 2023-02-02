@@ -1,4 +1,5 @@
 import type { AxiosRequestHeaders } from 'axios';
+import type { CacheAxiosResponse } from '../cache/axios';
 
 export type InterpreterResult = 'dont cache' | 'not enough headers' | number;
 
@@ -11,7 +12,7 @@ export type InterpreterResult = 'dont cache' | 'not enough headers' | number;
  *   **milliseconds** to cache the response.
  */
 export type HeadersInterpreter = (
-  headers?: Record<string, string | undefined>
+  headers?: CacheAxiosResponse['headers']
 ) => InterpreterResult;
 
 /**

@@ -1,3 +1,4 @@
+import type { AxiosResponseHeaders } from 'axios';
 import type {
   AxiosCacheInstance,
   CacheAxiosResponse,
@@ -213,7 +214,7 @@ export function defaultResponseInterceptor(
   };
 
   const onRejected: ResponseInterceptor['onRejected'] = async (error) => {
-    const config = error.config as CacheRequestConfig;
+    const config = error.config as CacheRequestConfig & { headers: AxiosResponseHeaders };
     const id = config.id;
     const cacheConfig = config.cache as CacheProperties;
 

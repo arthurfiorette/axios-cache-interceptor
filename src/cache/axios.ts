@@ -3,7 +3,10 @@ import type {
   AxiosInstance,
   AxiosInterceptorManager,
   AxiosRequestConfig,
-  AxiosResponse
+  AxiosResponse,
+  AxiosResponseHeaders,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  InternalAxiosRequestConfig
 } from 'axios';
 import type { CacheInstance, CacheProperties } from './cache';
 
@@ -44,6 +47,11 @@ export type CacheRequestConfig<R = any, D = any> = AxiosRequestConfig<D> & {
   cache?: false | Partial<CacheProperties<R, D>>;
 };
 
+/** Cached version of type {@link InternalAxiosRequestConfig} */
+export type InternalCacheRequestConfig<R = any, D = any> = CacheRequestConfig<R, D> & {
+  headers: AxiosResponseHeaders;
+};
+
 /**
  * Same as the AxiosInstance but with CacheRequestConfig as a config type and
  * CacheAxiosResponse as response type.
@@ -79,7 +87,7 @@ export interface AxiosCacheInstance extends CacheInstance, AxiosInstance {
   };
 
   interceptors: {
-    request: AxiosInterceptorManager<CacheRequestConfig>;
+    request: AxiosInterceptorManager<InternalCacheRequestConfig>;
     response: AxiosInterceptorManager<CacheAxiosResponse>;
   };
 

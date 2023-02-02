@@ -1,6 +1,9 @@
 import type { AxiosAdapter, AxiosResponse } from 'axios';
 import { setTimeout } from 'timers/promises';
-import type { CacheRequestConfig } from '../../src/cache/axios';
+import type {
+  CacheRequestConfig,
+  InternalCacheRequestConfig
+} from '../../src/cache/axios';
 import { Header } from '../../src/header/headers';
 import type { LoadingStorageValue } from '../../src/storage/types';
 import { mockAxios } from '../mocks/axios';
@@ -169,7 +172,7 @@ describe('test request interceptor', () => {
       // A simple adapter that deletes the current cache
       // before resolving the adapter. Simulates when a user
       // manually deletes this key before it can be resolved.
-      adapter: async (config: CacheRequestConfig) => {
+      adapter: async (config: InternalCacheRequestConfig) => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         await axios.storage.remove(config.id!);
         return (axios.defaults.adapter as AxiosAdapter)(config);
@@ -209,7 +212,7 @@ describe('test request interceptor', () => {
       cache: { override: true },
 
       // Simple adapter that resolves after the deferred is completed.
-      adapter: async (config: CacheRequestConfig) => {
+      adapter: async (config: InternalCacheRequestConfig) => {
         await setTimeout(150);
 
         const response = (await (axios.defaults.adapter as AxiosAdapter)(
@@ -267,7 +270,7 @@ describe('test request interceptor', () => {
       cache: { override: true },
 
       // Simple adapter that resolves after the deferred is completed.
-      adapter: async (config: CacheRequestConfig) => {
+      adapter: async (config: InternalCacheRequestConfig) => {
         await setTimeout(150);
 
         return (axios.defaults.adapter as AxiosAdapter)(config);

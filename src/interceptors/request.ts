@@ -37,7 +37,6 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
     // Its currently used before isMethodIn because if the isMethodIn returns false, the request
     // shouldn't be cached an therefore neither in the browser.
     if (config.cache.cacheTakeover) {
-      config.headers ??= {};
       config.headers[Header.CacheControl] ??= 'no-cache';
       config.headers[Header.Pragma] ??= 'no-cache';
       config.headers[Header.Expires] ??= '0';
