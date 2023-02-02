@@ -250,18 +250,17 @@ export default defineConfig({
       copyright: 'Copyright (c) 2021-present Arthur Fiorette & Contributors'
     },
 
-    // TODO: Change this to the real one
-    // algolia: {
-    //   appId: '8J64VVRP8K',
-    //   apiKey: 'a18e2f4cc5665f6602c5631fd868adfd',
-    //   indexName: 'vitepress'
-    // },
+    algolia: {
+      appId: 'WPY8IFS0UX',
+      apiKey: '8cc9e4ff3f98b5854346224aac791bbf',
+      indexName: 'axios-cache-interceptor-js'
+    },
 
-    // TODO: Change this to the real one
-    // carbonAds: {
-    //   code: 'CEBDT27Y',
-    //   placement: 'vuejsorg'
-    // },
+    carbonAds: {
+      // Helping Vue while this website doesn't have enough traffic
+      code: 'CEBDT27Y',
+      placement: 'vuejsorg'
+    },
 
     sidebar: [
       {
