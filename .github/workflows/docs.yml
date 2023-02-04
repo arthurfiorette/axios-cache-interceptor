@@ -4,11 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Publish as version:'
-        required: true
-      latest:
-        description: 'Override latest version[true/FALSE]:'
-        default: false
+        description: 'Publish as version[?]:'
+        default: 'latest'
+
 
 permissions:
   contents: write
@@ -38,6 +36,7 @@ jobs:
 
       - name: Deploy to ${{ github.event.inputs.version }}
         uses: JamesIves/github-pages-deploy-action@v4
+        if: ${{ github.event.inputs.version != 'latest' }}
         with:
           folder: ./docs/.vitepress/dist
           branch: gh-pages
@@ -51,7 +50,7 @@ jobs:
         run: yarn docs:build
 
       - name: Deploy to latest
-        if: ${{ github.event.inputs.latest == 'true' }}
+        if: ${{ github.event.inputs.version == 'latest' }}
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: ./docs/.vitepress/dist
