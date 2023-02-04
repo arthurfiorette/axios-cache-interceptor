@@ -212,7 +212,7 @@ export default defineConfig({
       },
       {
         icon: { svg: read('../src/public/jsdelivr.svg') },
-        link: 'https://www.jsdelivr.com/package/npm/axios-token-interceptor'
+        link: 'https://www.jsdelivr.com/package/npm/axios-cache-interceptor'
       },
       {
         icon: { svg: read('../src/public/bundlephobia.svg') },
