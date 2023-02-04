@@ -5,13 +5,10 @@ inconsistences. Which is explained in the next section.
 
 ## TL;DR
 
-- **Request** interceptors registered **before** `setupCache()` are ran **before** and
-  registrations made **after** are ran **after**.
-- **Response** interceptors registered
-  <strong style="color: var(--vp-c-yellow-light)">before</strong> `setupCache()` are ran
-  <strong style="color: var(--vp-c-yellow-light)">after</strong> and registrations made
-  <strong style="color: var(--vp-c-yellow-light)">after</strong> are ran
-  <strong style="color: var(--vp-c-yellow-light)">before</strong>.
+- **Request** interceptors registered before `setupCache()` are ran before and
+  registrations made after are ran after.
+- **Response** interceptors registered before `setupCache()` are ran **after** and
+  registrations made after are ran **before**.
 
 ## Explanation
 

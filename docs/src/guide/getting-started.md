@@ -1,17 +1,10 @@
 # Getting Started
 
-## Prerequisites
+[Looking for axios v0?](https://axios-cache-interceptor.js.org/v0/)
 
-- [Node.js](https://nodejs.org/) `(>= 12)` _Lower version requires a custom build with
-  polyfills._
+## Install Axios Cache Interceptor
 
-- [Axios](https://axios-http.com/) `(>= 0.21 or >= 1.1)` _Lower version requires a custom
-  build with polyfills._
-
-## Quick Start
-
-The fastest way to get axios with cache set up and running is to install it with npm or
-yarn
+Add Axios Cache Interceptor and Axios to your project using your favorite package manager:
 
 ::: code-group
 
@@ -45,6 +38,8 @@ import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor';
 ```
 
 :::
+
+## Setup Axios Cache Interceptor
 
 After installing, you can import the package and apply the interceptor to your axios
 instance, as shown below:
@@ -122,7 +117,7 @@ cache behavior by passing a configuration object to the `setupCache` function. A
 also customize some behaviors each request by using the `cache` option in the request
 config.
 
-### Support Table
+## Support Table
 
 Most of axios v0 breaking changes were about typing issues, so your version may work with
 one outside of this table. **Axios and Axios Cache Interceptor v0 are not compatible with

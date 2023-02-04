@@ -10,9 +10,8 @@ real time without communicating with the server.
 **All available revalidation methods only works when the request is successful.**
 
 If you are wanting to revalidate with a non standard `2XX` status code, make sure to
-enable it on the [`validateStatus`](https://axios-http.com/docs/handling_errors) axios
-option or revalidate it manually as shown
-[below](#updating-cache-through-external-sources).
+enable it at [`validateStatus`](https://axios-http.com/docs/handling_errors) or revalidate
+it manually as shown [below](#updating-cache-through-external-sources).
 
 :::
 
@@ -41,7 +40,7 @@ after.
 
 :::
 
-### Updating cache programmatically
+## Programmatically
 
 If the mutation you made was just simple changes, you can get the mutation response and
 update programmatically your cache.
@@ -51,38 +50,42 @@ cache and we are good to go.
 
 ```ts
 // Uses `list-posts` id to be able to reference it later.
-function listPosts() { 
-  return axios.get('/posts', { // [!code focus:3]
+function listPosts() {
+  return axios.get('/posts', {
     id: 'list-posts'
   });
 }
 
 function createPost(data) {
-  return axios.post('/posts', data, { // [!code focus:22]
-    cache: {
-      update: {
-        // Will perform a cache update for the `list-posts` respective
-        // cache entry.
-        'list-posts': (listPostsCache, createPostResponse) => {
-          // If the cache is does not has a cached state, we don't need
-          // to update it
-          if (listPostsCache.state !== 'cached') {
-            return 'ignore';
+  return axios.post(
+    '/posts',
+    data,
+    /* [!code focus:25] */ {
+      cache: {
+        update: {
+          // Will perform a cache update for the `list-posts` respective
+          // cache entry.
+          'list-posts': (listPostsCache, createPostResponse) => {
+            // If the cache is does not has a cached state, we don't need
+            // to update it
+            if (listPostsCache.state !== 'cached') {
+              return 'ignore';
+            }
+
+            // Imagine the server response for the `list-posts` request
+            // is: { posts: Post[]; }, and the `create-post` response
+            // comes with the newly created post.
+
+            // Adds the created post to the end of the post's list
+            listPostsCache.data.posts.push(createPostResponse.data);
+
+            // Return the same cache state, but a updated one.
+            return listPostsCache;
           }
-
-          // Imagine the server response for the `list-posts` request 
-          // is: { posts: Post[]; }, and the `create-post` response
-          // comes with the newly created post.
-
-          // Adds the created post to the end of the post's list
-          listPostsCache.data.posts.push(createPostResponse.data);
-
-          // Return the same cache state, but a updated one.
-          return listPostsCache;
         }
       }
     }
-  });
+  );
 }
 ```
 
@@ -90,7 +93,7 @@ This will update the `list-posts` cache at the client side, making it equal to t
 When operations like this are possible to be made, they are the preferred. That's because
 we do not contact the server again and update ourselves the cache.
 
-### Updating cache through network
+## Through network
 
 Sometimes, the mutation you made is not simple enough and would need a lot of copied
 service code to replicate all changes the backend made, turning it into a duplication and
@@ -102,13 +105,15 @@ the server, and updating the cache with the new network response.
 ```ts
 // Uses `list-posts` id to be able to reference it later.
 function listPosts() {
-  return axios.get('/posts', { // [!code focus:3]
+  return axios.get('/posts', {
+    // [!code focus:3]
     id: 'list-posts'
   });
 }
 
 function createPost(data) {
-  return axios.post('/posts', data, { // [!code focus:9]
+  return axios.post('/posts', data, {
+    // [!code focus:9]
     cache: {
       update: {
         // Will, internally, call storage.remove('list-posts') and let the
@@ -125,7 +130,7 @@ Still using the first example, while we are at the step **3**, automatically, th
 cache-interceptor instance will request the server again and do required changes in the
 cache before the promise resolves and your page gets rendered.
 
-### Updating cache through external sources
+## Through external sources
 
 If you have any other type of external communication, like when listening to a websocket
 for changes, you may want to update your axios cache without be in a request context.

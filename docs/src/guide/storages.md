@@ -124,28 +124,28 @@ object to build the storage. It has 3 methods:
   Receives the key and optionally the current request. It should return the value from the
   storage or `undefined` if not found.
 
-### Node Redis v4 Example
+## Node Redis Example
 
 To inspire you, here is an example for a server-side application that uses Redis as the
 storage.
 
-```ts{8,13,21}
-import axios from 'axios';
-import { createClient } from 'redis';
-import { buildStorage, setupCache, canStale } from 'axios-cache-interceptor';
+```ts{4}
+import { createClient } from 'redis'; // v4
+import { buildStorage, canStale } from 'axios-cache-interceptor';
 
 const client = createClient(/* connection config */);
-
+// [!code focus:6]
 const redisStorage = buildStorage({
   async find(key) {
     const result = await client.get(`axios-cache:${key}`);
     return JSON.parse(result);
   },
 
-  async set(key, value) {
+  // We use canStale function here because we shouldn't let
+  // redis remove automatically the key if it can enter the
+  // stale state.
+  async set(key, value) { // [!code focus:10]
     await client.set(`axios-cache:${key}`, JSON.stringify(value), {
-      // We use canStale function here because we shouldn't let
-      // redis remove it if it can stale.
       PXAT: canStale(value) ? value.expiresAt : undefined
     });
   },

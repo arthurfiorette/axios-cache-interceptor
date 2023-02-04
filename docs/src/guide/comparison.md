@@ -39,9 +39,9 @@
 
 ## Benchmark
 
-There's an simple
-[benchmark](https://github.com/arthurfiorette/axios-cache-interceptor/blob/main/docs/benchmark.js)
-in form of a stress test to compare the performance of this library, `axios-cache-adapter`
-and axios as it is.
+The
+[benchmark](https://github.com/arthurfiorette/axios-cache-interceptor/blob/main/benchmark/index.js)
+is composed of axios throughput tests to compare the performance of this library,
+`axios-cache-adapter` and axios as it is.
 
-<<< @/generated/benchmark.md {5,11,17}
+<<< @/generated/benchmark.md {5,11}

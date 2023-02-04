@@ -11,6 +11,7 @@ You can use it by changing the `setupCache` import:
 ```ts [EcmaScript]
 import Axios from 'axios';
 
+// Only import from `/dev` where you import `setupCache`.
 import { setupCache } from 'axios-cache-interceptor'; // [!code --]
 import { setupCache } from 'axios-cache-interceptor/dev'; // [!code ++]
 
@@ -23,6 +24,7 @@ const axios = setupCache(Axios, {
 ```ts [Common JS]
 const Axios = require('axios');
 
+// Only import from `/dev` where you import `setupCache`.
 const { setupCache } = require('axios-cache-interceptor'); // [!code --]
 const { setupCache } = require('axios-cache-interceptor/dev'); // [!code ++]
 
@@ -47,6 +49,7 @@ const axios = setupCache(Axios, {
 ```ts {5,11} [Skypack]
 import Axios from 'https://cdn.skypack.dev/axios';
 
+// Only import from `/dev` where you import `setupCache`.
 import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor'; // [!code --]
 import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor/dev'; // [!code ++]
 
@@ -58,15 +61,12 @@ const axios = setupCache(Axios, {
 
 :::
 
-::: tip
-
-You only need to import from `/dev` where you import the `setupCache` function.
-
-:::
+And much more, depending on your context, situation and configuration. **Any misbehavior
+that you find will have a log to explain it.**
 
 ::: details Sample of logs sent to console.
 
-```json 
+```json
 [
   {
     "id": "-644704205",
@@ -130,6 +130,3 @@ You only need to import from `/dev` where you import the `setupCache` function.
 ```
 
 :::
-
-And much more, depending on your context, situation and configuration. **I'm sure any
-misbehavior that you find will have a log to explain it.**

@@ -227,11 +227,11 @@ export default defineConfig({
     nav: [
       { text: 'Guide', link: `/guide` },
       { text: 'Config', link: `/config` },
+      { text: 'Others', link: `/others/license` },
       {
         text: VERSION,
         items: [
           { text: 'Latest', link: 'https://axios-cache-interceptor.js.org/' },
-          { text: 'v1.x', link: 'https://axios-cache-interceptor.js.org/v1/' },
           { text: 'v0.x', link: 'https://axios-cache-interceptor.js.org/v0/' }
         ].filter((i) =>
           BASE_URL === '/' ? i.text !== 'Latest' : !i.link.includes(BASE_URL)
@@ -282,6 +282,13 @@ export default defineConfig({
           { text: 'Global Configuration', link: '/config' },
           { text: 'Request Specifics', link: '/config/request-specifics' },
           { text: 'Response Object', link: '/config/response-object' }
+        ]
+      },
+      {
+        text: 'Others',
+        items: [
+          { text: 'MIT License', link: '/others/license' },
+          { text: 'Changelog', link: '/others/changelog' },
         ]
       }
     ]

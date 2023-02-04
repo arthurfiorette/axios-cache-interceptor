@@ -8,16 +8,7 @@ it later and to make the interceptor use the same cache for requests to the same
 and parameters.
 
 The default id generator is smart enough to generate the same ID for theoretically same
-requests. E.g. `{ baseURL: 'https://a.com/', url: '/b' }` results to the same ID as
-`{ url: 'https://a.com/b/' }`.
-
-::: warning
-
-If you send two different requests forcefully with the same ID. This
-library will ignore any possible differences between them and share the same cache for
-both.
-
-:::
+requests. `{ baseURL: 'https://a.com/', url: '/b' }` **==** `{ url: 'https://a.com/b/' }`.
 
 ::: code-group
 
@@ -29,10 +20,9 @@ const axios = setupCache(Axios);
 // [!code focus:5]
 // These two requests are from completely endpoints, but they will share
 // the same resources and cache, as both have the same ID.
-const request1 = await axios.get('some endpoint', { id: 'custom-id' });
-const request2 = await axios.get('different endpoint', { id: 'custom-id' });
+const reqA = await axios.get('/a', { id: 'custom-id' });
+const reqB = await axios.get('/b', { id: 'custom-id' });
 ```
-
 
 ```ts [Different contexts]
 import Axios from 'axios';
@@ -41,14 +31,19 @@ import { setupCache } from 'axios-cache-interceptor';
 const axios = setupCache(Axios);
 // [!code focus:7]
 // You can use the same logic to create two caches for the same endpoint.
-// These two requests will have different caches, as they have different
-// IDs. This allows you to have different use cases and scenarios for the
-// coincident same endpoint.
-const userForPageX = await axios.get('api.com/users/id', { id: 'page-x' });
-const userForPageY = await axios.get('api.com/users/id', { id: 'page-y' });
+// Allows you to have different use cases for the coincident same endpoint.
+const userForPageX = await axios.get('/users', { id: 'users-page-x' });
+const userForPageY = await axios.get('/users', { id: 'users-page-y' });
 ```
 
-::: 
+:::
+
+::: warning
+
+If you send two different requests forcefully with the same ID. This library will ignore
+any possible differences between them and share the same cache for both.
+
+:::
 
 ## Custom Generator
 
@@ -66,9 +61,9 @@ properties:
 import Axios from 'axios';
 import { setupCache, buildKeyGenerator } from 'axios-cache-interceptor';
 
+
 const axios = setupCache(Axios, {
-  keyGenerator: buildKeyGenerator((request) => ({
-    // [!code focus:5]
+  keyGenerator: buildKeyGenerator((request/* [!code focus:5] */) => ({
     method: request.method,
     url: request.url,
     custom: logicWith(request.method, request.url)
