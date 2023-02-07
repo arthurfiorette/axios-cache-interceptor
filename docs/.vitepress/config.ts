@@ -288,7 +288,7 @@ export default defineConfig({
         text: 'Others',
         items: [
           { text: 'MIT License', link: '/others/license' },
-          { text: 'Changelog', link: '/others/changelog' },
+          { text: 'Changelog', link: '/others/changelog' }
         ]
       }
     ]

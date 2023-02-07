@@ -61,9 +61,8 @@ properties:
 import Axios from 'axios';
 import { setupCache, buildKeyGenerator } from 'axios-cache-interceptor';
 
-
 const axios = setupCache(Axios, {
-  keyGenerator: buildKeyGenerator((request/* [!code focus:5] */) => ({
+  keyGenerator: buildKeyGenerator((request /* [!code focus:5] */) => ({
     method: request.method,
     url: request.url,
     custom: logicWith(request.method, request.url)

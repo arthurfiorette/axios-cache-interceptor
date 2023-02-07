@@ -7,7 +7,6 @@ on:
         description: 'Publish as version[?]:'
         default: 'latest'
 
-
 permissions:
   contents: write
 
@@ -33,6 +32,7 @@ jobs:
 
       - name: Build for ${{ github.event.inputs.version }}
         run: yarn docs:build --base /${{ github.event.inputs.version }}/
+        if: ${{ github.event.inputs.version != 'latest' }}
 
       - name: Deploy to ${{ github.event.inputs.version }}
         uses: JamesIves/github-pages-deploy-action@v4
@@ -48,6 +48,7 @@ jobs:
 
       - name: Build for main
         run: yarn docs:build
+        if: ${{ github.event.inputs.version == 'latest' }}
 
       - name: Deploy to latest
         if: ${{ github.event.inputs.version == 'latest' }}
