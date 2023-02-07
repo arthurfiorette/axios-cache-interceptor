@@ -2,10 +2,22 @@
   "name": "axios-cache-interceptor",
   "version": "1.0.1",
   "description": "Cache interceptor for axios",
+  "keywords": [
+    "axios",
+    "cache",
+    "interceptor",
+    "adapter",
+    "http",
+    "plugin",
+    "wrapper"
+  ],
+  "homepage": "https://axios-cache-interceptor.js.org",
+  "bugs": "https://github.com/arthurfiorette/axios-cache-interceptor/issues",
+  "repository": "https://github.com/arthurfiorette/axios-cache-interceptor.git",
+  "funding": "https://github.com/ArthurFiorette/axios-cache-interceptor?sponsor=1",
   "license": "MIT",
-  "main": "./dist/index.cjs",
-  "types": "./dist/index.d.ts",
-  "module": "./dist/index.mjs",
+  "author": "Arthur Fiorette <npm@arthur.place>",
+  "sideEffects": false,
   "exports": {
     ".": {
       "import": "./dist/index.mjs",
@@ -20,36 +32,26 @@
     "./package.json": "./package.json",
     "./*": "./*"
   },
+  "main": "./dist/index.cjs",
   "jsdelivr": "./dist/index.bundle.js",
   "unpkg": "./dist/index.bundle.js",
-  "sideEffects": false,
-  "runkitExampleFilename": "./examples/runkit.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "scripts": {
+    "benchmark": "cd benchmark && yarn start",
     "build": "sh build/build.sh",
-    "test": "jest --coverage",
     "check": "sh build/check.sh",
+    "docs:build": "vitepress build docs",
+    "docs:dev": "vitepress dev docs --port 1227",
+    "docs:serve": "vitepress serve docs",
     "format": "prettier --write .",
     "lint": "eslint . --ext .ts",
-    "version": "auto-changelog -p && cp CHANGELOG.md docs/src/others/changelog.md git add CHANGELOG.md docs/src/others/changelog.md",
-    "benchmark": "cd benchmark && yarn start",
-    "docs:dev": "vitepress dev docs --port 1227",
-    "docs:build": "vitepress build docs",
-    "docs:serve": "vitepress serve docs"
+    "test": "jest --coverage",
+    "version": "auto-changelog -p && cp CHANGELOG.md docs/src/others/changelog.md git add CHANGELOG.md docs/src/others/changelog.md"
   },
-  "funding": "https://github.com/ArthurFiorette/axios-cache-interceptor?sponsor=1",
-  "repository": "https://github.com/arthurfiorette/axios-cache-interceptor.git",
-  "author": "Arthur Fiorette <npm@arthur.place>",
-  "bugs": "https://github.com/arthurfiorette/axios-cache-interceptor/issues",
-  "homepage": "https://axios-cache-interceptor.js.org",
-  "keywords": [
-    "axios",
-    "cache",
-    "interceptor",
-    "adapter",
-    "http",
-    "plugin",
-    "wrapper"
-  ],
+  "resolutions": {
+    "colors": "1.4.0"
+  },
   "dependencies": {
     "cache-parser": "^1.2.4",
     "fast-defer": "^1.1.7",
@@ -84,10 +86,8 @@
     "axios": "^1"
   },
   "packageManager": "yarn@1.22.19",
-  "resolutions": {
-    "colors": "1.4.0"
-  },
   "engines": {
     "node": ">=12"
-  }
+  },
+  "runkitExampleFilename": "./examples/runkit.js"
 }

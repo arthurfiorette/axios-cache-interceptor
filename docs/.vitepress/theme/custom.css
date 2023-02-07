@@ -7,8 +7,16 @@
   --vp-c-brand-dimm: #363636;
 
   --vp-home-hero-name-color: transparent;
-  --vp-home-hero-name-background: -webkit-linear-gradient(120deg, hsl(15, 78%, 53%), hsl(55, 78%, 53%));
-  --vp-home-hero-image-background-image: -webkit-linear-gradient(45deg, hsl(0, 78%, 53%), hsl(70, 78%, 53%));
+  --vp-home-hero-name-background: -webkit-linear-gradient(
+    120deg,
+    hsl(15, 78%, 53%),
+    hsl(55, 78%, 53%)
+  );
+  --vp-home-hero-image-background-image: -webkit-linear-gradient(
+    45deg,
+    hsl(0, 78%, 53%),
+    hsl(70, 78%, 53%)
+  );
   --vp-home-hero-image-filter: blur(40px);
 }
 

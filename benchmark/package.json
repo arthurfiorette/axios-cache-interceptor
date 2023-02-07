@@ -2,20 +2,20 @@
   "name": "@aci/benchmark",
   "version": "1.0.0",
   "description": "Cache interceptor for axios",
-  "main": "index.js",
-  "authors": {
-    "name": "Arthur Fiorette",
-    "email": "me@arthur.place"
-  },
   "repository": "https://github.com/arthurfiorette/axios-cache-interceptor/@aci/docs",
+  "license": "MIT",
+  "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
-  "license": "MIT",
   "devDependencies": {
     "axios": "^0.27.2",
     "axios-cache-adapter": "^2.7.3",
     "benny": "^3.7.1",
     "express": "^4.18.1"
+  },
+  "authors": {
+    "name": "Arthur Fiorette",
+    "email": "me@arthur.place"
   }
 }
