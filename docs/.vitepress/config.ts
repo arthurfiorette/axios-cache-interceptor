@@ -13,14 +13,17 @@ console.log(
     : 'Building docs for latest version'
 );
 
+const description =
+  'Small and efficient cache interceptor for axios. Etag, Cache-Control, TTL, HTTP headers and more!';
+const url = 'https://axios-cache-interceptor.js.org';
+
 export default defineConfig({
   // The language of the site. This will be used to set the `lang` attribute on the <html> element
   lang: 'en-US',
   // Title for the site. This will be displayed in the nav bar also used as the suffix for all page titles
   title: 'Axios Cache Interceptor',
   // Description for the site. This will render as a <meta> tag in the page HTML
-  description:
-    'Small and efficient cache interceptor for axios. Etag, Cache-Control, TTL, HTTP headers and more!',
+  description: description,
 
   // The directory where the markdown pages are stored
   srcDir: './src',
@@ -131,6 +134,7 @@ export default defineConfig({
         href: `${BASE_URL}favicon-16x16.png`
       }
     ],
+
     ['link', { rel: 'manifest', href: `${BASE_URL}manifest.json` }],
     ['meta', { name: 'msapplication-TileColor', content: '#e5972a' }],
     [
@@ -138,25 +142,22 @@ export default defineConfig({
       { name: 'msapplication-TileImage', content: `${BASE_URL}ms-icon-144x144.png` }
     ],
     ['meta', { name: 'theme-color', content: '#e5972a' }],
+    ['meta', { name: 'description', content: description }],
 
-    // OG
+    // Facebook Meta Tags
+    ['meta', { property: 'og:url', content: url }],
     ['meta', { property: 'og:type', content: 'website' }],
-    ['meta', { property: 'og:url', content: 'https://axios-cache-interceptor.js.org' }],
     ['meta', { property: 'og:title', content: 'Axios Cache Interceptor' }],
-    [
-      'meta',
-      {
-        property: 'og:description',
-        content: 'Small and efficient cache interceptor for axios.'
-      }
-    ],
-    [
-      'meta',
-      {
-        property: 'og:image',
-        content: `${BASE_URL}preview.png`
-      }
-    ],
+    ['meta', { property: 'og:description', content: description }],
+    ['meta', { property: 'og:image', content: `${BASE_URL}preview.png` }],
+
+    // Twitter Meta Tags
+    ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
+    ['meta', { property: 'twitter:domain', content: url.replace(/https?:\/\//, '') }],
+    ['meta', { property: 'twitter:url', content: url }],
+    ['meta', { name: 'twitter:title', content: 'Axios Cache Interceptor' }],
+    ['meta', { name: 'twitter:description', content: description }],
+    ['meta', { name: 'twitter:image', content: `${BASE_URL}preview.png` }],
 
     // Analytics :(
     // This is an open source documentation project, analytics is being used to only track the number of visitors.
@@ -186,12 +187,12 @@ export default defineConfig({
         '@context': 'http://www.schema.org',
         '@type': 'Organization',
         name: 'Axios Cache Interceptor',
-        url: 'https://axios-cache-interceptor.js.org/',
+        url: url,
         sameAs: ['https://github.com/ArthurFiorette/axios-cache-interceptor'],
         datePublished: '2022-01-17',
         dateModified: '2022-01-17',
-        logo: 'https://axios-cache-interceptor.js.org/preview.png',
-        image: 'https://axios-cache-interceptor.js.org/preview.png',
+        logo: `${url}/preview.png`,
+        image: `${url}/preview.png`,
         description:
           'Axios Cache Interceptor is a small and efficient cache interceptor for axios.',
         headline: 'A small and efficient cache interceptor for axios.'
@@ -231,8 +232,8 @@ export default defineConfig({
       {
         text: VERSION,
         items: [
-          { text: 'Latest', link: 'https://axios-cache-interceptor.js.org/' },
-          { text: 'v0.x', link: 'https://axios-cache-interceptor.js.org/v0/' }
+          { text: 'Latest', link: url },
+          { text: 'v0.x', link: `${url}/v0/` }
         ].filter((i) =>
           BASE_URL === '/' ? i.text !== 'Latest' : !i.link.includes(BASE_URL)
         )
