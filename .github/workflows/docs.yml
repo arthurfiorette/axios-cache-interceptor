@@ -30,11 +30,11 @@ jobs:
       - name: Install packages
         run: yarn install --prefer-offline
 
-      - name: Build for ${{ github.event.inputs.version }}
+      - name: Build specific version
         run: yarn docs:build --base /${{ github.event.inputs.version }}/
         if: ${{ github.event.inputs.version != 'latest' }}
 
-      - name: Deploy to ${{ github.event.inputs.version }}
+      - name: Deploy to specific version
         uses: JamesIves/github-pages-deploy-action@v4
         if: ${{ github.event.inputs.version != 'latest' }}
         with:
@@ -46,7 +46,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: 'Deploy docs for ${{ github.event.inputs.version }}'
 
-      - name: Build for main
+      - name: Build latest
         run: yarn docs:build
         if: ${{ github.event.inputs.version == 'latest' }}
 
