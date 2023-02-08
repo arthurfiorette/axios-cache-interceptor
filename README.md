@@ -6,16 +6,13 @@
 
 <br />
 
-[![Issues](https://img.shields.io/github/issues/arthurfiorette/axios-cache-interceptor?logo=github&label=Issues)](https://github.com/arthurfiorette/axios-cache-interceptor/issues)
-[![Stars](https://img.shields.io/github/stars/arthurfiorette/axios-cache-interceptor?logo=github&label=Stars)](https://github.com/arthurfiorette/axios-cache-interceptor/stargazers)
+
 [![License](https://img.shields.io/github/license/arthurfiorette/axios-cache-interceptor?logo=githu&label=License)](https://github.com/arthurfiorette/axios-cache-interceptor/blob/main/LICENSE)
-[![Try on Runkit](https://img.shields.io/badge/try%20on-RunKit-brightgreen?logo=runkit&logoColor=e83e8c)](https://npm.runkit.com/axios-cache-interceptor)
-[![Codecov](https://codecov.io/gh/arthurfiorette/axios-cache-interceptor/branch/main/graph/badge.svg?token=ML0KGCU0VM)](https://codecov.io/gh/arthurfiorette/axios-cache-interceptor)
-[![Downloads](https://img.shields.io/npm/dw/axios-cache-interceptor?style=flat)](https://www.npmjs.com/package/axios-cache-interceptor)
+[![Codecov](https://img.shields.io/codecov/c/github/arthurfiorette/axios-cache-interceptor?token=ML0KGCU0VM)](https://codecov.io/gh/arthurfiorette/axios-cache-interceptor)
+[![Downloads](https://img.shields.io/npm/dm/axios-cache-interceptor?style=flat)](https://www.npmjs.com/package/axios-cache-interceptor)
 [![Bundlephobia](https://img.shields.io/bundlephobia/minzip/axios-cache-interceptor/latest?style=flat)](https://bundlephobia.com/package/axios-cache-interceptor@latest)
-[![Packagephobia](https://packagephobia.com/badge?p=axios-cache-interceptor@latest)](https://packagephobia.com/result?p=axios-cache-interceptor@latest)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Farthurfiorette%2Faxios-cache-interceptor.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Farthurfiorette%2Faxios-cache-interceptor?ref=badge_shield)
-[![Join the chat at https://gitter.im/axios-cache-interceptor/community](https://badges.gitter.im/axios-cache-interceptor/community.svg)](https://gitter.im/axios-cache-interceptor/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Last commit](https://img.shields.io/github/last-commit/arthurfiorette/axios-cache-interceptor)](https://github.com/arthurfiorette/axios-cache-interceptor/commits)
 
 <br />
 
