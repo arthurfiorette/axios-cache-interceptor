@@ -1,7 +1,9 @@
 <p align="center">
-  <i>
-    Help axios-cache-interceptor grow! Star and share this amazing repo with your friends and co-workers!
-  </i>
+  <b>Using this package?</b> Please consider <a href="https://github.com/sponsors/arthurfiorette" target="_blank">donating</a> to support my open source work ❤️
+  <br />
+  <sup>
+   Help axios-cache-interceptor grow! Star and share this amazing repo with your friends and co-workers!
+  </sup>
 </p>
 
 <br />
