@@ -6,6 +6,13 @@ way, you can have requests behaving differently from each other without much eff
 The inline documentation is self explanatory, but here is a shortly brief of what each
 property does:
 
+::: tip
+
+You can override every request specific property when creating the cached axios client,
+the same way you do with the [global options](../config.md).
+
+:::
+
 ## id
 
 <Badge text="optional" type="warning"/>
@@ -129,9 +136,27 @@ and in this [StackOverflow](https://stackoverflow.com/a/62781874/14681561) answe
 - Type: `Method[]`
 - Default: `["get"]`
 
-Specify what request methods should be cached.
+Specifies which methods we should handle and cache. This is where you can enable caching
+to `POST`, `PUT`, `DELETE` and other methods, as the default is only `GET`.
 
-Defaults to only cache `GET` methods.
+If you want to enable cache for `POST` requests, you can do:
+
+```ts
+// Globally enables caching for POST requests
+const axios = setupCache(instance, {
+  methods: ['get', 'post']
+});
+
+// Just for this request
+axios.post('url', data, {
+  cache: {
+    methods: ['post']
+  }
+});
+```
+
+We use `methods` in a per-request configuration setup because sometimes you have
+exceptions to the method rule.
 
 ## cache.cachePredicate
 

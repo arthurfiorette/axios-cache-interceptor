@@ -62,6 +62,17 @@ some sort of listener of know when a request is waiting for other to finish.
 The function used to interpret all headers from a request and determine a time to live
 (`ttl`) number.
 
+::: warning
+
+Many backends returns `Cache-Control: no-cache` or `Cache-Control: no-store` headers,
+which results in this library not caching at all. You shall disable `headerInterpreter`
+for those requests.
+
+_If the debug mode prints `Cache header interpreted as 'dont cache'` this is probably the
+reason._
+
+:::
+
 The possible returns are:
 
 - `'dont cache'`: the request will not be cached.
