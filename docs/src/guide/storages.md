@@ -99,19 +99,13 @@ The eviction is done by the following algorithm:
 5. If it still fails, the data is not saved. _Probably because the whole key is greater
    than the quota or other libraries already consumed the whole usable space._
 
-## Third Party Storages
+## buildStorage()
 
-These are not guaranteed to work with the latest version of the library, neither are
-maintained by the axios cache interceptor team. But, as we provide a minimal interface for
-storages, you can use them as a base to also create your own.
+All integrated storages are wrappers around the `buildStorage` function. External
+libraries use it and if you want to build your own, `buildStorage` is the way to go!
 
-- [Node Redis v4](#node-redis-v4-example)
-- **Have another one?**
-  [Open a PR](https://github.com/arthurfiorette/axios-cache-interceptor/pulls) to add it
-  here.
-
-The exported `buildStorage` abstracts the storage interface and requires a super simple
-object to build the storage. It has 3 methods:
+The exported `buildStorage` function abstracts the storage interface and requires a super
+simple object to build the storage. It has 3 methods:
 
 - `set(key: string, value: NotEmptyStorageValue, currentRequest?: CacheRequestConfig): MaybePromise<void>`:
   Receives the key and the value, and optionally the current request. It should save the
@@ -123,6 +117,17 @@ object to build the storage. It has 3 methods:
 - `find(key: string, currentRequest?: CacheRequestConfig) => MaybePromise<StorageValue | undefined>`:
   Receives the key and optionally the current request. It should return the value from the
   storage or `undefined` if not found.
+
+## Third Party Storages
+
+These are not guaranteed to work with the latest version of the library, neither are
+maintained by the axios cache interceptor team. But, as we provide a minimal interface for
+storages, you can use them as a base to also create your own.
+
+- [Node Redis v4](#node-redis-v4-example)
+- **Have another one?**
+  [Open a PR](https://github.com/arthurfiorette/axios-cache-interceptor/pulls) to add it
+  here.
 
 ## Node Redis Example
 

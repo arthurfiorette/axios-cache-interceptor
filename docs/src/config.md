@@ -64,9 +64,9 @@ The function used to interpret all headers from a request and determine a time t
 
 ::: warning
 
-Many backends returns `Cache-Control: no-cache` or `Cache-Control: no-store` headers,
-which results in this library not caching at all. You shall disable `headerInterpreter`
-for those requests.
+Many REST backends returns some variation of `Cache-Control: no-cache` or
+`Cache-Control: no-store` headers, which tell us to ignore caching at all. You shall
+disable `headerInterpreter` for those requests.
 
 _If the debug mode prints `Cache header interpreted as 'dont cache'` this is probably the
 reason._
