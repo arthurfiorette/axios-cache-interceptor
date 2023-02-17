@@ -47,7 +47,7 @@
     "format": "prettier --write .",
     "preinstall": "npx only-allow pnpm",
     "lint": "eslint . --ext .ts",
-    "test": "jest --coverage",
+    "test": "jest --verbose --coverage",
     "version": "auto-changelog -p && cp CHANGELOG.md docs/src/others/changelog.md && git add CHANGELOG.md docs/src/others/changelog.md"
   },
   "resolutions": {
