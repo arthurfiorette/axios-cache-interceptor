@@ -318,3 +318,42 @@ delete the current cache, it will just replace the cache when the response arriv
 Unlike as `cache: false`, this will not disable the cache, it will just ignore the
 pre-request cache checks before making the request. This way, all post-request options are
 still available and will work as expected.
+
+## cache.hydrate
+
+<Badge text="optional" type="warning"/>
+
+- Type: `undefined | ((cache: StorageValue) => void | Promise<void>)`
+- Default: `undefined`
+
+Asynchronously called when a network request is needed to resolve the data, but an older
+one **and probably expired** cache exists. Its with the current data **BEFORE** the
+network travel starts, so you can use it to temporarily update your UI with expired data
+before the network returns.
+
+Hydrating your components with old data before the network resolves with the newer one is
+better than _flickering_ your entire UI. This is even better when dealing with slower
+networks and persisted cache, like for mobile apps.
+
+::: warning
+
+If the axios call will return cached data, meaning no network will be involved, the
+hydrate **IS NOT CALLED**, as the axios promise will be resolved instantly.
+
+:::
+
+```ts {7,13}
+// Example of function that receives data and renders into a screen
+function render() {}
+
+const response = await axios.get(/* [!code focus:10] */ 'url', {
+  // This is called instantly if axios needs to make a network request
+  cache: {
+    hydrate: (cache) => render(cache.data)
+  }
+});
+
+// After the network lookup ends, we have fresh data and can
+// re-render the UI with confidence
+render(response.data);
+```

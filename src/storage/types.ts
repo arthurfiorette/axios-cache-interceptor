@@ -35,21 +35,23 @@ export type CachedStorageValue = {
   state: 'cached';
 };
 
-export type LoadingStorageValue =
-  | {
-      data?: undefined;
-      ttl?: undefined;
-      createdAt?: undefined;
-      state: 'loading';
-      previous: 'empty';
-    }
-  | {
-      state: 'loading';
-      data: CachedResponse;
-      ttl?: undefined;
-      createdAt: number;
-      previous: 'stale';
-    };
+export type LoadingStorageValue = LoadingEmptiedStorageValue | LoadingStaledStorageValue;
+
+export type LoadingEmptiedStorageValue = {
+  data?: undefined;
+  ttl?: undefined;
+  createdAt?: undefined;
+  state: 'loading';
+  previous: 'empty';
+};
+
+export type LoadingStaledStorageValue = {
+  state: 'loading';
+  data: CachedResponse;
+  ttl?: undefined;
+  createdAt: number;
+  previous: 'stale';
+};
 
 export type EmptyStorageValue = {
   data?: undefined;

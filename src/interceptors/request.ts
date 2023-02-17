@@ -151,6 +151,11 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
         });
       }
 
+      // Hydrates any UI temporarily, if cache is available
+      if (cache.state === 'stale' || cache.data) {
+        await config.cache.hydrate?.(cache);
+      }
+
       return config;
     }
 
@@ -163,6 +168,12 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
       /* istanbul ignore if 'really hard to test' */
       if (!deferred) {
         await axios.storage.remove(id, config);
+
+        // Hydrates any UI temporarily, if cache is available
+        if (cache.data) {
+          await config.cache.hydrate?.(cache);
+        }
+
         return config;
       }
 
@@ -182,6 +193,11 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
             msg: 'Deferred rejected, requesting again',
             data: err
           });
+        }
+
+        // Hydrates any UI temporarily, if cache is available
+        if (cache.data) {
+          await config.cache.hydrate?.(cache);
         }
 
         // The deferred is rejected when the request that we are waiting rejected cache.

@@ -2,7 +2,13 @@ import type { Method } from 'axios';
 import type { Deferred } from 'fast-defer';
 import type { HeadersInterpreter } from '../header/types';
 import type { AxiosInterceptor } from '../interceptors/build';
-import type { AxiosStorage, CachedResponse } from '../storage/types';
+import type {
+  AxiosStorage,
+  CachedResponse,
+  CachedStorageValue,
+  LoadingStorageValue,
+  StaleStorageValue
+} from '../storage/types';
 import type {
   CachePredicate,
   CacheUpdater,
@@ -137,6 +143,30 @@ export type CacheProperties<R = unknown, D = unknown> = {
    * @default false
    */
   override: boolean;
+
+  /**
+   * Asynchronously called when a network request is needed to resolve the data, but an
+   * older one **and probably expired** cache exists. Its with the current data **BEFORE**
+   * the network travel starts, so you can use it to temporarily update your UI with
+   * expired data before the network returns.
+   *
+   * Hydrating your components with old data before the network resolves with the newer
+   * one is better than _flickering_ your entire UI. This is even better when dealing with
+   * slower networks and persisted cache, like for mobile apps.
+   *
+   * If the request can return cached data, as no extensive network travel is needed, the
+   * hydrate **IS NOT CALLED**, as the axios promise will be resolved instantly.
+   *
+   * @default undefined
+   */
+  hydrate:
+    | undefined
+    | ((
+        cache:
+          | (LoadingStorageValue & { previous: 'stale' })
+          | CachedStorageValue
+          | StaleStorageValue
+      ) => void | Promise<void>);
 };
 
 export interface CacheInstance {

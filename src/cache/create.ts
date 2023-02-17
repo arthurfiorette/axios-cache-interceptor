@@ -17,7 +17,7 @@ export type CacheOptions = Partial<CacheInstance> & Partial<CacheProperties>;
  *
  * ```ts
  * import Axios from 'axios';
- * import { setupCache, AxiosCacheInstance } from 'axios-cache-interceptor';
+ * import { AxiosCacheInstance, setupCache } from 'axios-cache-interceptor';
  *
  * // instance will have our custom typings from the return of this function
  * const instance = setupCache(
@@ -100,7 +100,9 @@ export function setupCache(
 
     staleIfError: options.staleIfError ?? true,
 
-    override: false
+    override: false,
+
+    hydrate: undefined
   };
 
   // Apply interceptors
