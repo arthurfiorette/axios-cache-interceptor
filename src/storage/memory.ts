@@ -46,7 +46,7 @@ export function buildMemoryStorage(cloneData = false) {
     find: (key) => {
       const value = storage.data[key];
 
-        /* istanbul ignore if 'only available on super recent browsers' */
+      /* istanbul ignore if 'only available on super recent browsers' */
       if (cloneData && value !== undefined) {
         if (typeof structuredClone === 'function') {
           return structuredClone(value);
