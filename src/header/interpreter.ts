@@ -1,8 +1,8 @@
 import { parse } from 'cache-parser';
 import { Header } from './headers';
-import type { HeadersInterpreter } from './types';
+import type { HeaderInterpreter } from './types';
 
-export const defaultHeaderInterpreter: HeadersInterpreter = (headers) => {
+export const defaultHeaderInterpreter: HeaderInterpreter = (headers) => {
   if (!headers) return 'not enough headers';
 
   const cacheControl: unknown = headers[Header.CacheControl];

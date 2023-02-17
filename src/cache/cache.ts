@@ -1,6 +1,6 @@
 import type { Method } from 'axios';
 import type { Deferred } from 'fast-defer';
-import type { HeadersInterpreter } from '../header/types';
+import type { HeaderInterpreter } from '../header/types';
 import type { AxiosInterceptor } from '../interceptors/build';
 import type {
   AxiosStorage,
@@ -32,74 +32,122 @@ export type CacheProperties<R = unknown, D = unknown> = {
    * can't determine their TTL value to override this
    *
    * @default 1000 * 60 * 5 // 5 Minutes
+   * @see https://axios-cache-interceptor.js.org/config/request-specifics#cache-ttl
    */
   ttl: number | ((response: CacheAxiosResponse<R, D>) => number | Promise<number>);
 
   /**
-   * If this interceptor should configure the cache from the request cache header When
-   * used, the ttl property is ignored
+   * If activated, when the response is received, the `ttl` property will be inferred from
+   * the requests headers. As described in the MDN docs and HTML specification.
+   *
+   * See the actual implementation of the
+   * [`interpretHeader`](https://github.com/arthurfiorette/axios-cache-interceptor/blob/main/src/header/interpreter.ts)
+   * method for more information.
    *
    * @default true
+   * @see https://axios-cache-interceptor.js.org/config/request-specifics#cache-interpretheader
    */
   interpretHeader: boolean;
 
   /**
-   * If this interceptor should include some headers in the request to tell any possible
-   * adapter / client that only we should use cache mechanisms to this request.
+   * As most of our cache strategies depends on well known defined HTTP headers, most
+   * browsers also use those headers to define their own cache strategies and storages.
+   *
+   * When your requested routes includes `Cache-Control` in their responses, you may end
+   * up with we and your browser caching the response, resulting in a **double layer of
+   * cache**.
+   *
+   * This option solves this by including some predefined headers in the request, that
+   * should tell any client / adapter to not cache the response, thus only we will cache
+   * it.
+   *
+   * _These are headers used in our specific request, it won't affect any other request or
+   * response that the server may handle._*
+   *
+   * Headers included:
+   *
+   * - `Cache-Control: no-cache`
+   * - `Pragma: no-cache`
+   * - `Expires: 0`
+   *
+   * Learn more at
+   * [#437](https://github.com/arthurfiorette/axios-cache-interceptor/issues/437#issuecomment-1361262194)
+   * and in this [StackOverflow](https://stackoverflow.com/a/62781874/14681561) answer.
    *
    * @default true
+   * @see https://axios-cache-interceptor.js.org/config/request-specifics#cache-cachetakeover
    */
   cacheTakeover: boolean;
 
   /**
-   * All methods that should be cached.
+   * Specifies which methods we should handle and cache. This is where you can enable
+   * caching to `POST`, `PUT`, `DELETE` and other methods, as the default is only `GET`.
+   *
+   * We use `methods` in a per-request configuration setup because sometimes you have
+   * exceptions to the method rule.
    *
    * @default ['get']
+   * @see https://axios-cache-interceptor.js.org/config/request-specifics#cache-methods
    */
   methods: Lowercase<Method>[];
 
   /**
-   * The function to check if the response code permit being cached.
+   * An object or function that will be tested against the response to indicate if it can
+   * be cached.
    *
-   * @default {statusCheck: (status) => status >= 200 && status < 400}
+   * @default { statusCheck: (status) => status >= 200 && status < 400 }
+   * @see https://axios-cache-interceptor.js.org/config/request-specifics#cache-cachepredicate
    */
   cachePredicate: CachePredicate<R, D>;
 
   /**
-   * Once the request is resolved, this specifies what requests should we change the
-   * cache. Can be used to update the request or delete other caches.
+   * Once the request is resolved, this specifies what other responses should change their
+   * cache. Can be used to update the request or delete other caches. It is a simple
+   * `Record` with the request id.
    *
-   * This is independent if the request made was cached or not.
+   * Here's an example with some basic login:
    *
-   * If an provided id represents and loading cache, he will be ignored.
-   *
-   * The id used is the same as the id on `CacheRequestConfig['id']`, auto-generated or
-   * not.
-   *
-   * **Using a function instead of an object is supported but not recommended, as it's
+   * Using a function instead of an object is supported but not recommended, as it's
    * better to just consume the response normally and write your own code after it. But
-   * it`s here in case you need it.**
+   * it`s here in case you need it.
    *
    * @default {{}}
+   * @see https://axios-cache-interceptor.js.org/config/request-specifics#cache-update
    */
   update: CacheUpdater<R, D>;
 
   /**
-   * If the request should handle `ETag` and `If-None-Match` support. Use a string to
-   * force a custom value or true to use the response ETag
+   * If the request should handle
+   * [`ETag`](https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Headers/ETag) and
+   * [`If-None-Match
+   * support`](https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Headers/If-None-Match).
+   * Use a string to force a custom static value or true to use the previous response
+   * ETag.
+   *
+   * To use `true` (automatic ETag handling), `interpretHeader` option must be set to
+   * `true`.
    *
    * @default true
-   * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag
+   * @see https://axios-cache-interceptor.js.org/config/request-specifics#cache-etag
    */
   etag: string | boolean;
 
   /**
-   * Use `If-Modified-Since` header in this request. Use a date to force a custom value or
-   * true to use the last cached timestamp. If never cached before, the header is not
-   * set.
+   * Use
+   * [`If-Modified-Since`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/If-Modified-Since)
+   * header in this request. Use a date to force a custom static value or true to use the
+   * last cached timestamp.
+   *
+   * If never cached before, the header is not set.
+   *
+   * If `interpretHeader` is set and a
+   * [`Last-Modified`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Last-Modified)
+   * header is sent to us, then value from that header is used, otherwise cache creation
+   * timestamp will be sent in
+   * [`If-Modified-Since`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/If-Modified-Since).
    *
    * @default false // The opposite of the resulting `etag` option.
-   * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/If-Modified-Since
+   * @see https://axios-cache-interceptor.js.org/config/request-specifics#cache-modifiedsince
    */
   modifiedSince: Date | boolean;
 
@@ -108,26 +156,19 @@ export type CacheProperties<R = unknown, D = unknown> = {
    * status code, network errors and etc. You can filter the type of error that should be
    * stale by using a predicate function.
    *
-   * **Note**: If the response is treated as error because of invalid status code _(like
-   * from AxiosRequestConfig#invalidateStatus)_, and this ends up `true`, the cache will
-   * be preserved over the "invalid" request. So, if you want to preserve the response,
-   * you can use this predicate:
+   * **If the response is treated as error because of invalid status code _(like when
+   * using
+   * [statusCheck](https://axios-cache-interceptor.js.org/config/request-specifics#cache-cachepredicate))_,
+   * and this ends up `true`, the cache will be preserved over the "invalid" request.**
    *
-   * ```js
-   * const customPredicate = (response, cache, error) => {
-   *   // Return false if has a response
-   *   return !response;
-   * };
-   * ```
-   *
-   * Possible types:
+   * Types:
    *
    * - `number` -> the max time (in seconds) that the cache can be reused.
    * - `boolean` -> `false` disables and `true` enables with infinite time.
    * - `function` -> a predicate that can return `number` or `boolean` as described above.
    *
    * @default true
-   * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control#stale-if-error
+   * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control#stale-if-error
    */
   staleIfError: StaleIfErrorPredicate<R, D>;
 
@@ -141,6 +182,7 @@ export type CacheProperties<R = unknown, D = unknown> = {
    * options are still available and will work as expected.
    *
    * @default false
+   * @see https://axios-cache-interceptor.js.org/config/request-specifics#cache-override
    */
   override: boolean;
 
@@ -158,6 +200,7 @@ export type CacheProperties<R = unknown, D = unknown> = {
    * hydrate **IS NOT CALLED**, as the axios promise will be resolved instantly.
    *
    * @default undefined
+   * @see https://axios-cache-interceptor.js.org/config/request-specifics#cache-hydrate
    */
   hydrate:
     | undefined
@@ -169,56 +212,124 @@ export type CacheProperties<R = unknown, D = unknown> = {
       ) => void | Promise<void>);
 };
 
+/**
+ * These are properties that are used and shared by the entire application.
+ *
+ * ```ts
+ * const axios = setupCache(axios, OPTIONS);
+ * ```
+ *
+ * The `setupCache` function receives global options and all [request
+ * specifics](https://axios-cache-interceptor.js.org/config/request-specifics) ones too.
+ * This way, you can customize the defaults for all requests.
+ *
+ * @see https://axios-cache-interceptor.js.org/config/request-specifics
+ */
 export interface CacheInstance {
   /**
-   * The storage to save the cache data. Defaults to an in-memory storage.
+   * A storage interface is the entity responsible for saving, retrieving and serializing
+   * data received from network and requested when a axios call is made.
+   *
+   * See the [Storages](https://axios-cache-interceptor.js.org/guide/storages) page for
+   * more information.
    *
    * @default buildMemoryStorage
+   * @see https://axios-cache-interceptor.js.org/config#storage
    */
   storage: AxiosStorage;
 
   /**
    * The function used to create different keys for each request. Defaults to a function
-   * that priorizes the id, and if not specified, a string is generated using the method,
-   * baseURL, params, and url
+   * that priorizes the id, and if not specified, a string is generated using the
+   * `method`, `baseURL`, `params`, `data` and `url`.
+   *
+   * You can learn on how to use them on the [Request
+   * ID](https://axios-cache-interceptor.js.org/guide/request-id#custom-generator) page.
+   *
+   * @default defaultKeyGenerator
+   * @see https://axios-cache-interceptor.js.org/config#generatekey
    */
   generateKey: KeyGenerator;
 
   /**
-   * A simple object that holds all deferred objects until it is resolved or rejected.
+   * A simple object that will hold a promise for each pending request. Used to handle
+   * concurrent requests.
    *
-   * Can be used to listen when a request is cached or not.
+   * You'd normally not need to change this, but it is exposed in case you need to use it
+   * as some sort of listener of know when a request is waiting for other to finish.
+   *
+   * @default { }
+   * @see https://axios-cache-interceptor.js.org/config#waiting
    */
   waiting: Record<string, Deferred<CachedResponse>>;
 
   /**
-   * The function to parse and interpret response headers. Only used if
-   * cache.interpretHeader is true.
+   * The function used to interpret all headers from a request and determine a time to
+   * live (`ttl`) number.
+   *
+   * **Many REST backends returns some variation of `Cache-Control: no-cache` or
+   * `Cache-Control: no-store` headers, which tell us to ignore caching at all. You shall
+   * disable `headerInterpreter` for those requests.**
+   *
+   * **If the debug mode prints `Cache header interpreted as 'dont cache'` this is
+   * probably the reason.**
+   *
+   * The possible returns are:
+   *
+   * - `'dont cache'`: the request will not be cached.
+   * - `'not enough headers'`: the request will find other ways to determine the TTL value.
+   * - `number`: used as the TTL value.
    *
    * @default defaultHeaderInterpreter
+   * @see https://axios-cache-interceptor.js.org/config#headerinterpreter
    */
-  headerInterpreter: HeadersInterpreter;
+  headerInterpreter: HeaderInterpreter;
 
   /**
-   * The request interceptor that will be used to handle the cache.
+   * The function that will be used to intercept the request before it is sent to the
+   * axios adapter.
+   *
+   * It is the main function of this library, as it is the bridge between the axios
+   * request and the cache.
+   *
+   * _It wasn't meant to be changed, but if you need to, you can do it by passing a new
+   * function to this property._*
+   *
+   * See its code for more information
+   * [here](https://github.com/arthurfiorette/axios-cache-interceptor/tree/main/src/interceptors).
    *
    * @default defaultRequestInterceptor
+   * @see https://axios-cache-interceptor.js.org/config#requestinterceptor
    */
   requestInterceptor: AxiosInterceptor<CacheRequestConfig<unknown, unknown>>;
 
   /**
-   * The response interceptor that will be used to handle the cache.
+   * The function that will be used to intercept the request after it is returned by the
+   * axios adapter.
+   *
+   * It is the second most important function of this library, as it is the bridge between
+   * the axios response and the cache.
+   *
+   * _It wasn't meant to be changed, but if you need to, you can do it by passing a new
+   * function to this property._*
+   *
+   * See its code for more information
+   * [here](https://github.com/arthurfiorette/axios-cache-interceptor/tree/main/src/interceptors).
    *
    * @default defaultResponseInterceptor
+   * @see https://axios-cache-interceptor.js.org/config#responseinterceptor
    */
   responseInterceptor: AxiosInterceptor<CacheAxiosResponse<unknown, unknown>>;
 
   /**
-   * Logs useful information in the console
+   * The debug option will print debug information in the console. It is good if you need
+   * to trace any undesired behavior or issue. You can enable it by setting `debug` to a
+   * function that receives an string and returns nothing.
    *
-   * **Note**: This is only available with development mode enabled
+   * Read the [Debugging](https://axios-cache-interceptor.js.org/guide/debugging) page for
+   * the complete guide.
    *
-   * @default {console.log}
+   * @default undefined
    * @see https://axios-cache-interceptor.js.org/#/pages/development-mode
    */
   debug: undefined | ((msg: DebugObject) => void);
@@ -226,6 +337,8 @@ export interface CacheInstance {
 
 /**
  * An object with any possible type that can be used to log and debug information in
- * `development` mode (a.k.a `__ACI_DEV__ === true`)
+ * `development` mode _(a.k.a `__ACI_DEV__ === true`)_
+ *
+ * @see https://axios-cache-interceptor.js.org/#/pages/development-mode
  */
-export type DebugObject = Partial<{ id: string; msg: string; data: unknown }>;
+export type DebugObject = { id?: string; msg?: string; data?: unknown };

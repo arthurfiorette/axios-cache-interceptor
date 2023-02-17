@@ -20,8 +20,9 @@ export * from './util/update-cache';
 /** @internal */
 declare global {
   /**
-   * Global variable defined at compile time. Use to write code that will only be executed
-   * at development time.
+   * **This declaration is erased at compile time.**
+   *
+   * Use to write code that will only be executed at development time.
    *
    * @internal
    */
@@ -30,6 +31,6 @@ declare global {
 
 if (__ACI_DEV__) {
   console.error(
-    'You are using a development build. Make sure to use the correct build in production\nhttps://axios-cache-interceptor.js.org/#/pages/installing\n\n'
+    'You are using a development build. Make sure to use the correct build in production\nhttps://axios-cache-interceptor.js.org/guide/getting-started\n\n'
   );
 }

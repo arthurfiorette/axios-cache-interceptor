@@ -1,29 +1,23 @@
-import type { AxiosRequestHeaders } from 'axios';
 import type { CacheAxiosResponse } from '../cache/axios';
 
 export type InterpreterResult = 'dont cache' | 'not enough headers' | number;
 
 /**
- * Interpret all http headers to determina a time to live.
+ * - If activated, when the response is received, the `ttl` property will be inferred from
+ *   the requests headers. As described in the MDN docs and HTML specification.
+ *
+ * The possible returns are:
+ *
+ * - `'dont cache'`: the request will not be cached.
+ * - `'not enough headers'`: the request will find other ways to determine the TTL value.
+ * - `number`: used as the TTL value.
  *
  * @param header The header object to interpret.
  * @returns `false` if cache should not be used. `undefined` when provided headers was not
  *   enough to determine a valid value. Or a `number` containing the number of
  *   **milliseconds** to cache the response.
- */
-export type HeadersInterpreter = (
-  headers?: CacheAxiosResponse['headers']
-) => InterpreterResult;
-
-/**
- * Interpret a single string header
- *
- * @param header The header string to interpret.
- * @returns `false` if cache should not be used. `undefined` when provided headers was not
- *   enough to determine a valid value. Or a `number` containing the number of
- *   **milliseconds** to cache the response.
+ * @see https://axios-cache-interceptor.js.org/config#headerinterpreter
  */
 export type HeaderInterpreter = (
-  header: string,
-  headers: AxiosRequestHeaders
+  headers?: CacheAxiosResponse['headers']
 ) => InterpreterResult;

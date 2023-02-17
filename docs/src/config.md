@@ -21,7 +21,8 @@ the defaults for all requests.
 - Type: `AxiosStorage`
 - Default: `buildMemoryStorage()`
 
-The object responsible to save, retrieve and serialize (if needed) cache data.
+A storage interface is the entity responsible for saving, retrieving and serializing data
+received from network and requested when a axios call is made.
 
 See the [Storages](./guide/storages.md) page for more information.
 
@@ -82,9 +83,9 @@ The possible returns are:
 ::: details Example of a custom headerInterpreter
 
 ```ts
-import { setupCache, type HeaderInterpreter } from 'axios-cache-interceptor';
+import { setupCache, type HeadersInterpreter } from 'axios-cache-interceptor';
 
-const myHeaderInterpreter: HeaderInterpreter = (headers) => {
+const myHeaderInterpreter: HeadersInterpreter = (headers) => {
   if (headers['x-my-custom-header']) {
     const seconds = Number(headers['x-my-custom-header']);
 

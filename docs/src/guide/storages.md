@@ -126,7 +126,7 @@ storages, you can use them as a base to also create your own.
 
 - [Node Redis v4](#node-redis-v4-example)
 - **Have another one?**
-  [Open a PR](https://github.com/arthurfiorette/axios-cache-interceptor/pulls) to add it
+- [Open a PR](https://github.com/arthurfiorette/axios-cache-interceptor/pulls) to add it
   here.
 
 ## Node Redis Example

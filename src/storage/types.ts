@@ -63,21 +63,11 @@ export type EmptyStorageValue = {
 };
 
 /**
- * A storage implementation that stores data in memory.
+ * A storage interface is the entity responsible for saving, retrieving and serializing
+ * data received from network and requested when a axios call is made.
  *
- * **You can create yours with {@link buildStorage} function**
- *
- * @example
- *
- * ```js
- * const myStorage = buildStorage({
- *   find: () => {...},
- *   set: () => {...},
- *   remove: () => {...}
- * });
- *
- * const axios = setupCache(axios, { storage: myStorage });
- * ```
+ * @default buildMemoryStorage
+ * @see https://axios-cache-interceptor.js.org/guide/storages
  */
 export type AxiosStorage = {
   /**
@@ -88,6 +78,7 @@ export type AxiosStorage = {
    * @param key The key to look for
    * @param value The value to save.
    * @param currentRequest The current {@link CacheRequestConfig}, if any
+   * @see https://axios-cache-interceptor.js.org/guide/storages#buildstorage
    */
   set: (
     key: string,
@@ -100,6 +91,7 @@ export type AxiosStorage = {
    *
    * @param key The key to look for
    * @param currentRequest The current {@link CacheRequestConfig}, if any
+   * @see https://axios-cache-interceptor.js.org/guide/storages#buildstorage
    */
   remove: (key: string, currentRequest?: CacheRequestConfig) => MaybePromise<void>;
 
@@ -107,12 +99,13 @@ export type AxiosStorage = {
    * Returns the value for the given key. This method make checks for cache invalidation
    * or etc.
    *
-   * If the provided `find()` method returned null, this will map it to a `'empty'`
+   * If the internal `find()` method returned null, this will map it to a `'empty'`
    * storage value.
    *
    * @param key The key to look for
    * @param currentRequest The current {@link CacheRequestConfig}, if any
    * @returns The saved value for the given key.
+   * @see https://axios-cache-interceptor.js.org/guide/storages#buildstorage
    */
   get: (key: string, currentRequest?: CacheRequestConfig) => MaybePromise<StorageValue>;
 };

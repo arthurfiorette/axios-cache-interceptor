@@ -40,6 +40,7 @@ export type BuildStorage = Omit<AxiosStorage, 'get'> & {
    *
    * @param key The key to look for
    * @param currentRequest The current {@link CacheRequestConfig}, if any
+   * @see https://axios-cache-interceptor.js.org/guide/storages#buildstorage
    */
   find: (
     key: string,
@@ -48,7 +49,11 @@ export type BuildStorage = Omit<AxiosStorage, 'get'> & {
 };
 
 /**
- * Builds a custom storage.
+ * All integrated storages are wrappers around the `buildStorage` function. External
+ * libraries use it and if you want to build your own, `buildStorage` is the way to go!
+ *
+ * The exported `buildStorage` function abstracts the storage interface and requires a
+ * super simple object to build the storage.
  *
  * **Note**: You can only create an custom storage with this function.
  *
@@ -63,10 +68,12 @@ export type BuildStorage = Omit<AxiosStorage, 'get'> & {
  *
  * const axios = setupCache(axios, { storage: myStorage });
  * ```
+ *
+ * @see https://axios-cache-interceptor.js.org/guide/storages#buildstorage
  */
 export function buildStorage({ set, find, remove }: BuildStorage): AxiosStorage {
   return {
-    //@ts-expect-error - we don't want to expose thi
+    //@ts-expect-error - we don't want to expose this
     ['is-storage']: 1,
     set,
     remove,
