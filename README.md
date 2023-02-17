@@ -21,7 +21,7 @@
   <a title="Codecov" target="_blank" href="https://app.codecov.io/gh/arthurfiorette/axios-cache-interceptor"><img alt="Codecov" src="https://img.shields.io/codecov/c/github/arthurfiorette/axios-cache-interceptor?token=ML0KGCU0VM&color=d2a72d"></a>
   <a title="NPM Package" target="_blank" href="https://www.npmjs.com/package/axios-cache-interceptor"><img alt="Downloads" src="https://img.shields.io/npm/dw/axios-cache-interceptor?style=flat&color=de8f2e"></a>
   <a title="Bundle size" target="_blank" href="https://bundlephobia.com/package/axios-cache-interceptor"><img alt="Bundlephobia" src="https://img.shields.io/bundlephobia/minzip/axios-cache-interceptor/latest?style=flat&color=e87430"></a>
-  <a title="Last Commit" target="_blank" href="https://github.com/arthurfiorette/axios-cache-interceptor/blob/main/LICENSE"><img alt="Last commit" src="https://img.shields.io/github/last-commit/arthurfiorette/axios-cache-interceptor?color=f15633"></a>
+  <a title="Last Commit" target="_blank" href="https://github.com/arthurfiorette/axios-cache-interceptor/commits/main"><img alt="Last commit" src="https://img.shields.io/github/last-commit/arthurfiorette/axios-cache-interceptor?color=f15633"></a>
   <a title="Blazingly fast" target="_blank" href="https://twitter.com/acdlite/status/974390255393505280"><img src="https://img.shields.io/badge/blazingly-fast-fa3737"/></a>
   
 </p>
