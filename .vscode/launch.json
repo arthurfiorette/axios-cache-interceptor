@@ -5,15 +5,11 @@
       "name": "Debug Jest Tests",
       "type": "node",
       "request": "launch",
+      "runtimeExecutable": "pnpm",
       "runtimeArgs": [
         "--inspect-brk",
-
-        // Windows
-        //"${workspaceRoot}/node_modules/jest/bin/jest.js",
-
-        // Linux
-        "${workspaceRoot}/node_modules/.bin/jest",
-
+        "jest",
+        "--",
         "--runInBand",
         "--watch",
         "--coverage"
