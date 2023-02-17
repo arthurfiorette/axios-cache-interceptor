@@ -1,6 +1,5 @@
 // https://github.com/arthurfiorette/prettier-config
 
 module.exports = require('@arthurfiorette/prettier-config')({
-  tsdoc: true,
-  plugins: ['prettier-plugin-organize-imports', 'prettier-plugin-jsdoc']
+  // Any options here will override @arthurfiorette/prettier-config defaults
 });

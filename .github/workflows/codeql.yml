@@ -30,17 +30,20 @@ jobs:
         with:
           languages: ${{ matrix.language }}
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+
       - name: Setup node and restore cached dependencies
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
-          cache: 'yarn'
+          node-version: '18'
+          cache: 'pnpm'
 
       - name: Install packages
-        run: yarn install --prefer-offline
+        run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: yarn build
+        run: pnpm build
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2

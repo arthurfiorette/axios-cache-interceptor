@@ -16,22 +16,21 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          ref: ${{ github.head_ref }}
-          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
 
       - name: Setup node and restore cached dependencies
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
-          registry-url: 'https://registry.npmjs.org/'
-          cache: 'yarn'
+          node-version: '18'
+          cache: 'pnpm'
 
       - name: Install packages
-        run: yarn install --prefer-offline
+        run: pnpm install --frozen-lockfile
 
       - name: Build specific version
-        run: yarn docs:build --base /${{ github.event.inputs.version }}/
+        run: pnpm docs:build --base /${{ github.event.inputs.version }}/
         if: ${{ github.event.inputs.version != 'latest' }}
 
       - name: Deploy to specific version
@@ -47,7 +46,7 @@ jobs:
           commit-message: 'Deploy docs for ${{ github.event.inputs.version }}'
 
       - name: Build latest
-        run: yarn docs:build
+        run: pnpm docs:build
         if: ${{ github.event.inputs.version == 'latest' }}
 
       - name: Deploy to latest

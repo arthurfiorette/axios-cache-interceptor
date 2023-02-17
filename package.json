@@ -38,16 +38,17 @@
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "benchmark": "cd benchmark && yarn start",
+    "benchmark": "cd benchmark && pnpm start",
     "build": "sh build/build.sh",
     "check": "sh build/check.sh",
     "docs:build": "vitepress build docs",
     "docs:dev": "vitepress dev docs --port 1227",
     "docs:serve": "vitepress serve docs",
     "format": "prettier --write .",
+    "preinstall": "npx only-allow pnpm",
     "lint": "eslint . --ext .ts",
     "test": "jest --coverage",
-    "version": "auto-changelog -p && cp CHANGELOG.md docs/src/others/changelog.md git add CHANGELOG.md docs/src/others/changelog.md"
+    "version": "auto-changelog -p && cp CHANGELOG.md docs/src/others/changelog.md && git add CHANGELOG.md docs/src/others/changelog.md"
   },
   "resolutions": {
     "colors": "1.4.0"
@@ -60,6 +61,7 @@
   "devDependencies": {
     "@arthurfiorette/prettier-config": "*",
     "@types/jest": "^29.2.4",
+    "@types/node": "^18.13.0",
     "@types/webpack": "^5.28.0",
     "@typescript-eslint/eslint-plugin": "^5.50.0",
     "@typescript-eslint/parser": "^5.50.0",
@@ -85,7 +87,7 @@
   "peerDependencies": {
     "axios": "^1"
   },
-  "packageManager": "yarn@1.22.19",
+  "packageManager": "pnpm@7.27.0",
   "engines": {
     "node": ">=12"
   },

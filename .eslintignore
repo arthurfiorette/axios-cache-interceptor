@@ -14,10 +14,7 @@ node_modules
 .vscode/*
 !.vscode/launch.json
 
-# Npm & Yarn
+# Npm
 package-lock.json
-.yarn/*
-!.yarn/releases
-!.yarn/plugins
 
 benchmark/index.js
