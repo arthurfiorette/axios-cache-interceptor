@@ -308,7 +308,8 @@ const customPredicate = (response, cache, error) => {
 Types:
 
 - `number` -> the max time (in seconds) that the cache can be reused.
-- `boolean` -> `false` disables and `true` enables with infinite time.
+- `boolean` -> `false` disables and `true` enables with infinite time if no value is
+  present on `stale-if-error` in Cache-Control.
 - `function` -> a predicate that can return `number` or `boolean` as described above.
 
 ## cache.override
