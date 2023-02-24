@@ -1,5 +1,5 @@
 import Axios from 'axios';
-import type { AxiosCacheInstance } from '../../src/cache/axios';
+import type { AxiosCacheInstance, CacheRequestConfig } from '../../src/cache/axios';
 import { CacheOptions, setupCache } from '../../src/cache/create';
 import { Header } from '../../src/header/headers';
 
@@ -20,8 +20,25 @@ export function mockAxios(
       config.headers?.[Header.IfNoneMatch] || config.headers?.[Header.IfModifiedSince];
     const status = should304 ? 304 : 200;
 
-    // real axios would throw an error here.
-    config.validateStatus?.(status);
+    if (config.validateStatus?.(status) === false) {
+      throw {
+        id: (config as CacheRequestConfig).id,
+        config,
+        request: { config },
+        response: {
+          data: true,
+          status,
+          statusText: should304 ? '304 Not Modified' : '200 OK',
+          headers: {
+            ...responseHeaders,
+            // Random header for every request made
+            [XMockRandom]: `${Math.random()}`
+          },
+          config,
+          request: { config }
+        }
+      };
+    }
 
     return {
       data: true,

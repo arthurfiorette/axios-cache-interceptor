@@ -343,4 +343,47 @@ describe('Last-Modified handling', () => {
     expect(typeof cache.createdAt).toBe('number');
     expect(cache.data).toStrictEqual(cacheData);
   });
+
+  it('expects that the cache is marked as stale', async () => {
+    const axios = mockAxios(
+      {},
+      {
+        [Header.CacheControl]: 'stale-if-error=1'
+      }
+    );
+
+    const id = 'some-config-id';
+    await axios.storage.set(id, {
+      state: 'stale',
+      previous: 'empty',
+      createdAt: Date.now(),
+      data: {
+        data: true,
+        headers: {},
+        status: 200,
+        statusText: 'Ok'
+      }
+    });
+
+    const response = await axios.get('url', {
+      id,
+      cache: { staleIfError: true },
+      validateStatus: () => false
+    });
+
+    expect(response).toBeDefined();
+    expect(response.id).toBe(id);
+    expect(response.cached).toBe(true);
+    expect(response.data).toBe(true);
+
+    jest.spyOn(Date, 'now').mockReturnValue(Date.now() + 2e9);
+
+    await expect(
+      axios.get('url', {
+        id,
+        cache: { staleIfError: true },
+        validateStatus: () => false
+      })
+    ).rejects.toMatchObject({ id });
+  });
 });

@@ -1,4 +1,5 @@
 import type { AxiosResponseHeaders } from 'axios';
+import { parse } from 'cache-parser';
 import type {
   AxiosCacheInstance,
   CacheAxiosResponse,
@@ -217,6 +218,7 @@ export function defaultResponseInterceptor(
     const config = error.config as CacheRequestConfig & { headers: AxiosResponseHeaders };
     const id = config.id;
     const cacheConfig = config.cache as CacheProperties;
+    const response = error.response as CacheAxiosResponse | undefined;
 
     // config.cache should always exist, at least from global config merge.
     if (!cacheConfig || !id) {
@@ -255,7 +257,7 @@ export function defaultResponseInterceptor(
         axios.debug?.({
           id,
           msg: 'Caught an error in the request interceptor',
-          data: { error, config }
+          data: { cache, error, config }
         });
       }
 
@@ -263,13 +265,14 @@ export function defaultResponseInterceptor(
     }
 
     if (cacheConfig.staleIfError) {
+      const cacheControl = String(response?.headers[Header.CacheControl]);
+      const staleHeader = cacheControl && parse(cacheControl).staleIfError;
+
       const staleIfError =
         typeof cacheConfig.staleIfError === 'function'
-          ? await cacheConfig.staleIfError(
-              error.response as CacheAxiosResponse,
-              cache,
-              error
-            )
+          ? await cacheConfig.staleIfError(response, cache, error)
+          : cacheConfig.staleIfError === true && staleHeader
+          ? staleHeader * 1000 //staleIfError is in seconds
           : cacheConfig.staleIfError;
 
       if (__ACI_DEV__) {
