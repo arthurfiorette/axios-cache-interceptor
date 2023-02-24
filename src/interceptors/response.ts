@@ -1,4 +1,5 @@
 import type { AxiosResponseHeaders } from 'axios';
+import { parse } from 'cache-parser';
 import type {
   AxiosCacheInstance,
   CacheAxiosResponse,
@@ -11,8 +12,6 @@ import { testCachePredicate } from '../util/cache-predicate';
 import { updateCache } from '../util/update-cache';
 import type { ResponseInterceptor } from './build';
 import { createCacheResponse, isMethodIn } from './util';
-
-import { parse } from 'cache-parser';
 
 export function defaultResponseInterceptor(
   axios: AxiosCacheInstance
