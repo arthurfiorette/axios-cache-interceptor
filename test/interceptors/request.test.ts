@@ -113,12 +113,12 @@ describe('test request interceptor', () => {
   });
 
   it('tests "must revalidate" handling without any headers to do so', async () => {
-    const axios = mockAxios({}, { 'cache-control': 'must-revalidate' });
+    const axios = mockAxios({}, { 'cache-control': 'max-age=1, must-revalidate' });
     const config = { cache: { interpretHeader: true } };
     await axios.get('http://test.com', config);
 
-    // 0ms cache
-    await sleep(1);
+    // 1s cache
+    await sleep(1000);
 
     const response = await axios.get('http://test.com', config);
     // nothing to use for revalidation

@@ -14,12 +14,6 @@ describe('test Cache-Control header', () => {
     });
 
     expect(noCache).toBe('dont cache');
-
-    const mustRevalidate = defaultHeaderInterpreter({
-      [Header.CacheControl]: 'must-revalidate'
-    });
-
-    expect(mustRevalidate).toBe(0);
   });
 
   it('tests with maxAge header for 10 seconds', () => {
@@ -29,6 +23,12 @@ describe('test Cache-Control header', () => {
 
     // 10 Seconds in milliseconds
     expect(result).toBe(10 * 1000);
+
+    const mustRevalidate = defaultHeaderInterpreter({
+      [Header.CacheControl]: 'max-age=10, must-revalidate'
+    });
+
+    expect(mustRevalidate).toBe(10000);
   });
 
   it('tests with max-age of 0', () => {
