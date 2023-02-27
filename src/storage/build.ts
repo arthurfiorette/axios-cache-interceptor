@@ -1,3 +1,4 @@
+import { parse } from 'cache-parser';
 import type { CacheRequestConfig } from '../cache/axios';
 import { Header } from '../header/headers';
 import type { MaybePromise } from '../util/types';
@@ -15,13 +16,15 @@ export const isStorage = (obj: unknown): obj is AxiosStorage =>
 /** Returns true if this has sufficient properties to stale instead of expire. */
 export function canStale(value: CachedStorageValue): boolean {
   const headers = value.data.headers;
+  const { mustRevalidate } = parse(String(headers[Header.CacheControl]));
 
   return (
-    Header.ETag in headers ||
-    Header.LastModified in headers ||
-    Header.XAxiosCacheEtag in headers ||
-    Header.XAxiosCacheStaleIfError in headers ||
-    Header.XAxiosCacheLastModified in headers
+    (Header.ETag in headers ||
+      Header.LastModified in headers ||
+      Header.XAxiosCacheEtag in headers ||
+      Header.XAxiosCacheStaleIfError in headers ||
+      Header.XAxiosCacheLastModified in headers) &&
+    !mustRevalidate
   );
 }
 

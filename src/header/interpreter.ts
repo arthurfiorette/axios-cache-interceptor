@@ -8,9 +8,7 @@ export const defaultHeaderInterpreter: HeaderInterpreter = (headers) => {
   const cacheControl: unknown = headers[Header.CacheControl];
 
   if (cacheControl) {
-    const { noCache, noStore, mustRevalidate, maxAge, immutable } = parse(
-      String(cacheControl)
-    );
+    const { noCache, noStore, maxAge, immutable } = parse(String(cacheControl));
 
     // Header told that this response should not be cached.
     if (noCache || noStore) {
@@ -21,11 +19,6 @@ export const defaultHeaderInterpreter: HeaderInterpreter = (headers) => {
       // 1 year is sufficient, as Infinity may cause problems with certain storages.
       // It might not be the best way, but a year is better than none.
       return 1000 * 60 * 60 * 24 * 365;
-    }
-
-    // Already out of date, for cache can be saved, but must be requested again
-    if (mustRevalidate) {
-      return 0;
     }
 
     if (maxAge !== undefined) {
