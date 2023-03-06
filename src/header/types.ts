@@ -1,6 +1,11 @@
 import type { CacheAxiosResponse } from '../cache/axios';
 
-export type InterpreterResult = 'dont cache' | 'not enough headers' | number;
+export type TtlData = {
+  cacheTtl: number;
+  staleTtl?: number;
+};
+
+export type InterpreterResult = 'dont cache' | 'not enough headers' | TtlData;
 
 /**
  * - If activated, when the response is received, the `ttl` property will be inferred from

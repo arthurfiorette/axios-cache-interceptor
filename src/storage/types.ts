@@ -19,7 +19,7 @@ export type NotEmptyStorageValue = Exclude<StorageValue, EmptyStorageValue>;
 
 export type StaleStorageValue = {
   data: CachedResponse;
-  ttl?: undefined;
+  ttl?: number;
   createdAt: number;
   state: 'stale';
 };
@@ -31,6 +31,7 @@ export type CachedStorageValue = {
    * stale.
    */
   ttl: number;
+  staleTtl?: number;
   createdAt: number;
   state: 'cached';
 };

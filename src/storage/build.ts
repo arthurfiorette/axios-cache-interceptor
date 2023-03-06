@@ -12,24 +12,36 @@ import type {
 export const isStorage = (obj: unknown): obj is AxiosStorage =>
   !!obj && !!(obj as Record<string, boolean>)['is-storage'];
 
-/** Returns true if this has sufficient properties to stale instead of expire. */
-export function canStale(value: CachedStorageValue): boolean {
+function hasUniqueIdentifierHeader(
+  value: CachedStorageValue | StaleStorageValue
+): boolean {
   const headers = value.data.headers;
 
   return (
     Header.ETag in headers ||
     Header.LastModified in headers ||
     Header.XAxiosCacheEtag in headers ||
-    Header.XAxiosCacheStaleIfError in headers ||
     Header.XAxiosCacheLastModified in headers
   );
+}
+
+/** Returns true if this has sufficient properties to stale instead of expire. */
+export function canStale(value: CachedStorageValue | StaleStorageValue): boolean {
+  if (hasUniqueIdentifierHeader(value)) {
+    return true;
+  }
+
+  return value.state === 'cached' && value.staleTtl !== undefined && value.staleTtl > 0;
 }
 
 /**
  * Checks if the provided cache is expired. You should also check if the cache
  * {@link canStale}
  */
-export function isExpired(value: CachedStorageValue): boolean {
+export function isExpired(value: CachedStorageValue | StaleStorageValue): boolean {
+  if (value.ttl === undefined) {
+    return false;
+  }
   return value.createdAt + value.ttl <= Date.now();
 }
 
@@ -72,6 +84,48 @@ export type BuildStorage = Omit<AxiosStorage, 'get'> & {
  * @see https://axios-cache-interceptor.js.org/guide/storages#buildstorage
  */
 export function buildStorage({ set, find, remove }: BuildStorage): AxiosStorage {
+  const handleStaleValues = async (
+    value: StaleStorageValue,
+    key: string,
+    config?: CacheRequestConfig
+  ): Promise<StorageValue> => {
+    if (!isExpired(value)) {
+      return value;
+    }
+
+    if (hasUniqueIdentifierHeader(value)) {
+      return value;
+    }
+
+    await remove(key, config);
+    return { state: 'empty' };
+  };
+
+  const handleCachedValues = async (
+    value: CachedStorageValue,
+    key: string,
+    config?: CacheRequestConfig
+  ): Promise<StorageValue> => {
+    if (!isExpired(value)) {
+      return value;
+    }
+
+    if (canStale(value)) {
+      const stale: StaleStorageValue = {
+        state: 'stale',
+        createdAt: value.createdAt,
+        data: value.data,
+        ttl: value.staleTtl !== undefined ? value.staleTtl + value.ttl : undefined
+      };
+
+      await set(key, stale, config);
+      return handleStaleValues(stale, key, config);
+    }
+
+    await remove(key, config);
+    return { state: 'empty' };
+  };
+
   return {
     //@ts-expect-error - we don't want to expose this
     ['is-storage']: 1,
@@ -84,27 +138,17 @@ export function buildStorage({ set, find, remove }: BuildStorage): AxiosStorage 
         return { state: 'empty' };
       }
 
-      if (
-        // Not cached or fresh value
-        value.state !== 'cached' ||
-        !isExpired(value)
-      ) {
-        return value;
+      switch (value.state) {
+        case 'cached': {
+          return handleCachedValues(value, key, config);
+        }
+        case 'stale': {
+          return handleStaleValues(value, key, config);
+        }
+        default: {
+          return value;
+        }
       }
-
-      if (canStale(value)) {
-        const stale: StaleStorageValue = {
-          state: 'stale',
-          createdAt: value.createdAt,
-          data: value.data
-        };
-
-        await set(key, stale, config);
-        return stale;
-      }
-
-      await remove(key, config);
-      return { state: 'empty' };
     }
   };
 }

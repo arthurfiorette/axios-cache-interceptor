@@ -136,6 +136,7 @@ export function defaultResponseInterceptor(
     }
 
     let ttl = cacheConfig.ttl || -1; // always set from global config
+    let staleTtl;
 
     if (cacheConfig.interpretHeader) {
       const expirationTime = axios.headerInterpreter(response.headers);
@@ -155,7 +156,10 @@ export function defaultResponseInterceptor(
         return response;
       }
 
-      ttl = expirationTime === 'not enough headers' ? ttl : expirationTime;
+      if (expirationTime !== 'not enough headers') {
+        ttl = expirationTime.cacheTtl;
+        staleTtl = expirationTime.staleTtl;
+      }
     }
 
     const data = createCacheResponse(response, cache.data);
@@ -179,6 +183,7 @@ export function defaultResponseInterceptor(
     const newCache: CachedStorageValue = {
       state: 'cached',
       ttl,
+      staleTtl,
       createdAt: Date.now(),
       data
     };
