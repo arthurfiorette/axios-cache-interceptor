@@ -157,8 +157,13 @@ export function defaultResponseInterceptor(
       }
 
       if (expirationTime !== 'not enough headers') {
-        ttl = expirationTime.cacheTtl;
-        staleTtl = expirationTime.staleTtl;
+        // backward compatibility
+        if (typeof expirationTime === 'number') {
+          ttl = expirationTime;
+        } else {
+          ttl = expirationTime.cacheTtl;
+          staleTtl = expirationTime.staleTtl;
+        }
       }
     }
 

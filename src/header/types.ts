@@ -5,7 +5,16 @@ export type TtlData = {
   staleTtl?: number;
 };
 
-export type InterpreterResult = 'dont cache' | 'not enough headers' | TtlData;
+/**
+ * @deprecated
+ */
+export type DeprecatedTtlData = number;
+
+export type InterpreterResult =
+  | 'dont cache'
+  | 'not enough headers'
+  | DeprecatedTtlData
+  | TtlData;
 
 /**
  * - If activated, when the response is received, the `ttl` property will be inferred from
