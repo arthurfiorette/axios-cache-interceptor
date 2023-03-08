@@ -18,7 +18,7 @@ describe('Hydrate works', () => {
   it('only hydrates when cache is stale', async () => {
     const axios = mockAxios(
       {},
-      { [Header.CacheControl]: 'max-age=100,stale-while-revalidate=100' }
+      { [Header.CacheControl]: 'max-age=100, stale-while-revalidate=100' }
     );
     const id = 'some-unique-id';
 
@@ -43,7 +43,7 @@ describe('Hydrate works', () => {
   it('hydrates when cache is stale', async () => {
     const axios = mockAxios(
       {},
-      { [Header.CacheControl]: 'max-age=0,stale-while-revalidate=100' }
+      { [Header.CacheControl]: 'max-age=0, stale-while-revalidate=100' }
     );
     const id = 'some-unique-id';
 
@@ -100,7 +100,7 @@ describe('Hydrate works', () => {
   it('only hydrates when stale while revalidate is set', async () => {
     const axios = mockAxios(
       {},
-      { [Header.CacheControl]: 'max-age=0,stale-while-revalidate=0' }
+      { [Header.CacheControl]: 'max-age=0, stale-while-revalidate=0' }
     );
     const id = 'some-unique-id';
 
@@ -125,7 +125,7 @@ describe('Hydrate works', () => {
   it('only hydrates when stale while revalidate is not expired', async () => {
     const axios = mockAxios(
       {},
-      { [Header.CacheControl]: 'max-age=0,stale-while-revalidate=1' }
+      { [Header.CacheControl]: 'max-age=0, stale-while-revalidate=1' }
     );
     const id = 'some-unique-id';
 

@@ -1,5 +1,6 @@
 import { Header } from '../../src/header/headers';
 import { defaultHeaderInterpreter } from '../../src/header/interpreter';
+import { mockAxios } from '../mocks/axios';
 
 describe('tests header interpreter', () => {
   it('tests without cache-control header', () => {
@@ -22,7 +23,7 @@ describe('tests header interpreter', () => {
       [Header.Age]: '3'
     });
 
-    expect(result).toEqual({ cacheTtl: 7 * 1000, staleTtl: 0 });
+    expect(result).toEqual({ cache: 7 * 1000, stale: 0 });
   });
 
   it('tests with expires and cache-control present', () => {
@@ -33,7 +34,7 @@ describe('tests header interpreter', () => {
 
     // expires should be ignored
     // 10 Seconds in milliseconds
-    expect(result).toEqual({ cacheTtl: 10 * 1000, staleTtl: 0 });
+    expect(result).toEqual({ cache: 10 * 1000, stale: 0 });
   });
 
   it('tests with immutable', () => {
@@ -42,26 +43,36 @@ describe('tests header interpreter', () => {
     });
 
     // 1 year
-    expect(result).toEqual({ cacheTtl: 1000 * 60 * 60 * 24 * 365 });
+    expect(result).toEqual({ cache: 1000 * 60 * 60 * 24 * 365 });
   });
 
   it('tests with maxAge=10 and age=3 and staleWhileRevalidate headers', () => {
     const result = defaultHeaderInterpreter({
-      [Header.CacheControl]: 'max-age=10,stale-while-revalidate=5',
+      [Header.CacheControl]: 'max-age=10, stale-while-revalidate=5',
       [Header.Age]: '3'
     });
 
-    expect(result).toEqual({ cacheTtl: 7 * 1000, staleTtl: 5 * 1000 });
+    expect(result).toEqual({ cache: 7 * 1000, stale: 5 * 1000 });
   });
 
   it('tests with expires and cache-control and staleWhileRevalidate present', () => {
     const result = defaultHeaderInterpreter({
-      [Header.CacheControl]: 'max-age=10,stale-while-revalidate=5',
+      [Header.CacheControl]: 'max-age=10, stale-while-revalidate=5',
       [Header.Expires]: new Date(new Date().getFullYear() + 1, 1, 1).toUTCString()
     });
 
     // expires should be ignored
     // 10 Seconds in milliseconds
-    expect(result).toEqual({ cacheTtl: 10 * 1000, staleTtl: 5 * 1000 });
+    expect(result).toEqual({ cache: 10 * 1000, stale: 5 * 1000 });
+  });
+
+  it('tests header interpreter integration returning only numbers', async () => {
+    const axios = mockAxios({ headerInterpreter: () => 100 }, {});
+
+    // Make first request to cache it
+    await axios.get('http://test.com', { cache: { interpretHeader: true } });
+    const result = await axios.get('http://test.com');
+
+    expect(result.cached).toBe(true);
   });
 });

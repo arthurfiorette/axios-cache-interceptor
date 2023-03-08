@@ -26,7 +26,7 @@ function hasUniqueIdentifierHeader(
 }
 
 /** Returns true if this has sufficient properties to stale instead of expire. */
-export function canStale(value: CachedStorageValue | StaleStorageValue): boolean {
+export function canStale(value: CachedStorageValue): boolean {
   if (hasUniqueIdentifierHeader(value)) {
     return true;
   }
@@ -39,10 +39,7 @@ export function canStale(value: CachedStorageValue | StaleStorageValue): boolean
  * {@link canStale}
  */
 export function isExpired(value: CachedStorageValue | StaleStorageValue): boolean {
-  if (value.ttl === undefined) {
-    return false;
-  }
-  return value.createdAt + value.ttl <= Date.now();
+  return value.ttl !== undefined && value.createdAt + value.ttl <= Date.now();
 }
 
 export type BuildStorage = Omit<AxiosStorage, 'get'> & {
@@ -84,71 +81,51 @@ export type BuildStorage = Omit<AxiosStorage, 'get'> & {
  * @see https://axios-cache-interceptor.js.org/guide/storages#buildstorage
  */
 export function buildStorage({ set, find, remove }: BuildStorage): AxiosStorage {
-  const handleStaleValues = async (
-    value: StaleStorageValue,
-    key: string,
-    config?: CacheRequestConfig
-  ): Promise<StorageValue> => {
-    if (!isExpired(value)) {
-      return value;
-    }
-
-    if (hasUniqueIdentifierHeader(value)) {
-      return value;
-    }
-
-    await remove(key, config);
-    return { state: 'empty' };
-  };
-
-  const handleCachedValues = async (
-    value: CachedStorageValue,
-    key: string,
-    config?: CacheRequestConfig
-  ): Promise<StorageValue> => {
-    if (!isExpired(value)) {
-      return value;
-    }
-
-    if (canStale(value)) {
-      const stale: StaleStorageValue = {
-        state: 'stale',
-        createdAt: value.createdAt,
-        data: value.data,
-        ttl: value.staleTtl !== undefined ? value.staleTtl + value.ttl : undefined
-      };
-
-      await set(key, stale, config);
-      return handleStaleValues(stale, key, config);
-    }
-
-    await remove(key, config);
-    return { state: 'empty' };
-  };
-
   return {
     //@ts-expect-error - we don't want to expose this
     ['is-storage']: 1,
     set,
     remove,
     get: async (key, config) => {
-      const value = await find(key, config);
+      let value = await find(key, config);
 
       if (!value) {
         return { state: 'empty' };
       }
 
-      switch (value.state) {
-        case 'cached': {
-          return handleCachedValues(value, key, config);
-        }
-        case 'stale': {
-          return handleStaleValues(value, key, config);
-        }
-        default: {
+      if (value.state === 'empty' || value.state === 'loading') {
+        return value;
+      }
+
+      if (value.state === 'cached') {
+        if (!isExpired(value)) {
           return value;
         }
+
+        if (!canStale(value)) {
+          await remove(key, config);
+          return { state: 'empty' };
+        }
+
+        value = {
+          state: 'stale',
+          createdAt: value.createdAt,
+          data: value.data,
+          ttl: value.staleTtl !== undefined ? value.staleTtl + value.ttl : undefined
+        };
+        await set(key, value, config);
       }
+
+      if (!isExpired(value)) {
+        return value;
+      }
+
+      if (hasUniqueIdentifierHeader(value)) {
+        return value;
+      }
+
+      await remove(key, config);
+      return { state: 'empty' };
     }
   };
 }

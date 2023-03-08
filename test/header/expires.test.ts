@@ -15,11 +15,11 @@ describe('test Expires header', () => {
       return expect(true).toBeFalsy();
     }
 
-    const cacheTtl = typeof result === 'number' ? result : result.cacheTtl;
+    const cache = typeof result === 'number' ? result : result.cache;
 
     // the result should be what the date is in milliseconds
     // minus the actual epoch milliseconds
-    expect(Math.abs(cacheTtl - approx)).toBeLessThanOrEqual(1);
+    expect(Math.abs(cache - approx)).toBeLessThanOrEqual(1);
   });
 
   it('expects Expires to be used when invalid Cache-Control is provided', () => {

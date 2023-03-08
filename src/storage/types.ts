@@ -20,6 +20,7 @@ export type NotEmptyStorageValue = Exclude<StorageValue, EmptyStorageValue>;
 export type StaleStorageValue = {
   data: CachedResponse;
   ttl?: number;
+  staleTtl?: undefined;
   createdAt: number;
   state: 'stale';
 };
@@ -41,6 +42,7 @@ export type LoadingStorageValue = LoadingEmptiedStorageValue | LoadingStaledStor
 export type LoadingEmptiedStorageValue = {
   data?: undefined;
   ttl?: undefined;
+  staleTtl?: undefined;
   createdAt?: undefined;
   state: 'loading';
   previous: 'empty';
@@ -50,6 +52,7 @@ export type LoadingStaledStorageValue = {
   state: 'loading';
   data: CachedResponse;
   ttl?: undefined;
+  staleTtl?: undefined;
   createdAt: number;
   previous: 'stale';
 };
@@ -57,6 +60,7 @@ export type LoadingStaledStorageValue = {
 export type EmptyStorageValue = {
   data?: undefined;
   ttl?: undefined;
+  staleTtl?: undefined;
 
   /** Defined when the state is cached */
   createdAt?: undefined;

@@ -100,16 +100,6 @@ describe('test response interceptor', () => {
     expect(resultCache.cached).toBe(true);
   });
 
-  it('tests header interpreter integration deprecated', async () => {
-    const axios = mockAxios({ headerInterpreter: () => 100 }, {});
-
-    // Make first request to cache it
-    await axios.get('http://test.com', { cache: { interpretHeader: true } });
-    const result = await axios.get('http://test.com');
-
-    expect(result.cached).toBe(true);
-  });
-
   it('tests update cache integration', async () => {
     const axios = mockAxios();
 

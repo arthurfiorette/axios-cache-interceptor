@@ -10,7 +10,6 @@ export const defaultHeaderInterpreter: HeaderInterpreter = (headers) => {
   if (cacheControl) {
     const { noCache, noStore, mustRevalidate, maxAge, immutable, staleWhileRevalidate } =
       parse(String(cacheControl));
-    const staleTtl = staleWhileRevalidate !== undefined ? staleWhileRevalidate * 1000 : 0;
 
     // Header told that this response should not be cached.
     if (noCache || noStore) {
@@ -20,22 +19,23 @@ export const defaultHeaderInterpreter: HeaderInterpreter = (headers) => {
     if (immutable) {
       // 1 year is sufficient, as Infinity may cause problems with certain storages.
       // It might not be the best way, but a year is better than none.
-      return { cacheTtl: 1000 * 60 * 60 * 24 * 365 };
+      return { cache: 1000 * 60 * 60 * 24 * 365 };
     }
 
     // Already out of date, for cache can be saved, but must be requested again
+    const stale = staleWhileRevalidate !== undefined ? staleWhileRevalidate * 1000 : 0;
     if (mustRevalidate) {
-      return { cacheTtl: 0, staleTtl };
+      return { cache: 0, stale };
     }
 
     if (maxAge !== undefined) {
       const age: unknown = headers[Header.Age];
 
       if (!age) {
-        return { cacheTtl: maxAge * 1000, staleTtl };
+        return { cache: maxAge * 1000, stale };
       }
 
-      return { cacheTtl: (maxAge - Number(age)) * 1000, staleTtl };
+      return { cache: (maxAge - Number(age)) * 1000, stale };
     }
   }
 
@@ -43,7 +43,7 @@ export const defaultHeaderInterpreter: HeaderInterpreter = (headers) => {
 
   if (expires) {
     const milliseconds = Date.parse(String(expires)) - Date.now();
-    return milliseconds >= 0 ? { cacheTtl: milliseconds } : 'dont cache';
+    return milliseconds >= 0 ? { cache: milliseconds } : 'dont cache';
   }
 
   return 'not enough headers';

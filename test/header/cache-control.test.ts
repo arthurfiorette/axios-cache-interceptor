@@ -19,7 +19,7 @@ describe('test Cache-Control header', () => {
       [Header.CacheControl]: 'must-revalidate'
     });
 
-    expect(mustRevalidate).toEqual({ cacheTtl: 0, staleTtl: 0 });
+    expect(mustRevalidate).toEqual({ cache: 0, stale: 0 });
   });
 
   it('tests with maxAge header for 10 seconds', () => {
@@ -28,7 +28,7 @@ describe('test Cache-Control header', () => {
     });
 
     // 10 Seconds in milliseconds
-    expect(result).toEqual({ cacheTtl: 10 * 1000, staleTtl: 0 });
+    expect(result).toEqual({ cache: 10 * 1000, stale: 0 });
   });
 
   it('tests with max-age of 0', () => {
@@ -36,6 +36,6 @@ describe('test Cache-Control header', () => {
       [Header.CacheControl]: 'max-age=0'
     });
 
-    expect(result).toEqual({ cacheTtl: 0, staleTtl: 0 });
+    expect(result).toEqual({ cache: 0, stale: 0 });
   });
 });

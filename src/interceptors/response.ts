@@ -136,7 +136,7 @@ export function defaultResponseInterceptor(
     }
 
     let ttl = cacheConfig.ttl || -1; // always set from global config
-    let staleTtl;
+    let staleTtl: number | undefined;
 
     if (cacheConfig.interpretHeader) {
       const expirationTime = axios.headerInterpreter(response.headers);
@@ -157,12 +157,11 @@ export function defaultResponseInterceptor(
       }
 
       if (expirationTime !== 'not enough headers') {
-        // backward compatibility
         if (typeof expirationTime === 'number') {
           ttl = expirationTime;
         } else {
-          ttl = expirationTime.cacheTtl;
-          staleTtl = expirationTime.staleTtl;
+          ttl = expirationTime.cache;
+          staleTtl = expirationTime.stale;
         }
       }
     }
