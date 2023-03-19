@@ -98,7 +98,10 @@ describe('test request interceptor', () => {
   });
 
   it('test cache expiration', async () => {
-    const axios = mockAxios({}, { 'cache-control': 'max-age=1' });
+    const axios = mockAxios(
+      {},
+      { 'cache-control': 'max-age=1,stale-while-revalidate=10' }
+    );
 
     await axios.get('http://test.com', { cache: { interpretHeader: true } });
 

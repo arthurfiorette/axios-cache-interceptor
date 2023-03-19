@@ -12,25 +12,34 @@ import type {
 export const isStorage = (obj: unknown): obj is AxiosStorage =>
   !!obj && !!(obj as Record<string, boolean>)['is-storage'];
 
-/** Returns true if this has sufficient properties to stale instead of expire. */
-export function canStale(value: CachedStorageValue): boolean {
+function hasUniqueIdentifierHeader(
+  value: CachedStorageValue | StaleStorageValue
+): boolean {
   const headers = value.data.headers;
 
   return (
     Header.ETag in headers ||
     Header.LastModified in headers ||
     Header.XAxiosCacheEtag in headers ||
-    Header.XAxiosCacheStaleIfError in headers ||
     Header.XAxiosCacheLastModified in headers
   );
+}
+
+/** Returns true if this has sufficient properties to stale instead of expire. */
+export function canStale(value: CachedStorageValue): boolean {
+  if (hasUniqueIdentifierHeader(value)) {
+    return true;
+  }
+
+  return value.state === 'cached' && value.staleTtl !== undefined && value.staleTtl > 0;
 }
 
 /**
  * Checks if the provided cache is expired. You should also check if the cache
  * {@link canStale}
  */
-export function isExpired(value: CachedStorageValue): boolean {
-  return value.createdAt + value.ttl <= Date.now();
+export function isExpired(value: CachedStorageValue | StaleStorageValue): boolean {
+  return value.ttl !== undefined && value.createdAt + value.ttl <= Date.now();
 }
 
 export type BuildStorage = Omit<AxiosStorage, 'get'> & {
@@ -78,29 +87,42 @@ export function buildStorage({ set, find, remove }: BuildStorage): AxiosStorage 
     set,
     remove,
     get: async (key, config) => {
-      const value = await find(key, config);
+      let value = await find(key, config);
 
       if (!value) {
         return { state: 'empty' };
       }
 
-      if (
-        // Not cached or fresh value
-        value.state !== 'cached' ||
-        !isExpired(value)
-      ) {
+      if (value.state === 'empty' || value.state === 'loading') {
         return value;
       }
 
-      if (canStale(value)) {
-        const stale: StaleStorageValue = {
+      if (value.state === 'cached') {
+        if (!isExpired(value)) {
+          return value;
+        }
+
+        if (!canStale(value)) {
+          await remove(key, config);
+          return { state: 'empty' };
+        }
+
+        value = {
           state: 'stale',
           createdAt: value.createdAt,
-          data: value.data
+          data: value.data,
+          ttl: value.staleTtl !== undefined ? value.staleTtl + value.ttl : undefined
         };
+        await set(key, value, config);
+      }
 
-        await set(key, stale, config);
-        return stale;
+      // A second check in case the new stale value was created already expired.
+      if (!isExpired(value)) {
+        return value;
+      }
+
+      if (hasUniqueIdentifierHeader(value)) {
+        return value;
       }
 
       await remove(key, config);
