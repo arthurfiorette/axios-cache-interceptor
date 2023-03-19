@@ -31,7 +31,11 @@ export function canStale(value: CachedStorageValue): boolean {
     return true;
   }
 
-  return value.state === 'cached' && value.staleTtl !== undefined && value.staleTtl > 0;
+  return (
+    value.state === 'cached' &&
+    value.staleTtl !== undefined &&
+    value.createdAt + value.ttl + value.staleTtl <= Date.now()
+  );
 }
 
 /**
@@ -97,11 +101,13 @@ export function buildStorage({ set, find, remove }: BuildStorage): AxiosStorage 
         return value;
       }
 
+      // Handle cached values
       if (value.state === 'cached') {
         if (!isExpired(value)) {
           return value;
         }
 
+        // Tries to stale expired value
         if (!canStale(value)) {
           await remove(key, config);
           return { state: 'empty' };
@@ -113,6 +119,7 @@ export function buildStorage({ set, find, remove }: BuildStorage): AxiosStorage 
           data: value.data,
           ttl: value.staleTtl !== undefined ? value.staleTtl + value.ttl : undefined
         };
+
         await set(key, value, config);
       }
 

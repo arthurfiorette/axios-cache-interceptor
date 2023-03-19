@@ -1,4 +1,4 @@
-import { buildStorage } from './build';
+import { buildStorage, canStale, isExpired } from './build';
 import type { AxiosStorage, StorageValue } from './types';
 
 /**
@@ -32,8 +32,11 @@ declare const structuredClone: (<T>(value: T) => T) | undefined;
  *
  * @param {boolean} cloneData If the data returned by `find()` should be cloned to avoid
  *   mutating the original data outside the `set()` method.
+ *
+ * @param {number} cleanupInterval The interval in milliseconds to run a
+ *   setInterval job of cleaning old entries. If false, the job will not be created. Defaults to 1 hour
  */
-export function buildMemoryStorage(cloneData = false) {
+export function buildMemoryStorage(cloneData = false, cleanupInterval = 1000 * 60 * 60) {
   const storage = buildStorage({
     set: (key, value) => {
       storage.data[key] = value;
@@ -61,9 +64,43 @@ export function buildMemoryStorage(cloneData = false) {
 
   storage.data = Object.create(null) as Record<string, StorageValue>;
 
+  // When this program gets running for more than the specified interval, there's a good
+  // chance of it being a long-running process or at least have a lot of entries. Therefore,
+  // "faster" loop is more important than code readability.
+  storage.cleaner = setInterval(() => {
+    const keys = Object.keys(storage.data);
+
+    let i = -1,
+      value: StorageValue,
+      key: string;
+
+    // Looping forward, as older entries are more likely to be expired
+    // than newer ones.
+    while (++i < keys.length) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      (key = keys[i]!), (value = storage.data[key]!);
+
+      if (value.state === 'empty') {
+        // this storage returns void.
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        storage.remove(key);
+        continue;
+      }
+
+      // If the value is expired and can't be stale, remove it
+      if (value.state === 'cached' && isExpired(value) && !canStale(value)) {
+        // this storage returns void.
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        storage.remove(key);
+      }
+    }
+  }, cleanupInterval);
+
   return storage;
 }
 
 export type MemoryStorage = AxiosStorage & {
   data: Record<string, StorageValue>;
+  /** The job responsible to cleaning old entries */
+  cleaner: ReturnType<typeof setInterval>;
 };

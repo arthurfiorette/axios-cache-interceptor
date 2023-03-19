@@ -32,13 +32,19 @@ option to clone the response before saving it. _Just like
 [#136](https://github.com/arthurfiorette/axios-cache-interceptor/issues/163) and many
 others._
 
+For long running processes, you can avoid memory leaks by using playing with the
+`cleanupInterval` option.
+
 ```ts
 import Axios from 'axios';
 import { setupCache, buildMemoryStorage } from 'axios-cache-interceptor';
 
 setupCache(axios, {
   // You don't need to to that, as it is the default option.
-  storage: buildMemoryStorage(/* cloneData default=*/ false)
+  storage: buildMemoryStorage(
+    /* cloneData default=*/ false,
+    /* cleanupInterval default=*/ 1000 * 60 * 60 /* 1 hour */
+  )
 });
 ```
 
