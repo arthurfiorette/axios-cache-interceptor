@@ -252,4 +252,20 @@ describe('test response interceptor', () => {
     expect(cache.state).not.toBe('loading');
     expect(cache.state).toBe('empty');
   });
+
+  it('expects response interceptor handles non response errors', async () => {
+    const instance = Axios.create();
+
+    const NOT_RESPONSE = { notAResponse: true };
+
+    //@ts-expect-error - this is indeed wrongly behavior
+    instance.interceptors.response.use(() => NOT_RESPONSE);
+
+    const axios = mockAxios(undefined, undefined, instance);
+
+    await expect(
+      // just calls the response interceptor
+      axios.get('url')
+    ).rejects.toBe(NOT_RESPONSE);
+  });
 });

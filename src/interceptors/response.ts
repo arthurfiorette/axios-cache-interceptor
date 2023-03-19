@@ -32,6 +32,18 @@ export function defaultResponseInterceptor(
   };
 
   const onFulfilled: ResponseInterceptor['onFulfilled'] = async (response) => {
+    // When response.config is not present, the response is indeed a error.
+    if (!response.config) {
+      if (__ACI_DEV__) {
+        axios.debug?.({
+          msg: 'Response interceptor received an unknown response.',
+          data: response
+        });
+
+        throw response;
+      }
+    }
+
     const id = (response.id = response.config.id ??= axios.generateKey(response.config));
     response.cached ??= false;
 
