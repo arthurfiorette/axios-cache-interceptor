@@ -68,7 +68,8 @@ export function setupCache(
 
     cachePredicate: options.cachePredicate || {
       // All cacheable status codes defined in RFC 7231
-      statusCheck: (status) => [200, 203, 300, 301, 302, 404, 405, 410, 414, 501].includes(status)
+      statusCheck: (status) =>
+        [200, 203, 300, 301, 302, 404, 405, 410, 414, 501].includes(status)
     },
 
     etag: options.etag ?? true,
