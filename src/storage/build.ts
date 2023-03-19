@@ -116,6 +116,7 @@ export function buildStorage({ set, find, remove }: BuildStorage): AxiosStorage 
         await set(key, value, config);
       }
 
+      // A second check in case the new stale value was created already expired.
       if (!isExpired(value)) {
         return value;
       }
