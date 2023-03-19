@@ -62,10 +62,13 @@ export function setupCache(
 
     ttl: options.ttl ?? 1000 * 60 * 5,
 
-    methods: options.methods || ['get'],
+    // Although RFC 7231 also marks POST as cacheable, most users don't know that
+    // and may have problems about why their "create X" route not working.
+    methods: options.methods || ['get', 'head'],
 
     cachePredicate: options.cachePredicate || {
-      statusCheck: (status) => status >= 200 && status < 400
+      // All cacheable status codes defined in RFC 7231
+      statusCheck: (status) => [200, 203, 300, 301, 302, 404, 405, 410, 414, 501].includes(status)
     },
 
     etag: options.etag ?? true,

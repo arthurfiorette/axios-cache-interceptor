@@ -95,7 +95,7 @@ export type CacheProperties<R = unknown, D = unknown> = {
    * An object or function that will be tested against the response to indicate if it can
    * be cached.
    *
-   * @default { statusCheck: (status) => status >= 200 && status < 400 }
+   * @default { statusCheck: (status) => [200, 203, 300, 301, 302, 404, 405, 410, 414, 501].includes(status) }
    * @see https://axios-cache-interceptor.js.org/config/request-specifics#cache-cachepredicate
    */
   cachePredicate: CachePredicate<R, D>;
