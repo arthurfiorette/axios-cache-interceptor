@@ -43,7 +43,7 @@ setupCache(axios, {
   // You don't need to to that, as it is the default option.
   storage: buildMemoryStorage(
     /* cloneData default=*/ false,
-    /* cleanupInterval default=*/ 1000 * 60 * 60 /* 1 hour */
+    /* cleanupInterval default=*/ false
   )
 });
 ```

@@ -33,10 +33,13 @@ declare const structuredClone: (<T>(value: T) => T) | undefined;
  * @param {boolean} cloneData If the data returned by `find()` should be cloned to avoid
  *   mutating the original data outside the `set()` method.
  *
- * @param {number} cleanupInterval The interval in milliseconds to run a
- *   setInterval job of cleaning old entries. If false, the job will not be created. Defaults to 1 hour
+ * @param {number | false} cleanupInterval The interval in milliseconds to run a
+ *   setInterval job of cleaning old entries. If false, the job will not be created. Disabled is default
  */
-export function buildMemoryStorage(cloneData = false, cleanupInterval = 1000 * 60 * 60) {
+export function buildMemoryStorage(
+  cloneData = false,
+  cleanupInterval: number | false = false
+) {
   const storage = buildStorage({
     set: (key, value) => {
       storage.data[key] = value;
@@ -67,34 +70,36 @@ export function buildMemoryStorage(cloneData = false, cleanupInterval = 1000 * 6
   // When this program gets running for more than the specified interval, there's a good
   // chance of it being a long-running process or at least have a lot of entries. Therefore,
   // "faster" loop is more important than code readability.
-  storage.cleaner = setInterval(() => {
-    const keys = Object.keys(storage.data);
+  if (cleanupInterval) {
+    storage.cleaner = setInterval(() => {
+      const keys = Object.keys(storage.data);
 
-    let i = -1,
-      value: StorageValue,
-      key: string;
+      let i = -1,
+        value: StorageValue,
+        key: string;
 
-    // Looping forward, as older entries are more likely to be expired
-    // than newer ones.
-    while (++i < keys.length) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      (key = keys[i]!), (value = storage.data[key]!);
+      // Looping forward, as older entries are more likely to be expired
+      // than newer ones.
+      while (++i < keys.length) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        (key = keys[i]!), (value = storage.data[key]!);
 
-      if (value.state === 'empty') {
-        // this storage returns void.
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        storage.remove(key);
-        continue;
+        if (value.state === 'empty') {
+          // this storage returns void.
+          // eslint-disable-next-line @typescript-eslint/no-floating-promises
+          storage.remove(key);
+          continue;
+        }
+
+        // If the value is expired and can't be stale, remove it
+        if (value.state === 'cached' && isExpired(value) && !canStale(value)) {
+          // this storage returns void.
+          // eslint-disable-next-line @typescript-eslint/no-floating-promises
+          storage.remove(key);
+        }
       }
-
-      // If the value is expired and can't be stale, remove it
-      if (value.state === 'cached' && isExpired(value) && !canStale(value)) {
-        // this storage returns void.
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        storage.remove(key);
-      }
-    }
-  }, cleanupInterval);
+    }, cleanupInterval);
+  }
 
   return storage;
 }
