@@ -108,6 +108,6 @@ describe('tests memory storage', () => {
     await expect(storage.get('expiredCache')).resolves.toMatchObject({ state: 'empty' });
 
     // Clears handle
-    clearTimeout(storage.cleaner)
+    clearTimeout(storage.cleaner);
   });
 });
