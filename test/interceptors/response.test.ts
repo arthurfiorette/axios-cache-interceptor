@@ -268,4 +268,14 @@ describe('test response interceptor', () => {
       axios.get('url')
     ).rejects.toBe(NOT_RESPONSE);
   });
+
+  it('works even when modifying response', async () => {
+    const axios = mockAxios();
+
+    const normal = await axios.get('url');
+    const transformed = await axios.get('url', { transformResponse: (data) => [data] });
+
+    expect(normal.data).toBe(true);
+    expect(transformed.data).toStrictEqual([true]);
+  });
 });
