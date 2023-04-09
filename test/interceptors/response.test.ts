@@ -273,7 +273,9 @@ describe('test response interceptor', () => {
     const axios = mockAxios();
 
     const normal = await axios.get('url');
-    const transformed = await axios.get('url', { transformResponse: (data) => [data] });
+    const transformed = await axios.get('url', {
+      transformResponse: (data: unknown) => [data]
+    });
 
     expect(normal.data).toBe(true);
     expect(transformed.data).toStrictEqual([true]);
