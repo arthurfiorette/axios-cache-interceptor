@@ -1,3 +1,4 @@
+import type { CacheRequestConfig } from '../../src';
 import { Header } from '../../src/header/headers';
 import { mockAxios, XMockRandom } from '../mocks/axios';
 import { sleep } from '../utils';
@@ -12,18 +13,21 @@ describe('Last-Modified handling', () => {
       }
     );
 
-    const config = { cache: { interpretHeader: true, modifiedSince: true } };
+    const config: CacheRequestConfig = {
+      id: 'same request',
+      cache: { interpretHeader: true, modifiedSince: true }
+    };
 
-    await axios.get('http://test.com', config);
+    await axios.get('url', config);
 
-    const response = await axios.get('http://test.com', config);
+    const response = await axios.get('url', config);
     expect(response.cached).toBe(true);
     expect(response.data).toBe(true);
 
     // Sleep entire max age time.
     await sleep(1000);
 
-    const response2 = await axios.get('http://test.com', config);
+    const response2 = await axios.get('url', config);
     // from revalidation
     expect(response2.cached).toBe(true);
     expect(response2.status).toBe(200);
@@ -38,16 +42,16 @@ describe('Last-Modified handling', () => {
       }
     );
 
-    await axios.get('http://test.com');
+    await axios.get('url');
 
-    const response = await axios.get('http://test.com');
+    const response = await axios.get('url');
     expect(response.cached).toBe(true);
     expect(response.data).toBe(true);
 
     // Sleep entire max age time.
     await sleep(1000);
 
-    const response2 = await axios.get('http://test.com');
+    const response2 = await axios.get('url');
     // from revalidation
     expect(response2.cached).toBe(true);
     expect(response2.status).toBe(200);
@@ -56,17 +60,18 @@ describe('Last-Modified handling', () => {
   it('tests modifiedSince as date', async () => {
     const axios = mockAxios({ ttl: 0 });
 
-    const config = {
+    const config: CacheRequestConfig = {
+      id: 'same request',
       cache: { modifiedSince: new Date(2014, 1, 1) }
     };
 
-    const response = await axios.get('http://test.com', config);
+    const response = await axios.get('url', config);
     expect(response.cached).toBe(false);
     expect(response.data).toBe(true);
     expect(response.config.headers?.[Header.IfModifiedSince]).toBeUndefined();
     expect(response.headers?.[Header.XAxiosCacheLastModified]).toBeDefined();
 
-    const response2 = await axios.get('http://test.com', config);
+    const response2 = await axios.get('url', config);
     expect(response2.cached).toBe(true);
     expect(response2.data).toBe(true);
     expect(response2.config.headers?.[Header.IfModifiedSince]).toBeDefined();
@@ -77,22 +82,25 @@ describe('Last-Modified handling', () => {
     const axios = mockAxios(
       {},
       {
-        'cache-control': 'must-revalidate'
+        [Header.CacheControl]: 'max-age=0',
+        // etag is a header to makes a response able to stale
+        [Header.ETag]: 'W/123'
       }
     );
 
-    const config = {
+    const config: CacheRequestConfig = {
+      id: 'same request',
       cache: { interpretHeader: true, modifiedSince: true }
     };
 
-    await axios.get('http://test.com', config);
-    const response = await axios.get('http://test.com', config);
+    // pre caches
+    await axios.get('url', config);
 
+    const response = await axios.get('url', config);
     const modifiedSince = response.config.headers?.[Header.IfModifiedSince] as string;
 
-    if (!modifiedSince) {
-      throw new Error('modifiedSince is not defined');
-    }
+    expect(modifiedSince).toBeDefined();
+
     const milliseconds = Date.parse(modifiedSince);
 
     expect(typeof milliseconds).toBe('number');
@@ -103,14 +111,14 @@ describe('Last-Modified handling', () => {
     const axios = mockAxios();
 
     // First request, return x-my-header. Ttl 1 to make the cache stale
-    const firstResponse = await axios.get('http://test.com', { cache: { ttl: -1 } });
+    const firstResponse = await axios.get('url', { cache: { ttl: -1 } });
     const firstMyHeader: unknown = firstResponse.headers?.[XMockRandom];
 
     expect(firstMyHeader).toBeDefined();
     expect(Number(firstMyHeader)).not.toBeNaN();
 
     // Second request with 304 Not Modified
-    const secondResponse = await axios.get('http://test.com', {
+    const secondResponse = await axios.get('url', {
       cache: { modifiedSince: true }
     });
     const secondMyHeader: unknown = secondResponse.headers?.[XMockRandom];

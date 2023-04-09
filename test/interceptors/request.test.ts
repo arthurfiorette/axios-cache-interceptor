@@ -100,7 +100,7 @@ describe('test request interceptor', () => {
   it('test cache expiration', async () => {
     const axios = mockAxios(
       {},
-      { 'cache-control': 'max-age=1,stale-while-revalidate=10' }
+      { [Header.CacheControl]: 'max-age=1,stale-while-revalidate=10' }
     );
 
     await axios.get('http://test.com', { cache: { interpretHeader: true } });
@@ -115,17 +115,39 @@ describe('test request interceptor', () => {
     expect(response2.cached).toBe(false);
   });
 
-  it('tests "must revalidate" handling without any headers to do so', async () => {
-    const axios = mockAxios({}, { 'cache-control': 'must-revalidate' });
-    const config = { cache: { interpretHeader: true } };
-    await axios.get('http://test.com', config);
+  test('"must revalidate" does not allows stale', async () => {
+    const axios = mockAxios(
+      {},
+      {
+        [Header.CacheControl]: 'must-revalidate, max-age=1',
+        // etag is a header that should make the cache stale
+        [Header.ETag]: 'W/123'
+      }
+    );
 
-    // 0ms cache
-    await sleep(1);
+    const config: CacheRequestConfig = {
+      id: 'req-id',
+      cache: {
+        interpretHeader: true,
+        etag: true
+      }
+    };
 
-    const response = await axios.get('http://test.com', config);
-    // nothing to use for revalidation
-    expect(response.cached).toBe(false);
+    const res1 = await axios.get('url', config);
+    const res2 = await axios.get('url', config);
+    const res3 = await axios.get('url', config);
+
+    expect(res1.cached).toBeFalsy();
+    expect(res2.cached).toBeTruthy();
+    expect(res3.cached).toBeTruthy();
+
+    // waits one second
+    await sleep(1000);
+
+    const res4 = await axios.get('url', config);
+
+    // Should be false because the cache couldn't be stale
+    expect(res4.cached).toBeFalsy();
   });
 
   it("expect two requests with different body aren't cached", async () => {

@@ -19,7 +19,7 @@ describe('test Cache-Control header', () => {
       [Header.CacheControl]: 'must-revalidate'
     });
 
-    expect(mustRevalidate).toEqual({ cache: 0, stale: 0 });
+    expect(mustRevalidate).toEqual('not enough headers');
   });
 
   it('tests with maxAge header for 10 seconds', () => {
@@ -37,5 +37,14 @@ describe('test Cache-Control header', () => {
     });
 
     expect(result).toEqual({ cache: 0, stale: 0 });
+  });
+
+  it('tests stale values with age', () => {
+    const result = defaultHeaderInterpreter({
+      [Header.CacheControl]: 'max-age=10, stale-while-revalidate=5',
+      [Header.Age]: '5'
+    });
+
+    expect(result).toEqual({ cache: 5 * 1000, stale: 5 * 1000 });
   });
 });
