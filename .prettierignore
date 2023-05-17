@@ -3,8 +3,7 @@ node_modules
 /ignore
 /coverage
 /dist
-/dev
-/tsconfig.json
+/dev 
 
 .yarn
 
