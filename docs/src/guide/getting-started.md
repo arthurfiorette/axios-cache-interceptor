@@ -9,27 +9,19 @@ Add Axios Cache Interceptor and Axios to your project using your favorite packag
 ::: code-group
 
 ```bash [Yarn]
-yarn add axios@1 axios-cache-interceptor@1
+yarn add axios@^1 axios-cache-interceptor@^1
 ```
 
 ```bash [NPM]
-npm install axios@1 axios-cache-interceptor@1
+npm install axios@^1 axios-cache-interceptor@^1
 ```
 
 ```html [Browser]
 <!-- Development UMD build for ES2017+ (~13.3 KiB) -->
-<script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@1.0.1/dev/index.bundle.js"
-  integrity="sha256-+VuTj9uoKtkaK4W5NhpOzIa5i2c1c8U4KtGeKT05Xng="
-  crossorigin="anonymous"
-></script>
+<script src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@1.1.0/dev/index.bundle.js" integrity="sha256-IqTiaEd8yMpoIWKHKQUxVKYza+DT4wg81fOzdE7tujI=" crossorigin="anonymous"></script>
 
 <!-- Production UMD build for ES5+ (~14.6 KiB) -->
-<script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@1.0.1/dist/index.bundle.js"
-  integrity="sha256-oMsCHuvRgFCk0HWYVIYEB/M1XjRAglYjU+lMQEi3zjY="
-  crossorigin="anonymous"
-></script>
+<script src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@1.1.0/dist/index.bundle.js" integrity="sha256-UPK5JOqd8kPjRHJmrvvauuRvPlcZb0gAb6z4iYhszOs=" crossorigin="anonymous"></script>
 ```
 
 ```ts [Skypack]
