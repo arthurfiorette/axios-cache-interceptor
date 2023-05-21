@@ -165,7 +165,8 @@ exceptions to the method rule.
 <Badge text="optional" type="warning"/>
 
 - Type: `CachePredicate<R, D>`
-- Default: `{ statusCheck: (status) => [200, 203, 300, 301, 302, 404, 405, 410, 414, 501].includes(status) }`
+- Default:
+  `{ statusCheck: (status) => [200, 203, 300, 301, 302, 404, 405, 410, 414, 501].includes(status) }`
 
 An object or function that will be tested against the response to indicate if it can be
 cached.
