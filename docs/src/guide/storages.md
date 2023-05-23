@@ -135,34 +135,45 @@ storages, you can use them as a base to also create your own.
 - [Open a PR](https://github.com/arthurfiorette/axios-cache-interceptor/pulls) to add it
   here.
 
-## Node Redis Example
+## Node Redis storage
 
-To inspire you, here is an example for a server-side application that uses Redis as the
-storage.
+The node redis storage implementation is listed here because it shows the only tricky part
+when implementing a storage with an third party client that allows auto-evicting entries,
+as show on the `PXAT` property.
 
-```ts{4}
-import { createClient } from 'redis'; // v4
-import { buildStorage, canStale } from 'axios-cache-interceptor';
-
-const client = createClient(/* connection config */);
-// [!code focus:6]
-const redisStorage = buildStorage({
-  async find(key) {
-    const result = await client.get(`axios-cache:${key}`);
-    return JSON.parse(result);
+```ts{11}
+buildStorage({
+  find(key) {
+    return client
+      .get(`axios-cache-${key}`)
+      .then((result) => result && (JSON.parse(result) as StorageValue));
   },
 
-  // We use canStale function here because we shouldn't let
-  // redis remove automatically the key if it can enter the
-  // stale state.
-  async set(key, value) { // [!code focus:10]
-    await client.set(`axios-cache:${key}`, JSON.stringify(value), {
-      PXAT: canStale(value) ? value.expiresAt : undefined
-    });
+  set(key, value, req) {
+    return client
+      .set(`axios-cache-${key}`, JSON.stringify(value), {
+        PXAT:
+          // We don't want to keep indefinitely values in the storage if their request don't finish somehow.
+          // Either set its value as the TTL or 1 minute.
+          value.state === 'loading'
+            ? Date.now() +
+              (req?.cache && typeof req.cache.ttl === 'number' ? req.cache.ttl : 60000)
+            : // When a stale state has a determined value to expire, we can use it. Or if the cached value cannot enter in stale state.
+            (value.state === 'stale' && value.ttl) ||
+              (value.state === 'cached' && !canStale(value))
+            ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              value.createdAt + value.ttl!
+            : // otherwise, we can't determine when it should expire, so we keep it indefinitely.
+              undefined
+      })
+      ;
   },
 
-  async remove(key) {
-    await client.del(`axios-cache:${key}`);
+  remove(key) {
+    return client.del(`axios-cache-${key}`);
   }
 });
 ```
+
+However you can use the [`buildStorage`](#buildstorage) function to integrate with ANY storage you want,
+like `localForage`, `ioredis`, `memcache` and others.
