@@ -264,8 +264,16 @@ describe('Last-Modified handling', () => {
       data: cache
     });
 
-    const response = await axios.get('https://httpbin.org/status/503', {
-      id
+    const response = await axios.get('url', {
+      id,
+      adapter: (config) =>
+        Promise.reject({
+          data: false,
+          headers: {},
+          config,
+          status: 503,
+          statusText: 'Service Unavailable'
+        })
     });
 
     expect(response).toBeDefined();
@@ -276,18 +284,24 @@ describe('Last-Modified handling', () => {
     expect(response.headers).toStrictEqual(cache.headers);
     expect(response.cached).toBe(true);
 
-    const newResponse = await axios.get('https://httpbin.org/status/503', {
+    const newResponse = await axios.get('url', {
       id,
-      validateStatus: () => true // prevents error
+      validateStatus: () => true, // prevents error
+      adapter: (config) =>
+        Promise.resolve({
+          data: false,
+          headers: {},
+          config,
+          status: 503,
+          statusText: 'Service Unavailable'
+        })
     });
 
     expect(newResponse).toBeDefined();
     expect(newResponse.id).toBe(id);
     expect(newResponse.data).not.toBe(cache.data);
     expect(newResponse.status).toBe(503);
-
-    // Increase the maximum time because some CI services may have slow internet.
-  }, 10_000);
+  });
 
   it('expects that the cache is marked as stale', async () => {
     const axios = setupCache(Axios.create(), {

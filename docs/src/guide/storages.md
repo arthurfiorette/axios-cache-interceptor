@@ -141,8 +141,13 @@ The node redis storage implementation is listed here because it shows the only t
 when implementing a storage with an third party client that allows auto-evicting entries,
 as show on the `PXAT` property.
 
-```ts{11}
-buildStorage({
+```ts{4}
+import { createClient } from 'redis'; // v4
+import { buildStorage, canStale } from 'axios-cache-interceptor';
+
+const client = createClient(/* connection config */);
+// [!code focus:36]
+const redisStorage = buildStorage({
   find(key) {
     return client
       .get(`axios-cache-${key}`)
@@ -150,23 +155,27 @@ buildStorage({
   },
 
   set(key, value, req) {
-    return client
-      .set(`axios-cache-${key}`, JSON.stringify(value), {
-        PXAT:
-          // We don't want to keep indefinitely values in the storage if their request don't finish somehow.
-          // Either set its value as the TTL or 1 minute.
-          value.state === 'loading'
-            ? Date.now() +
-              (req?.cache && typeof req.cache.ttl === 'number' ? req.cache.ttl : 60000)
-            : // When a stale state has a determined value to expire, we can use it. Or if the cached value cannot enter in stale state.
-            (value.state === 'stale' && value.ttl) ||
-              (value.state === 'cached' && !canStale(value))
-            ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              value.createdAt + value.ttl!
-            : // otherwise, we can't determine when it should expire, so we keep it indefinitely.
-              undefined
-      })
-      ;
+    return client.set(`axios-cache-${key}`, JSON.stringify(value), {
+      PXAT:
+        // We don't want to keep indefinitely values in the storage if
+        // their request don't finish somehow. Either set its value as
+        // the TTL or 1 minute.
+        value.state === 'loading'
+          ? Date.now() +
+            (req?.cache && typeof req.cache.ttl === 'number'
+              ? req.cache.ttl
+              : // 1 minute in seconds
+                60000)
+          : // When a stale state has a determined value to expire, we can use it.
+          //   Or if the cached value cannot enter in stale state.
+          (value.state === 'stale' && value.ttl) ||
+            (value.state === 'cached' && !canStale(value))
+          ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            value.createdAt + value.ttl!
+          : // otherwise, we can't determine when it should expire, so we keep
+            //   it indefinitely.
+            undefined
+    });
   },
 
   remove(key) {
@@ -175,5 +184,5 @@ buildStorage({
 });
 ```
 
-However you can use the [`buildStorage`](#buildstorage) function to integrate with ANY storage you want,
-like `localForage`, `ioredis`, `memcache` and others.
+However you can use the [`buildStorage`](#bui) function to integrate with ANY storage you
+want, like `localForage`, `ioredis`, `memcache` and others.
