@@ -79,6 +79,7 @@ The possible returns are:
 - `'dont cache'`: the request will not be cached.
 - `'not enough headers'`: the request will find other ways to determine the TTL value.
 - `number`: used as the TTL value.
+- `{ cache: number, stale: number }`: used as the TTL value and stale TTL value
 
 ::: details Example of a custom headerInterpreter
 
