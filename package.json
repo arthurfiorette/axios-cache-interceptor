@@ -1,6 +1,6 @@
 {
   "name": "axios-cache-interceptor",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Cache interceptor for axios",
   "keywords": [
     "axios",
@@ -14,7 +14,7 @@
   "homepage": "https://axios-cache-interceptor.js.org",
   "bugs": "https://github.com/arthurfiorette/axios-cache-interceptor/issues",
   "repository": "https://github.com/arthurfiorette/axios-cache-interceptor.git",
-  "funding": "https://github.com/ArthurFiorette/axios-cache-interceptor?sponsor=1",
+  "funding": "https://github.com/arthurfiorette/axios-cache-interceptor?sponsor=1",
   "license": "MIT",
   "author": "Arthur Fiorette <npm@arthur.place>",
   "sideEffects": false,
