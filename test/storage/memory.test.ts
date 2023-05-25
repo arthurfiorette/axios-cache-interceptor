@@ -110,4 +110,85 @@ describe('tests memory storage', () => {
     // Clears handle
     clearTimeout(storage.cleaner);
   });
+
+  it('tests maxEntries without cleanup', async () => {
+    const storage = buildMemoryStorage(false, false, 2);
+
+    await storage.set('key', {
+      state: 'cached',
+      createdAt: Date.now(),
+      ttl: 1000 * 60 * 5, // 5 Minutes
+      data: { ...EMPTY_RESPONSE, data: 'data' }
+    });
+
+    await storage.set('key2', {
+      state: 'cached',
+      createdAt: Date.now(),
+      ttl: 1000 * 60 * 5, // 5 Minutes
+      data: { ...EMPTY_RESPONSE, data: 'data' }
+    });
+
+    expect(Object.keys(storage.data)).toHaveLength(2);
+    expect(storage.data['key']).toBeDefined();
+    expect(storage.data['key2']).toBeDefined();
+    expect(storage.data['key3']).toBeUndefined();
+
+    await storage.set('key3', {
+      state: 'cached',
+      createdAt: Date.now(),
+      ttl: 1000 * 60 * 5, // 5 Minutes
+      data: { ...EMPTY_RESPONSE, data: 'data' }
+    });
+
+    expect(Object.keys(storage.data)).toHaveLength(2);
+
+    expect(storage.data['key']).toBeUndefined();
+    expect(storage.data['key2']).toBeDefined();
+    expect(storage.data['key3']).toBeDefined();
+  });
+
+  it('tests maxEntries with cleanup', async () => {
+    const storage = buildMemoryStorage(false, false, 3);
+
+    await storage.set('exp', {
+      state: 'cached',
+      createdAt: Date.now() - 1000,
+      ttl: 500,
+      data: { ...EMPTY_RESPONSE, data: 'data' }
+    });
+
+    await storage.set('not exp', {
+      state: 'cached',
+      createdAt: Date.now(),
+      ttl: 1000 * 60 * 5, // 5 Minutes
+      data: { ...EMPTY_RESPONSE, data: 'data' }
+    });
+
+    await storage.set('exp2', {
+      state: 'cached',
+      createdAt: Date.now() - 1000,
+      ttl: 500,
+      data: { ...EMPTY_RESPONSE, data: 'data' }
+    });
+
+    expect(Object.keys(storage.data)).toHaveLength(3);
+    expect(storage.data['exp']).toBeDefined();
+    expect(storage.data['not exp']).toBeDefined();
+    expect(storage.data['exp2']).toBeDefined();
+    expect(storage.data['key']).toBeUndefined();
+
+    await storage.set('key', {
+      state: 'cached',
+      createdAt: Date.now(),
+      ttl: 1000 * 60 * 5, // 5 Minutes
+      data: { ...EMPTY_RESPONSE, data: 'data' }
+    });
+
+    expect(Object.keys(storage.data)).toHaveLength(2);
+
+    expect(storage.data['exp']).toBeUndefined();
+    expect(storage.data['exp2']).toBeUndefined();
+    expect(storage.data['not exp']).toBeDefined();
+    expect(storage.data['key']).toBeDefined();
+  });
 });

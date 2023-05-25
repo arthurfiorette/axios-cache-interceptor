@@ -33,7 +33,7 @@ option to clone the response before saving it. _Just like
 others._
 
 For long running processes, you can avoid memory leaks by using playing with the
-`cleanupInterval` option.
+`cleanupInterval` option. And can reduce memory usage with `maxEntries`.
 
 ```ts
 import Axios from 'axios';
@@ -43,7 +43,8 @@ setupCache(axios, {
   // You don't need to to that, as it is the default option.
   storage: buildMemoryStorage(
     /* cloneData default=*/ false,
-    /* cleanupInterval default=*/ false
+    /* cleanupInterval default=*/ false,
+    /* maxEntries default=*/ false
   )
 });
 ```

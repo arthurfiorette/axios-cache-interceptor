@@ -35,13 +35,38 @@ declare const structuredClone: (<T>(value: T) => T) | undefined;
  *
  * @param {number | false} cleanupInterval The interval in milliseconds to run a
  *   setInterval job of cleaning old entries. If false, the job will not be created. Disabled is default
+ *
+ * @param {number | false} maxEntries The maximum number of entries to keep in the storage. Its hard to
+ *    determine the size of the entries, so a smart FIFO order is used to determine eviction. If false,
+ *    no check will be done and you may grow up memory usage. Disabled is default
  */
 export function buildMemoryStorage(
   cloneData = false,
-  cleanupInterval: number | false = false
+  cleanupInterval: number | false = false,
+  maxEntries: number | false = false
 ) {
   const storage = buildStorage({
     set: (key, value) => {
+      if (maxEntries) {
+        let keys = Object.keys(storage.data);
+
+        // Tries to cleanup first
+        if (keys.length >= maxEntries) {
+          storage.cleanup();
+
+          // Recalculates the keys
+          keys = Object.keys(storage.data);
+
+          // Keeps deleting until there's space
+          while (keys.length >= maxEntries) {
+            // There's always at least one key here, otherwise it would not be
+            // in the loop.
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            delete storage.data[keys.shift()!];
+          }
+        }
+      }
+
       storage.data[key] = value;
     },
 
@@ -70,35 +95,37 @@ export function buildMemoryStorage(
   // When this program gets running for more than the specified interval, there's a good
   // chance of it being a long-running process or at least have a lot of entries. Therefore,
   // "faster" loop is more important than code readability.
-  if (cleanupInterval) {
-    storage.cleaner = setInterval(() => {
-      const keys = Object.keys(storage.data);
+  storage.cleanup = () => {
+    const keys = Object.keys(storage.data);
 
-      let i = -1,
-        value: StorageValue,
-        key: string;
+    let i = -1,
+      value: StorageValue,
+      key: string;
 
-      // Looping forward, as older entries are more likely to be expired
-      // than newer ones.
-      while (++i < keys.length) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        (key = keys[i]!), (value = storage.data[key]!);
+    // Looping forward, as older entries are more likely to be expired
+    // than newer ones.
+    while (++i < keys.length) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      (key = keys[i]!), (value = storage.data[key]!);
 
-        if (value.state === 'empty') {
-          // this storage returns void.
-          // eslint-disable-next-line @typescript-eslint/no-floating-promises
-          storage.remove(key);
-          continue;
-        }
-
-        // If the value is expired and can't be stale, remove it
-        if (value.state === 'cached' && isExpired(value) && !canStale(value)) {
-          // this storage returns void.
-          // eslint-disable-next-line @typescript-eslint/no-floating-promises
-          storage.remove(key);
-        }
+      if (value.state === 'empty') {
+        // this storage returns void.
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        storage.remove(key);
+        continue;
       }
-    }, cleanupInterval);
+
+      // If the value is expired and can't be stale, remove it
+      if (value.state === 'cached' && isExpired(value) && !canStale(value)) {
+        // this storage returns void.
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        storage.remove(key);
+      }
+    }
+  };
+
+  if (cleanupInterval) {
+    storage.cleaner = setInterval(storage.cleanup, cleanupInterval);
   }
 
   return storage;
@@ -108,4 +135,6 @@ export type MemoryStorage = AxiosStorage & {
   data: Record<string, StorageValue>;
   /** The job responsible to cleaning old entries */
   cleaner: ReturnType<typeof setInterval>;
+  /** Tries to remove any invalid entry from the memory */
+  cleanup: () => void;
 };
