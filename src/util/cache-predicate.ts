@@ -24,10 +24,7 @@ export async function testCachePredicate<R = unknown, D = unknown>(
     for (const [header, predicate] of Object.entries(containsHeaders)) {
       if (
         !(await predicate(
-          // Axios response headers are in lowercase, but check both just in case.
-
-          // FIXME: https://github.com/axios/axios/pull/5525
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+          // Avoid bugs in case the header is not in lower case
           response.headers[header.toLowerCase()] ?? response.headers[header]
         ))
       ) {

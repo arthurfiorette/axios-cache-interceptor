@@ -45,23 +45,25 @@ describe('tests cache predicate object', () => {
       headers: { 'content-type': 'application/json' }
     });
 
-    expect(
-      await testCachePredicate(response, {
-        containsHeaders: { 'content-type': () => true }
-      })
-    ).toBeTruthy();
+    expect(await testCachePredicate(response, {})).toBeTruthy();
 
     expect(
       await testCachePredicate(response, {
-        containsHeaders: { 'Content-Type': () => true }
+        containsHeaders: { 'content-type': () => false }
       })
-    ).toBeTruthy();
+    ).toBeFalsy();
 
     expect(
       await testCachePredicate(response, {
-        containsHeaders: { 'Content-Type': () => true }
+        containsHeaders: { 'Content-Type': () => false }
       })
-    ).toBeTruthy();
+    ).toBeFalsy();
+
+    expect(
+      await testCachePredicate(response, {
+        containsHeaders: { 'Content-Type': () => false }
+      })
+    ).toBeFalsy();
   });
 
   it('tests containsHeader', async () => {
