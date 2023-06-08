@@ -166,7 +166,8 @@ exceptions to the method rule.
 
 - Type: `CachePredicate<R, D>`
 - Default:
-  `{ statusCheck: (status) => [200, 203, 300, 301, 302, 404, 405, 410, 414, 501].includes(status) }` _(These default status codes follows RFC 7231)_
+  `{ statusCheck: (status) => [200, 203, 300, 301, 302, 404, 405, 410, 414, 501].includes(status) }`
+  _(These default status codes follows RFC 7231)_
 
 An object or function that will be tested against the response to indicate if it can be
 cached.
