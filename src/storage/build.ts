@@ -43,7 +43,13 @@ export function canStale(value: CachedStorageValue): boolean {
   return (
     value.state === 'cached' &&
     value.staleTtl !== undefined &&
-    value.createdAt + value.ttl + value.staleTtl <= Date.now()
+    // Only allow stale values after the ttl is already in the past and the staleTtl is in the future.
+    // In cases that just createdAt + ttl > Date.now(), isn't enough because the staleTtl could be <= 0.
+    // This logic only returns true when Date.now() is between the (createdAt + ttl) and (createdAt + ttl + staleTtl).
+    // Following the example below:
+    // |--createdAt--:--ttl--:---staleTtl--->
+    // [        past        ][now is in here]
+    Math.abs(Date.now() - (value.createdAt + value.ttl)) <= value.staleTtl
   );
 }
 
