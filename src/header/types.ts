@@ -2,6 +2,7 @@ import type { CacheAxiosResponse } from '../cache/axios';
 
 /**
  * The possible values are:
+ *
  * - `'dont cache'`: the request will not be cached.
  * - `'not enough headers'`: the request will find other ways to determine the TTL value.
  * - `number`: used as the TTL value.
