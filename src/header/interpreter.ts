@@ -8,7 +8,7 @@ export const defaultHeaderInterpreter: HeaderInterpreter = (headers) => {
   const cacheControl: unknown = headers[Header.CacheControl];
 
   if (cacheControl) {
-    const { noCache, noStore, maxAge, immutable, staleWhileRevalidate } = parse(
+    const { noCache, noStore, maxAge, maxStale, immutable, staleWhileRevalidate } = parse(
       String(cacheControl)
     );
 
@@ -19,7 +19,8 @@ export const defaultHeaderInterpreter: HeaderInterpreter = (headers) => {
 
     if (immutable) {
       // 1 year is sufficient, as Infinity may cause problems with certain storages.
-      // It might not be the best way, but a year is better than none.
+      // It might not be the best way, but a year is better than none. Facebook shows
+      // that a browser session stays at the most 1 month.
       return {
         cache: 1000 * 60 * 60 * 24 * 365
       };
@@ -33,8 +34,18 @@ export const defaultHeaderInterpreter: HeaderInterpreter = (headers) => {
           ? // If age is present, we must subtract it from maxAge
             (maxAge - Number(age)) * 1000
           : maxAge * 1000,
-        // Already out of date, for cache can be saved, but must be requested again
-        stale: staleWhileRevalidate !== undefined ? staleWhileRevalidate * 1000 : 0
+        // Already out of date, must be requested again
+        stale:
+          // I couldn't find any documentation about who should be used, as they
+          // are not meant to overlap each other. But, as we cannot request in the
+          // background, as the stale-while-revalidate says, and we just increase
+          // its staleTtl when its present, max-stale is being preferred over
+          // stale-while-revalidate.
+          maxStale !== undefined
+            ? maxStale * 1000
+            : staleWhileRevalidate !== undefined
+            ? staleWhileRevalidate * 1000
+            : undefined
       };
     }
   }

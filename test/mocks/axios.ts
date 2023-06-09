@@ -19,6 +19,7 @@ export function mockAxios(
     const should304: unknown =
       config.headers?.[Header.IfNoneMatch] || config.headers?.[Header.IfModifiedSince];
     const status = should304 ? 304 : 200;
+    const statusText = should304 ? '304 Not Modified' : '200 OK';
 
     if (config.validateStatus?.(status) === false) {
       throw {
@@ -28,7 +29,7 @@ export function mockAxios(
         response: {
           data: true,
           status,
-          statusText: should304 ? '304 Not Modified' : '200 OK',
+          statusText,
           headers: {
             ...responseHeaders,
             // Random header for every request made
@@ -43,7 +44,7 @@ export function mockAxios(
     return {
       data: true,
       status,
-      statusText: should304 ? '304 Not Modified' : '200 OK',
+      statusText,
       headers: {
         ...responseHeaders,
         // Random header for every request made

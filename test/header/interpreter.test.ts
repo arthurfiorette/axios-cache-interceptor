@@ -23,7 +23,7 @@ describe('tests header interpreter', () => {
       [Header.Age]: '3'
     });
 
-    expect(result).toEqual({ cache: 7 * 1000, stale: 0 });
+    expect(result).toEqual({ cache: 7 * 1000, stale: undefined });
   });
 
   it('tests with expires and cache-control present', () => {
@@ -34,7 +34,7 @@ describe('tests header interpreter', () => {
 
     // expires should be ignored
     // 10 Seconds in milliseconds
-    expect(result).toEqual({ cache: 10 * 1000, stale: 0 });
+    expect(result).toEqual({ cache: 10 * 1000, stale: undefined });
   });
 
   it('tests with immutable', () => {
@@ -74,5 +74,35 @@ describe('tests header interpreter', () => {
     const result = await axios.get('http://test.com');
 
     expect(result.cached).toBe(true);
+  });
+
+  it('tests header interpreter stale with staleWhileRevalidate and maxStale', () => {
+    // only staleWhileRevalidate
+    expect(
+      defaultHeaderInterpreter({
+        [Header.CacheControl]: 'max-age=10, stale-while-revalidate=5'
+      })
+    ).toEqual({ cache: 10 * 1000, stale: 5 * 1000 });
+
+    // only maxStale
+    expect(
+      defaultHeaderInterpreter({
+        [Header.CacheControl]: 'max-age=10, max-stale=4'
+      })
+    ).toEqual({ cache: 10 * 1000, stale: 4 * 1000 });
+
+    // both should use max-stale
+    expect(
+      defaultHeaderInterpreter({
+        [Header.CacheControl]: 'max-age=10, stale-while-revalidate=5, max-stale=4'
+      })
+    ).toEqual({ cache: 10 * 1000, stale: 4 * 1000 });
+
+    // none should return undefined
+    expect(
+      defaultHeaderInterpreter({
+        [Header.CacheControl]: 'max-age=10'
+      })
+    ).toEqual({ cache: 10 * 1000, stale: undefined });
   });
 });
