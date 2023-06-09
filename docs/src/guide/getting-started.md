@@ -129,6 +129,7 @@ Axios and Axios Cache Interceptor v1**
 
 | [Axios](https://github.com/axios/axios/releases) | [Axios Cache Interceptor](https://github.com/arthurfiorette/axios-cache-interceptor/releases) |
 | ------------------------------------------------ | --------------------------------------------------------------------------------------------- |
+| `>= v1.4`                                        | `>= v1.2.0`                                                                                   |
 | `>= v1.3.1`                                      | `>= v1`                                                                                       |
 | `>= v0.27`                                       | `>= v0.10.3`                                                                                  |
 | `>= v0.26`                                       | `>= v0.8.4`                                                                                   |

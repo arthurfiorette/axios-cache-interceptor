@@ -369,7 +369,6 @@ describe('Last-Modified handling', () => {
     const id = 'some-config-id';
     await axios.storage.set(id, {
       state: 'stale',
-      previous: 'empty',
       createdAt: Date.now(),
       data: {
         data: true,

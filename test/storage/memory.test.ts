@@ -47,7 +47,6 @@ describe('tests memory storage', () => {
       state: 'stale',
       ttl: 1000,
       createdAt: Date.now() - 2000,
-      previous: 'stale',
       data: {
         status: 200,
         statusText: '200 OK',
@@ -58,7 +57,6 @@ describe('tests memory storage', () => {
       state: 'stale',
       ttl: 1000,
       createdAt: Date.now() - 2000,
-      previous: 'stale',
       data: {
         status: 200,
         statusText: '200 OK',
