@@ -36,7 +36,7 @@ describe('test Cache-Control header', () => {
       [Header.CacheControl]: 'max-age=0'
     });
 
-    expect(result).toEqual({ cache: 0, stale:undefined });
+    expect(result).toEqual({ cache: 0, stale: undefined });
   });
 
   it('tests stale values with age', () => {
