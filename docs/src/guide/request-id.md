@@ -48,7 +48,7 @@ any possible differences between them and share the same cache for both.
 ## Custom Generator
 
 If the default generator is not enough for your use case, you can provide your own custom
-generator with the `keyGenerator` option.
+generator with the `generateKey` option.
 
 By default, it extracts `method`, `baseURL`, `params`, `data` and `url` properties from
 the request object and hashes it into a number with
@@ -62,7 +62,7 @@ import Axios from 'axios';
 import { setupCache, buildKeyGenerator } from 'axios-cache-interceptor';
 
 const axios = setupCache(Axios, {
-  keyGenerator: buildKeyGenerator((request /* [!code focus:5] */) => ({
+  generateKey: buildKeyGenerator((request /* [!code focus:5] */) => ({
     method: request.method,
     url: request.url,
     custom: logicWith(request.method, request.url)
