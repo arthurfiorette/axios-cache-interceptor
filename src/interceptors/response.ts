@@ -155,7 +155,6 @@ export function defaultResponseInterceptor(
 
       // Cache should not be used
       if (expirationTime === 'dont cache') {
-        await rejectResponse(id, config);
 
         if (__ACI_DEV__) {
           axios.debug?.({
