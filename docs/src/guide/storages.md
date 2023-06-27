@@ -131,7 +131,7 @@ These are not guaranteed to work with the latest version of the library, neither
 maintained by the axios cache interceptor team. But, as we provide a minimal interface for
 storages, you can use them as a base to also create your own.
 
-- [Node Redis v4](#node-redis-v4-example)
+- [Node Redis v4](#node-redis-storage)
 - **Have another one?**
 - [Open a PR](https://github.com/arthurfiorette/axios-cache-interceptor/pulls) to add it
   here.
