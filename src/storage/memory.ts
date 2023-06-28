@@ -1,5 +1,5 @@
 import { buildStorage, canStale, isExpired } from './build';
-import type { AxiosStorage, StorageValue } from './types';
+import type { AxiosStorage, NotEmptyStorageValue, StorageValue } from './types';
 
 /**
  * Modern function to natively deep clone.
@@ -76,7 +76,7 @@ export function buildMemoryStorage(
         if (typeof structuredClone === 'function') {
           value = structuredClone(value);
         } else {
-          value = JSON.parse(JSON.stringify(value));
+          value = JSON.parse(JSON.stringify(value)) as NotEmptyStorageValue;
         }
       }
 
