@@ -45,7 +45,7 @@ describe('tests memory storage', () => {
   it('not allow changes by value reference before', async () => {
     const storage = buildMemoryStorage(false, false, false, true);
 
-    let data = { ...EMPTY_RESPONSE, data: 'data' }
+    const data = { ...EMPTY_RESPONSE, data: 'data' };
     await storage.set('key', {
       state: 'cached',
       createdAt: Date.now(),
@@ -53,7 +53,7 @@ describe('tests memory storage', () => {
       data: data
     });
 
-    data.data = 'another data'
+    data.data = 'another data';
 
     const result = (await storage.get('key')) as CachedStorageValue;
 
