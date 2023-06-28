@@ -32,18 +32,24 @@ declare const structuredClone: (<T>(value: T) => T) | undefined;
  *
  * @param {boolean} cloneData If the data returned by `find()` should be cloned to avoid
  *   mutating the original data outside the `set()` method.
+ *   Disabled is default
  * @param {number | false} cleanupInterval The interval in milliseconds to run a
  *   setInterval job of cleaning old entries. If false, the job will not be created.
  *   Disabled is default
  * @param {number | false} maxEntries The maximum number of entries to keep in the
  *   storage. Its hard to determine the size of the entries, so a smart FIFO order is used
  *   to determine eviction. If false, no check will be done and you may grow up memory
- *   usage. Disabled is default
+ *   usage.
+ *   Disabled is default
+ * @param {boolean} storeClone If the data stored by `set()` should be cloned to prevent
+ *   future mutation from affecting cached data.
+ *   Disabled is default
  */
 export function buildMemoryStorage(
   cloneData = false,
   cleanupInterval: number | false = false,
-  maxEntries: number | false = false
+  maxEntries: number | false = false,
+  storeClone = false,
 ) {
   const storage = buildStorage({
     set: (key, value) => {
@@ -64,6 +70,16 @@ export function buildMemoryStorage(
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             delete storage.data[keys.shift()!];
           }
+        }
+      }
+
+      if (storeClone && value !== undefined) {
+        // Clone the value before storing to prevent future mutations
+        // from affecting cached data.
+        if (typeof structuredClone === 'function') {
+          value = structuredClone(value);
+        } else {
+          value = JSON.parse(JSON.stringify(value));
         }
       }
 
