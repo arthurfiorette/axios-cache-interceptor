@@ -38,7 +38,7 @@ describe('tests memory storage', () => {
     expect(result2.data?.data).toBe('data');
   });
 
-  // Expects that a when value saved using storage.set is has his inner properties updated,
+  // Expects that a when value saved using storage.set() is has his inner properties updated,
   // a request to storage.get() should return unmodified value.
   //
   // https://github.com/arthurfiorette/axios-cache-interceptor/issues/580
