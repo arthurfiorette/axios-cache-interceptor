@@ -56,8 +56,13 @@ describe('tests memory storage', () => {
     data.data = 'another data';
 
     expect(storage.data['key']).not.toBeNull();
-    expect(storage.data['key'].state).toBe('cached');
-    expect(storage.data['key'].data.data).toBe('data');
+    if (storage.data['key']) {
+      expect(storage.data['key'].state).toBe('cached');
+      expect(storage.data['key'].data).not.toBeNull();
+      if (storage.data['key'].data) {
+        expect(storage.data['key'].data.data).toBe('data');
+      }
+    }
 
     const result = (await storage.get('key')) as CachedStorageValue;
 
