@@ -43,7 +43,7 @@ describe('tests memory storage', () => {
   //
   // https://github.com/arthurfiorette/axios-cache-interceptor/issues/580
   it('not allow changes by value reference before', async () => {
-    const storage = buildMemoryStorage(false, false, false, true);
+    const storage = buildMemoryStorage('double');
 
     const data = { ...EMPTY_RESPONSE, data: 'data' };
     await storage.set('key', {
@@ -54,6 +54,10 @@ describe('tests memory storage', () => {
     });
 
     data.data = 'another data';
+
+    expect(storage.data['key']).not.toBeNull();
+    expect(storage.data['key'].state).toBe('cached');
+    expect(storage.data['key'].data.data).toBe('data');
 
     const result = (await storage.get('key')) as CachedStorageValue;
 
