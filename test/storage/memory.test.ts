@@ -57,6 +57,7 @@ describe('tests memory storage', () => {
     data.data = 'another data';
 
     expect(storage.data['key']).not.toBeNull();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     expect(storage.data['key']!.state).toBe('cached');
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     expect(storage.data['key']!.data).not.toBeNull();
