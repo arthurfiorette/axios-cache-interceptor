@@ -70,7 +70,7 @@ export function buildMemoryStorage(
       }
 
       /* istanbul ignore if 'only available on super recent browsers' */
-      if (cloneData === 'double' && value !== undefined) {
+      if (cloneData === 'double') {
         // Clone the value before storing to prevent future mutations
         // from affecting cached data.
         if (typeof structuredClone === 'function') {
