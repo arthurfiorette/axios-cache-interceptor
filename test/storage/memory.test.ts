@@ -38,6 +38,39 @@ describe('tests memory storage', () => {
     expect(result2.data?.data).toBe('data');
   });
 
+  // Expects that a when value saved using storage.set() is has his inner properties updated,
+  // a request to storage.get() should return unmodified value.
+  //
+  // https://github.com/arthurfiorette/axios-cache-interceptor/issues/580
+  it('ensures set() also clones data when cloneData is double', async () => {
+    const storage = buildMemoryStorage('double');
+
+    const data = { ...EMPTY_RESPONSE, data: 'data' };
+
+    await storage.set('key', {
+      state: 'cached',
+      createdAt: Date.now(),
+      ttl: 1000 * 60 * 5, // 5 Minutes
+      data: data
+    });
+
+    data.data = 'another data';
+
+    expect(storage.data['key']).not.toBeNull();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    expect(storage.data['key']!.state).toBe('cached');
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    expect(storage.data['key']!.data).not.toBeNull();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    expect(storage.data['key']!.data!.data).toBe('data');
+
+    const result = (await storage.get('key')) as CachedStorageValue;
+
+    expect(result).not.toBeNull();
+    expect(result.state).toBe('cached');
+    expect(result.data.data).toBe('data');
+  });
+
   it('tests cleanup function', async () => {
     const storage = buildMemoryStorage(false, 500);
 

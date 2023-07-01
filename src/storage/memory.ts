@@ -1,5 +1,5 @@
 import { buildStorage, canStale, isExpired } from './build';
-import type { AxiosStorage, StorageValue } from './types';
+import type { AxiosStorage, NotEmptyStorageValue, StorageValue } from './types';
 
 /**
  * Modern function to natively deep clone.
@@ -30,8 +30,10 @@ declare const structuredClone: (<T>(value: T) => T) | undefined;
  * delete memoryStorage.data[id];
  * ```
  *
- * @param {boolean} cloneData If the data returned by `find()` should be cloned to avoid
- *   mutating the original data outside the `set()` method.
+ * @param {boolean | 'double'} cloneData Use `true` if the data returned by `find()`
+ *   should be cloned to avoid mutating the original data outside the `set()` method. Use
+ *   `'double'` to also clone before saving value in storage using `set()`. Disabled is
+ *   default
  * @param {number | false} cleanupInterval The interval in milliseconds to run a
  *   setInterval job of cleaning old entries. If false, the job will not be created.
  *   Disabled is default
@@ -41,7 +43,7 @@ declare const structuredClone: (<T>(value: T) => T) | undefined;
  *   usage. Disabled is default
  */
 export function buildMemoryStorage(
-  cloneData = false,
+  cloneData: boolean | 'double' = false,
   cleanupInterval: number | false = false,
   maxEntries: number | false = false
 ) {
@@ -67,7 +69,15 @@ export function buildMemoryStorage(
         }
       }
 
-      storage.data[key] = value;
+      storage.data[key] =
+        // Clone the value before storing to prevent future mutations
+        // from affecting cached data.
+        cloneData === 'double'
+          ? /* istanbul ignore next 'only available on super recent browsers' */
+            typeof structuredClone === 'function'
+            ? structuredClone(value)
+            : (JSON.parse(JSON.stringify(value)) as NotEmptyStorageValue)
+          : value;
     },
 
     remove: (key) => {
