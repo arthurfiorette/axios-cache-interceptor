@@ -31,6 +31,16 @@ steps or a minimum reproduction repository.
 https://minimum-reproduction.wtf/
 -->
 
+### Debug Logs
+
+<!--
+Paste here debug logs that are relative to your problem
+
+⚠️⚠️⚠️ ISSUES WITHOUT THIS ARE GOING TO BE CLOSED.
+
+https://axios-cache-interceptor.js.org/guide/debugging
+-->
+
 ### Expected behavior
 
 <!--
