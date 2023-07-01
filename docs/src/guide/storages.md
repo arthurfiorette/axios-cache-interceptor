@@ -27,8 +27,9 @@ A memory storage is the simplest one. It works everywhere and its values are los
 page reload or when the process is killed.
 
 If you are directly mutating some response property, you probably will face some reference
-issues because the storage will also get mutated. To avoid that, you can use the `clone`
-option to clone the response before saving it. _Just like
+issues because the storage will also get mutated. To avoid that, you can use the
+`clone: true` option to clone the response before saving it or `clone: 'double'` to also
+clone both ways, on `set()` and on `get()`. _Just like
 [#136](https://github.com/arthurfiorette/axios-cache-interceptor/issues/163) and many
 others._
 

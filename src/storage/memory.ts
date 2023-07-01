@@ -69,18 +69,15 @@ export function buildMemoryStorage(
         }
       }
 
-      /* istanbul ignore if 'only available on super recent browsers' */
-      if (cloneData === 'double') {
+      storage.data[key] =
         // Clone the value before storing to prevent future mutations
         // from affecting cached data.
-        if (typeof structuredClone === 'function') {
-          value = structuredClone(value);
-        } else {
-          value = JSON.parse(JSON.stringify(value)) as NotEmptyStorageValue;
-        }
-      }
-
-      storage.data[key] = value;
+        cloneData === 'double'
+          ? /* istanbul ignore next 'only available on super recent browsers' */
+            typeof structuredClone === 'function'
+            ? structuredClone(value)
+            : (JSON.parse(JSON.stringify(value)) as NotEmptyStorageValue)
+          : value;
     },
 
     remove: (key) => {
