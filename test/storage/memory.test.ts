@@ -46,6 +46,7 @@ describe('tests memory storage', () => {
     const storage = buildMemoryStorage('double');
 
     const data = { ...EMPTY_RESPONSE, data: 'data' };
+
     await storage.set('key', {
       state: 'cached',
       createdAt: Date.now(),
