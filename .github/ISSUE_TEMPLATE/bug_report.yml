@@ -49,7 +49,7 @@ body:
       description: What storage is being used?
       placeholder: Web Storage
     validations:
-      required: true
+      required: false
   - type: textarea
     id: logs
     attributes:
