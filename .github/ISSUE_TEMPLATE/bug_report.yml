@@ -42,7 +42,7 @@ body:
       placeholder: v1.4.0
     validations:
       required: true
-  - type: input
+  - type: dropdown
     id: storage
     attributes:
       label: What storage is being used
