@@ -32,6 +32,7 @@ body:
     attributes:
       label: Axios Cache Interceptor Version
       description: What version of our software are you running?
+      placeholder: 0.9.3
     validations:
       required: true
   - type: input
@@ -39,6 +40,7 @@ body:
     attributes:
       label: Node Version
       description: What version of Node.js are you running?
+      placeholder: 16.9.1
     validations:
       required: true
   - type: input
@@ -46,6 +48,7 @@ body:
     attributes:
       label: Axios Version
       description: What version of Axios are you running?
+      placeholder: 0.26.1
     validations:
       required: true
   - type: input
@@ -53,6 +56,7 @@ body:
     attributes:
       label: What storage is being used
       description: What storage is being used?
+      placeholder: Web Storage
     validations:
       required: true
   - type: dropdown
