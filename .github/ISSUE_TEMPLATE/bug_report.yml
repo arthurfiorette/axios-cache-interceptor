@@ -1,0 +1,60 @@
+name: Bug report
+description: Create a report to help us improve
+title: 'Bug:'
+labels: ["bug", "triage"]
+assignees: arthurfiorette
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Also tell us, what did you expect to happen?
+      placeholder: Tell us what you see!
+      value: "A bug happened!"
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: axios-cache-interceptor version
+      description: What version of our software are you running?
+      placeholder: v0.9.3
+    validations:
+      required: true
+  - type: input
+    id: node_version
+    attributes:
+      label: Node / Browser Version
+      description: What version of Node.js / Browser are you running?
+      placeholder: Node v16.9.1 / Chrome 98 
+    validations:
+      required: true
+  - type: input
+    id: axios_version
+    attributes:
+      label: Axios Version
+      description: What version of Axios are you running?
+      placeholder: v0.26.1
+    validations:
+      required: true
+  - type: input
+    id: storage
+    attributes:
+      label: What storage is being used
+      description: What storage is being used?
+      placeholder: Web Storage
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
+      render: Shell
+    validations:
+      required: true
