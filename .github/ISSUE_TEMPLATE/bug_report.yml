@@ -23,7 +23,7 @@ body:
     attributes:
       label: axios-cache-interceptor version
       description: What version of our software are you running?
-      placeholder: v0.9.3
+      placeholder: v1.2.0
     validations:
       required: true
   - type: input
@@ -31,7 +31,7 @@ body:
     attributes:
       label: Node / Browser Version
       description: What version of Node.js / Browser are you running?
-      placeholder: Node v16.9.1 / Chrome 98 
+      placeholder: Node v18.16.1 / Chrome 114 
     validations:
       required: true
   - type: input
@@ -39,7 +39,7 @@ body:
     attributes:
       label: Axios Version
       description: What version of Axios are you running?
-      placeholder: v0.26.1
+      placeholder: v1.4.0
     validations:
       required: true
   - type: input
@@ -48,13 +48,18 @@ body:
       label: What storage is being used
       description: What storage is being used?
       placeholder: Web Storage
+      options:
+        - Web Storage
+        - Memory Storage
+        - Redis / Other DB
+        - Another one
     validations:
       required: true
   - type: textarea
     id: logs
     attributes:
-      label: Relevant log output
-      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
+      label: Relevant debugging log output
+      description: Please paste relevant log output collected from [debug mode](https://axios-cache-interceptor.js.org/guide/debugging). This will be automatically formatted into code, so no need for backticks.
       render: Shell
     validations:
       required: true
