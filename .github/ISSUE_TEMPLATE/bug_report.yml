@@ -24,7 +24,7 @@ body:
     attributes:
       label: Axios Cache Interceptor Version
       description: What version of our software are you running?
-      placeholder: 0.9.3
+      placeholder: v0.9.3
     validations:
       required: true
   - type: input
@@ -32,7 +32,7 @@ body:
     attributes:
       label: Node / Browser Version
       description: What version of Node.js / Browser are you running?
-      placeholder: 16.9.1 / Chrome 98 
+      placeholder: Node v16.9.1 / Chrome 98 
     validations:
       required: true
   - type: input
@@ -40,7 +40,7 @@ body:
     attributes:
       label: Axios Version
       description: What version of Axios are you running?
-      placeholder: 0.26.1
+      placeholder: v0.26.1
     validations:
       required: true
   - type: input
