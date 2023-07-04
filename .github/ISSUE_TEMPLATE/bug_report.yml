@@ -59,6 +59,6 @@ body:
     attributes:
       label: Relevant debugging log output
       description: Please paste relevant log output collected from [debug mode](https://axios-cache-interceptor.js.org/guide/debugging). This will be automatically formatted into code, so no need for backticks.
-      render: Shell
+      render: js
     validations:
       required: true
