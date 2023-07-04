@@ -1,6 +1,6 @@
 name: Bug report
 description: Create a report to help us improve
-title: 'bug: something is wrong :('
+title: 'Bug:'
 labels: 
   - bug
 assignees: arthurfiorette
@@ -30,9 +30,9 @@ body:
   - type: input
     id: node_version
     attributes:
-      label: Node Version
-      description: What version of Node.js are you running?
-      placeholder: 16.9.1
+      label: Node / Browser Version
+      description: What version of Node.js / Browser are you running?
+      placeholder: 16.9.1 / Chrome 98 
     validations:
       required: true
   - type: input
@@ -51,16 +51,6 @@ body:
       placeholder: Web Storage
     validations:
       required: true
-  - type: dropdown
-    id: browsers
-    attributes:
-      label: What browsers are you seeing the problem on?
-      multiple: true
-      options:
-        - Firefox
-        - Chrome
-        - Safari
-        - Microsoft Edge
   - type: textarea
     id: logs
     attributes:
