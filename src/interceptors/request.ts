@@ -16,7 +16,6 @@ import {
 
 export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
   const onFulfilled: RequestInterceptor['onFulfilled'] = async (config) => {
-    const id = (config.id = axios.generateKey(config));
 
     if (config.cache === false) {
       if (__ACI_DEV__) {
@@ -28,6 +27,8 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
 
       return config;
     }
+
+    const id = (config.id = axios.generateKey(config));
 
     // merge defaults with per request configuration
     config.cache = { ...axios.defaults.cache, ...config.cache };
