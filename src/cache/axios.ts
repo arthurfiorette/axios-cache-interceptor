@@ -54,7 +54,7 @@ export type CacheAxiosResponse<R = any, D = any> = AxiosResponse<R, D> & {
  * @template R The type returned by this response
  * @template D The type for the request body
  */
-export type CacheRequestConfig<R = any, D = any> = AxiosRequestConfig<D> & {
+export interface CacheRequestConfig<R = any, D = any> extends AxiosRequestConfig<D> {
   /**
    * The [Request ID](https://axios-cache-interceptor.js.org/guide/request-id) used in
    * this request.
@@ -81,12 +81,13 @@ export type CacheRequestConfig<R = any, D = any> = AxiosRequestConfig<D> & {
    * @see https://axios-cache-interceptor.js.org/config/response-object#cache
    */
   cache?: false | Partial<CacheProperties<R, D>>;
-};
+}
 
 /** Cached version of type {@link InternalAxiosRequestConfig} */
-export type InternalCacheRequestConfig<R = any, D = any> = CacheRequestConfig<R, D> & {
+export interface InternalCacheRequestConfig<R = any, D = any>
+  extends CacheRequestConfig<R, D> {
   headers: AxiosResponseHeaders;
-};
+}
 
 /**
  * Same as the AxiosInstance but with CacheRequestConfig as a config type and

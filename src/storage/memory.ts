@@ -141,10 +141,10 @@ export function buildMemoryStorage(
   return storage;
 }
 
-export type MemoryStorage = AxiosStorage & {
+export interface MemoryStorage extends AxiosStorage {
   data: Record<string, StorageValue>;
   /** The job responsible to cleaning old entries */
   cleaner: ReturnType<typeof setInterval>;
   /** Tries to remove any invalid entry from the memory */
   cleanup: () => void;
-};
+}
