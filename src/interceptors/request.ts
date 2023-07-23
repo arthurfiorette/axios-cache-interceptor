@@ -16,7 +16,6 @@ import {
 
 export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
   const onFulfilled: RequestInterceptor['onFulfilled'] = async (config) => {
-
     if (config.cache === false) {
       if (__ACI_DEV__) {
         axios.debug?.({
