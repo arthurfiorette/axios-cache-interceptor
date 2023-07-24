@@ -44,6 +44,22 @@ export function defaultResponseInterceptor(
       }
     }
 
+    const config = response.config;
+    // Request interceptor merges defaults with per request configuration
+    const cacheConfig = config.cache as CacheProperties;
+
+    // Skip cache: either false or weird behavior
+    // config.cache should always exists, at least from global config merge.
+    if (!cacheConfig) {
+      if (__ACI_DEV__) {
+        axios.debug?.({
+          msg: 'Response with config.cache falsy'
+        });
+      }
+
+      return { ...response, cached: false };
+    }
+
     const id = (response.id = response.config.id ??= axios.generateKey(response.config));
     response.cached ??= false;
 
@@ -58,25 +74,6 @@ export function defaultResponseInterceptor(
 
       return response;
     }
-
-    const config = response.config;
-    // Request interceptor merges defaults with per request configuration
-    const cacheConfig = config.cache as CacheProperties;
-
-    // Skip cache: either false or weird behavior
-    // config.cache should always exists, at least from global config merge.
-    if (!cacheConfig) {
-      if (__ACI_DEV__) {
-        axios.debug?.({
-          id,
-          msg: 'Response with config.cache falsy',
-          data: response
-        });
-      }
-
-      return { ...response, cached: false };
-    }
-
     // Update other entries before updating himself
     if (cacheConfig.update) {
       await updateCache(axios.storage, response, cacheConfig.update);
