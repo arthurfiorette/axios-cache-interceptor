@@ -18,8 +18,8 @@ import type { CacheInstance, CacheProperties } from './cache';
  * @template D The type that the request body was
  * @see https://axios-cache-interceptor.js.org/config/response-object
  */
-export type CacheAxiosResponse<R = any, D = any> = AxiosResponse<R, D> & {
-  config: CacheRequestConfig<R, D>;
+export interface CacheAxiosResponse<R = any, D = any> extends AxiosResponse<R, D> {
+  config: InternalCacheRequestConfig<R, D>;
 
   /**
    * The [Request ID](https://axios-cache-interceptor.js.org/guide/request-id) used in
@@ -46,7 +46,7 @@ export type CacheAxiosResponse<R = any, D = any> = AxiosResponse<R, D> & {
    * @see https://axios-cache-interceptor.js.org/config/response-object#cached
    */
   cached: boolean;
-};
+}
 
 /**
  * Options that can be overridden per request
