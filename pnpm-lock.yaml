@@ -74,7 +74,7 @@ devDependencies:
     version: 9.4.4(typescript@5.1.6)(webpack@5.88.2)
   tslib:
     specifier: ^2.5.3
-    version: 2.6.0
+    version: 2.6.1
   typescript:
     specifier: ^5.1.3
     version: 5.1.6
@@ -1199,7 +1199,7 @@ packages:
       is-glob: 4.0.3
       open: 9.1.0
       picocolors: 1.0.0
-      tslib: 2.6.0
+      tslib: 2.6.1
     dev: true
 
   /@sinclair/typebox@0.27.8:
@@ -4972,7 +4972,7 @@ packages:
     engines: {node: ^14.18.0 || >=16.0.0}
     dependencies:
       '@pkgr/utils': 2.4.1
-      tslib: 2.6.0
+      tslib: 2.6.1
     dev: true
 
   /tabbable@6.2.0:
@@ -5135,8 +5135,8 @@ packages:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
     dev: true
 
-  /tslib@2.6.0:
-    resolution: {integrity: sha512-7At1WUettjcSRHXCyYtTselblcHl9PJFFVKiCAy/bY97+BPZXSQ2wbq0P9s8tK2G7dFQfNnlJnPAiArVBVBsfA==}
+  /tslib@2.6.1:
+    resolution: {integrity: sha512-t0hLfiEKfMUoqhG+U1oid7Pva4bbDPHYfJNiB7BiIjRkj1pyC++4N3huJfqY6aRH6VTB0rvtzQwjM4K6qpfOig==}
     dev: true
 
   /tsutils@3.21.0(typescript@5.1.6):
