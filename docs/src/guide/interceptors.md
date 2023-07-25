@@ -36,3 +36,20 @@ axios.interceptors.request.use((req) => req);
 // This will be ran BEFORE the cache interceptor
 axios.interceptors.response.use((res) => res);
 ```
+
+---
+
+## Extending types
+
+As this package overrides the `AxiosInstance` interface with its own types,
+in case of adding other interceptors or custom code, you need to create
+a proper namespace for them:
+
+```ts
+declare module 'axios-cache-interceptor' {
+  interface CacheRequestConfig<R = any, D = any> {
+    customProperty: string;
+  }
+}
+```
+
