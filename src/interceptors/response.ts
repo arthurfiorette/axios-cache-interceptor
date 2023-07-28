@@ -236,6 +236,21 @@ export function defaultResponseInterceptor(
   };
 
   const onRejected: ResponseInterceptor['onRejected'] = async (error) => {
+    // When response.config is not present, the response is indeed a error.
+    if (!error.isAxiosError) {
+      if (__ACI_DEV__) {
+        axios.debug?.({
+          msg: 'Received an non axios error in the rejected response interceptor, ignoring.',
+          data: error
+        });
+      }
+
+      // We should probably re-request the response to avoid an infinite loading state here
+      // but, since this is an unknown error, we cannot figure out what request ID to use.
+      // And the only solution is to let the storage actively reject the current loading state.
+      throw error;
+    }
+
     const config = error.config as CacheRequestConfig & { headers: AxiosResponseHeaders };
     const id = config.id;
     const cacheConfig = config.cache as CacheProperties;
