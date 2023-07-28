@@ -288,4 +288,21 @@ describe('test response interceptor', () => {
     expect(normal.data).toBe(true);
     expect(transformed.data).toStrictEqual([true]);
   });
+
+  it('works even when modifying the error response', async () => {
+    const axios = mockAxios();
+
+    const error = new Error();
+
+    const promise = axios.get('url', {
+      transformResponse: () => {
+        throw error;
+      }
+    });
+
+    await expect(promise).rejects.not.toThrow(
+      "Cannot read properties of undefined (reading 'id')"
+    );
+    await expect(promise).rejects.toBe(error);
+  });
 });
