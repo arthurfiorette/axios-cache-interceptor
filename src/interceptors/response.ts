@@ -39,9 +39,10 @@ export function defaultResponseInterceptor(
           msg: 'Response interceptor received an unknown response.',
           data: response
         });
-
-        throw response;
       }
+
+      // Re-throws the error
+      throw response;
     }
 
     const config = response.config;
