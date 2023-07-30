@@ -33,7 +33,7 @@ export function defaultResponseInterceptor(
 
   const onFulfilled: ResponseInterceptor['onFulfilled'] = async (response) => {
     // When response.config is not present, the response is indeed a error.
-    if (!response.config) {
+    if (!response?.config) {
       if (__ACI_DEV__) {
         axios.debug?.({
           msg: 'Response interceptor received an unknown response.',
@@ -45,14 +45,19 @@ export function defaultResponseInterceptor(
       throw response;
     }
 
-    const id = (response.id = response.config.id ??= axios.generateKey(response.config));
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    response.id = response.config.id!;
     response.cached ??= false;
+
+    const config = response.config;
+    // Request interceptor merges defaults with per request configuration
+    const cacheConfig = config.cache as CacheProperties;
 
     // Response is already cached
     if (response.cached) {
       if (__ACI_DEV__) {
         axios.debug?.({
-          id,
+          id: response.id,
           msg: 'Returned cached response'
         });
       }
@@ -60,22 +65,19 @@ export function defaultResponseInterceptor(
       return response;
     }
 
-    const config = response.config;
-    // Request interceptor merges defaults with per request configuration
-    const cacheConfig = config.cache as CacheProperties;
-
     // Skip cache: either false or weird behavior
     // config.cache should always exists, at least from global config merge.
     if (!cacheConfig) {
       if (__ACI_DEV__) {
         axios.debug?.({
-          id,
+          id: response.id,
           msg: 'Response with config.cache falsy',
           data: response
         });
       }
 
-      return { ...response, cached: false };
+      response.cached = false;
+      return response;
     }
 
     // Update other entries before updating himself
@@ -86,7 +88,7 @@ export function defaultResponseInterceptor(
     if (!isMethodIn(config.method, cacheConfig.methods)) {
       if (__ACI_DEV__) {
         axios.debug?.({
-          id,
+          id: response.id,
           msg: `Ignored because method (${config.method}) is not in cache.methods (${cacheConfig.methods})`,
           data: { config, cacheConfig }
         });
@@ -95,7 +97,7 @@ export function defaultResponseInterceptor(
       return response;
     }
 
-    const cache = await axios.storage.get(id, config);
+    const cache = await axios.storage.get(response.id, config);
 
     if (
       // If the request interceptor had a problem or it wasn't cached
@@ -103,7 +105,7 @@ export function defaultResponseInterceptor(
     ) {
       if (__ACI_DEV__) {
         axios.debug?.({
-          id,
+          id: response.id,
           msg: "Response not cached and storage isn't loading",
           data: { cache, response }
         });
@@ -118,11 +120,11 @@ export function defaultResponseInterceptor(
       !cache.data &&
       !(await testCachePredicate(response, cacheConfig.cachePredicate))
     ) {
-      await rejectResponse(id, config);
+      await rejectResponse(response.id, config);
 
       if (__ACI_DEV__) {
         axios.debug?.({
-          id,
+          id: response.id,
           msg: 'Cache predicate rejected this response'
         });
       }
@@ -156,11 +158,11 @@ export function defaultResponseInterceptor(
 
       // Cache should not be used
       if (expirationTime === 'dont cache') {
-        await rejectResponse(id, config);
+        await rejectResponse(response.id, config);
 
         if (__ACI_DEV__) {
           axios.debug?.({
-            id,
+            id: response.id,
             msg: `Cache header interpreted as 'dont cache'`,
             data: { cache, response, expirationTime }
           });
@@ -191,7 +193,7 @@ export function defaultResponseInterceptor(
 
     if (__ACI_DEV__) {
       axios.debug?.({
-        id,
+        id: response.id,
         msg: 'Useful response configuration found',
         data: { cacheConfig, cacheResponse: data }
       });
@@ -206,26 +208,26 @@ export function defaultResponseInterceptor(
     };
 
     // Resolve all other requests waiting for this response
-    const waiting = axios.waiting[id];
+    const waiting = axios.waiting[response.id];
 
     if (waiting) {
       waiting.resolve(newCache.data);
-      delete axios.waiting[id];
+      delete axios.waiting[response.id];
 
       if (__ACI_DEV__) {
         axios.debug?.({
-          id,
+          id: response.id,
           msg: 'Found waiting deferred(s) and resolved them'
         });
       }
     }
 
     // Define this key as cache on the storage
-    await axios.storage.set(id, newCache, config);
+    await axios.storage.set(response.id, newCache, config);
 
     if (__ACI_DEV__) {
       axios.debug?.({
-        id,
+        id: response.id,
         msg: 'Response cached',
         data: { cache: newCache, response }
       });
