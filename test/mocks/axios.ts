@@ -1,5 +1,5 @@
-import Axios from 'axios';
-import type { AxiosCacheInstance, CacheRequestConfig } from '../../src/cache/axios';
+import Axios, { AxiosError } from 'axios';
+import type { AxiosCacheInstance } from '../../src/cache/axios';
 import { CacheOptions, setupCache } from '../../src/cache/create';
 import { Header } from '../../src/header/headers';
 
@@ -22,11 +22,12 @@ export function mockAxios(
     const statusText = should304 ? '304 Not Modified' : '200 OK';
 
     if (config.validateStatus?.(status) === false) {
-      throw {
-        id: (config as CacheRequestConfig).id,
+      throw new AxiosError(
+        'request failed',
+        status.toString(),
         config,
-        request: { config },
-        response: {
+        { config },
+        {
           data: true,
           status,
           statusText,
@@ -38,7 +39,7 @@ export function mockAxios(
           config,
           request: { config }
         }
-      };
+      );
     }
 
     return {

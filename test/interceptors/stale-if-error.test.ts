@@ -268,6 +268,7 @@ describe('Last-Modified handling', () => {
       id,
       adapter: (config) =>
         Promise.reject({
+          isAxiosError: true,
           data: false,
           headers: {},
           config,
@@ -397,6 +398,6 @@ describe('Last-Modified handling', () => {
         cache: { staleIfError: true },
         validateStatus: () => false
       })
-    ).rejects.toMatchObject({ id });
+    ).rejects.toMatchObject({ config: { id } });
   });
 });
