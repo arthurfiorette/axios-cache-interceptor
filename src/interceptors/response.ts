@@ -206,7 +206,6 @@ export function defaultResponseInterceptor(
     const waiting = axios.waiting[id];
 
     if (waiting) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       waiting.resolve(newCache.data);
       delete axios.waiting[id];
 
