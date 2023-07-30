@@ -219,4 +219,20 @@ describe('tests key generation', () => {
     expect(keyGenerator({ data })).not.toBe(data);
     expect(typeof keyGenerator({ data })).toBe('string');
   });
+
+  it('expects key generator handles recursive objects', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const recursive: any = {};
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+    recursive.data = recursive;
+
+    const keyGenerator = buildKeyGenerator(({ data }) => data);
+
+    // We should not throw errors here, as some recursive objects may be handled by axios/other interceptors
+    // This way, if any, error happens, it will be thrown by other packages, not this one
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    expect(() => keyGenerator(recursive)).not.toThrow();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    expect(() => defaultKeyGenerator(recursive)).not.toThrow();
+  });
 });
