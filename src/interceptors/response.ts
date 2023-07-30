@@ -45,26 +45,13 @@ export function defaultResponseInterceptor(
       throw response;
     }
 
-    const config = response.config;
-    // Request interceptor merges defaults with per request configuration
-    const cacheConfig = config.cache as CacheProperties;
-
-    // Skip cache: either false or weird behavior
-    // config.cache should always exists, at least from global config merge.
-    if (!cacheConfig) {
-      if (__ACI_DEV__) {
-        axios.debug?.({
-          msg: 'Response with config.cache falsy'
-        });
-      }
-
-      response.cached = false;
-      return response;
-    }
-
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     response.id = response.config.id!;
     response.cached ??= false;
+
+    const config = response.config;
+    // Request interceptor merges defaults with per request configuration
+    const cacheConfig = config.cache as CacheProperties;
 
     // Response is already cached
     if (response.cached) {
@@ -75,6 +62,21 @@ export function defaultResponseInterceptor(
         });
       }
 
+      return response;
+    }
+
+    // Skip cache: either false or weird behavior
+    // config.cache should always exists, at least from global config merge.
+    if (!cacheConfig) {
+      if (__ACI_DEV__) {
+        axios.debug?.({
+          id: response.id,
+          msg: 'Response with config.cache falsy',
+          data: response
+        });
+      }
+
+      response.cached = false;
       return response;
     }
 

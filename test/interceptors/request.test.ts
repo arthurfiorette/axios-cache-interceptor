@@ -186,16 +186,6 @@ describe('test request interceptor', () => {
     expect(spy).toHaveBeenCalledTimes(1);
   });
 
-  it('ensures that generateKey is not called when using cache: false', async () => {
-    const axios = mockAxios();
-
-    const spy = jest.spyOn(axios, 'generateKey');
-
-    await axios.get('url', { cache: false });
-
-    expect(spy).not.toHaveBeenCalled();
-  });
-
   it('Deleting a cache in the middle of a request should be fine', async () => {
     const ID = 'custom-id';
     const axios = mockAxios();

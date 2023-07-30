@@ -208,18 +208,10 @@ describe('test response interceptor', () => {
     expect(cache.ttl).toBe(173);
   });
 
-  it('ensures that a request id has not been generated when cache: false', async () => {
+  it('ensures that a request id has been generated even with cache: false', async () => {
     const axios = mockAxios();
 
     const { id } = await axios.get('url', { cache: false });
-
-    expect(id).not.toBeDefined();
-  });
-
-  it('ensures that a request id has been generated when cache is not false', async () => {
-    const axios = mockAxios();
-
-    const { id } = await axios.get('url');
 
     expect(id).toBeDefined();
     expect(typeof id).toBe('string');
