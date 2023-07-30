@@ -1,12 +1,12 @@
 import type { CacheAxiosResponse, CacheRequestConfig } from '../cache/axios';
 import type { MaybePromise } from '../util/types';
 
-export type CachedResponse = {
+export interface CachedResponse {
   data?: unknown;
   headers: CacheAxiosResponse['headers'];
   status: number;
   statusText: string;
-};
+}
 
 /** The value returned for a given key. */
 export type StorageValue =
@@ -17,15 +17,15 @@ export type StorageValue =
 
 export type NotEmptyStorageValue = Exclude<StorageValue, EmptyStorageValue>;
 
-export type StaleStorageValue = {
+export interface StaleStorageValue {
   data: CachedResponse;
   ttl?: number;
   staleTtl?: undefined;
   createdAt: number;
   state: 'stale';
-};
+}
 
-export type CachedStorageValue = {
+export interface CachedStorageValue {
   data: CachedResponse;
   /**
    * The number in milliseconds to wait after createdAt before the value is considered
@@ -35,29 +35,29 @@ export type CachedStorageValue = {
   staleTtl?: number;
   createdAt: number;
   state: 'cached';
-};
+}
 
 export type LoadingStorageValue = LoadingEmptiedStorageValue | LoadingStaledStorageValue;
 
-export type LoadingEmptiedStorageValue = {
+export interface LoadingEmptiedStorageValue {
   data?: undefined;
   ttl?: undefined;
   staleTtl?: undefined;
   createdAt?: undefined;
   state: 'loading';
   previous: 'empty';
-};
+}
 
-export type LoadingStaledStorageValue = {
+export interface LoadingStaledStorageValue {
   state: 'loading';
   data: CachedResponse;
   ttl?: undefined;
   staleTtl?: undefined;
   createdAt: number;
   previous: 'stale';
-};
+}
 
-export type EmptyStorageValue = {
+export interface EmptyStorageValue {
   data?: undefined;
   ttl?: undefined;
   staleTtl?: undefined;
@@ -65,7 +65,7 @@ export type EmptyStorageValue = {
   /** Defined when the state is cached */
   createdAt?: undefined;
   state: 'empty';
-};
+}
 
 /**
  * A storage interface is the entity responsible for saving, retrieving and serializing
@@ -74,7 +74,7 @@ export type EmptyStorageValue = {
  * @default buildMemoryStorage
  * @see https://axios-cache-interceptor.js.org/guide/storages
  */
-export type AxiosStorage = {
+export interface AxiosStorage {
   /**
    * Sets a new value for the given key
    *
@@ -113,4 +113,4 @@ export type AxiosStorage = {
    * @see https://axios-cache-interceptor.js.org/guide/storages#buildstorage
    */
   get: (key: string, currentRequest?: CacheRequestConfig) => MaybePromise<StorageValue>;
-};
+}

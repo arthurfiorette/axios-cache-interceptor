@@ -10,7 +10,7 @@ export type CachePredicate<R = unknown, D = unknown> = Exclude<
   undefined
 >;
 
-export type CachePredicateObject<R = unknown, D = unknown> = {
+export interface CachePredicateObject<R = unknown, D = unknown> {
   /** Matches if this function returned true. */
   statusCheck?: (status: number) => MaybePromise<boolean>;
 
@@ -29,7 +29,7 @@ export type CachePredicateObject<R = unknown, D = unknown> = {
 
   /** Check if the response matches this predicate. */
   responseMatch?: (res: CacheAxiosResponse<R, D>) => MaybePromise<boolean>;
-};
+}
 
 /**
  * A simple function that receives a cache request config and should return a string id
@@ -68,14 +68,14 @@ export type CacheUpdaterFn<R, D> = (
  * `delete` -> Deletes the request cache `predicate()` -> Determines if the cache can be
  * reused, deleted or modified.
  */
-export type CacheUpdaterRecord<R, D> = {
+export interface CacheUpdaterRecord<R, D> {
   [requestId: string]:
     | 'delete'
     | ((
         cached: Exclude<StorageValue, LoadingStorageValue>,
         response: CacheAxiosResponse<R, D>
       ) => MaybePromise<CachedStorageValue | 'delete' | 'ignore'>);
-};
+}
 
 /**
  * Updates any specified request cache by applying the response for this network call.

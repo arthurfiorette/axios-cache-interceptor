@@ -61,7 +61,7 @@ export function isExpired(value: CachedStorageValue | StaleStorageValue): boolea
   return value.ttl !== undefined && value.createdAt + value.ttl <= Date.now();
 }
 
-export type BuildStorage = Omit<AxiosStorage, 'get'> & {
+export interface BuildStorage extends Omit<AxiosStorage, 'get'> {
   /**
    * Returns the value for the given key. This method does not have to make checks for
    * cache invalidation or anything. It just returns what was previous saved, if present.
@@ -74,7 +74,7 @@ export type BuildStorage = Omit<AxiosStorage, 'get'> & {
     key: string,
     currentRequest?: CacheRequestConfig
   ) => MaybePromise<StorageValue | undefined>;
-};
+}
 
 /**
  * All integrated storages are wrappers around the `buildStorage` function. External
