@@ -220,7 +220,7 @@ describe('tests key generation', () => {
     expect(typeof keyGenerator({ data })).toBe('string');
   });
 
-  it('expects key generator handles recursive objects', async () => {
+  it('expects key generator handles recursive objects', () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const recursive: any = {};
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
