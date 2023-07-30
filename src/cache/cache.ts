@@ -21,7 +21,7 @@ import type { CacheAxiosResponse, CacheRequestConfig } from './axios';
  * @template R The type returned by this response
  * @template D The type for the request body
  */
-export type CacheProperties<R = unknown, D = unknown> = {
+export interface CacheProperties<R = unknown, D = unknown> {
   /**
    * The time until the cached value is expired in milliseconds.
    *
@@ -211,7 +211,7 @@ export type CacheProperties<R = unknown, D = unknown> = {
           | CachedStorageValue
           | StaleStorageValue
       ) => void | Promise<void>);
-};
+}
 
 /**
  * These are properties that are used and shared by the entire application.
@@ -342,4 +342,8 @@ export interface CacheInstance {
  *
  * @see https://axios-cache-interceptor.js.org/#/pages/development-mode
  */
-export type DebugObject = { id?: string; msg?: string; data?: unknown };
+export interface DebugObject {
+  id?: string;
+  msg?: string;
+  data?: unknown;
+}

@@ -25,9 +25,9 @@ export function isMethodIn(
   return methodList.some((method) => method === requestMethod);
 }
 
-export type ConfigWithCache<D> = CacheRequestConfig<unknown, D> & {
-  cache: Partial<CacheProperties>;
-};
+export interface ConfigWithCache<D> extends CacheRequestConfig<unknown, D> {
+  cache: Partial<CacheProperties<unknown, D>>;
+}
 
 /**
  * This function updates the cache when the request is stale. So, the next request to the

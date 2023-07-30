@@ -8,7 +8,7 @@ import { defaultKeyGenerator } from '../util/key-generator';
 import type { AxiosCacheInstance } from './axios';
 import type { CacheInstance, CacheProperties } from './cache';
 
-export type CacheOptions = Partial<CacheInstance> & Partial<CacheProperties>;
+export interface CacheOptions extends Partial<CacheInstance>, Partial<CacheProperties> {}
 
 /**
  * Apply the caching interceptors for a already created axios instance.
