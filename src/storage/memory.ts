@@ -77,6 +77,8 @@ export function buildMemoryStorage(
             typeof structuredClone === 'function'
             ? structuredClone(value)
             : (JSON.parse(JSON.stringify(value)) as NotEmptyStorageValue)
+          : cloneData
+          ? (JSON.parse(JSON.stringify(value)) as NotEmptyStorageValue)
           : value;
     },
 
