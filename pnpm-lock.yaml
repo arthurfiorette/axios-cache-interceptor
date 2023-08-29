@@ -79,8 +79,8 @@ devDependencies:
     specifier: ^5.1.3
     version: 5.2.2
   vitepress:
-    specifier: 1.0.0-rc.9
-    version: 1.0.0-rc.9(@algolia/client-search@4.19.1)(@types/node@18.17.12)(axios@1.5.0)(search-insights@2.6.0)
+    specifier: 1.0.0-rc.10
+    version: 1.0.0-rc.10(@algolia/client-search@4.19.1)(@types/node@18.17.12)(axios@1.5.0)(search-insights@2.6.0)
   webpack:
     specifier: ^5.86.0
     version: 5.88.2(webpack-cli@5.1.4)
@@ -5334,8 +5334,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /vitepress@1.0.0-rc.9(@algolia/client-search@4.19.1)(@types/node@18.17.12)(axios@1.5.0)(search-insights@2.6.0):
-    resolution: {integrity: sha512-HqMcWqJnxk/8aIN9LqhvEbKkBYop8qGs3/qw3Tt1AwdIRoTGOw5sk7g84J5j1H0p9Axvk87c9xrtMum4G/VVjQ==}
+  /vitepress@1.0.0-rc.10(@algolia/client-search@4.19.1)(@types/node@18.17.12)(axios@1.5.0)(search-insights@2.6.0):
+    resolution: {integrity: sha512-+MsahIWqq5WUEmj6MR4obcKYbT7im07jZPCQPdNJExkeOSbOAJ4xypSLx88x7rvtzWHhHc5aXbOhCRvGEGjFrw==}
     hasBin: true
     dependencies:
       '@docsearch/css': 3.5.2
