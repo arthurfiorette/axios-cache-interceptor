@@ -1,10 +1,14 @@
 :root {
-  --vp-c-brand: hsl(35, 78%, 53%);
+  --vp-c-brand-1: hsl(35, 78%, 53%);
+  
+  --vp-button-brand-bg: hsl(35, 78%, 53%);
+  --vp-button-brand-active-bg:  hsla(35, 78%, 53%, 36.5%);
+  --vp-button-brand-hover-bg: hsl(35, 78%, 53%);
+
   --vp-c-brand-light: hsla(35, 78%, 53%, 36.5%);
   --vp-c-brand-lighter: hsla(35, 78%, 53%, 36.5%);
   --vp-c-brand-dark: hsl(35, 78%, 53%);
   --vp-c-brand-darker: hsl(35, 78%, 53%);
-  --vp-c-brand-dimm: #363636;
 
   --vp-home-hero-name-color: transparent;
   --vp-home-hero-name-background: -webkit-linear-gradient(

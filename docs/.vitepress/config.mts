@@ -1,7 +1,8 @@
-import fs from 'fs';
+import {readFileSync} from 'fs';
 import { defineConfig } from 'vitepress';
+import {resolve} from 'path'
 
-const read = (relative) => fs.readFileSync(require.resolve(relative), 'utf-8');
+const read = (relative) => readFileSync(resolve(process.cwd(), 'docs', '.vitepress', relative), 'utf-8');
 
 const isVersion = process.argv.indexOf('--base');
 const VERSION = isVersion > -1 ? process.argv[isVersion + 1].slice(1, -1) : 'Latest';
