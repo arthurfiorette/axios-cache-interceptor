@@ -1,22 +1,38 @@
 import Axios from 'axios';
+import assert from 'node:assert';
+import { describe, it, mock } from 'node:test';
 import { setupCache } from '../../src/cache/create';
 
-describe('tests header interpreter', () => {
-  it('tests argument composition', () => {
+describe('Axios Cache Interceptor instances', () => {
+  it('Argument composition', () => {
     const withAxios = setupCache(Axios.create());
-    expect(withAxios).not.toBeUndefined();
-    expect(withAxios.defaults.cache.ttl).not.toBe(1234);
+    assert.notEqual(withAxios, undefined);
+    assert.notEqual(withAxios.defaults.cache.ttl, 1234);
 
     const withConfig = setupCache(Axios.create(), { ttl: 1234 });
-    expect(withConfig).not.toBeUndefined();
-    expect(withConfig.defaults.cache.ttl).toBe(1234);
+    assert.notEqual(withConfig, undefined);
+    assert.equal(withConfig.defaults.cache.ttl, 1234);
   });
 
-  it('expects double registration is rejected', () => {
+  it('Double registration gets rejected', () => {
     const axios = Axios.create();
     const withAxios = setupCache(axios);
-    expect(withAxios).not.toBeUndefined();
+    assert.notEqual(withAxios, undefined);
+    assert.throws(() => setupCache(axios));
+  });
 
-    expect(() => setupCache(axios)).toThrowError();
+  it('Importing with __ACI_DEV__ true prints console warning', async () => {
+    assert.ok(__ACI_DEV__);
+
+    const oldLog = console.error;
+
+    const consoleMock = mock.fn();
+    console.error = consoleMock;
+
+    await import('../../src/index');
+
+    assert.equal(consoleMock.mock.callCount(), 1);
+
+    console.error = oldLog;
   });
 });

@@ -1,9 +1,11 @@
+import assert from 'node:assert';
+import { describe, it } from 'node:test';
 import type { CacheRequestConfig } from '../../src/cache/axios';
 import { buildKeyGenerator, defaultKeyGenerator } from '../../src/util/key-generator';
 import { mockAxios } from '../mocks/axios';
 
-describe('tests key generation', () => {
-  it('should generate different key for and id', () => {
+describe('KeyGeneration', () => {
+  it('Generates different key for and id', () => {
     const baseURL = 'http://example.com';
     const url = '/asd/test';
     const method = 'get';
@@ -24,10 +26,10 @@ describe('tests key generation', () => {
       id: 'random-id'
     });
 
-    expect(keyWithoutId).not.toEqual(keyWithId);
+    assert.notEqual(keyWithoutId, keyWithId);
   });
 
-  it('should merge baseURL with url', () => {
+  it('Merges baseURL with url', () => {
     const method = 'get';
     const params = {};
 
@@ -50,11 +52,11 @@ describe('tests key generation', () => {
       params
     });
 
-    expect(keyWithBoth).toEqual(keyWithBaseURL);
-    expect(keyWithBoth).toEqual(keyWithURL);
+    assert.equal(keyWithBoth, keyWithBaseURL);
+    assert.equal(keyWithBoth, keyWithURL);
   });
 
-  it('tests against trailing slashes', () => {
+  it('Trailing slashes', () => {
     const keysArr = [
       ['http://example.com', 'asd/test'],
       ['http://example.com', 'asd/test/'],
@@ -72,10 +74,10 @@ describe('tests key generation', () => {
       .map((key) => defaultKeyGenerator(key))
       .every((k, _, arr) => k === arr[0]);
 
-    expect(allSame).toBeTruthy();
+    assert.ok(allSame);
   });
 
-  it('tests against different params order', () => {
+  it('Different parameters order', () => {
     const keyABOrder = defaultKeyGenerator({
       baseURL: 'http://example.com',
       url: 'asd/test',
@@ -87,10 +89,10 @@ describe('tests key generation', () => {
       params: { b: 2, a: 1 }
     });
 
-    expect(keyABOrder).toBe(keyBAOrder);
+    assert.equal(keyABOrder, keyBAOrder);
   });
 
-  it('tests argument replacement', () => {
+  it('Argument replacement', () => {
     const groups = [
       ['http://example.com', '/http://example.com'],
       ['http://example.com', '/http://example.com/'],
@@ -99,16 +101,19 @@ describe('tests key generation', () => {
     ];
 
     for (const [first, second] of groups) {
-      expect(defaultKeyGenerator({ url: first })).toBe(
+      assert.equal(
+        defaultKeyGenerator({ url: first }),
         defaultKeyGenerator({ url: second })
       );
-      expect(defaultKeyGenerator({ baseURL: first })).toBe(
+
+      assert.equal(
+        defaultKeyGenerator({ baseURL: first }),
         defaultKeyGenerator({ baseURL: second })
       );
     }
   });
 
-  it('tests unique data and params', () => {
+  it('Unique data and params', () => {
     const def = { baseURL: 'http://example.com', url: '', params: { a: 1, b: 2 } };
 
     const dataProps = [
@@ -121,7 +126,7 @@ describe('tests key generation', () => {
       defaultKeyGenerator({ ...def, data: undefined })
     ];
 
-    expect(new Set(dataProps).size).toBe(dataProps.length);
+    assert.equal(new Set(dataProps).size, dataProps.length);
 
     const paramsProps = [
       defaultKeyGenerator({ ...def, params: 23 }),
@@ -134,10 +139,10 @@ describe('tests key generation', () => {
       defaultKeyGenerator({ ...def, params: undefined })
     ];
 
-    expect(new Set(paramsProps).size).toBe(paramsProps.length);
+    assert.equal(new Set(paramsProps).size, paramsProps.length);
   });
 
-  it('tests buildKeyGenerator & hash: false', async () => {
+  it('BuildKeyGenerator & `hash: false`', async () => {
     const keyGenerator = buildKeyGenerator(({ headers }) =>
       String(headers?.['x-req-header'] || 'not-set')
     );
@@ -162,12 +167,12 @@ describe('tests key generation', () => {
       data: Math.random() * 2
     });
 
-    expect(id).toBe('my-custom-id');
-    expect(id).toBe(id2);
-    expect(id3).toBe('not-set');
+    assert.equal(id, 'my-custom-id');
+    assert.equal(id, id2);
+    assert.equal(id3, 'not-set');
   });
 
-  it('expects that the response remains unchanged', () => {
+  it('Response remains unchanged', () => {
     const originalResponse: CacheRequestConfig = {
       baseURL: 'http://example.com/',
       url: '/test/path/',
@@ -183,56 +188,52 @@ describe('tests key generation', () => {
     const response = Object.assign({}, originalResponse);
 
     const key = defaultKeyGenerator(response);
-    expect(key).toBeDefined();
+    assert.ok(key);
 
-    expect(response).toEqual(originalResponse);
+    assert.deepEqual(response, originalResponse);
 
     const key2 = defaultKeyGenerator(response);
-    expect(key2).toBeDefined();
+    assert.ok(key2);
 
-    expect(key).toBe(key2);
+    assert.equal(key, key2);
 
-    expect(response).toEqual(originalResponse);
+    assert.deepEqual(response, originalResponse);
   });
 
-  it('tests when hash() is used in the response', () => {
+  it('hash() is used in the response', () => {
     const keyGenerator = buildKeyGenerator(({ data }) => data);
 
-    expect(keyGenerator({ data: 'test' })).toBe('test');
-    expect(keyGenerator({ data: 123123 })).toBe('123123');
+    assert.equal(keyGenerator({ data: 'test' }), 'test');
+    assert.equal(keyGenerator({ data: 123123 }), '123123');
 
     let data: unknown = { a: 1 };
 
-    expect(keyGenerator({ data })).not.toBe(data);
-    expect(typeof keyGenerator({ data })).toBe('string');
+    assert.notEqual(keyGenerator({ data }), data);
+    assert.equal(typeof keyGenerator({ data }), 'string');
 
     data = true;
 
-    expect(keyGenerator({ data })).not.toBe(data);
-    expect(typeof keyGenerator({ data })).toBe('string');
+    assert.notEqual(keyGenerator({ data }), data);
+    assert.equal(typeof keyGenerator({ data }), 'string');
 
     data = {
-      fn: () => expect(false).toBeTruthy(),
+      fn: () => assert.ok(false),
       test: new (class Asd {})()
     };
 
-    expect(keyGenerator({ data })).not.toBe(data);
-    expect(typeof keyGenerator({ data })).toBe('string');
+    assert.notEqual(keyGenerator({ data }), data);
+    assert.equal(typeof keyGenerator({ data }), 'string');
   });
 
-  it('expects key generator handles recursive objects', () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  it('KeyGenerator handles recursive objects', () => {
     const recursive: any = {};
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     recursive.data = recursive;
 
     const keyGenerator = buildKeyGenerator(({ data }) => data);
 
     // We should not throw errors here, as some recursive objects may be handled by axios/other interceptors
     // This way, if any, error happens, it will be thrown by other packages, not this one
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    expect(() => keyGenerator(recursive)).not.toThrow();
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    expect(() => defaultKeyGenerator(recursive)).not.toThrow();
+    assert.doesNotThrow(() => keyGenerator(recursive));
+    assert.doesNotThrow(() => defaultKeyGenerator(recursive));
   });
 });

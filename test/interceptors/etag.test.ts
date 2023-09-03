@@ -1,9 +1,11 @@
+import assert from 'node:assert';
+import { describe, it } from 'node:test';
 import { Header } from '../../src/header/headers';
 import { mockAxios } from '../mocks/axios';
-import { sleep } from '../utils';
+import { mockDateNow } from '../utils';
 
 describe('ETag handling', () => {
-  it('tests etag header handling', async () => {
+  it('Etag Header', async () => {
     const axios = mockAxios({}, { etag: 'fakeEtag', 'cache-control': 'max-age=1' });
     const config = { cache: { interpretHeader: true, etag: true } };
 
@@ -11,20 +13,20 @@ describe('ETag handling', () => {
     await axios.get('http://test.com', config);
 
     const response = await axios.get('http://test.com', config);
-    expect(response.cached).toBe(true);
-    expect(response.data).toBe(true);
+    assert.ok(response.cached);
+    assert.ok(response.data);
 
     // Sleep entire max age time.
-    await sleep(1000);
+    await mockDateNow(1000);
 
     const response2 = await axios.get('http://test.com', config);
     // from revalidation
-    expect(response2.cached).toBe(true);
+    assert.ok(response2.cached);
     // ensure value from stale cache is kept
-    expect(response2.data).toBe(true);
+    assert.ok(response2.data);
   });
 
-  it('tests etag header handling in global config', async () => {
+  it('Etag header handling in global config', async () => {
     const axios = mockAxios(
       { interpretHeader: true, etag: true },
       { etag: 'fakeEtag', 'cache-control': 'max-age=1' }
@@ -34,48 +36,48 @@ describe('ETag handling', () => {
     await axios.get('http://test.com');
 
     const response = await axios.get('http://test.com');
-    expect(response.cached).toBe(true);
-    expect(response.data).toBe(true);
+    assert.ok(response.cached);
+    assert.ok(response.data);
 
     // Sleep entire max age time.
-    await sleep(1000);
+    mockDateNow(1000);
 
     const response2 = await axios.get('http://test.com');
     // from revalidation
-    expect(response2.cached).toBe(true);
+    assert.ok(response2.cached);
     // ensure value from stale cache is kept
-    expect(response2.data).toBe(true);
+    assert.ok(response2.data);
   });
 
-  it('tests "must revalidate" handling with etag', async () => {
+  it('"must revalidate" handling with Etag', async () => {
     const axios = mockAxios({}, { etag: 'fakeEtag', 'cache-control': 'must-revalidate' });
     const config = { cache: { interpretHeader: true, etag: true } };
 
     await axios.get('http://test.com', config);
 
-    // 0ms cache
-    await sleep(1);
+    // 1ms cache (using await to function as setImmediate)
+    await mockDateNow(1);
 
     const response = await axios.get('http://test.com', config);
     // from etag revalidation
-    expect(response.cached).toBe(true);
-    expect(response.data).toBe(true);
+    assert.ok(response.cached);
+    assert.ok(response.data);
   });
 
-  it('tests custom e-tag', async () => {
+  it('Custom Etag', async () => {
     const axios = mockAxios({ ttl: 0 }, { etag: 'fake-etag-2' });
     const config = { cache: { interpretHeader: true, etag: 'fake-etag' } };
 
     const response = await axios.get('http://test.com', config);
-    expect(response.cached).toBe(false);
-    expect(response.data).toBe(true);
-    expect(response.config.headers?.[Header.IfModifiedSince]).toBeUndefined();
-    expect(response.headers?.[Header.LastModified]).toBeUndefined();
+    assert.equal(response.cached, false);
+    assert.ok(response.data);
+    assert.equal(response.config.headers?.[Header.IfModifiedSince], undefined);
+    assert.equal(response.headers?.[Header.LastModified], undefined);
 
     const response2 = await axios.get('http://test.com', config);
-    expect(response2.cached).toBe(true);
-    expect(response2.data).toBe(true);
-    expect(response2.config.headers?.[Header.IfNoneMatch]).toBe('fake-etag');
-    expect(response2.headers?.[Header.ETag]).toBe('fake-etag-2');
+    assert.ok(response2.cached);
+    assert.ok(response2.data);
+    assert.equal(response2.config.headers?.[Header.IfNoneMatch], 'fake-etag');
+    assert.equal(response2.headers?.[Header.ETag], 'fake-etag-2');
   });
 });

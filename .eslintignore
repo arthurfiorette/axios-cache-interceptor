@@ -5,6 +5,7 @@ node_modules
 # Output
 /dist
 /dev
+/test
 
 # Random
 /ignore

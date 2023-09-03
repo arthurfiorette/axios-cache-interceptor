@@ -1,7 +1,7 @@
 name: Bug report
 description: Create a report to help us improve
 title: 'Bug:'
-labels: ["bug", "triage"]
+labels: ['bug', 'triage']
 assignees: arthurfiorette
 
 body:
@@ -15,7 +15,7 @@ body:
       label: What happened?
       description: Also tell us, what did you expect to happen?
       placeholder: Tell us what you see!
-      value: "A bug happened!"
+      value: 'A bug happened!'
     validations:
       required: true
   - type: input
@@ -31,7 +31,7 @@ body:
     attributes:
       label: Node / Browser Version
       description: What version of Node.js / Browser are you running?
-      placeholder: Node v18.16.1 / Chrome 114 
+      placeholder: Node v18.16.1 / Chrome 114
     validations:
       required: true
   - type: input
@@ -46,7 +46,7 @@ body:
     id: storage
     attributes:
       label: What storage is being used
-      description: What storage is being used? 
+      description: What storage is being used?
       options:
         - Web Storage
         - Memory Storage
@@ -58,7 +58,10 @@ body:
     id: logs
     attributes:
       label: Relevant debugging log output
-      description: Please paste relevant log output collected from [debug mode](https://axios-cache-interceptor.js.org/guide/debugging). This will be automatically formatted into code, so no need for backticks.
+      description:
+        Please paste relevant log output collected from [debug
+        mode](https://axios-cache-interceptor.js.org/guide/debugging). This will be
+        automatically formatted into code, so no need for backticks.
       render: js
     validations:
       required: true

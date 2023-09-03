@@ -1,46 +1,48 @@
+import assert from 'node:assert';
+import { describe, it, mock } from 'node:test';
 import { Header } from '../../src/header/headers';
 import { mockAxios } from '../mocks/axios';
-import { sleep } from '../utils';
+import { mockDateNow } from '../utils';
 
-describe('Hydrate works', () => {
-  it('expects that hydrate is only called when a cache exists', async () => {
+describe('Hydrate handling', () => {
+  it('Hydrate is only called when a cache exists', async () => {
     const axios = mockAxios({});
 
-    const mock = jest.fn();
+    const m = mock.fn();
 
     await axios.get('url', {
-      cache: { hydrate: mock }
+      cache: { hydrate: m }
     });
 
-    expect(mock).not.toHaveBeenCalled();
+    assert.equal(m.mock.callCount(), 0);
   });
 
-  it('only hydrates when cache is stale', async () => {
+  it('Only hydrates when cache is stale', async () => {
     const axios = mockAxios(
       {},
       { [Header.CacheControl]: 'max-age=100, stale-while-revalidate=100' }
     );
     const id = 'some-unique-id';
 
-    const mock = jest.fn();
+    const m = mock.fn();
 
     await axios.get('url', {
       id,
-      cache: { hydrate: mock }
+      cache: { hydrate: m }
     });
 
-    expect(mock).not.toHaveBeenCalled();
+    assert.equal(m.mock.callCount(), 0);
 
     const res2 = await axios.get('url', {
       id,
-      cache: { hydrate: mock }
+      cache: { hydrate: m }
     });
 
-    expect(mock).not.toHaveBeenCalled();
-    expect(res2.cached).toBe(true);
+    assert.equal(m.mock.callCount(), 0);
+    assert.ok(res2.cached);
   });
 
-  it('hydrates when etag is set', async () => {
+  it('Hydrates when etag is set', async () => {
     const axios = mockAxios(
       {},
       {
@@ -50,103 +52,100 @@ describe('Hydrate works', () => {
     );
     const id = 'some-unique-id';
 
-    const mock = jest.fn();
+    const m = mock.fn();
 
     await axios.get('url', {
       id,
-      cache: { hydrate: mock }
+      cache: { hydrate: m }
     });
 
-    expect(mock).not.toHaveBeenCalled();
+    assert.equal(m.mock.callCount(), 0);
 
     const cache = await axios.storage.get(id);
     const res2 = await axios.get('url', {
       id,
-      cache: { hydrate: mock }
+      cache: { hydrate: m }
     });
 
-    expect(mock).toHaveBeenCalledTimes(1);
-    expect(res2.cached).toBe(true);
-    expect(mock).toHaveBeenCalledWith(cache);
+    assert.equal(m.mock.callCount(), 1);
+    assert.ok(res2.cached);
+    assert.deepEqual(m.mock.calls[0]?.arguments, [cache]);
   });
 
-  it('only hydrates when stale while revalidate is set', async () => {
+  it('Only hydrates when stale while revalidate is set', async () => {
     const axios = mockAxios(
       {},
       { [Header.CacheControl]: 'max-age=0, stale-while-revalidate=0' }
     );
     const id = 'some-unique-id';
 
-    const mock = jest.fn();
+    const m = mock.fn();
 
     await axios.get('url', {
       id,
-      cache: { hydrate: mock }
+      cache: { hydrate: m }
     });
 
-    expect(mock).not.toHaveBeenCalled();
+    assert.equal(m.mock.callCount(), 0);
 
     const res2 = await axios.get('url', {
       id,
-      cache: { hydrate: mock }
+      cache: { hydrate: m }
     });
 
-    expect(mock).not.toHaveBeenCalled();
-    expect(res2.cached).toBe(false);
+    assert.equal(m.mock.callCount(), 0);
+    assert.equal(res2.cached, false);
   });
 
-  it('only hydrates when stale while revalidate is not expired', async () => {
+  it('Only hydrates when stale while revalidate is not expired', async () => {
     const axios = mockAxios(
       {},
       { [Header.CacheControl]: 'max-age=0, stale-while-revalidate=1' }
     );
     const id = 'some-unique-id';
 
-    const mock = jest.fn();
+    const m = mock.fn();
 
     await axios.get('url', {
       id,
-      cache: { hydrate: mock }
+      cache: { hydrate: m }
     });
 
-    expect(mock).not.toHaveBeenCalled();
+    assert.equal(m.mock.callCount(), 0);
 
-    // Sleep entire max age time.
-    await sleep(1000);
+    // Sleep entire max age time (using await to function as setImmediate)
+    mockDateNow(1000);
 
     const res2 = await axios.get('url', {
       id,
-      cache: { hydrate: mock }
+      cache: { hydrate: m }
     });
 
-    expect(mock).not.toHaveBeenCalled();
-    expect(res2.cached).toBe(false);
+    assert.equal(m.mock.callCount(), 0);
+    assert.equal(res2.cached, false);
   });
 
-  it('hydrates when force stale', async () => {
+  it('Hydrates when force stale', async () => {
     const axios = mockAxios({}, { [Header.CacheControl]: `max-age=100` });
     const id = 'some-unique-id';
 
-    const mock = jest.fn();
+    const m = mock.fn();
 
     await axios.get('url', {
       id,
-      cache: { hydrate: mock }
+      cache: { hydrate: m }
     });
 
-    expect(mock).not.toHaveBeenCalled();
+    assert.equal(m.mock.callCount(), 0);
 
     const cache = await axios.storage.get(id);
     const res2 = await axios.get('url', {
       id,
-      cache: {
-        hydrate: mock,
-        override: true
-      }
+      cache: { hydrate: m, override: true }
     });
 
-    expect(mock).toHaveBeenCalledTimes(1);
-    expect(res2.cached).toBe(false);
-    expect(mock).toHaveBeenCalledWith(cache);
+    assert.equal(m.mock.callCount(), 1);
+    assert.deepEqual(m.mock.calls[0]?.arguments, [cache]);
+    assert.equal(res2.cached, false);
   });
 });

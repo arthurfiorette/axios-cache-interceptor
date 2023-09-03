@@ -19,7 +19,7 @@ jobs:
       - name: Setup node and restore cached dependencies
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version-file: '.nvmrc'
           cache: 'pnpm'
 
       - name: Install packages
@@ -28,11 +28,11 @@ jobs:
       - name: Lint
         run: pnpm lint
 
-      - name: Test
-        run: pnpm test -- --ci
+      - name: Build tests
+        run: pnpm build:test
 
-      - name: Build
-        run: pnpm build
+      - name: Test
+        run: pnpm test
 
       - name: ESCheck
         run: pnpm run check

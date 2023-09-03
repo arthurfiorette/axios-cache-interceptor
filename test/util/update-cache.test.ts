@@ -1,3 +1,5 @@
+import assert from 'node:assert';
+import { describe, it, mock } from 'node:test';
 import type { CachedStorageValue } from '../../src/storage/types';
 import { defaultKeyGenerator } from '../../src/util/key-generator';
 import { mockAxios } from '../mocks/axios';
@@ -10,8 +12,8 @@ const CACHED_VALUE: CachedStorageValue = Object.freeze({
   data: { data: 'value', headers: {}, status: 200, statusText: '200 OK' }
 });
 
-describe('Tests update-cache', () => {
-  it('tests for delete key with CacheUpdaterFn', async () => {
+describe('Tests UpdateCache', () => {
+  it('`delete` key with CacheUpdaterFn', async () => {
     const axios = mockAxios({});
     await axios.storage.set(CACHE_KEY, CACHED_VALUE);
 
@@ -20,7 +22,7 @@ describe('Tests update-cache', () => {
     });
 
     const cacheValue1 = await axios.storage.get(CACHE_KEY);
-    expect(cacheValue1).toStrictEqual({ state: 'empty' });
+    assert.deepEqual(cacheValue1, { state: 'empty' });
 
     //
 
@@ -31,10 +33,10 @@ describe('Tests update-cache', () => {
     });
 
     const cacheValue3 = await axios.storage.get(CACHE_KEY);
-    expect(cacheValue3).toStrictEqual({ state: 'empty' });
+    assert.deepEqual(cacheValue3, { state: 'empty' });
   });
 
-  it('tests for delete key', async () => {
+  it('`delete` key', async () => {
     const axios = mockAxios({});
     await axios.storage.set(CACHE_KEY, CACHED_VALUE);
 
@@ -43,7 +45,7 @@ describe('Tests update-cache', () => {
     });
 
     const cacheValue1 = await axios.storage.get(CACHE_KEY);
-    expect(cacheValue1).toStrictEqual({ state: 'empty' });
+    assert.deepEqual(cacheValue1, { state: 'empty' });
 
     //
 
@@ -58,7 +60,7 @@ describe('Tests update-cache', () => {
     });
 
     const cacheValue2 = await axios.storage.get(CACHE_KEY);
-    expect(cacheValue2).toStrictEqual({ state: 'empty' });
+    assert.deepEqual(cacheValue2, { state: 'empty' });
 
     //
 
@@ -69,10 +71,10 @@ describe('Tests update-cache', () => {
     });
 
     const cacheValue3 = await axios.storage.get(CACHE_KEY);
-    expect(cacheValue3).toStrictEqual({ state: 'empty' });
+    assert.deepEqual(cacheValue3, { state: 'empty' });
   });
 
-  it('tests for ignore key', async () => {
+  it('`ignore` key', async () => {
     const axios = mockAxios({});
     await axios.storage.set(CACHE_KEY, CACHED_VALUE);
 
@@ -81,7 +83,7 @@ describe('Tests update-cache', () => {
     });
 
     const cacheValue = await axios.storage.get(CACHE_KEY);
-    expect(cacheValue).toStrictEqual(CACHED_VALUE);
+    assert.deepEqual(cacheValue, CACHED_VALUE);
 
     //
 
@@ -90,10 +92,10 @@ describe('Tests update-cache', () => {
     });
 
     const cacheValue2 = await axios.storage.get(CACHE_KEY);
-    expect(cacheValue2).toStrictEqual(CACHED_VALUE);
+    assert.deepEqual(cacheValue2, CACHED_VALUE);
   });
 
-  it('tests for new cached storage value', async () => {
+  it('New cached storage values', async () => {
     const axios = mockAxios({});
     await axios.storage.set(CACHE_KEY, CACHED_VALUE);
 
@@ -115,15 +117,15 @@ describe('Tests update-cache', () => {
     });
 
     const cacheValue = await axios.storage.get(CACHE_KEY);
-    expect(cacheValue).not.toStrictEqual(CACHED_VALUE);
-    expect(cacheValue.data?.data).toBe(1);
+    assert.notDeepEqual(cacheValue, CACHED_VALUE);
+    assert.equal(cacheValue.data?.data, 1);
   });
 
-  it('tests updateCache with key is loading', async () => {
+  it('updateCache() with key is loading', async () => {
     const axios = mockAxios({});
     await axios.storage.set(CACHE_KEY, { state: 'loading', previous: 'empty' });
 
-    const handler = jest.fn();
+    const handler = mock.fn(() => 'ignore' as const);
 
     await axios.get('other-key', {
       cache: {
@@ -133,13 +135,13 @@ describe('Tests update-cache', () => {
       }
     });
 
-    expect(handler).not.toHaveBeenCalled();
+    assert.equal(handler.mock.callCount(), 0);
 
     const cacheValue = await axios.storage.get(CACHE_KEY);
-    expect(cacheValue.state).toBe('loading');
+    assert.equal(cacheValue.state, 'loading');
   });
 
-  it('tests updateCache with non cached updater', async () => {
+  it('updateCache() with non cached updater', async () => {
     const ID = 'cache-id';
 
     const axios = mockAxios({ methods: ['get'] });
@@ -156,6 +158,6 @@ describe('Tests update-cache', () => {
     // if the update did not get executed, the cache shouldn't be empty
     const cacheValue = await axios.storage.get(ID);
 
-    expect(cacheValue.state).toBe('empty');
+    assert.equal(cacheValue.state, 'empty');
   });
 });

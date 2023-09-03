@@ -1,4 +1,6 @@
 import type { AxiosAdapter, AxiosResponse } from 'axios';
+import assert from 'node:assert';
+import { describe, it, mock } from 'node:test';
 import { setTimeout } from 'timers/promises';
 import type {
   CacheRequestConfig,
@@ -7,10 +9,10 @@ import type {
 import { Header } from '../../src/header/headers';
 import type { LoadingStorageValue } from '../../src/storage/types';
 import { mockAxios } from '../mocks/axios';
-import { sleep } from '../utils';
+import { mockDateNow } from '../utils';
 
-describe('test request interceptor', () => {
-  it('tests against specified methods', async () => {
+describe('Request Interceptor', () => {
+  it('Against specified methods', async () => {
     const axios = mockAxios({
       // only cache post methods
       methods: ['post']
@@ -20,10 +22,10 @@ describe('test request interceptor', () => {
     const cacheKey = axios.generateKey(response.config);
     const cache = await axios.storage.get(cacheKey);
 
-    expect(cache.state).toBe('empty');
+    assert.equal(cache.state, 'empty');
   });
 
-  it('tests specified methods', async () => {
+  it('Specified methods', async () => {
     const axios = mockAxios({
       // only cache get methods
       methods: ['get']
@@ -33,10 +35,10 @@ describe('test request interceptor', () => {
     const cacheKey = axios.generateKey(response.config);
     const cache = await axios.storage.get(cacheKey);
 
-    expect(cache.state).toBe('cached');
+    assert.equal(cache.state, 'cached');
   });
 
-  it('tests concurrent requests', async () => {
+  it('Concurrent requests', async () => {
     const axios = mockAxios();
 
     const [resp1, resp2] = await Promise.all([
@@ -44,11 +46,11 @@ describe('test request interceptor', () => {
       axios.get('http://test.com')
     ]);
 
-    expect(resp1.cached).toBe(false);
-    expect(resp2.cached).toBe(true);
+    assert.equal(resp1.cached, false);
+    assert.ok(resp2.cached);
   });
 
-  it('tests concurrent requests with cache: false', async () => {
+  it('Concurrent requests with `cache: false`', async () => {
     const axios = mockAxios();
 
     const results = await Promise.all([
@@ -57,7 +59,7 @@ describe('test request interceptor', () => {
       axios.get('http://test.com', { cache: false })
     ]);
     for (const result of results) {
-      expect(result.cached).toBe(false);
+      assert.equal(result.cached, false);
     }
   });
 
@@ -67,7 +69,7 @@ describe('test request interceptor', () => {
    * cached, the second should not be waiting forever for the deferred to be resolved with
    * a cached response.
    */
-  it('tests concurrent requests with uncached responses', async () => {
+  it('Concurrent requests with uncached responses', async () => {
     const axios = mockAxios();
 
     const [, resp2] = await Promise.all([
@@ -78,26 +80,26 @@ describe('test request interceptor', () => {
       axios.get('http://test.com')
     ]);
 
-    expect(resp2.cached).toBe(false);
+    assert.equal(resp2.cached, false);
   });
 
-  it('tests response.cached', async () => {
+  it('`response.cached` is present', async () => {
     const axios = mockAxios();
 
     const response = await axios.get('http://test.com');
-    expect(response.cached).toBe(false);
+    assert.equal(response.cached, false);
 
     const response2 = await axios.get('http://test.com');
-    expect(response2.cached).toBe(true);
+    assert.ok(response2.cached);
 
     const response3 = await axios.get('http://test.com', { id: 'random-id' });
-    expect(response3.cached).toBe(false);
+    assert.equal(response3.cached, false);
 
     const response4 = await axios.get('http://test.com', { id: 'random-id' });
-    expect(response4.cached).toBe(true);
+    assert.ok(response4.cached);
   });
 
-  it('test cache expiration', async () => {
+  it('Cache expiration', async () => {
     const axios = mockAxios(
       {},
       { [Header.CacheControl]: 'max-age=1,stale-while-revalidate=10' }
@@ -106,16 +108,16 @@ describe('test request interceptor', () => {
     await axios.get('http://test.com', { cache: { interpretHeader: true } });
 
     const resultCache = await axios.get('http://test.com');
-    expect(resultCache.cached).toBe(true);
+    assert.ok(resultCache.cached);
 
-    // Sleep entire max age time.
-    await sleep(1000);
+    // Sleep entire max age time (using await to function as setImmediate)
+    await mockDateNow(1000);
 
     const response2 = await axios.get('http://test.com');
-    expect(response2.cached).toBe(false);
+    assert.equal(response2.cached, false);
   });
 
-  test('"must revalidate" does not allows stale', async () => {
+  it('`must revalidate` does not allows stale', async () => {
     const axios = mockAxios(
       {},
       {
@@ -137,32 +139,32 @@ describe('test request interceptor', () => {
     const res2 = await axios.get('url', config);
     const res3 = await axios.get('url', config);
 
-    expect(res1.cached).toBeFalsy();
-    expect(res2.cached).toBeTruthy();
-    expect(res3.cached).toBeTruthy();
+    assert.equal(res1.cached, false);
+    assert.ok(res2.cached);
+    assert.ok(res3.cached);
 
-    // waits one second
-    await sleep(1000);
+    // waits one second (using await to function as setImmediate)
+    await mockDateNow(1000);
 
     const res4 = await axios.get('url', config);
 
     // Should be false because the cache couldn't be stale
-    expect(res4.cached).toBeFalsy();
+    assert.equal(res4.cached, false);
   });
 
-  it("expect two requests with different body aren't cached", async () => {
+  it('Expects two requests with different body are not cached', async () => {
     const axios = mockAxios();
 
     const result = await axios.get('url', { data: { a: 1 } });
 
-    expect(result.cached).toBe(false);
+    assert.equal(result.cached, false);
 
     const result2 = await axios.get('url', { data: { a: 2 } });
 
-    expect(result2.cached).toBe(false);
+    assert.equal(result2.cached, false);
   });
 
-  it('tests a request with really long keys', async () => {
+  it('Tests a request with really long keys', async () => {
     const axios = mockAxios();
 
     const result = await axios.get('url', {
@@ -170,27 +172,26 @@ describe('test request interceptor', () => {
       params: Array(5e3).fill({ rnd: Math.random() })
     });
 
-    expect(result).toBeDefined();
+    assert.ok(result);
   });
 
-  it('expect keyGenerator is called once during a single request', async () => {
+  it('Expect KeyGenerator is called once during a single request', async () => {
     const axios = mockAxios();
 
-    const spy = jest.spyOn(axios, 'generateKey');
+    const spy = mock.method(axios, 'generateKey');
 
     await axios.get('url', {
       // generates a long key
       data: Array(5e3).fill({ rnd: Math.random() })
     });
 
-    expect(spy).toHaveBeenCalledTimes(1);
+    assert.equal(spy.mock.callCount(), 1);
   });
 
   it('Deleting a cache in the middle of a request should be fine', async () => {
     const ID = 'custom-id';
     const axios = mockAxios();
 
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     await axios.get('url', {
       id: ID,
 
@@ -198,7 +199,6 @@ describe('test request interceptor', () => {
       // before resolving the adapter. Simulates when a user
       // manually deletes this key before it can be resolved.
       adapter: async (config: InternalCacheRequestConfig) => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         await axios.storage.remove(config.id!);
         return (axios.defaults.adapter as AxiosAdapter)(config);
       }
@@ -207,29 +207,29 @@ describe('test request interceptor', () => {
     // Expects that the cache is empty (deleted above) and
     // it still has a waiting entry.
     const { state } = await axios.storage.get(ID);
-    expect(state).toBe('empty');
-    expect(axios.waiting[ID]).toBeDefined();
+    assert.equal(state, 'empty');
+    assert.ok(axios.waiting[ID]);
 
     // This line should throw an error if this bug isn't fixed.
     await axios.get('url', { id: ID });
 
     const { state: newState } = await axios.storage.get(ID);
 
-    expect(newState).not.toBe('empty');
-    expect(axios.waiting[ID]).toBeUndefined();
+    assert.notEqual(newState, 'empty');
+    assert.equal(axios.waiting[ID], undefined);
   });
 
-  it('tests cache.override = true with previous cache', async () => {
+  it('`cache.override = true` with previous cache', async () => {
     const axios = mockAxios();
 
     // First normal request to populate cache
     const { id, ...initialResponse } = await axios.get('url');
 
-    expect(initialResponse.cached).toBe(false);
+    assert.equal(initialResponse.cached, false);
 
     // Ensure cache was populated
     const c1 = await axios.storage.get(id);
-    expect(c1.state).toBe('cached');
+    assert.equal(c1.state, 'cached');
 
     // Make a request with cache.override = true
     const promise = axios.get('url', {
@@ -260,10 +260,10 @@ describe('test request interceptor', () => {
 
       const c2 = (await axios.storage.get(id)) as LoadingStorageValue;
 
-      expect(c2.state).toBe('loading');
-      expect(c2.previous).toBe('stale');
-      expect(c2.data).toBe(c1.data);
-      expect(c2.createdAt).toBe(c1.createdAt);
+      assert.equal(c2.state, 'loading');
+      assert.equal(c2.previous, 'stale');
+      assert.equal(c2.data, c1.data);
+      assert.equal(c2.createdAt, c1.createdAt);
     }
 
     // Waits for the promise completion
@@ -273,21 +273,21 @@ describe('test request interceptor', () => {
     {
       const c3 = await axios.storage.get(id);
 
-      expect(newResponse.cached).toBe(false);
-      expect(c3.state).toBe('cached');
-      expect(c3.data).not.toBe(c1.data); // `'overridden response'`, not `true`
-      expect(c3.createdAt).not.toBe(c1.createdAt);
+      assert.equal(newResponse.cached, false);
+      assert.equal(c3.state, 'cached');
+      assert.notEqual(c3.data, c1.data); // `'overridden response'`, not `true`
+      assert.notEqual(c3.createdAt, c1.createdAt);
     }
   });
 
-  it('tests cache.override = true without previous cache', async () => {
+  it('`cache.override = true` without previous cache', async () => {
     const id = 'CUSTOM_RANDOM_ID';
 
     const axios = mockAxios();
 
     const c1 = await axios.storage.get(id);
 
-    expect(c1.state).toBe('empty');
+    assert.equal(c1.state, 'empty');
 
     // Make a request with cache.override = true
     const promise = axios.get('url', {
@@ -311,11 +311,11 @@ describe('test request interceptor', () => {
 
       const c2 = (await axios.storage.get(id)) as LoadingStorageValue;
 
-      expect(c2.state).toBe('loading');
-      expect(c2.previous).toBe('empty');
+      assert.equal(c2.state, 'loading');
+      assert.equal(c2.previous, 'empty');
 
-      expect(c2.data).toBeUndefined();
-      expect(c2.createdAt).not.toBe(c1.createdAt);
+      assert.equal(c2.data, undefined);
+      assert.notEqual(c2.createdAt, c1.createdAt);
     }
 
     // Waits for the promise completion
@@ -325,22 +325,22 @@ describe('test request interceptor', () => {
     {
       const c3 = await axios.storage.get(id);
 
-      expect(newResponse.cached).toBe(false);
-      expect(c3.state).toBe('cached');
-
-      expect(c3.data).not.toBeUndefined();
-      expect(c3.createdAt).not.toBe(c1.createdAt);
+      assert.equal(newResponse.cached, false);
+      assert.equal(c3.state, 'cached');
+      assert.ok(c3.data);
+      assert.notEqual(c3.createdAt, c1.createdAt);
     }
   });
 
-  it('expect requests are made with cache-control=no-cache', async () => {
+  it('Requests are made with CacheControl no-cache', async () => {
     const axios = mockAxios({ cacheTakeover: true });
 
     const req1 = await axios.get('url');
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    expect(req1.request.config.headers).toMatchObject({
+    assert.deepEqual(Object.assign({}, req1.request.config.headers), {
       [Header.CacheControl]: 'no-cache',
+      ['Accept']: 'application/json, text/plain, */*',
+      'Content-Type': undefined,
       [Header.Pragma]: 'no-cache',
       [Header.Expires]: '0'
     });
@@ -349,10 +349,9 @@ describe('test request interceptor', () => {
       cache: { cacheTakeover: false }
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    const headers2 = req2.request.config.headers as CacheRequestConfig;
-    expect(headers2).not.toHaveProperty(Header.CacheControl);
-    expect(headers2).not.toHaveProperty(Header.Pragma);
-    expect(headers2).not.toHaveProperty(Header.Expires);
+    const headers2 = req2.request.config.headers as Record<string, string>;
+    assert.equal(headers2[Header.CacheControl], undefined);
+    assert.equal(headers2[Header.Pragma], undefined);
+    assert.equal(headers2[Header.Expires], undefined);
   });
 });

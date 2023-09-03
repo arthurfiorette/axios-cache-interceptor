@@ -41,14 +41,14 @@ axios.interceptors.response.use((res) => res);
 
 ## Extending types
 
-When using axios-cache-interceptor, you'll note that it have a different type
-than the defaults `AxiosInstance`, `AxiosRequestConfig` and `AxiosResponse`.
-That's because was chosen to override axios's interfaces instead of extending,
-to avoid breaking changes with other libraries.
+When using axios-cache-interceptor, you'll note that it have a different type than the
+defaults `AxiosInstance`, `AxiosRequestConfig` and `AxiosResponse`. That's because was
+chosen to override axios's interfaces instead of extending, to avoid breaking changes with
+other libraries.
 
-However, this also means that when integrating with other packages or creating
-your own custom interceptor, you need to override/extend our own types,
-`CacheInstance`, `CacheRequestConfig` and `CacheAxiosResponse` to match your needs.
+However, this also means that when integrating with other packages or creating your own
+custom interceptor, you need to override/extend our own types, `CacheInstance`,
+`CacheRequestConfig` and `CacheAxiosResponse` to match your needs.
 
 This can be done as shown below:
 
@@ -59,4 +59,3 @@ declare module 'axios-cache-interceptor' {
   }
 }
 ```
-

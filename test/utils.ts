@@ -1,16 +1,17 @@
 import { AxiosHeaders } from 'axios';
+import { mock } from 'node:test';
 import type { CacheAxiosResponse } from '../src/cache/axios';
 
-export const EMPTY_RESPONSE = {
+export const EMPTY_RESPONSE = Object.freeze({
   headers: {},
   status: 200,
   statusText: '200 OK',
   data: true
-};
+});
 
-export const createResponse = <R>(
+export function createResponse<R>(
   config: Partial<CacheAxiosResponse<R>>
-): CacheAxiosResponse => {
+): CacheAxiosResponse {
   return {
     ...EMPTY_RESPONSE,
     config: { headers: new AxiosHeaders() },
@@ -20,7 +21,21 @@ export const createResponse = <R>(
     cached: true,
     ...config
   };
-};
+}
 
-export const sleep = (ms: number): Promise<void> =>
-  new Promise((res) => setTimeout(res, ms));
+/**
+ * Mocks the result of Date.now() to return a current date plus the given ticks.
+ *
+ * TODO: Migrate to nodejs Date mock timers as soon as possible.
+ *
+ * @link https://github.com/nodejs/node/pull/48638
+ */
+export function mockDateNow(ticks: number) {
+  const old = Date.now;
+
+  mock.method(Date, 'now', mockedDateNow);
+
+  function mockedDateNow(this: DateConstructor) {
+    return old.call(this) + ticks;
+  }
+}

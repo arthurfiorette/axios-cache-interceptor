@@ -1,66 +1,69 @@
 import Axios from 'axios';
+import assert from 'node:assert';
+import { describe, it, mock } from 'node:test';
 import { setupCache } from '../../src/cache/create';
 import { Header } from '../../src/header/headers';
-import { mockAxios, XMockRandom } from '../mocks/axios';
+import { XMockRandom, mockAxios } from '../mocks/axios';
 
-describe('test response interceptor', () => {
-  it('tests for storage.get call against specified methods', async () => {
+describe('Response Interceptor', () => {
+  it('`storage.get` call without specified methods', async () => {
     const axios = mockAxios({
       // only cache post methods
       methods: ['post']
     });
 
-    const spy = jest.spyOn(axios.storage, 'get');
+    const spy = mock.method(axios.storage, 'get');
     await axios.get('http://test.com');
 
-    expect(spy).not.toHaveBeenCalled();
+    assert.equal(spy.mock.callCount(), 0);
   });
 
-  it('tests for storage.get call with specified methods', async () => {
+  it('`storage.get` call with specified methods', async () => {
     const axios = mockAxios({
       // only cache get methods
       methods: ['get']
     });
 
-    const spy = jest.spyOn(axios.storage, 'get');
+    const spy = mock.method(axios.storage, 'get');
     await axios.get('http://test.com');
 
-    expect(spy).toHaveBeenCalled();
+    assert.ok(spy.mock.callCount() >= 1);
   });
 
-  it('tests on error for storage.get call against specified methods', async () => {
+  it('Expects error for `storage.get` calls against specified methods', async () => {
     const instance = Axios.create({});
     const axios = setupCache(instance, {});
+
     // only cache post methods
     axios.defaults.cache.methods = ['post'];
 
-    expect.assertions(1);
+    const spy = mock.method(axios.storage, 'get');
 
-    const spy = jest.spyOn(axios.storage, 'get');
     try {
       await axios.get('http://unknown.url.lan:1234');
+      assert.fail('should have thrown an error');
     } catch (error) {
-      expect(spy).not.toHaveBeenCalled();
+      assert.equal(spy.mock.callCount(), 0);
     }
   });
 
-  it('tests on error for storage.get call with specified methods', async () => {
+  it('Expects error for `storage.get` call with specified methods', async () => {
     const instance = Axios.create({});
     const axios = setupCache(instance, {});
     // only cache get methods
     axios.defaults.cache.methods = ['get'];
 
-    expect.assertions(1);
+    const spy = mock.method(axios.storage, 'get');
 
-    const spy = jest.spyOn(axios.storage, 'get');
     try {
       await axios.get('http://unknown.url.lan:1234');
+      assert.fail('should have thrown an error');
     } catch (error) {
-      expect(spy).toHaveBeenCalled();
+      assert.ok(spy.mock.callCount() >= 1);
     }
   });
 
-  it('tests cache predicate integration', async () => {
+  it('CachePredicate integration', async () => {
     const axios = mockAxios();
 
     const fetch = () =>
@@ -76,17 +79,17 @@ describe('test response interceptor', () => {
     await fetch();
     const result = await fetch();
 
-    expect(result.cached).toBe(false);
+    assert.equal(result.cached, false);
   });
 
-  it('tests header interpreter integration', async () => {
+  it('HeaderInterpreter integration', async () => {
     const axiosNoCache = mockAxios({}, { [Header.CacheControl]: 'no-cache' });
 
     // Make first request to cache it
     await axiosNoCache.get('http://test.com', { cache: { interpretHeader: true } });
     const resultNoCache = await axiosNoCache.get('http://test.com');
 
-    expect(resultNoCache.cached).toBe(false);
+    assert.equal(resultNoCache.cached, false);
 
     const axiosCache = mockAxios(
       {},
@@ -97,10 +100,10 @@ describe('test response interceptor', () => {
     await axiosCache.get('http://test.com', { cache: { interpretHeader: true } });
     const resultCache = await axiosCache.get('http://test.com');
 
-    expect(resultCache.cached).toBe(true);
+    assert.ok(resultCache.cached);
   });
 
-  it('tests update cache integration', async () => {
+  it('Update cache integration', async () => {
     const axios = mockAxios();
 
     const { id } = await axios.get('key01');
@@ -115,10 +118,10 @@ describe('test response interceptor', () => {
 
     const cache = await axios.storage.get(id);
 
-    expect(cache.state).toBe('empty');
+    assert.equal(cache.state, 'empty');
   });
 
-  it('tests with blank cache-control header', async () => {
+  it('Blank CacheControl header', async () => {
     const defaultTtl = 60;
 
     const axios = mockAxios(
@@ -134,11 +137,11 @@ describe('test response interceptor', () => {
 
     const cache = await axios.storage.get(id);
 
-    expect(cache.state).toBe('cached');
-    expect(cache.ttl).toBe(defaultTtl);
+    assert.equal(cache.state, 'cached');
+    assert.equal(cache.ttl, defaultTtl);
   });
 
-  it('tests ttl with functions', async () => {
+  it('TTL with functions', async () => {
     const axios = mockAxios();
     const id = 'my-id';
 
@@ -148,12 +151,12 @@ describe('test response interceptor', () => {
       id,
       cache: {
         ttl: (resp) => {
-          expect(resp.cached).toBe(false);
-          expect(resp.config).toBeDefined();
-          expect(resp.headers[XMockRandom]).not.toBeNaN();
-          expect(resp.status).toBe(200);
-          expect(resp.statusText).toBe('200 OK');
-          expect(resp.data).toBeTruthy();
+          assert.equal(resp.cached, false);
+          assert.ok(resp.config);
+          assert.notEqual(resp.headers[XMockRandom], NaN);
+          assert.equal(resp.status, 200);
+          assert.equal(resp.statusText, '200 OK');
+          assert.ok(resp.data);
 
           return 100;
         }
@@ -161,12 +164,11 @@ describe('test response interceptor', () => {
     });
 
     const cache1 = await axios.storage.get(id);
-    expect(cache1.state).toBe('cached');
-    expect(cache1.ttl).toBe(100);
+    assert.equal(cache1.state, 'cached');
+    assert.equal(cache1.ttl, 100);
 
     // Second request (cached by ttl)
-
-    const ttl = jest.fn().mockReturnValue(200);
+    const ttl = mock.fn(() => 200);
 
     await axios.get('url', {
       id,
@@ -174,16 +176,16 @@ describe('test response interceptor', () => {
     });
 
     const cache2 = await axios.storage.get(id);
-    expect(cache2.state).toBe('cached');
-    expect(cache2.ttl).toBe(100);
+    assert.equal(cache2.state, 'cached');
+    assert.equal(cache2.ttl, 100);
 
-    expect(ttl).not.toHaveBeenCalled();
+    assert.equal(ttl.mock.callCount(), 0);
 
     // Force invalidation
     await axios.storage.remove(id);
   });
 
-  it('tests async ttl function', async () => {
+  it('Async ttl function', async () => {
     const axios = mockAxios();
 
     // A lot of promises and callbacks
@@ -204,20 +206,20 @@ describe('test response interceptor', () => {
     });
 
     const cache = await axios.storage.get(id);
-    expect(cache.state).toBe('cached');
-    expect(cache.ttl).toBe(173);
+    assert.equal(cache.state, 'cached');
+    assert.equal(cache.ttl, 173);
   });
 
-  it('ensures that a request id has been generated even with cache: false', async () => {
+  it('Ensures a request id has been generated even with `cache: false`', async () => {
     const axios = mockAxios();
 
     const { id } = await axios.get('url', { cache: false });
 
-    expect(id).toBeDefined();
-    expect(typeof id).toBe('string');
+    assert.ok(id);
+    assert.equal(typeof id, 'string');
   });
 
-  it('It expects that any X-axios-cache gets removed', async () => {
+  it('Any X-axios-cache header gets removed', async () => {
     const headerValue = '23asdf8ghd';
 
     const axios = mockAxios(
@@ -231,13 +233,13 @@ describe('test response interceptor', () => {
 
     const { headers } = await axios.get('url');
 
-    expect(headers[Header.XAxiosCacheEtag]).not.toBe(headerValue);
-    expect(headers[Header.XAxiosCacheLastModified]).not.toBe(headerValue);
-    expect(headers[Header.XAxiosCacheStaleIfError]).not.toBe(headerValue);
+    assert.notEqual(headers[Header.XAxiosCacheEtag], headerValue);
+    assert.notEqual(headers[Header.XAxiosCacheLastModified], headerValue);
+    assert.notEqual(headers[Header.XAxiosCacheStaleIfError], headerValue);
   });
 
   // https://github.com/arthurfiorette/axios-cache-interceptor/issues/317
-  it('Expects that aborted requests clears its cache', async () => {
+  it('Aborted requests clears its cache afterwards', async () => {
     const id = 'abort-request-id';
     const ac = new AbortController();
     const axios = mockAxios();
@@ -246,14 +248,14 @@ describe('test response interceptor', () => {
 
     ac.abort();
 
-    await expect(promise).rejects.toThrow(Error);
+    await assert.rejects(promise, Error);
 
     const cache = await axios.storage.get(id);
-    expect(cache.state).not.toBe('loading');
-    expect(cache.state).toBe('empty');
+    assert.notEqual(cache.state, 'loading');
+    assert.equal(cache.state, 'empty');
   });
 
-  it('expects response interceptor handles non response errors', async () => {
+  it('Response interceptor handles non response errors', async () => {
     const instance = Axios.create();
 
     const NOT_RESPONSE = { notAResponse: true };
@@ -263,13 +265,14 @@ describe('test response interceptor', () => {
 
     const axios = mockAxios(undefined, undefined, instance);
 
-    await expect(
+    await assert.rejects(
       // just calls the response interceptor
-      axios.get('url')
-    ).rejects.toBe(NOT_RESPONSE);
+      axios.get('url'),
+      NOT_RESPONSE
+    );
   });
 
-  it('works even when modifying response', async () => {
+  it('Works when modifying response', async () => {
     const axios = mockAxios();
 
     const normal = await axios.get('url');
@@ -277,13 +280,12 @@ describe('test response interceptor', () => {
       transformResponse: (data: unknown) => [data]
     });
 
-    expect(normal.data).toBe(true);
-    expect(transformed.data).toStrictEqual([true]);
+    assert.ok(normal.data);
+    assert.deepEqual(transformed.data, [true]);
   });
 
-  it('works even when modifying the error response', async () => {
+  it('Works when modifying the error response', async () => {
     const axios = mockAxios();
-
     const error = new Error();
 
     const promise = axios.get('url', {
@@ -292,9 +294,6 @@ describe('test response interceptor', () => {
       }
     });
 
-    await expect(promise).rejects.not.toThrow(
-      "Cannot read properties of undefined (reading 'id')"
-    );
-    await expect(promise).rejects.toBe(error);
+    await assert.rejects(promise, error);
   });
 });

@@ -1,35 +1,35 @@
+import assert from 'node:assert';
+import { it } from 'node:test';
 import { buildWebStorage } from '../../src/storage/web-api';
 import { mockAxios } from '../mocks/axios';
 import { EMPTY_RESPONSE } from '../utils';
 
-export function testStorageQuota(name: string, Storage: () => Storage): void {
+export function testStorageQuota(name: string, storage: Storage): void {
   // Jest quota, in browsers this quota can be different but that isn't a problem.
   const MAXIMUM_LIMIT = 5_000_000;
 
-  it(`tests ${name} has storage limit`, () => {
-    const storage = Storage();
+  it(`${name} has storage limit`, () => {
+    assert.ok(storage);
 
-    expect(storage).toBeDefined();
-
-    expect(() => {
+    assert.doesNotThrow(() => {
       storage.setItem('key', '0'.repeat(MAXIMUM_LIMIT * 0.9));
-    }).not.toThrowError();
+    });
 
-    expect(() => {
+    assert.throws(() => {
       storage.setItem('key', '0'.repeat(MAXIMUM_LIMIT));
-    }).toThrowError();
+    });
   });
 
-  it(`tests buildWebStorage(${name}) function`, () => {
-    const webStorage = buildWebStorage(Storage());
+  it(`buildWebStorage(${name}) function`, () => {
+    const webStorage = buildWebStorage(storage);
 
-    expect(typeof webStorage.get).toBe('function');
-    expect(typeof webStorage.set).toBe('function');
-    expect(typeof webStorage.remove).toBe('function');
+    assert.equal(typeof webStorage.get, 'function');
+    assert.equal(typeof webStorage.set, 'function');
+    assert.equal(typeof webStorage.remove, 'function');
   });
 
-  it(`tests ${name} with gigant values`, async () => {
-    const axios = mockAxios({ storage: buildWebStorage(Storage()) });
+  it(`${name} with giant values`, async () => {
+    const axios = mockAxios({ storage: buildWebStorage(storage) });
 
     // Does not throw error
     await axios.storage.set('key', {
@@ -40,11 +40,11 @@ export function testStorageQuota(name: string, Storage: () => Storage): void {
     });
 
     // Too big for this storage save
-    expect(await axios.storage.get('key')).toStrictEqual({ state: 'empty' });
+    assert.equal((await axios.storage.get('key')).state, 'empty');
   });
 
-  it(`tests ${name} evicts oldest first`, async () => {
-    const axios = mockAxios({ storage: buildWebStorage(Storage()) });
+  it(`${name} evicts oldest first`, async () => {
+    const axios = mockAxios({ storage: buildWebStorage(storage) });
 
     // Fills the storage with 5 keys
     for (const i of [1, 2, 3, 4, 5]) {
@@ -77,17 +77,17 @@ export function testStorageQuota(name: string, Storage: () => Storage): void {
     const initial = await axios.storage.get('key-initial');
 
     // Key was defined
-    expect(initial.state).toBe('cached');
+    assert.equal(initial.state, 'cached');
 
     // Has evicted all 1-5 keys
     for (const i of [1, 2, 3, 4]) {
       const { state } = await axios.storage.get(`key-${i}`);
-      expect(state).toBe('empty');
+      assert.equal(state, 'empty');
     }
   });
 
-  it(`expects ${name} remove expired keys`, async () => {
-    const axios = mockAxios({ storage: buildWebStorage(Storage()) });
+  it(`${name} removes expired keys`, async () => {
+    const axios = mockAxios({ storage: buildWebStorage(storage) });
 
     const year2k = new Date(2000, 1, 1);
 
@@ -123,12 +123,12 @@ export function testStorageQuota(name: string, Storage: () => Storage): void {
     const initial = await axios.storage.get('non-expired');
 
     // Key was defined
-    expect(initial.state).toBe('cached');
+    assert.equal(initial.state, 'cached');
 
     // Has evicted all 1-5 keys
     for (const i of [1, 2, 3, 4]) {
       const { state } = await axios.storage.get(`expired-${i}`);
-      expect(state).toBe('empty');
+      assert.equal(state, 'empty');
     }
   });
 }

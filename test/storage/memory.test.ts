@@ -1,11 +1,13 @@
+import assert from 'node:assert';
+import { describe, it } from 'node:test';
 import { Header } from '../../src/header/headers';
 import { buildMemoryStorage } from '../../src/storage/memory';
 import type { CachedStorageValue } from '../../src/storage/types';
-import { EMPTY_RESPONSE, sleep } from '../utils';
+import { EMPTY_RESPONSE, mockDateNow } from '../utils';
 import { testStorage } from './storages';
 
-describe('tests memory storage', () => {
-  testStorage('memory', () => buildMemoryStorage());
+describe('MemoryStorage', () => {
+  testStorage('MemoryStorage', buildMemoryStorage());
 
   // Expects that when a result returned by storage.get() has his inner properties updated,
   // a new request to storage.get() should maintain the same value.
@@ -23,9 +25,9 @@ describe('tests memory storage', () => {
 
     const result = (await storage.get('key')) as CachedStorageValue;
 
-    expect(result).not.toBeNull();
-    expect(result.state).toBe('cached');
-    expect(result.data.data).toBe('data');
+    assert.notEqual(result, null);
+    assert.equal(result.state, 'cached');
+    assert.equal(result.data.data, 'data');
 
     // Deletes the value
     delete result.data.data;
@@ -33,9 +35,9 @@ describe('tests memory storage', () => {
     // Check if the value has been modified
     const result2 = await storage.get('key');
 
-    expect(result2).not.toBeNull();
-    expect(result2.state).toBe('cached');
-    expect(result2.data?.data).toBe('data');
+    assert.notEqual(result2, null);
+    assert.equal(result2.state, 'cached');
+    assert.equal(result2.data?.data, 'data');
   });
 
   // Expects that a when value saved using storage.set() is has his inner properties updated,
@@ -56,19 +58,16 @@ describe('tests memory storage', () => {
 
     data.data = 'another data';
 
-    expect(storage.data['key']).not.toBeNull();
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    expect(storage.data['key']!.state).toBe('cached');
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    expect(storage.data['key']!.data).not.toBeNull();
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    expect(storage.data['key']!.data!.data).toBe('data');
+    assert.notEqual(storage.data['key'], null);
+    assert.equal(storage.data['key']!.state, 'cached');
+    assert.notEqual(storage.data['key']!.data, null);
+    assert.equal(storage.data['key']!.data!.data, 'data');
 
     const result = (await storage.get('key')) as CachedStorageValue;
 
-    expect(result).not.toBeNull();
-    expect(result.state).toBe('cached');
-    expect(result.data.data).toBe('data');
+    assert.notEqual(result, null);
+    assert.equal(result.state, 'cached');
+    assert.equal(result.data.data, 'data');
   });
 
   it('tests cleanup function', async () => {
@@ -119,24 +118,22 @@ describe('tests memory storage', () => {
     });
 
     // Ensure that the values are still there
-    expect(storage.data['empty']).toMatchObject({ state: 'empty' });
-    expect(storage.data['stale']).toMatchObject({ state: 'stale' });
-    expect(storage.data['expiredStale']).toMatchObject({ state: 'stale' });
-    expect(storage.data['loading']).toMatchObject({ state: 'loading' });
-    expect(storage.data['cached']).toMatchObject({ state: 'cached' });
-    expect(storage.data['expiredCache']).toMatchObject({
-      state: 'cached'
-    });
+    assert.equal(storage.data['empty']?.state, 'empty');
+    assert.equal(storage.data['stale']?.state, 'stale');
+    assert.equal(storage.data['expiredStale']?.state, 'stale');
+    assert.equal(storage.data['loading']?.state, 'loading');
+    assert.equal(storage.data['cached']?.state, 'cached');
+    assert.equal(storage.data['expiredCache']?.state, 'cached');
 
     // Waits for the cleanup function to run
-    await sleep(600);
+    await mockDateNow(600);
 
-    await expect(storage.get('empty')).resolves.toMatchObject({ state: 'empty' });
-    await expect(storage.get('stale')).resolves.toMatchObject({ state: 'stale' });
-    await expect(storage.get('expiredStale')).resolves.toMatchObject({ state: 'empty' });
-    await expect(storage.get('loading')).resolves.toMatchObject({ state: 'loading' });
-    await expect(storage.get('cached')).resolves.toMatchObject({ state: 'cached' });
-    await expect(storage.get('expiredCache')).resolves.toMatchObject({ state: 'empty' });
+    assert.equal((await storage.get('empty')).state, 'empty');
+    assert.equal((await storage.get('stale')).state, 'stale');
+    assert.equal((await storage.get('expiredStale')).state, 'empty');
+    assert.equal((await storage.get('loading')).state, 'loading');
+    assert.equal((await storage.get('cached')).state, 'cached');
+    assert.equal((await storage.get('expiredCache')).state, 'empty');
 
     // Clears handle
     clearTimeout(storage.cleaner);
@@ -159,10 +156,10 @@ describe('tests memory storage', () => {
       data: { ...EMPTY_RESPONSE, data: 'data' }
     });
 
-    expect(Object.keys(storage.data)).toHaveLength(2);
-    expect(storage.data['key']).toBeDefined();
-    expect(storage.data['key2']).toBeDefined();
-    expect(storage.data['key3']).toBeUndefined();
+    assert.equal(Object.keys(storage.data).length, 2);
+    assert.ok(storage.data['key']);
+    assert.ok(storage.data['key2']);
+    assert.equal(storage.data['key3'], undefined);
 
     await storage.set('key3', {
       state: 'cached',
@@ -171,11 +168,11 @@ describe('tests memory storage', () => {
       data: { ...EMPTY_RESPONSE, data: 'data' }
     });
 
-    expect(Object.keys(storage.data)).toHaveLength(2);
+    assert.equal(Object.keys(storage.data).length, 2);
 
-    expect(storage.data['key']).toBeUndefined();
-    expect(storage.data['key2']).toBeDefined();
-    expect(storage.data['key3']).toBeDefined();
+    assert.equal(storage.data['key'], undefined);
+    assert.ok(storage.data['key2']);
+    assert.ok(storage.data['key3']);
   });
 
   it('tests maxEntries with cleanup', async () => {
@@ -202,11 +199,11 @@ describe('tests memory storage', () => {
       data: { ...EMPTY_RESPONSE, data: 'data' }
     });
 
-    expect(Object.keys(storage.data)).toHaveLength(3);
-    expect(storage.data['exp']).toBeDefined();
-    expect(storage.data['not exp']).toBeDefined();
-    expect(storage.data['exp2']).toBeDefined();
-    expect(storage.data['key']).toBeUndefined();
+    assert.equal(Object.keys(storage.data).length, 3);
+    assert.ok(storage.data['exp']);
+    assert.ok(storage.data['not exp']);
+    assert.ok(storage.data['exp2']);
+    assert.equal(storage.data['key'], undefined);
 
     await storage.set('key', {
       state: 'cached',
@@ -215,11 +212,11 @@ describe('tests memory storage', () => {
       data: { ...EMPTY_RESPONSE, data: 'data' }
     });
 
-    expect(Object.keys(storage.data)).toHaveLength(2);
+    assert.equal(Object.keys(storage.data).length, 2);
 
-    expect(storage.data['exp']).toBeUndefined();
-    expect(storage.data['exp2']).toBeUndefined();
-    expect(storage.data['not exp']).toBeDefined();
-    expect(storage.data['key']).toBeDefined();
+    assert.equal(storage.data['exp'], undefined);
+    assert.equal(storage.data['exp2'], undefined);
+    assert.ok(storage.data['not exp']);
+    assert.ok(storage.data['key']);
   });
 });

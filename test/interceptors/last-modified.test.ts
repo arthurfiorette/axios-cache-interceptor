@@ -1,10 +1,12 @@
+import assert from 'node:assert';
+import { describe, it } from 'node:test';
 import type { CacheRequestConfig } from '../../src';
 import { Header } from '../../src/header/headers';
-import { mockAxios, XMockRandom } from '../mocks/axios';
-import { sleep } from '../utils';
+import { XMockRandom, mockAxios } from '../mocks/axios';
+import { mockDateNow } from '../utils';
 
-describe('Last-Modified handling', () => {
-  it('tests last modified header handling', async () => {
+describe('LastModified handling', () => {
+  it('Last modified header handling', async () => {
     const axios = mockAxios(
       {},
       {
@@ -21,19 +23,19 @@ describe('Last-Modified handling', () => {
     await axios.get('url', config);
 
     const response = await axios.get('url', config);
-    expect(response.cached).toBe(true);
-    expect(response.data).toBe(true);
+    assert.ok(response.cached);
+    assert.ok(response.data);
 
-    // Sleep entire max age time.
-    await sleep(1000);
+    // Sleep entire max age time (using await to function as setImmediate)
+    await mockDateNow(1);
 
     const response2 = await axios.get('url', config);
     // from revalidation
-    expect(response2.cached).toBe(true);
-    expect(response2.status).toBe(200);
+    assert.ok(response2.cached);
+    assert.equal(response2.status, 200);
   });
 
-  it('tests last modified header handling in global config', async () => {
+  it('Last modified header handling in global config', async () => {
     const axios = mockAxios(
       { interpretHeader: true, modifiedSince: true },
       {
@@ -45,19 +47,19 @@ describe('Last-Modified handling', () => {
     await axios.get('url');
 
     const response = await axios.get('url');
-    expect(response.cached).toBe(true);
-    expect(response.data).toBe(true);
+    assert.ok(response.cached);
+    assert.ok(response.data);
 
-    // Sleep entire max age time.
-    await sleep(1000);
+    // Sleep entire max age time (using await to function as setImmediate)
+    await mockDateNow(1);
 
     const response2 = await axios.get('url');
     // from revalidation
-    expect(response2.cached).toBe(true);
-    expect(response2.status).toBe(200);
+    assert.ok(response2.cached);
+    assert.equal(response2.status, 200);
   });
 
-  it('tests modifiedSince as date', async () => {
+  it('ModifiedSince as Date', async () => {
     const axios = mockAxios({ ttl: 0 });
 
     const config: CacheRequestConfig = {
@@ -66,19 +68,19 @@ describe('Last-Modified handling', () => {
     };
 
     const response = await axios.get('url', config);
-    expect(response.cached).toBe(false);
-    expect(response.data).toBe(true);
-    expect(response.config.headers?.[Header.IfModifiedSince]).toBeUndefined();
-    expect(response.headers?.[Header.XAxiosCacheLastModified]).toBeDefined();
+    assert.equal(response.cached, false);
+    assert.ok(response.data);
+    assert.equal(response.config.headers?.[Header.IfModifiedSince], undefined);
+    assert.ok(response.headers?.[Header.XAxiosCacheLastModified]);
 
     const response2 = await axios.get('url', config);
-    expect(response2.cached).toBe(true);
-    expect(response2.data).toBe(true);
-    expect(response2.config.headers?.[Header.IfModifiedSince]).toBeDefined();
-    expect(response2.headers?.[Header.XAxiosCacheLastModified]).toBeDefined();
+    assert.ok(response2.cached);
+    assert.ok(response2.data);
+    assert.ok(response2.config.headers?.[Header.IfModifiedSince]);
+    assert.ok(response2.headers?.[Header.XAxiosCacheLastModified]);
   });
 
-  it('tests modifiedSince using cache timestamp', async () => {
+  it('ModifiedSince using cache timestamp', async () => {
     const axios = mockAxios(
       {},
       {
@@ -99,23 +101,23 @@ describe('Last-Modified handling', () => {
     const response = await axios.get('url', config);
     const modifiedSince = response.config.headers?.[Header.IfModifiedSince] as string;
 
-    expect(modifiedSince).toBeDefined();
+    assert.ok(modifiedSince);
 
     const milliseconds = Date.parse(modifiedSince);
 
-    expect(typeof milliseconds).toBe('number');
-    expect(milliseconds).toBeLessThan(Date.now());
+    assert.equal(typeof milliseconds, 'number');
+    assert.ok(milliseconds < Date.now());
   });
 
-  it('tests header overriding with 304', async () => {
+  it('Header overriding with 304', async () => {
     const axios = mockAxios();
 
     // First request, return x-my-header. Ttl 1 to make the cache stale
     const firstResponse = await axios.get('url', { cache: { ttl: -1 } });
     const firstMyHeader: unknown = firstResponse.headers?.[XMockRandom];
 
-    expect(firstMyHeader).toBeDefined();
-    expect(Number(firstMyHeader)).not.toBeNaN();
+    assert.ok(firstMyHeader);
+    assert.notEqual(Number(firstMyHeader), NaN);
 
     // Second request with 304 Not Modified
     const secondResponse = await axios.get('url', {
@@ -123,8 +125,8 @@ describe('Last-Modified handling', () => {
     });
     const secondMyHeader: unknown = secondResponse.headers?.[XMockRandom];
 
-    expect(secondMyHeader).toBeDefined();
-    expect(Number(secondMyHeader)).not.toBeNaN();
-    expect(secondMyHeader).not.toBe(firstMyHeader);
+    assert.ok(secondMyHeader);
+    assert.notEqual(Number(secondMyHeader), NaN);
+    assert.notEqual(secondMyHeader, firstMyHeader);
   });
 });

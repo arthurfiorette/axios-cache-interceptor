@@ -1,72 +1,76 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
+import assert from 'node:assert';
+import { describe, it } from 'node:test';
 import type { CachedStorageValue } from '../../src/storage/types';
 import { testCachePredicate } from '../../src/util/cache-predicate';
 import { mockAxios } from '../mocks/axios';
 import { createResponse } from '../utils';
 
-describe('tests cache predicate object', () => {
-  it('tests some empty usage', () => {
+describe('CachePredicate', () => {
+  it('Empty usage', () => {
     const response = createResponse({ status: 200 });
 
-    expect(testCachePredicate(response, {})).toBeTruthy();
+    assert.ok(testCachePredicate(response, {}));
   });
 
-  it('tests custom cased headers', async () => {
+  it('Capital Cased headers', async () => {
     const response = createResponse({ headers: { 'Content-Type': 'application/json' } });
 
-    expect(
+    assert.ok(
       await testCachePredicate(response, {
         containsHeaders: {
           'Content-Type': (h) => h === 'application/json'
         }
       })
-    ).toBeTruthy();
+    );
   });
 
-  it('tests statusCheck with a predicate', async () => {
+  it('StatusCheck with a predicate', async () => {
     const response = createResponse({ status: 764 });
 
-    expect(
+    assert.equal(
       await testCachePredicate(response, {
         statusCheck: (status) => status >= 200 && status <= 299
-      })
-    ).toBeFalsy();
+      }),
+      false
+    );
 
-    expect(
+    assert.ok(
       await testCachePredicate(response, {
         statusCheck: (status) => status >= 760 && status <= 769
       })
-    ).toBeTruthy();
+    );
   });
 
-  it('tests containsHeader header casing', async () => {
+  it('ContainsHeader header casing', async () => {
     const response = createResponse({
       headers: { 'content-type': 'application/json' }
     });
 
-    expect(await testCachePredicate(response, {})).toBeTruthy();
+    assert.ok(await testCachePredicate(response, {}));
 
-    expect(
+    assert.equal(
       await testCachePredicate(response, {
         containsHeaders: { 'content-type': () => false }
-      })
-    ).toBeFalsy();
+      }),
+      false
+    );
 
-    expect(
+    assert.equal(
       await testCachePredicate(response, {
         containsHeaders: { 'Content-Type': () => false }
-      })
-    ).toBeFalsy();
+      }),
+      false
+    );
 
-    expect(
+    assert.equal(
       await testCachePredicate(response, {
         containsHeaders: { 'Content-Type': () => false }
-      })
-    ).toBeFalsy();
+      }),
+      false
+    );
   });
 
-  it('tests containsHeader', async () => {
+  it('ContainsHeader', async () => {
     const response = createResponse({
       headers: { 'content-type': 'application/json' }
     });
@@ -83,12 +87,12 @@ describe('tests cache predicate object', () => {
       containsHeaders: { 'Content-Type': (h) => h === 'application/xml' }
     });
 
-    expect(isXmlContent).toBeFalsy();
-    expect(isJsonLowercase).toBeTruthy();
-    expect(isJsonContent).toBeTruthy();
+    assert.equal(isXmlContent, false);
+    assert.ok(isJsonLowercase);
+    assert.ok(isJsonContent);
   });
 
-  it('tests containsHeader with string predicate', async () => {
+  it('ContainsHeader with string predicate', async () => {
     const response = createResponse({
       headers: { 'content-type': 'application/json' }
     });
@@ -105,44 +109,45 @@ describe('tests cache predicate object', () => {
       containsHeaders: { 'Content-Type': (header) => header === 'application/json' }
     });
 
-    expect(headerExists).toBeTruthy();
-    expect(isXmlContent).toBeFalsy();
-    expect(isJsonContent).toBeTruthy();
+    assert.ok(headerExists);
+    assert.equal(isXmlContent, false);
+    assert.ok(isJsonContent);
   });
 
-  it('tests responseMatch', async () => {
+  it('ResponseMatch', async () => {
     const response = createResponse({
       data: { a: true, b: 1 }
     });
 
-    expect(
+    assert.ok(
       await testCachePredicate(response, {
         responseMatch: ({ data }) => data && data.a === true && data.b === 1
       })
-    ).toBeTruthy();
+    );
 
-    expect(
+    assert.ok(
       await testCachePredicate(
         response,
         ({ data }) => data && data.a === true && data.b === 1
       )
-    ).toBeTruthy();
+    );
 
-    expect(
+    assert.equal(
       await testCachePredicate(response, {
         responseMatch: ({ data }) => data && (data.a !== true || data.b !== 1)
-      })
-    ).toBeFalsy();
+      }),
+      false
+    );
   });
 
-  it('tests responseMath, containsHeaders with async functions', async () => {
+  it('ResponseMath, ContainsHeaders with async functions', async () => {
     const response = createResponse({
       data: { a: true, b: 1 },
       status: 399,
       headers: { 'cache-control': 'no-cache' }
     });
 
-    expect(
+    assert.equal(
       await testCachePredicate(response, {
         containsHeaders: {
           'cache-control': async (h) => {
@@ -151,10 +156,11 @@ describe('tests cache predicate object', () => {
             return h !== 'no-cache';
           }
         }
-      })
-    ).toBeFalsy();
+      }),
+      false
+    );
 
-    expect(
+    assert.ok(
       await testCachePredicate(response, {
         containsHeaders: {
           'cache-control': async (header) => {
@@ -163,27 +169,28 @@ describe('tests cache predicate object', () => {
           }
         }
       })
-    ).toBeTruthy();
+    );
 
-    expect(
+    assert.ok(
       await testCachePredicate(response, {
         responseMatch: async ({ data }) => {
           await 0; // jumps to next nodejs event loop tick
           return data.a;
         }
       })
-    ).toBeTruthy();
+    );
 
-    expect(
+    assert.equal(
       await testCachePredicate(response, {
         responseMatch: async ({ data }) => {
           await 0; // jumps to next nodejs event loop tick
           return !data.a;
         }
-      })
-    ).toBeFalsy();
+      }),
+      false
+    );
 
-    expect(
+    assert.ok(
       await testCachePredicate(response, {
         statusCheck: async (status) => {
           await 0; // jumps to next nodejs event loop tick
@@ -192,17 +199,18 @@ describe('tests cache predicate object', () => {
       })
     );
 
-    expect(
+    assert.equal(
       await testCachePredicate(response, {
         statusCheck: async (status) => {
           await 0; // jumps to next nodejs event loop tick
           return status !== 399;
         }
-      })
+      }),
+      false
     );
   });
 
-  it('tests generics and typescript types', async () => {
+  it('Generics and Typescript types', async () => {
     const axios = mockAxios();
 
     const result = await axios.get<{ a: boolean; b: number }>('url', {
@@ -236,10 +244,10 @@ describe('tests cache predicate object', () => {
       }
     });
 
-    expect(result).toBeDefined();
+    assert.ok(result);
   });
 
-  it('request have id no matter what', async () => {
+  it('Request always have id', async () => {
     const axios = mockAxios({
       methods: ['post'] // only post
     });
@@ -249,13 +257,13 @@ describe('tests cache predicate object', () => {
 
     const req3 = await axios.get('url-2');
 
-    expect(req1.id).toBeDefined();
-    expect(req1.cached).toBe(false);
+    assert.ok(req1.id);
+    assert.equal(req1.cached, false);
 
-    expect(req2.id).toBeDefined();
-    expect(req2.cached).toBe(true);
+    assert.ok(req2.id);
+    assert.equal(req2.cached, true);
 
-    expect(req3.id).toBeDefined();
-    expect(req3.cached).toBe(false);
+    assert.ok(req3.id);
+    assert.equal(req3.cached, false);
   });
 });
