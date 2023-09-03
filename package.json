@@ -47,7 +47,7 @@
     "docs:serve": "vitepress serve docs",
     "format": "prettier --write .",
     "lint": "eslint . --ext .ts",
-    "test": "NODE_V8_COVERAGE=coverage node -r ./dist/test/setup.js --trace-warnings --experimental-test-coverage --test dist/test/**/*.test.js",
+    "test": "NODE_V8_COVERAGE=coverage node -r ./dist/test/setup.js --enable-source-maps --trace-warnings --experimental-test-coverage --test dist/test/**/*.test.js",
     "version": "auto-changelog -p && cp CHANGELOG.md docs/src/others/changelog.md && git add CHANGELOG.md docs/src/others/changelog.md"
   },
   "resolutions": {
@@ -75,7 +75,6 @@
     "prettier": "^2.8.8",
     "prettier-plugin-jsdoc": "^0.4.2",
     "prettier-plugin-organize-imports": "^3.2.2",
-    "source-map-support": "^0.5.21",
     "ts-loader": "^9.4.3",
     "tslib": "^2.5.3",
     "typescript": "^5.1.3",
