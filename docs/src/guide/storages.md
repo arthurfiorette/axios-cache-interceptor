@@ -50,6 +50,19 @@ setupCache(axios, {
 });
 ```
 
+Options:
+
+- **cloneData**: Use `true` if the data returned by `find()` should be cloned to avoid
+  mutating the original data outside the `set()` method. Use `'double'` to also clone
+  before saving value in storage using `set()`. Disabled is default
+
+- **cleanupInterval**: The interval in milliseconds to run a setInterval job of cleaning
+  old entries. If false, the job will not be created. Disabled is default
+
+- **maxEntries**: The maximum number of entries to keep in the storage. Its hard to
+  determine the size of the entries, so a smart FIFO order is used to determine eviction.
+  If false, no check will be done and you may grow up memory usage. Disabled is default
+
 ## Web Storage API
 
 If you need persistent caching between page refreshes, you can use the `buildWebStorage`

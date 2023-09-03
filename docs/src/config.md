@@ -1,6 +1,7 @@
-# Global
+# setupCache()
 
-These are properties that are used and shared by the entire application.
+The `setupCache` function receives the axios instance and a set of optional properties
+described below. They are used and shared by the entire application workflow.
 
 ```ts
 const axios = setupCache(axios, OPTIONS);

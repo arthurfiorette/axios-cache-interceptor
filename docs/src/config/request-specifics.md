@@ -182,7 +182,8 @@ exceptions to the method rule.
   _(These default status codes follows RFC 7231)_
 
 An object or function that will be tested against the response to indicate if it can be
-cached.
+cached. You can use `statusCheck`, `containsHeader` and `responseMatch` to test against
+the response.
 
 ```ts{5,8,13}
 axios.get<{ auth: { status: string } }>('url', {
