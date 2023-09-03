@@ -127,9 +127,21 @@ Headers included:
 - `Pragma: no-cache`
 - `Expires: 0`
 
-Learn more at
+::: warning
+
+This option will not work on most **CORS** requests, as the browser will throw
+`Request header field pragma is not allowed by Access-Control-Allow-Headers in preflight response.`.
+
+When you encounter this error, you need to make sure `Cache-Control`, `Pragma` and
+`Expires` headers are included into your server's `Access-Control-Allow-Headers` CORS
+configuration.
+
+If you cannot do such thing, you can fallback to disabling this option. Learn more on why
+it should be enabled at
 [#437](https://github.com/arthurfiorette/axios-cache-interceptor/issues/437#issuecomment-1361262194)
 and in this [StackOverflow](https://stackoverflow.com/a/62781874/14681561) answer.
+
+:::
 
 ## cache.methods
 
