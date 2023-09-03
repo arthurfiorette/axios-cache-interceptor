@@ -164,11 +164,10 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
     if (cache.state === 'loading') {
       const deferred = axios.waiting[config.id];
 
-      // Just in case, the deferred doesn't exists.
-      /* istanbul ignore if 'really hard to test' */
+      // The deferred may not exists when the process is using a persistent
+      // storage and cancelled  in the middle of a request, this would result in
+      // a pending loading state in the storage but no current promises to resolve
       if (!deferred) {
-        await axios.storage.remove(config.id, config);
-
         // Hydrates any UI temporarily, if cache is available
         if (cache.data) {
           await config.cache.hydrate?.(cache);
@@ -201,8 +200,9 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
           await config.cache.hydrate?.(cache);
         }
 
-        // The deferred is rejected when the request that we are waiting rejected cache.
-        return config;
+        // The deferred is rejected when the request that we are waiting rejects its cache.
+        // In this case, we need to redo the request all over again.
+        return onFulfilled(config);
       }
     } else {
       cachedResponse = cache.data;
@@ -210,8 +210,8 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
 
     // Even though the response interceptor receives this one from here,
     // it has been configured to ignore cached responses = true
-    config.adapter = (): Promise<CacheAxiosResponse> =>
-      Promise.resolve({
+    config.adapter = function cachedAdapter(): Promise<CacheAxiosResponse> {
+      return Promise.resolve({
         config,
         data: cachedResponse.data,
         headers: cachedResponse.headers,
@@ -221,6 +221,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         id: config.id!
       });
+    };
 
     if (__ACI_DEV__) {
       axios.debug?.({

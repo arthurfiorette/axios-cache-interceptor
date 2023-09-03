@@ -296,4 +296,59 @@ describe('Response Interceptor', () => {
 
     await assert.rejects(promise, error);
   });
+
+  it('Cancelled deferred still should save cache after new response', async () => {
+    const axios = mockAxios();
+
+    const id = '1';
+    const controller = new AbortController();
+
+    const cancelled = axios.get('url', { id, signal: controller.signal });
+    const promise = axios.get('url', { id });
+
+    controller.abort();
+
+    // p1 should fail as it was aborted
+    try {
+      await cancelled;
+      assert.fail('should have thrown an error');
+    } catch (error: any) {
+      assert.equal(error.code, 'ERR_CANCELED');
+    }
+
+    const response = await promise;
+
+    // p2 should succeed as it was not aborted
+    await assert.ok(response.data);
+    await assert.equal(response.cached, false);
+
+    const storage = await axios.storage.get(id);
+
+    // P2 should have saved the cache
+    // even that his origin was from a cancelled deferred
+    assert.equal(storage.state, 'cached');
+    assert.equal(storage.data?.data, true);
+  });
+
+  it('Response gets cached even if there is a pending request without deferred.', async () => {
+    const axios = mockAxios();
+
+    const id = '1';
+
+    // Simulates previous unresolved request
+    await axios.storage.set(id, {
+      state: 'loading',
+      previous: 'empty'
+    });
+
+    const response = await axios.get('url', { id });
+
+    assert.equal(response.cached, false);
+    assert.ok(response.data);
+
+    const storage = await axios.storage.get(id);
+
+    assert.equal(storage.state, 'cached');
+    assert.equal(storage.data?.data, true);
+  });
 });

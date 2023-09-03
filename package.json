@@ -48,6 +48,7 @@
     "format": "prettier --write .",
     "lint": "eslint . --ext .ts",
     "test": "NODE_V8_COVERAGE=coverage node -r ./dist/test/setup.js --enable-source-maps --trace-warnings --experimental-test-coverage --test dist/test/**/*.test.js",
+    "test:only": "tsc -p tsconfig.test.json && NODE_V8_COVERAGE=coverage node -r ./dist/test/setup.js --enable-source-maps --trace-warnings --experimental-test-coverage --test-only",
     "version": "auto-changelog -p && cp CHANGELOG.md docs/src/others/changelog.md && git add CHANGELOG.md docs/src/others/changelog.md"
   },
   "resolutions": {
