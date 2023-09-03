@@ -34,6 +34,9 @@ jobs:
       - name: Test
         run: pnpm test
 
+      - name: Build code
+        run: pnpm build
+
       - name: ESCheck
         run: pnpm run check
 
