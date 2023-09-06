@@ -55,6 +55,9 @@ devDependencies:
   eslint-plugin-prettier:
     specifier: ^4.2.1
     version: 4.2.1(eslint-config-prettier@9.0.0)(eslint@8.48.0)(prettier@2.8.8)
+  idb:
+    specifier: ^7.1.1
+    version: 7.1.1
   jsdom:
     specifier: ^22.1.0
     version: 22.1.0
@@ -2165,6 +2168,10 @@ packages:
     engines: {node: '>=0.10.0'}
     dependencies:
       safer-buffer: 2.1.2
+    dev: true
+
+  /idb@7.1.1:
+    resolution: {integrity: sha512-gchesWBzyvGHRO9W8tzUWFDycow5gwjvFKfyV9FF32Y7F50yZMp7mP+T2mJIWFx49zicqyC4uefHM17o6xKIVQ==}
     dev: true
 
   /ignore@5.2.4:
