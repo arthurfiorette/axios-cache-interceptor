@@ -4,7 +4,7 @@ import type { CachedStorageValue } from '../../src/storage/types';
 import { EMPTY_RESPONSE } from '../utils';
 import { testStorage } from './storages';
 import buildIndexedDbStorage from '../../src/storage/indexeddb';
-import { indexedDB } from '../dom';
+import "fake-indexeddb/auto";
 
 const INDEXED_DB_TEST_NAME = 'axios-cache-test-indexeddb';
 

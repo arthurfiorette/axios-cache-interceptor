@@ -74,6 +74,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "idb": "^7.1.1",
     "jsdom": "^22.1.0",
+    "fake-indexeddb": "^4.0.2",
     "prettier": "^2.8.8",
     "prettier-plugin-jsdoc": "^0.4.2",
     "prettier-plugin-organize-imports": "^3.2.2",
