@@ -42,7 +42,7 @@ devDependencies:
     version: 2.4.0
   axios:
     specifier: ^1.4.0
-    version: 1.5.0
+    version: 1.5.1
   es-check:
     specifier: ^7.1.1
     version: 7.1.1
@@ -78,7 +78,7 @@ devDependencies:
     version: 5.2.2
   vitepress:
     specifier: 1.0.0-rc.20
-    version: 1.0.0-rc.20(@algolia/client-search@4.19.1)(@types/node@20.5.0)(axios@1.5.0)(search-insights@2.6.0)
+    version: 1.0.0-rc.20(@algolia/client-search@4.19.1)(@types/node@20.5.0)(axios@1.5.1)(search-insights@2.6.0)
   webpack:
     specifier: ^5.86.0
     version: 5.88.2(webpack-cli@5.1.4)
@@ -1001,7 +1001,7 @@ packages:
       - vue
     dev: true
 
-  /@vueuse/integrations@10.4.1(axios@1.5.0)(focus-trap@7.5.2)(vue@3.3.4):
+  /@vueuse/integrations@10.4.1(axios@1.5.1)(focus-trap@7.5.2)(vue@3.3.4):
     resolution: {integrity: sha512-uRBPyG5Lxoh1A/J+boiioPT3ELEAPEo4t8W6Mr4yTKIQBeW/FcbsotZNPr4k9uz+3QEksMmflWloS9wCnypM7g==}
     peerDependencies:
       async-validator: '*'
@@ -1044,7 +1044,7 @@ packages:
     dependencies:
       '@vueuse/core': 10.4.1(vue@3.3.4)
       '@vueuse/shared': 10.4.1(vue@3.3.4)
-      axios: 1.5.0
+      axios: 1.5.1
       focus-trap: 7.5.2
       vue-demi: 0.14.5(vue@3.3.4)
     transitivePeerDependencies:
@@ -1340,8 +1340,8 @@ packages:
       - encoding
     dev: true
 
-  /axios@1.5.0:
-    resolution: {integrity: sha512-D4DdjDo5CY50Qms0qGQTTw6Q44jl7zRwY7bthds06pUGfChBCTcQs+N743eFWGEd6pRTMd6A+I87aWyFV5wiZQ==}
+  /axios@1.5.1:
+    resolution: {integrity: sha512-Q28iYCWzNHjAm+yEAot5QaAMxhMghWLFVf7rRdwhUI+c2jix2DUXjAHXVi+s1ibs3mjPO/cCgbA++3BjD0vP/A==}
     dependencies:
       follow-redirects: 1.15.2
       form-data: 4.0.0
@@ -3574,7 +3574,7 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /vitepress@1.0.0-rc.20(@algolia/client-search@4.19.1)(@types/node@20.5.0)(axios@1.5.0)(search-insights@2.6.0):
+  /vitepress@1.0.0-rc.20(@algolia/client-search@4.19.1)(@types/node@20.5.0)(axios@1.5.1)(search-insights@2.6.0):
     resolution: {integrity: sha512-CykMUJ8JLxLcGWek0ew3wln4RYbsOd1+0YzXITTpajggpynm2S331TNkJVOkHrMRc6GYe3y4pS40GfgcW0ZwAw==}
     hasBin: true
     peerDependencies:
@@ -3591,7 +3591,7 @@ packages:
       '@types/markdown-it': 13.0.1
       '@vue/devtools-api': 6.5.0
       '@vueuse/core': 10.4.1(vue@3.3.4)
-      '@vueuse/integrations': 10.4.1(axios@1.5.0)(focus-trap@7.5.2)(vue@3.3.4)
+      '@vueuse/integrations': 10.4.1(axios@1.5.1)(focus-trap@7.5.2)(vue@3.3.4)
       focus-trap: 7.5.2
       mark.js: 8.11.1
       minisearch: 6.1.0
