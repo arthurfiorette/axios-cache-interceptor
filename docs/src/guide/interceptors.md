@@ -1,6 +1,6 @@
 # Other Interceptors
 
-When combining `axios-cache-adapter` with other interceptors, you may encounter some
+When combining `axios-cache-interceptors` with other interceptors, you may encounter some
 inconsistences. Which is explained in the next section.
 
 ## TL;DR
