@@ -50,8 +50,8 @@ any possible differences between them and share the same cache for both.
 If the default generator is not enough for your use case, you can provide your own custom
 generator with the `generateKey` option.
 
-By default, it extracts `method`, `baseURL`, `query`, `params`, `data` and `url` properties from
-the request object and hashes it into a number with
+By default, it extracts `method`, `baseURL`, `query`, `params`, `data` and `url`
+properties from the request object and hashes it into a number with
 [`object-code`](https://www.npmjs.com/package/object-code).
 
 Here's an example of a generator that only uses the `url` and `method` and `custom`
