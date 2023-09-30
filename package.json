@@ -40,7 +40,6 @@
   "scripts": {
     "benchmark": "cd benchmark && pnpm start",
     "build": "sh build/build.sh",
-    "build:test": "tsc -p tsconfig.test.json",
     "check": "sh build/check.sh",
     "docs:build": "vitepress build docs",
     "docs:dev": "vitepress dev docs --port 1227",
