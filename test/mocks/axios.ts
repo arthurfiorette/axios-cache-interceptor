@@ -1,4 +1,5 @@
 import Axios, { AxiosError } from 'axios';
+import { setTimeout } from 'node:timers/promises';
 import type { AxiosCacheInstance } from '../../src/cache/axios';
 import { CacheOptions, setupCache } from '../../src/cache/create';
 import { Header } from '../../src/header/headers';
@@ -14,7 +15,8 @@ export function mockAxios(
 
   // Axios interceptors are a stack, so apply this after the cache interceptor
   axios.defaults.adapter = async (config) => {
-    await 0; // Jumps to next tick of nodejs event loop
+    // Simply wait for 1ms to simulate a network request
+    await setTimeout(1);
 
     const should304: unknown =
       config.headers?.[Header.IfNoneMatch] || config.headers?.[Header.IfModifiedSince];

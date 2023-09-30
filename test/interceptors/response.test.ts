@@ -1,6 +1,7 @@
 import Axios from 'axios';
 import assert from 'node:assert';
 import { describe, it, mock } from 'node:test';
+import { setImmediate } from 'node:timers/promises';
 import { setupCache } from '../../src/cache/create';
 import { Header } from '../../src/header/headers';
 import { XMockRandom, mockAxios } from '../mocks/axios';
@@ -192,7 +193,7 @@ describe('Response Interceptor', () => {
     const { id } = await axios.get('url', {
       cache: {
         ttl: async () => {
-          await 0;
+          await setImmediate(); // jumps to next nodejs event loop tick
 
           return new Promise((res) => {
             setTimeout(() => {

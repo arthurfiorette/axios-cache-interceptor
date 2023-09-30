@@ -1,5 +1,6 @@
 import assert from 'node:assert';
 import { describe, it } from 'node:test';
+import { setImmediate } from 'node:timers/promises';
 import type { CachedStorageValue } from '../../src/storage/types';
 import { testCachePredicate } from '../../src/util/cache-predicate';
 import { mockAxios } from '../mocks/axios';
@@ -151,8 +152,7 @@ describe('CachePredicate', () => {
       await testCachePredicate(response, {
         containsHeaders: {
           'cache-control': async (h) => {
-            await 0; // jumps to next nodejs event loop tick
-
+            await setImmediate(); // jumps to next nodejs event loop tick
             return h !== 'no-cache';
           }
         }
@@ -164,7 +164,7 @@ describe('CachePredicate', () => {
       await testCachePredicate(response, {
         containsHeaders: {
           'cache-control': async (header) => {
-            await 0; // jumps to next nodejs event loop tick
+            await setImmediate(); // jumps to next nodejs event loop tick
             return header === 'no-cache';
           }
         }
@@ -174,7 +174,7 @@ describe('CachePredicate', () => {
     assert.ok(
       await testCachePredicate(response, {
         responseMatch: async ({ data }) => {
-          await 0; // jumps to next nodejs event loop tick
+          await setImmediate(); // jumps to next nodejs event loop tick
           return data.a;
         }
       })
@@ -183,7 +183,7 @@ describe('CachePredicate', () => {
     assert.equal(
       await testCachePredicate(response, {
         responseMatch: async ({ data }) => {
-          await 0; // jumps to next nodejs event loop tick
+          await setImmediate(); // jumps to next nodejs event loop tick
           return !data.a;
         }
       }),
@@ -193,7 +193,7 @@ describe('CachePredicate', () => {
     assert.ok(
       await testCachePredicate(response, {
         statusCheck: async (status) => {
-          await 0; // jumps to next nodejs event loop tick
+          await setImmediate(); // jumps to next nodejs event loop tick
           return status === 399;
         }
       })
@@ -202,7 +202,7 @@ describe('CachePredicate', () => {
     assert.equal(
       await testCachePredicate(response, {
         statusCheck: async (status) => {
-          await 0; // jumps to next nodejs event loop tick
+          await setImmediate(); // jumps to next nodejs event loop tick
           return status !== 399;
         }
       }),

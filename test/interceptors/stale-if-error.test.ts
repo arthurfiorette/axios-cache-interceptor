@@ -6,7 +6,7 @@ import { Header } from '../../src/header/headers';
 import { mockAxios } from '../mocks/axios';
 import { mockDateNow } from '../utils';
 
-describe('StaleIfError handling', () => {
+describe.only('StaleIfError handling', () => {
   it('Handles thrown errors', async () => {
     const instance = Axios.create({});
     const axios = setupCache(instance, {});
@@ -405,17 +405,17 @@ describe('StaleIfError handling', () => {
   });
 
   // https://github.com/arthurfiorette/axios-cache-interceptor/issues/685
-  it.only('tests deadlock', async () => {
-    const axios = mockAxios();
+  it('ensure failed responses always cleans up waiting promise', async () => {
+    const axios = mockAxios({ staleIfError: false, ttl: -1, debug: console.log });
 
     axios.defaults.adapter = async (config) => {
       if (config.params?.fail) {
         throw new AxiosError(
-          'failed',
-          '400',
+          'Request failed with status code 404',
+          'ERR_BAD_REQUEST',
           config,
           { config },
-          { config, data: true, headers: {}, status: 200, statusText: 'Ok' }
+          { config, data: true, headers: {}, status: 404, statusText: 'Not Found' }
         );
       }
 
@@ -423,14 +423,33 @@ describe('StaleIfError handling', () => {
         config,
         data: true,
         headers: {},
+        request: { config },
         status: 200,
-        statusText: 'Ok'
+        statusText: 'OK'
       };
     };
 
-    const id = '#685';
-    const data = await axios.get('url', { id });
+    const id = 'arthurfiorette/axios-cache-interceptor#685';
 
-    console.log(data)
+    let data = await axios.get('url', { id });
+
+    assert.equal(data.cached, false);
+
+    try {
+      await axios.get('url', { id, params: { fail: true } });
+      assert.fail('should have thrown an error');
+    } catch (error: any) {
+      assert.equal(error.response.status, 404);
+    }
+
+    // If any waiting promise is not cleaned up, this will throw
+    // `Promise resolution is still pending but the event loop has already resolved`
+    // in node test runner
+    try {
+      await axios.get('url', { id, params: { fail: true } });
+      assert.fail('should have thrown an error');
+    } catch (error: any) {
+      assert.equal(error.response.status, 404);
+    }
   });
 });

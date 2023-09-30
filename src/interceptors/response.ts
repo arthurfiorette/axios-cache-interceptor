@@ -242,7 +242,7 @@ export function defaultResponseInterceptor(
     if (!error.isAxiosError) {
       if (__ACI_DEV__) {
         axios.debug({
-          msg: 'Received an non axios error in the rejected response interceptor, ignoring.',
+          msg: 'FATAL: Received an non axios error in the rejected response interceptor, ignoring.',
           data: error
         });
       }
@@ -279,6 +279,9 @@ export function defaultResponseInterceptor(
         });
       }
 
+      // Rejects all other requests waiting for this response
+      await rejectResponse(id, config);
+
       throw error;
     }
 
@@ -289,8 +292,6 @@ export function defaultResponseInterceptor(
       cache.state !== 'loading' ||
       cache.previous !== 'stale'
     ) {
-      await rejectResponse(id, config);
-
       if (__ACI_DEV__) {
         axios.debug({
           id,
@@ -298,6 +299,9 @@ export function defaultResponseInterceptor(
           data: { cache, error, config }
         });
       }
+
+      // Rejects all other requests waiting for this response
+      await rejectResponse(id, config);
 
       throw error;
     }
@@ -368,6 +372,9 @@ export function defaultResponseInterceptor(
         data: { error, config }
       });
     }
+
+    // Rejects all other requests waiting for this response
+    await rejectResponse(id, config);
 
     throw error;
   };

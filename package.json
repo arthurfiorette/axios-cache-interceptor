@@ -47,7 +47,7 @@
     "format": "prettier --write .",
     "lint": "eslint . --ext .ts",
     "test": "c8 --reporter lcov --reporter text node --trace-warnings -r tsx/cjs -r ./test/setup --enable-source-maps --trace-warnings --test test/**/*.test.ts",
-    "test:only": "c8 --reporter lcov --reporter text node --trace-warnings -r tsx/cjs -r test/setup.ts --enable-source-maps --trace-warnings --test-only",
+    "test:only": "c8 --reporter lcov --reporter text node --trace-warnings -r tsx/cjs -r ./test/setup --enable-source-maps --trace-warnings --test-only",
     "version": "auto-changelog -p && cp CHANGELOG.md docs/src/others/changelog.md && git add CHANGELOG.md docs/src/others/changelog.md"
   },
   "resolutions": {
