@@ -239,7 +239,7 @@ export function defaultResponseInterceptor(
 
   const onRejected: ResponseInterceptor['onRejected'] = async (error) => {
     // When response.config is not present, the response is indeed a error.
-    if (!error.isAxiosError) {
+    if (!error.isAxiosError || !error.config) {
       if (__ACI_DEV__) {
         axios.debug({
           msg: 'FATAL: Received an non axios error in the rejected response interceptor, ignoring.',
