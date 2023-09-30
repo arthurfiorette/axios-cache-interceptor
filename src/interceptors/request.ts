@@ -20,7 +20,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
 
     if (config.cache === false) {
       if (__ACI_DEV__) {
-        axios.debug?.({
+        axios.debug({
           msg: 'Ignoring cache because config.cache === false',
           data: config
         });
@@ -44,7 +44,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
 
     if (!isMethodIn(config.method, config.cache.methods)) {
       if (__ACI_DEV__) {
-        axios.debug?.({
+        axios.debug({
           msg: `Ignored because method (${config.method}) is not in cache.methods (${config.cache.methods})`
         });
       }
@@ -81,7 +81,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
         //@ts-expect-error read above
         if (cache.state !== 'empty') {
           if (__ACI_DEV__) {
-            axios.debug?.({
+            axios.debug({
               id: config.id,
               msg: 'Waiting list had an deferred for this key, waiting for it to finish'
             });
@@ -131,7 +131,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
         updateStaleRequest(cache, config as ConfigWithCache<unknown>);
 
         if (__ACI_DEV__) {
-          axios.debug?.({
+          axios.debug({
             id: config.id,
             msg: 'Updated stale request'
           });
@@ -141,7 +141,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
       config.validateStatus = createValidateStatus(config.validateStatus);
 
       if (__ACI_DEV__) {
-        axios.debug?.({
+        axios.debug({
           id: config.id,
           msg: 'Sending request, waiting for response',
           data: {
@@ -177,7 +177,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
       }
 
       if (__ACI_DEV__) {
-        axios.debug?.({
+        axios.debug({
           id: config.id,
           msg: 'Detected concurrent request, waiting for it to finish'
         });
@@ -187,7 +187,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
         cachedResponse = await deferred;
       } catch (err) {
         if (__ACI_DEV__) {
-          axios.debug?.({
+          axios.debug({
             id: config.id,
             msg: 'Deferred rejected, requesting again',
             data: err
@@ -224,7 +224,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
     };
 
     if (__ACI_DEV__) {
-      axios.debug?.({
+      axios.debug({
         id: config.id,
         msg: 'Returning cached response'
       });

@@ -54,7 +54,8 @@ export function setupCache(
   axiosCache.responseInterceptor =
     options.responseInterceptor || defaultResponseInterceptor(axiosCache);
 
-  axiosCache.debug = options.debug;
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  axiosCache.debug = options.debug || function noop() {};
 
   // CacheRequestConfig values
   axiosCache.defaults.cache = {
