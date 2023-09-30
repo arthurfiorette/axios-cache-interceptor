@@ -7,7 +7,13 @@ const { DefinePlugin } = require('webpack');
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const { version } = require('../package.json');
 
-const COPYRIGHT = `// Axios Cache Interceptor v${version} MIT License Copyright (c) 2021-present Arthur Fiorette & Contributors\n`;
+const COPYRIGHT = `
+/*!
+ * Axios Cache Interceptor v${version}
+ * (c) 2021-present Arthur Fiorette & Contributors
+ * Released under the MIT License.
+ */
+`.trim();
 
 /** @type {(...args: string[]) => string} */
 const root = (...p) => path.resolve(__dirname, '..', ...p);
@@ -102,7 +108,7 @@ const config = ({
 
               // @ts-expect-error - _value is not a public property
               // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-              assets._value = COPYRIGHT + assets._value;
+              assets._value = COPYRIGHT + '\n' + assets._value;
             }
           }
 
