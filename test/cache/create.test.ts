@@ -21,7 +21,7 @@ describe('Axios Cache Interceptor instances', () => {
     assert.throws(() => setupCache(axios));
   });
 
-  it('Importing with __ACI_DEV__ true prints console warning', async () => {
+  it('Importing with __ACI_DEV__ true prints console warning', () => {
     assert.ok(__ACI_DEV__);
 
     const oldLog = console.error;
@@ -29,7 +29,7 @@ describe('Axios Cache Interceptor instances', () => {
     const consoleMock = mock.fn();
     console.error = consoleMock;
 
-    await import('../../src/index');
+    require('../../src/index');
 
     assert.equal(consoleMock.mock.callCount(), 1);
 

@@ -73,7 +73,7 @@ export function buildMemoryStorage(
         // Clone the value before storing to prevent future mutations
         // from affecting cached data.
         cloneData === 'double'
-          ? /* istanbul ignore next 'only available on super recent browsers' */
+          ? /* c8 ignore next 3 */
             typeof structuredClone === 'function'
             ? structuredClone(value)
             : (JSON.parse(JSON.stringify(value)) as NotEmptyStorageValue)
@@ -87,7 +87,7 @@ export function buildMemoryStorage(
     find: (key) => {
       const value = storage.data[key];
 
-      /* istanbul ignore if 'only available on super recent browsers' */
+      /* c8 ignore next 7 */
       if (cloneData && value !== undefined) {
         if (typeof structuredClone === 'function') {
           return structuredClone(value);

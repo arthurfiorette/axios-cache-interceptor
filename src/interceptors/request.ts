@@ -195,7 +195,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
         }
 
         // Hydrates any UI temporarily, if cache is available
-        /* istanbul ignore if 'really hard to test' */
+        /* c8 ignore next 3 */
         if (cache.data) {
           await config.cache.hydrate?.(cache);
         }

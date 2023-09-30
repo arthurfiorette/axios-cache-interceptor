@@ -1,4 +1,4 @@
-import Axios from 'axios';
+import Axios, { AxiosError } from 'axios';
 import assert from 'node:assert';
 import { describe, it } from 'node:test';
 import { setupCache } from '../../src/cache/create';
@@ -402,5 +402,35 @@ describe('StaleIfError handling', () => {
     } catch (error: any) {
       assert.deepEqual(error.config.id, id);
     }
+  });
+
+  // https://github.com/arthurfiorette/axios-cache-interceptor/issues/685
+  it.only('tests deadlock', async () => {
+    const axios = mockAxios();
+
+    axios.defaults.adapter = async (config) => {
+      if (config.params?.fail) {
+        throw new AxiosError(
+          'failed',
+          '400',
+          config,
+          { config },
+          { config, data: true, headers: {}, status: 200, statusText: 'Ok' }
+        );
+      }
+
+      return {
+        config,
+        data: true,
+        headers: {},
+        status: 200,
+        statusText: 'Ok'
+      };
+    };
+
+    const id = '#685';
+    const data = await axios.get('url', { id });
+
+    console.log(data)
   });
 });

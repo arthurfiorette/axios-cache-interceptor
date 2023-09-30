@@ -5,7 +5,6 @@ import { mockAxios } from '../mocks/axios';
 import { EMPTY_RESPONSE } from '../utils';
 
 export function testStorageQuota(name: string, storage: Storage): void {
-  // Jest quota, in browsers this quota can be different but that isn't a problem.
   const MAXIMUM_LIMIT = 5_000_000;
 
   it(`${name} has storage limit`, () => {
