@@ -24,7 +24,7 @@ devDependencies:
     version: 1.0.10(prettier@2.8.8)
   '@types/jsdom':
     specifier: ^21.1.2
-    version: 21.1.3
+    version: 21.1.4
   '@types/node':
     specifier: ^20.5.0
     version: 20.5.0
@@ -713,8 +713,8 @@ packages:
     resolution: {integrity: sha512-z/QT1XN4K4KYuslS23k62yDIDLwLFkzxOuMplDtObz0+y7VqJCaO2o+SPwHCvLFZh7xazvvoor2tA/hPz9ee7g==}
     dev: true
 
-  /@types/jsdom@21.1.3:
-    resolution: {integrity: sha512-1zzqSP+iHJYV4lB3lZhNBa012pubABkj9yG/GuXuf6LZH1cSPIJBqFDrm5JX65HHt6VOnNYdTui/0ySerRbMgA==}
+  /@types/jsdom@21.1.4:
+    resolution: {integrity: sha512-NzAMLEV0KQ4cBaDx3Ls8VfJUElyDUm1xrtYRmcMK0gF8L5xYbujFVaQlJ50yinQ/d47j2rEP1XUzkiYrw4YRFA==}
     dependencies:
       '@types/node': 20.5.0
       '@types/tough-cookie': 4.0.2
