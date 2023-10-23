@@ -406,7 +406,7 @@ describe('StaleIfError handling', () => {
 
   // https://github.com/arthurfiorette/axios-cache-interceptor/issues/685
   it('ensure failed responses always cleans up waiting promise', async () => {
-    const axios = mockAxios({ staleIfError: false, ttl: -1, debug: console.log });
+    const axios = mockAxios({ staleIfError: false, ttl: -1  });
 
     axios.defaults.adapter = async (config) => {
       if (config.params?.fail) {
