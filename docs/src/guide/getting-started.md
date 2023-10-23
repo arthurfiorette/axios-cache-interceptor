@@ -19,15 +19,15 @@ npm install axios@^1 axios-cache-interceptor@^1
 ```html [Browser]
 <!-- Development UMD build for ES2017+ (~14.2 KiB) -->
 <script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@1.3.1/dev/index.bundle.js"
-  integrity="sha256-EX/QAG+AaaAiIwuw0NfWo6WOr3kOgObGfMQJPOaiFD8="
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@1.3.2/dev/index.bundle.js"
+  integrity="sha256-8ztORY8MY5U4qXNIQ1sEgJ4BliHUdn/v9VVzLwzL9wI="
   crossorigin="anonymous"
 ></script>
 
 <!-- Production UMD build for ES5+ (~16.4 KiB) -->
 <script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@1.3.1/dist/index.bundle.js"
-  integrity="sha256-luDarorfTxSjjV5gI+taqn80UQahPUg6UuO9tNoUEA8="
+  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@1.3.2/dist/index.bundle.js"
+  integrity="sha256-IntgxZHcB9wD20WbxK6df32kNwSsibK3VawPqVeWrVc="
   crossorigin="anonymous"
 ></script>
 ```
