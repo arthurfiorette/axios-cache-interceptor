@@ -6,7 +6,7 @@ import { Header } from '../../src/header/headers';
 import { mockAxios } from '../mocks/axios';
 import { mockDateNow } from '../utils';
 
-describe.only('StaleIfError handling', () => {
+describe('StaleIfError handling', () => {
   it('Handles thrown errors', async () => {
     const instance = Axios.create({});
     const axios = setupCache(instance, {});
