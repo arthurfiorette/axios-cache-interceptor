@@ -332,6 +332,14 @@ describe('Request Interceptor', () => {
     }
   });
 
+  it('ensures override can be used globally', async () => {
+    const axios = mockAxios({ override: true });
+
+    const { config } = await axios.get('url');
+
+    assert.equal((config.cache as any).override, true);
+  });
+
   it('Requests are made with CacheControl no-cache', async () => {
     const axios = mockAxios({ cacheTakeover: true });
 

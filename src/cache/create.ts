@@ -85,9 +85,9 @@ export function setupCache(
 
     staleIfError: options.staleIfError ?? true,
 
-    override: false,
+    override: options.override ?? false,
 
-    hydrate: undefined
+    hydrate: options.hydrate ?? undefined
   };
 
   // Apply interceptors
