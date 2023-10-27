@@ -8,7 +8,7 @@
 
 <br />
 
-<p align="center" title="We need a designer :)">
+<p align="center" title="Axios Cache Interceptor's logo">
   <a href="https://axios-cache-interceptor.js.org" target="_blank" rel="noopener noreferrer">
     <img src="docs/src/public/rocket.svg" width="180" alt="Axios Cache Interceptor logo" />
   </a>

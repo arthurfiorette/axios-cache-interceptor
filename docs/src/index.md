@@ -8,7 +8,7 @@ hero:
   image:
     src: /rocket.svg
     alt: Rocket
-    title: We need a designer :)
+    title: Axios Cache Interceptor's logo
 
   actions:
     - theme: brand
