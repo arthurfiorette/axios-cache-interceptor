@@ -10,7 +10,7 @@
 
 <p align="center" title="We need a designer :)">
   <a href="https://axios-cache-interceptor.js.org" target="_blank" rel="noopener noreferrer">
-    <img src="docs/src/public/rocket.png" width="180" alt="Axios Cache Interceptor logo" />
+    <img src="docs/src/public/rocket.svg" width="180" alt="Axios Cache Interceptor logo" />
   </a>
 </p>
 
