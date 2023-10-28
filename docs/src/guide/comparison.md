@@ -30,7 +30,7 @@
 |                            Built-in redis storage                            |           🔶            |                                   ✅                                   |          🟡          |
 |                         Handles storage quota errors                         |           ✅            |                                   ✅                                   |          ✅          |
 |                            Node & Web compatible                             |           ✅            |                                   ✅                                   |          🛑          |
-|                      Invalidade cache based on response                      |           ✅            |                                   ✅                                   |          🛑          |
+|                      Invalidate cache based on response                      |           ✅            |                                   ✅                                   |          🛑          |
 |                        Update cache based on response                        |           ✅            |                                   🟡                                   |          🟡          |
 |                Predicate to test if request should be cached                 |           ✅            |                                   ✅                                   |          🛑          |
 |                             Concurrent requests                              |           ✅            | 🔶[#231](https://github.com/RasCarlito/axios-cache-adapter/issues/231) |          🛑          |
