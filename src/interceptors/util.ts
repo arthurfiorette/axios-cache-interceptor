@@ -33,17 +33,13 @@ export interface ConfigWithCache<D> extends CacheRequestConfig<unknown, D> {
  * This function updates the cache when the request is stale. So, the next request to the
  * server will be made with proper header / settings.
  */
-export function updateStaleRequest<D>(
-  cache: StaleStorageValue,
-  config: ConfigWithCache<D>
-): void {
+export function updateStaleRequest<D>(cache: StaleStorageValue, config: ConfigWithCache<D>): void {
   config.headers ||= {};
 
   const { etag, modifiedSince } = config.cache;
 
   if (etag) {
-    const etagValue =
-      etag === true ? (cache.data?.headers[Header.ETag] as unknown) : etag;
+    const etagValue = etag === true ? (cache.data?.headers[Header.ETag] as unknown) : etag;
 
     if (etagValue) {
       config.headers[Header.IfNoneMatch] = etagValue;

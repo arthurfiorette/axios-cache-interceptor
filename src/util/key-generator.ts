@@ -45,35 +45,33 @@ export function buildKeyGenerator<R = unknown, D = unknown>(
   };
 }
 
-export const defaultKeyGenerator = buildKeyGenerator(
-  ({ baseURL, url, method, params, data }) => {
-    // Remove trailing slashes to avoid generating different keys for the "same" final url.
-    if (baseURL !== undefined) {
-      baseURL = baseURL.replace(SLASHES_REGEX, '');
-    } else {
-      // just to have a consistent hash
-      baseURL = '';
-    }
-
-    if (url !== undefined) {
-      url = url.replace(SLASHES_REGEX, '');
-    } else {
-      // just to have a consistent hash
-      url = '';
-    }
-
-    if (method !== undefined) {
-      method = method.toLowerCase() as Method;
-    } else {
-      // just to have a consistent hash
-      method = 'get';
-    }
-
-    return {
-      url: baseURL + (baseURL && url ? '/' : '') + url,
-      params: params,
-      method: method,
-      data: data
-    };
+export const defaultKeyGenerator = buildKeyGenerator(({ baseURL, url, method, params, data }) => {
+  // Remove trailing slashes to avoid generating different keys for the "same" final url.
+  if (baseURL !== undefined) {
+    baseURL = baseURL.replace(SLASHES_REGEX, '');
+  } else {
+    // just to have a consistent hash
+    baseURL = '';
   }
-);
+
+  if (url !== undefined) {
+    url = url.replace(SLASHES_REGEX, '');
+  } else {
+    // just to have a consistent hash
+    url = '';
+  }
+
+  if (method !== undefined) {
+    method = method.toLowerCase() as Method;
+  } else {
+    // just to have a consistent hash
+    method = 'get';
+  }
+
+  return {
+    url: baseURL + (baseURL && url ? '/' : '') + url,
+    params: params,
+    method: method,
+    data: data
+  };
+});

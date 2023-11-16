@@ -1,18 +1,9 @@
 import { deferred } from 'fast-defer';
 import type { AxiosCacheInstance, CacheAxiosResponse } from '../cache/axios';
 import { Header } from '../header/headers';
-import type {
-  CachedResponse,
-  CachedStorageValue,
-  LoadingStorageValue
-} from '../storage/types';
+import type { CachedResponse, CachedStorageValue, LoadingStorageValue } from '../storage/types';
 import type { RequestInterceptor } from './build';
-import {
-  ConfigWithCache,
-  createValidateStatus,
-  isMethodIn,
-  updateStaleRequest
-} from './util';
+import { ConfigWithCache, createValidateStatus, isMethodIn, updateStaleRequest } from './util';
 
 export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
   const onFulfilled: RequestInterceptor['onFulfilled'] = async (config) => {
@@ -58,11 +49,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
 
     // Not cached, continue the request, and mark it as fetching
     // biome-ignore lint/suspicious/noConfusingLabels: required to break condition in simultaneous accesses
-    ignoreAndRequest: if (
-      cache.state === 'empty' ||
-      cache.state === 'stale' ||
-      overrideCache
-    ) {
+    ignoreAndRequest: if (cache.state === 'empty' || cache.state === 'stale' || overrideCache) {
       /**
        * This checks for simultaneous access to a new key. The js event loop jumps on the
        * first await statement, so the second (asynchronous call) request may have already
@@ -121,8 +108,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
 
           // If the cache is empty and asked to override it, use the current timestamp
 
-          createdAt:
-            overrideCache && !cache.createdAt ? Date.now() : (cache.createdAt as any)
+          createdAt: overrideCache && !cache.createdAt ? Date.now() : (cache.createdAt as any)
         },
         config
       );

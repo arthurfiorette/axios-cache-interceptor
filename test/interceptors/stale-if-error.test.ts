@@ -1,6 +1,6 @@
-import Axios, { AxiosError } from 'axios';
 import assert from 'node:assert';
 import { describe, it } from 'node:test';
+import Axios, { AxiosError } from 'axios';
 import { setupCache } from '../../src/cache/create';
 import { Header } from '../../src/header/headers';
 import { mockAxios } from '../mocks/axios';
@@ -406,7 +406,7 @@ describe('StaleIfError handling', () => {
 
   // https://github.com/arthurfiorette/axios-cache-interceptor/issues/685
   it('ensure failed responses always cleans up waiting promise', async () => {
-    const axios = mockAxios({ staleIfError: false, ttl: -1  });
+    const axios = mockAxios({ staleIfError: false, ttl: -1 });
 
     axios.defaults.adapter = async (config) => {
       if (config.params?.fail) {
@@ -431,7 +431,7 @@ describe('StaleIfError handling', () => {
 
     const id = 'arthurfiorette/axios-cache-interceptor#685';
 
-    let data = await axios.get('url', { id });
+    const data = await axios.get('url', { id });
 
     assert.equal(data.cached, false);
 

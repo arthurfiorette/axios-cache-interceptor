@@ -34,6 +34,4 @@ export type InterpreterResult =
  *   **milliseconds** to cache the response.
  * @see https://axios-cache-interceptor.js.org/config#headerinterpreter
  */
-export type HeaderInterpreter = (
-  headers?: CacheAxiosResponse['headers']
-) => InterpreterResult;
+export type HeaderInterpreter = (headers?: CacheAxiosResponse['headers']) => InterpreterResult;

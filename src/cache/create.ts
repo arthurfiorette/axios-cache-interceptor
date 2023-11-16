@@ -26,10 +26,7 @@ export interface CacheOptions extends Partial<CacheInstance>, Partial<CachePrope
  * @returns The same instance with extended typescript types.
  * @see https://axios-cache-interceptor.js.org/config
  */
-export function setupCache(
-  axios: AxiosInstance,
-  options: CacheOptions = {}
-): AxiosCacheInstance {
+export function setupCache(axios: AxiosInstance, options: CacheOptions = {}): AxiosCacheInstance {
   const axiosCache = axios as AxiosCacheInstance;
 
   if (axiosCache.defaults.cache) {
@@ -54,7 +51,6 @@ export function setupCache(
   axiosCache.responseInterceptor =
     options.responseInterceptor || defaultResponseInterceptor(axiosCache);
 
-  
   axiosCache.debug = options.debug || function noop() {};
 
   // CacheRequestConfig values
@@ -69,8 +65,7 @@ export function setupCache(
 
     cachePredicate: options.cachePredicate || {
       // All cacheable status codes defined in RFC 7231
-      statusCheck: (status) =>
-        [200, 203, 300, 301, 302, 404, 405, 410, 414, 501].includes(status)
+      statusCheck: (status) => [200, 203, 300, 301, 302, 404, 405, 410, 414, 501].includes(status)
     },
 
     etag: options.etag ?? true,

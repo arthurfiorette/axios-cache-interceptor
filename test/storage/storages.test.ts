@@ -1,6 +1,6 @@
-import { Axios } from 'axios';
 import assert from 'node:assert';
 import { describe, it } from 'node:test';
+import { Axios } from 'axios';
 import { buildStorage, canStale, isStorage } from '../../src/storage/build';
 import { buildMemoryStorage } from '../../src/storage/memory';
 import type { AxiosStorage, StorageValue } from '../../src/storage/types';

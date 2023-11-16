@@ -1,10 +1,6 @@
 import type { AxiosResponseHeaders } from 'axios';
 import { parse } from 'cache-parser';
-import type {
-  AxiosCacheInstance,
-  CacheAxiosResponse,
-  CacheRequestConfig
-} from '../cache/axios';
+import type { AxiosCacheInstance, CacheAxiosResponse, CacheRequestConfig } from '../cache/axios';
 import type { CacheProperties } from '../cache/cache';
 import { Header } from '../header/headers';
 import type { CachedStorageValue } from '../storage/types';
@@ -13,9 +9,7 @@ import { updateCache } from '../util/update-cache';
 import type { ResponseInterceptor } from './build';
 import { createCacheResponse, isMethodIn } from './util';
 
-export function defaultResponseInterceptor(
-  axios: AxiosCacheInstance
-): ResponseInterceptor {
+export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseInterceptor {
   /**
    * Rejects cache for an response response.
    *
@@ -45,7 +39,6 @@ export function defaultResponseInterceptor(
       throw response;
     }
 
-    
     response.id = response.config.id!;
     response.cached ??= false;
 

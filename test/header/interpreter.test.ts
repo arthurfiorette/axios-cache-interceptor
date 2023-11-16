@@ -10,15 +10,9 @@ describe('Header Interpreter', () => {
 
     assert.equal(defaultHeaderInterpreter({}), 'not enough headers');
 
-    assert.equal(
-      defaultHeaderInterpreter({ [Header.CacheControl]: '' }),
-      'not enough headers'
-    );
+    assert.equal(defaultHeaderInterpreter({ [Header.CacheControl]: '' }), 'not enough headers');
 
-    assert.equal(
-      defaultHeaderInterpreter({ ['x-random-header']: '' }),
-      'not enough headers'
-    );
+    assert.equal(defaultHeaderInterpreter({ 'x-random-header': '' }), 'not enough headers');
   });
 
   it('MaxAge=10 and Age=3', () => {

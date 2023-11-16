@@ -1,20 +1,13 @@
 import type { CacheRequestConfig } from '../cache/axios';
 import { Header } from '../header/headers';
 import type { MaybePromise } from '../util/types';
-import type {
-  AxiosStorage,
-  CachedStorageValue,
-  StaleStorageValue,
-  StorageValue
-} from './types';
+import type { AxiosStorage, CachedStorageValue, StaleStorageValue, StorageValue } from './types';
 
 /** Returns true if the provided object was created from {@link buildStorage} function. */
 export const isStorage = (obj: unknown): obj is AxiosStorage =>
   !!obj && !!(obj as Record<string, boolean>)['is-storage'];
 
-function hasUniqueIdentifierHeader(
-  value: CachedStorageValue | StaleStorageValue
-): boolean {
+function hasUniqueIdentifierHeader(value: CachedStorageValue | StaleStorageValue): boolean {
   const headers = value.data.headers;
 
   return (
@@ -102,7 +95,7 @@ export interface BuildStorage extends Omit<AxiosStorage, 'get'> {
 export function buildStorage({ set, find, remove }: BuildStorage): AxiosStorage {
   return {
     //@ts-expect-error - we don't want to expose this
-    ['is-storage']: 1,
+    'is-storage': 1,
     set,
     remove,
     get: async (key, config) => {

@@ -127,10 +127,7 @@ describe('CachePredicate', () => {
     );
 
     assert.ok(
-      await testCachePredicate(
-        response,
-        ({ data }) => data && data.a === true && data.b === 1
-      )
+      await testCachePredicate(response, ({ data }) => data && data.a === true && data.b === 1)
     );
 
     assert.equal(
@@ -224,10 +221,7 @@ describe('CachePredicate', () => {
           }
         },
         update: {
-          id: (
-            _,
-            { data: { a, b }, headers, status, statusText }
-          ): CachedStorageValue => {
+          id: (_, { data: { a, b }, headers, status, statusText }): CachedStorageValue => {
             return {
               state: 'cached',
               ttl: Number.MAX_SAFE_INTEGER,

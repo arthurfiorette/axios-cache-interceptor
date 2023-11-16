@@ -63,7 +63,7 @@ export function buildMemoryStorage(
           while (keys.length >= maxEntries) {
             // There's always at least one key here, otherwise it would not be
             // in the loop.
-            
+
             delete storage.data[keys.shift()!];
           }
         }
@@ -108,9 +108,9 @@ export function buildMemoryStorage(
   storage.cleanup = () => {
     const keys = Object.keys(storage.data);
 
-    let i = -1,
-      value: StorageValue,
-      key: string;
+    let i = -1;
+    let value: StorageValue;
+    let key: string;
 
     // Looping forward, as older entries are more likely to be expired
     // than newer ones.
@@ -120,7 +120,7 @@ export function buildMemoryStorage(
 
       if (value.state === 'empty') {
         // this storage returns void.
-        
+
         storage.remove(key);
         continue;
       }
@@ -128,7 +128,7 @@ export function buildMemoryStorage(
       // If the value is expired and can't be stale, remove it
       if (value.state === 'cached' && isExpired(value) && !canStale(value)) {
         // this storage returns void.
-        
+
         storage.remove(key);
       }
     }

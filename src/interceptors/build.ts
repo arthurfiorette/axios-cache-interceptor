@@ -10,7 +10,5 @@ export interface AxiosInterceptor<T> {
   apply: () => void;
 }
 
-export type RequestInterceptor = AxiosInterceptor<
-  InternalCacheRequestConfig<unknown, unknown>
->;
+export type RequestInterceptor = AxiosInterceptor<InternalCacheRequestConfig<unknown, unknown>>;
 export type ResponseInterceptor = AxiosInterceptor<CacheAxiosResponse<unknown, unknown>>;

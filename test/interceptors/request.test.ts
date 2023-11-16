@@ -1,11 +1,8 @@
-import type { AxiosAdapter, AxiosResponse } from 'axios';
 import assert from 'node:assert';
 import { describe, it, mock } from 'node:test';
+import type { AxiosAdapter, AxiosResponse } from 'axios';
 import { setTimeout } from 'timers/promises';
-import type {
-  CacheRequestConfig,
-  InternalCacheRequestConfig
-} from '../../src/cache/axios';
+import type { CacheRequestConfig, InternalCacheRequestConfig } from '../../src/cache/axios';
 import { Header } from '../../src/header/headers';
 import type { LoadingStorageValue } from '../../src/storage/types';
 import { mockAxios } from '../mocks/axios';
@@ -100,10 +97,7 @@ describe('Request Interceptor', () => {
   });
 
   it('Cache expiration', async () => {
-    const axios = mockAxios(
-      {},
-      { [Header.CacheControl]: 'max-age=1,stale-while-revalidate=10' }
-    );
+    const axios = mockAxios({}, { [Header.CacheControl]: 'max-age=1,stale-while-revalidate=10' });
 
     await axios.get('http://test.com', { cache: { interpretHeader: true } });
 
@@ -240,9 +234,7 @@ describe('Request Interceptor', () => {
       adapter: async (config: InternalCacheRequestConfig) => {
         await setTimeout(150);
 
-        const response = (await (axios.defaults.adapter as AxiosAdapter)(
-          config
-        )) as AxiosResponse;
+        const response = (await (axios.defaults.adapter as AxiosAdapter)(config)) as AxiosResponse;
 
         // Changes the response to be different from `true` (default)
         response.data = 'overridden response';
@@ -347,7 +339,7 @@ describe('Request Interceptor', () => {
 
     assert.deepEqual(Object.assign({}, req1.request.config.headers), {
       [Header.CacheControl]: 'no-cache',
-      ['Accept']: 'application/json, text/plain, */*',
+      Accept: 'application/json, text/plain, */*',
       'Content-Type': undefined,
       [Header.Pragma]: 'no-cache',
       [Header.Expires]: '0'

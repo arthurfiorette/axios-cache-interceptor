@@ -73,10 +73,7 @@ describe('Hydrate handling', () => {
   });
 
   it('Only hydrates when stale while revalidate is set', async () => {
-    const axios = mockAxios(
-      {},
-      { [Header.CacheControl]: 'max-age=0, stale-while-revalidate=0' }
-    );
+    const axios = mockAxios({}, { [Header.CacheControl]: 'max-age=0, stale-while-revalidate=0' });
     const id = 'some-unique-id';
 
     const m = mock.fn();
@@ -98,10 +95,7 @@ describe('Hydrate handling', () => {
   });
 
   it('Only hydrates when stale while revalidate is not expired', async () => {
-    const axios = mockAxios(
-      {},
-      { [Header.CacheControl]: 'max-age=0, stale-while-revalidate=1' }
-    );
+    const axios = mockAxios({}, { [Header.CacheControl]: 'max-age=0, stale-while-revalidate=1' });
     const id = 'some-unique-id';
 
     const m = mock.fn();
@@ -126,7 +120,7 @@ describe('Hydrate handling', () => {
   });
 
   it('Hydrates when force stale', async () => {
-    const axios = mockAxios({}, { [Header.CacheControl]: `max-age=100` });
+    const axios = mockAxios({}, { [Header.CacheControl]: 'max-age=100' });
     const id = 'some-unique-id';
 
     const m = mock.fn();

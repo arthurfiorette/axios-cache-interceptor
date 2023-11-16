@@ -9,7 +9,7 @@ export async function updateCache<R, D>(
   cacheUpdater: CacheUpdater<R, D>
 ): Promise<void> {
   // Global cache update function.
-  if (typeof cacheUpdater === `function`) {
+  if (typeof cacheUpdater === 'function') {
     return cacheUpdater(data);
   }
 

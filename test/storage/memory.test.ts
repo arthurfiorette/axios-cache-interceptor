@@ -30,7 +30,7 @@ describe('MemoryStorage', () => {
     assert.equal(result.data.data, 'data');
 
     // Deletes the value
-    delete result.data.data;
+    result.data.data = undefined;
 
     // Check if the value has been modified
     const result2 = await storage.get('key');
@@ -58,10 +58,10 @@ describe('MemoryStorage', () => {
 
     data.data = 'another data';
 
-    assert.notEqual(storage.data['key'], null);
-    assert.equal(storage.data['key']!.state, 'cached');
-    assert.notEqual(storage.data['key']!.data, null);
-    assert.equal(storage.data['key']!.data!.data, 'data');
+    assert.notEqual(storage.data.key, null);
+    assert.equal(storage.data.key!.state, 'cached');
+    assert.notEqual(storage.data.key!.data, null);
+    assert.equal(storage.data.key!.data!.data, 'data');
 
     const result = (await storage.get('key')) as CachedStorageValue;
 
@@ -118,12 +118,12 @@ describe('MemoryStorage', () => {
     });
 
     // Ensure that the values are still there
-    assert.equal(storage.data['empty']?.state, 'empty');
-    assert.equal(storage.data['stale']?.state, 'stale');
-    assert.equal(storage.data['expiredStale']?.state, 'stale');
-    assert.equal(storage.data['loading']?.state, 'loading');
-    assert.equal(storage.data['cached']?.state, 'cached');
-    assert.equal(storage.data['expiredCache']?.state, 'cached');
+    assert.equal(storage.data.empty?.state, 'empty');
+    assert.equal(storage.data.stale?.state, 'stale');
+    assert.equal(storage.data.expiredStale?.state, 'stale');
+    assert.equal(storage.data.loading?.state, 'loading');
+    assert.equal(storage.data.cached?.state, 'cached');
+    assert.equal(storage.data.expiredCache?.state, 'cached');
 
     // Waits for the cleanup function to run
     await mockDateNow(600);
@@ -157,9 +157,9 @@ describe('MemoryStorage', () => {
     });
 
     assert.equal(Object.keys(storage.data).length, 2);
-    assert.ok(storage.data['key']);
-    assert.ok(storage.data['key2']);
-    assert.equal(storage.data['key3'], undefined);
+    assert.ok(storage.data.key);
+    assert.ok(storage.data.key2);
+    assert.equal(storage.data.key3, undefined);
 
     await storage.set('key3', {
       state: 'cached',
@@ -170,9 +170,9 @@ describe('MemoryStorage', () => {
 
     assert.equal(Object.keys(storage.data).length, 2);
 
-    assert.equal(storage.data['key'], undefined);
-    assert.ok(storage.data['key2']);
-    assert.ok(storage.data['key3']);
+    assert.equal(storage.data.key, undefined);
+    assert.ok(storage.data.key2);
+    assert.ok(storage.data.key3);
   });
 
   it('tests maxEntries with cleanup', async () => {
@@ -200,10 +200,10 @@ describe('MemoryStorage', () => {
     });
 
     assert.equal(Object.keys(storage.data).length, 3);
-    assert.ok(storage.data['exp']);
+    assert.ok(storage.data.exp);
     assert.ok(storage.data['not exp']);
-    assert.ok(storage.data['exp2']);
-    assert.equal(storage.data['key'], undefined);
+    assert.ok(storage.data.exp2);
+    assert.equal(storage.data.key, undefined);
 
     await storage.set('key', {
       state: 'cached',
@@ -214,9 +214,9 @@ describe('MemoryStorage', () => {
 
     assert.equal(Object.keys(storage.data).length, 2);
 
-    assert.equal(storage.data['exp'], undefined);
-    assert.equal(storage.data['exp2'], undefined);
+    assert.equal(storage.data.exp, undefined);
+    assert.equal(storage.data.exp2, undefined);
     assert.ok(storage.data['not exp']);
-    assert.ok(storage.data['key']);
+    assert.ok(storage.data.key);
   });
 });

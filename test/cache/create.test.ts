@@ -1,6 +1,6 @@
-import Axios from 'axios';
 import assert from 'node:assert';
 import { describe, it, mock } from 'node:test';
+import Axios from 'axios';
 import { setupCache } from '../../src/cache/create';
 
 describe('Axios Cache Interceptor instances', () => {

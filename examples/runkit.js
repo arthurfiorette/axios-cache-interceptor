@@ -36,7 +36,7 @@ const { log } = console;
   //
 
   log(`Fetched response Cache-Control: ${fetchedResponse.headers['cache-control']}`);
-  log(`Fetched response Age: ${fetchedResponse.headers['age']}`);
+  log(`Fetched response Age: ${fetchedResponse.headers.age}`);
 
   const cacheInformation = await axios.storage.get(fetchedResponse.id);
 

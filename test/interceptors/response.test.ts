@@ -1,7 +1,7 @@
-import Axios from 'axios';
 import assert from 'node:assert';
 import { describe, it, mock } from 'node:test';
 import { setImmediate } from 'node:timers/promises';
+import Axios from 'axios';
 import { setupCache } from '../../src/cache/create';
 import { Header } from '../../src/header/headers';
 import { XMockRandom, mockAxios } from '../mocks/axios';
@@ -92,10 +92,7 @@ describe('Response Interceptor', () => {
 
     assert.equal(resultNoCache.cached, false);
 
-    const axiosCache = mockAxios(
-      {},
-      { [Header.CacheControl]: `max-age=${60 * 60 * 24 * 365}` }
-    );
+    const axiosCache = mockAxios({}, { [Header.CacheControl]: `max-age=${60 * 60 * 24 * 365}` });
 
     // Make first request to cache it
     await axiosCache.get('http://test.com', { cache: { interpretHeader: true } });
