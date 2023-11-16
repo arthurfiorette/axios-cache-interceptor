@@ -11,9 +11,6 @@ const MAXIMUM_20_0 = '0'.repeat(MAXIMUM_LIMIT * 0.2);
 const MAXIMUM_90_0 = '0'.repeat(MAXIMUM_LIMIT * 0.9);
 
 export function testStorageQuota(name: string, storage: Storage): void {
-  
-  
-
   it(`${name} has storage limit`, () => {
     assert.ok(storage);
 
@@ -76,7 +73,7 @@ export function testStorageQuota(name: string, storage: Storage): void {
       ttl: 60_000,
       data: {
         ...EMPTY_RESPONSE,
-        data: MAXIMUM_90_0// 90%
+        data: MAXIMUM_90_0 // 90%
       }
     });
 

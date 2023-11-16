@@ -101,10 +101,7 @@ describe('KeyGeneration', () => {
     ];
 
     for (const [first, second] of groups) {
-      assert.equal(
-        defaultKeyGenerator({ url: first }),
-        defaultKeyGenerator({ url: second })
-      );
+      assert.equal(defaultKeyGenerator({ url: first }), defaultKeyGenerator({ url: second }));
 
       assert.equal(
         defaultKeyGenerator({ baseURL: first }),
