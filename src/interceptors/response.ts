@@ -45,7 +45,7 @@ export function defaultResponseInterceptor(
       throw response;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    
     response.id = response.config.id!;
     response.cached ??= false;
 

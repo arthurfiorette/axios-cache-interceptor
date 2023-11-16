@@ -57,6 +57,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
     const overrideCache = config.cache.override;
 
     // Not cached, continue the request, and mark it as fetching
+    // biome-ignore lint/suspicious/noConfusingLabels: required to break condition in simultaneous accesses
     ignoreAndRequest: if (
       cache.state === 'empty' ||
       cache.state === 'stale' ||
@@ -98,7 +99,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
        * Adds a default reject handler to catch when the request gets aborted without
        * others waiting for it.
        */
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
       axios.waiting[config.id]!.catch(() => undefined);
 
       await axios.storage.set(
@@ -115,13 +116,12 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
               (cache.state as 'stale'),
 
           // Eslint complains a lot :)
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
+
           data: cache.data as any,
 
           // If the cache is empty and asked to override it, use the current timestamp
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
           createdAt:
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             overrideCache && !cache.createdAt ? Date.now() : (cache.createdAt as any)
         },
         config
@@ -218,7 +218,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
         status: cachedResponse.status,
         statusText: cachedResponse.statusText,
         cached: true,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
         id: config.id!
       });
     };

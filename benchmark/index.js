@@ -25,7 +25,11 @@ const runs = {};
 const app = require('express')();
 
 app.get('/:name', ({ params }, res) => {
-  data[params.name] ? data[params.name]++ : (data[params.name] = 1);
+  if (data[params.name] === undefined) {
+    data[params.name] = 1;
+  } else {
+    data[params.name]++;
+  }
 
   return res.json({
     computation: Math.random(),
@@ -40,21 +44,36 @@ Benny.suite(
 
   Benny.add('axios', async () => {
     const name = 'axios';
-    runs[name] ? runs[name]++ : (runs[name] = 1);
+
+    if (runs[name] === undefined) {
+      runs[name] = 1;
+    } else {
+      runs[name]++;
+    }
 
     await AxiosInstance.get(`http://${config.host}:${config.port}/${name}`);
   }),
 
   Benny.add('cache-interceptor', async () => {
     const name = 'cache-interceptor';
-    runs[name] ? runs[name]++ : (runs[name] = 1);
+
+    if (runs[name] === undefined) {
+      runs[name] = 1;
+    } else {
+      runs[name]++;
+    }
 
     await InterceptorInstance.get(`http://${config.host}:${config.port}/${name}`);
   }),
 
   Benny.add('cache-adapter', async () => {
     const name = 'cache-adapter';
-    runs[name] ? runs[name]++ : (runs[name] = 1);
+
+    if (runs[name] === undefined) {
+      runs[name] = 1;
+    } else {
+      runs[name]++;
+    }
 
     await AdapterInstance.get(`http://${config.host}:${config.port}/${name}`);
   }),

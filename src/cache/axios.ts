@@ -5,7 +5,7 @@ import type {
   AxiosRequestConfig,
   AxiosResponse,
   AxiosResponseHeaders,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  
   InternalAxiosRequestConfig
 } from 'axios';
 import type { CacheInstance, CacheProperties } from './cache';
@@ -96,26 +96,26 @@ export interface InternalCacheRequestConfig<R = any, D = any>
  * @see https://axios-cache-interceptor.js.org/guide/getting-started
  */
 export interface AxiosCacheInstance extends CacheInstance, AxiosInstance {
-  // eslint-disable-next-line @typescript-eslint/no-misused-new
+  
   new (config?: CacheRequestConfig): AxiosCacheInstance;
 
   /**
-   * @template T The type returned by this response
-   * @template R The custom response type that the request can return
-   * @template D The type that the request body use
+   * @template T1 The type returned by this response
+   * @template R1 The custom response type that the request can return
+   * @template D1 The type that the request body use
    */
-  <T = any, D = any, R = CacheAxiosResponse<T, D>>(
-    config: CacheRequestConfig<T, D>
-  ): Promise<R>;
+  <T1 = any, D1 = any, R1 = CacheAxiosResponse<T1, D1>>(
+    config: CacheRequestConfig<T1, D1>
+  ): Promise<R1>;
   /**
-   * @template T The type returned by this response
-   * @template R The custom response type that the request can return
-   * @template D The type that the request body use
+   * @template T2 The type returned by this response
+   * @template R2 The custom response type that the request can return
+   * @template D2 The type that the request body use
    */
-  <T = any, D = any, R = CacheAxiosResponse<T, D>>(
+  <T2 = any, D2 = any, R2 = CacheAxiosResponse<T2, D2>>(
     url: string,
-    config?: CacheRequestConfig<T, D>
-  ): Promise<R>;
+    config?: CacheRequestConfig<T2, D2>
+  ): Promise<R2>;
 
   defaults: AxiosInstance['defaults'] & {
     cache: CacheProperties;

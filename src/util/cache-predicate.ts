@@ -1,5 +1,5 @@
 import type { CacheAxiosResponse } from '../cache/axios';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 import type { CachePredicate, CachePredicateObject } from './types';
 
 /** Tests an response against a {@link CachePredicateObject}. */

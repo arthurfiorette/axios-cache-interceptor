@@ -185,7 +185,7 @@ const redisStorage = buildStorage({
           //   Or if the cached value cannot enter in stale state.
           (value.state === 'stale' && value.ttl) ||
             (value.state === 'cached' && !canStale(value))
-          ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          ? 
             value.createdAt + value.ttl!
           : // otherwise, we can't determine when it should expire, so we keep
             //   it indefinitely.

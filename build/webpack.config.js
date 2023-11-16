@@ -4,7 +4,7 @@
 const path = require('path');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
 const { DefinePlugin } = require('webpack');
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
 const { version } = require('../package.json');
 
 const COPYRIGHT = `
@@ -107,7 +107,7 @@ const config = ({
               const assets = comp.assets[filename];
 
               // @ts-expect-error - _value is not a public property
-              // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+              
               assets._value = COPYRIGHT + '\n' + assets._value;
             }
           }

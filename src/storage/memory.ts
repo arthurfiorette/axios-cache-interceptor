@@ -63,7 +63,7 @@ export function buildMemoryStorage(
           while (keys.length >= maxEntries) {
             // There's always at least one key here, otherwise it would not be
             // in the loop.
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            
             delete storage.data[keys.shift()!];
           }
         }
@@ -115,12 +115,12 @@ export function buildMemoryStorage(
     // Looping forward, as older entries are more likely to be expired
     // than newer ones.
     while (++i < keys.length) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      (key = keys[i]!), (value = storage.data[key]!);
+      key = keys[i]!;
+      value = storage.data[key]!;
 
       if (value.state === 'empty') {
         // this storage returns void.
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        
         storage.remove(key);
         continue;
       }
@@ -128,7 +128,7 @@ export function buildMemoryStorage(
       // If the value is expired and can't be stale, remove it
       if (value.state === 'cached' && isExpired(value) && !canStale(value)) {
         // this storage returns void.
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        
         storage.remove(key);
       }
     }
