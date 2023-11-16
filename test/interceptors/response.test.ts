@@ -197,7 +197,7 @@ describe('Response Interceptor', () => {
               process.nextTick(() => {
                 res(173);
               });
-            }, 50);
+            }, 20);
           });
         }
       }

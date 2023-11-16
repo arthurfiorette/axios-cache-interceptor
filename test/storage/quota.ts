@@ -4,18 +4,25 @@ import { buildWebStorage } from '../../src/storage/web-api';
 import { mockAxios } from '../mocks/axios';
 import { EMPTY_RESPONSE } from '../utils';
 
+const MAXIMUM_LIMIT = 5_000_000;
+
+const MAXIMUM_0 = '0'.repeat(MAXIMUM_LIMIT);
+const MAXIMUM_20_0 = '0'.repeat(MAXIMUM_LIMIT * 0.2);
+const MAXIMUM_90_0 = '0'.repeat(MAXIMUM_LIMIT * 0.9);
+
 export function testStorageQuota(name: string, storage: Storage): void {
-  const MAXIMUM_LIMIT = 5_000_000;
+  
+  
 
   it(`${name} has storage limit`, () => {
     assert.ok(storage);
 
     assert.doesNotThrow(() => {
-      storage.setItem('key', '0'.repeat(MAXIMUM_LIMIT * 0.9));
+      storage.setItem('key', MAXIMUM_90_0);
     });
 
     assert.throws(() => {
-      storage.setItem('key', '0'.repeat(MAXIMUM_LIMIT));
+      storage.setItem('key', MAXIMUM_0);
     });
   });
 
@@ -35,7 +42,7 @@ export function testStorageQuota(name: string, storage: Storage): void {
       state: 'cached',
       createdAt: Date.now(),
       ttl: 60_000,
-      data: { ...EMPTY_RESPONSE, data: '0'.repeat(MAXIMUM_LIMIT) }
+      data: { ...EMPTY_RESPONSE, data: MAXIMUM_0 }
     });
 
     // Too big for this storage save
@@ -58,7 +65,7 @@ export function testStorageQuota(name: string, storage: Storage): void {
         ttl: 60_000,
         data: {
           ...EMPTY_RESPONSE,
-          data: '0'.repeat(MAXIMUM_LIMIT * 0.2) // 20% each
+          data: MAXIMUM_20_0 // 20% each
         }
       });
     }
@@ -69,7 +76,7 @@ export function testStorageQuota(name: string, storage: Storage): void {
       ttl: 60_000,
       data: {
         ...EMPTY_RESPONSE,
-        data: '0'.repeat(MAXIMUM_LIMIT * 0.9) // 90%
+        data: MAXIMUM_90_0// 90%
       }
     });
 
@@ -104,7 +111,7 @@ export function testStorageQuota(name: string, storage: Storage): void {
         ttl: i * 10_000,
         data: {
           ...EMPTY_RESPONSE,
-          data: '0'.repeat(MAXIMUM_LIMIT * 0.2) // 20% each
+          data: MAXIMUM_20_0 // 20% each
         }
       });
     }
@@ -115,7 +122,7 @@ export function testStorageQuota(name: string, storage: Storage): void {
       ttl: 10_000,
       data: {
         ...EMPTY_RESPONSE,
-        data: '0'.repeat(MAXIMUM_LIMIT * 0.9) // 90%
+        data: MAXIMUM_90_0 // 90%
       }
     });
 

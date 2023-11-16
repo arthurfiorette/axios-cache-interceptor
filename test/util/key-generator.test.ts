@@ -101,7 +101,10 @@ describe('KeyGeneration', () => {
     ];
 
     for (const [first, second] of groups) {
-      assert.equal(defaultKeyGenerator({ url: first }), defaultKeyGenerator({ url: second }));
+      assert.equal(
+        defaultKeyGenerator({ url: first }),
+        defaultKeyGenerator({ url: second })
+      );
 
       assert.equal(
         defaultKeyGenerator({ baseURL: first }),
@@ -140,28 +143,28 @@ describe('KeyGeneration', () => {
   });
 
   it('BuildKeyGenerator & `hash: false`', async () => {
-    const keyGenerator = buildKeyGenerator(({ headers }) =>
-      String(headers?.['x-req-header'] || 'not-set')
-    );
-
-    const axios = mockAxios({ generateKey: keyGenerator });
+    const axios = mockAxios({
+      generateKey: buildKeyGenerator(({ headers }) =>
+        String(headers?.['x-req-header'] || 'not-set')
+      )
+    });
 
     const { id } = await axios.get('random-url', {
-      data: Math.random(),
+      data: 1,
       headers: {
         'x-req-header': 'my-custom-id'
       }
     });
 
     const { id: id2 } = await axios.get('other-url', {
-      data: Math.random() * 2,
+      data: 2,
       headers: {
         'x-req-header': 'my-custom-id'
       }
     });
 
     const { id: id3 } = await axios.get('other-url', {
-      data: Math.random() * 2
+      data: 3
     });
 
     assert.equal(id, 'my-custom-id');

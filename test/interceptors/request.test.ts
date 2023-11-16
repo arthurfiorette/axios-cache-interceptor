@@ -232,7 +232,7 @@ describe('Request Interceptor', () => {
 
       // Simple adapter that resolves after the deferred is completed.
       adapter: async (config: InternalCacheRequestConfig) => {
-        await setTimeout(150);
+        await setTimeout(10);
 
         const response = (await (axios.defaults.adapter as AxiosAdapter)(config)) as AxiosResponse;
 
@@ -248,7 +248,7 @@ describe('Request Interceptor', () => {
     // Leading to test the intermediate loading state.
 
     {
-      await setTimeout(50);
+      await setTimeout(5);
 
       const c2 = (await axios.storage.get(id)) as LoadingStorageValue;
 
@@ -288,8 +288,7 @@ describe('Request Interceptor', () => {
 
       // Simple adapter that resolves after the deferred is completed.
       adapter: async (config: InternalCacheRequestConfig) => {
-        await setTimeout(150);
-
+        await setTimeout(10);
         return (axios.defaults.adapter as AxiosAdapter)(config);
       }
     });
@@ -299,7 +298,7 @@ describe('Request Interceptor', () => {
     // Leading to test the intermediate loading state.
 
     {
-      await setTimeout(50);
+      await setTimeout(5);
 
       const c2 = (await axios.storage.get(id)) as LoadingStorageValue;
 
