@@ -2,6 +2,7 @@
 
 The `setupCache` function receives the axios instance and a set of optional properties
 described below. They are used and shared by the entire application workflow.
+This means that other imports of axios will also have the cache interceptor.
 
 ```ts
 const axios = setupCache(axios, OPTIONS);
@@ -12,6 +13,19 @@ const axios = setupCache(axios, OPTIONS);
 The `setupCache` function receives global options and all
 [request specifics](./config/request-specifics.md) ones too. This way, you can customize
 the defaults for all requests.
+
+:::
+
+::: tip
+
+If you do not want to override the default axios instance, you can fist create a new one and
+then pass it to the `setupCache` function. Then, just use this new separate instance for any requests
+you want to use the cache interceptor with.
+
+```ts
+const axios = Axios.create();
+setupCache(axios, OPTIONS);
+```
 
 :::
 
