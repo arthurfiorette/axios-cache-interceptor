@@ -57,8 +57,8 @@ overloading the network or coding himself a simple and buggy cache system.
 import Axios from 'axios';
 import { setupCache } from 'axios-cache-interceptor';
 
-// Same object, new types. All Axios imports in your project will now have the cache interceptor.
-const axios = setupCache(Axios);
+const instance = Axios.create();
+const axios = setupCache(instance);
 
 const req1 = axios.get('https://arthur.place/');
 const req2 = axios.get('https://arthur.place/');

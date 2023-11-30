@@ -50,9 +50,9 @@ instance, as shown below:
 import Axios from 'axios';
 import { setupCache } from 'axios-cache-interceptor';
 
-// Same object, new types. 
-// All Axios imports in your project will now have the cache interceptor.
-const axios = setupCache(Axios); // [!code focus]
+const instance = Axios.create(); // [!code focus]
+const axios = setupCache(instance);// [!code focus]
+
 
 const req1 = axios.get('https://api.example.com/'); // [!code focus]
 const req2 = axios.get('https://api.example.com/'); // [!code focus]
@@ -67,9 +67,8 @@ res2.cached; // true // [!code focus]
 const Axios = require('axios');
 const { setupCache } = require('axios-cache-interceptor');
 
-// Same object, new types. 
-// All Axios imports in your project will now have the cache interceptor.
-const axios = setupCache(Axios); // [!code focus]
+const instance = Axios.create(); // [!code focus]
+const axios = setupCache(instance);// [!code focus]
 
 const req1 = axios.get('https://api.example.com/'); // [!code focus]
 const req2 = axios.get('https://api.example.com/'); // [!code focus]
@@ -84,9 +83,8 @@ res2.cached; // true // [!code focus]
 const Axios = window.axios;
 const { setupCache } = window.AxiosCacheInterceptor;
 
-// Same object, new types. 
-// Overrides window.axios everywhere in the project.
-const axios = setupCache(Axios); // [!code focus]
+const instance = Axios.create(); // [!code focus]
+const axios = setupCache(instance);// [!code focus]
 
 const req1 = axios.get('https://api.example.com/'); // [!code focus]
 const req2 = axios.get('https://api.example.com/'); // [!code focus]
@@ -101,8 +99,9 @@ res2.cached; // true // [!code focus]
 import Axios from 'https://cdn.skypack.dev/axios';
 import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor';
 
-// Same object, new types. 
-const axios = setupCache(Axios); // [!code focus]
+
+const instance = Axios.create(); // [!code focus]
+const axios = setupCache(instance);// [!code focus]
 
 const req1 = axios.get('https://api.example.com/'); // [!code focus]
 const req2 = axios.get('https://api.example.com/'); // [!code focus]
