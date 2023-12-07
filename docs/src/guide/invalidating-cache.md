@@ -2,12 +2,12 @@
 
 When using cache-first approaches to improve performance, data inconsistency becomes your
 major problem. That occurs because **you** can mutate data in the server and **others**
-also can too. Becoming impossible to really know what is the current state of the data at
+also can too. It becomes impossible to really know what the current state of the data is in
 real time without communicating with the server.
 
 ::: warning
 
-**All available revalidation methods only works when the request is successful.**
+**All available revalidation methods only work when the request is successful.**
 
 If you are wanting to revalidate with a non standard `2XX` status code, make sure to
 enable it at [`validateStatus`](https://axios-http.com/docs/handling_errors) or revalidate
@@ -17,7 +17,7 @@ it manually as shown [below](#updating-cache-through-external-sources).
 
 Take a look at this simple example:
 
-1. User list all available posts, server return an empty array.
+1. User lists all available posts, the server returns an empty array.
 2. User proceeds to create a new post, server returns 200 OK.
 3. Your frontend navigates to the post list page.
 4. The post list page still shows 0 posts because it had a recent cache for that request.
@@ -25,8 +25,8 @@ Take a look at this simple example:
 
 ## Revalidation after mutation
 
-Most of the cases, you were the one responsible for that inconsistency, like in the above
-example when the client himself initiated the mutation request. When that happens, you are
+In most cases, you are the one responsible for that inconsistency, like in the above
+example when the client itself initiated the mutation request. When that happens, you are
 capable of invalidating the cache for all places you have changed too.
 
 **The `cache.update` option is available for every request that you make, and it will be
@@ -43,9 +43,9 @@ after.
 ## Programmatically
 
 If the mutation you made was just simple changes, you can get the mutation response and
-update programmatically your cache.
+programmatically update your cache.
 
-Again considering the first example, we can just to an `array.push` to the `list-posts`
+Again considering the first example, we can just do an `array.push` to the `list-posts`
 cache and we are good to go.
 
 ```ts
@@ -100,7 +100,7 @@ service code to replicate all changes the backend made, turning it into a duplic
 maintenance nightmare.
 
 In those cases, you can just invalidate the cache and let the next request be forwarded to
-the server, and updating the cache with the new network response.
+the server, and update the cache with the new network response.
 
 ```ts
 // Uses `list-posts` id to be able to reference it later.
@@ -116,7 +116,7 @@ function createPost(data) {
     // [!code focus:9]
     cache: {
       update: {
-        // Will, internally, call storage.remove('list-posts') and let the
+        // Internally calls the storage.remove('list-posts') and lets the
         // next request be forwarded to the server without you having to
         // do any checks.
         'list-posts': 'delete'
@@ -126,7 +126,7 @@ function createPost(data) {
 }
 ```
 
-Still using the first example, while we are at the step **3**, automatically, the-axios
+Still using the first example, while we are at the step **3**, automatically, the axios
 cache-interceptor instance will request the server again and do required changes in the
 cache before the promise resolves and your page gets rendered.
 
@@ -150,7 +150,7 @@ If you were **not** the one responsible for that change, your client may not be 
 it has changed. E.g. When you are using a chat application, you may not be aware that a
 new message was sent to you.
 
-In such cases that we do have a way to know that the cache is outdated, you may have to
+In such cases that we **do not** have a way to know that the cache is outdated, you may have to
 end up setting a custom time to live (TTL) for specific requests.
 
 ```ts
