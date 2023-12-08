@@ -1,12 +1,12 @@
 # Storages
 
-Storages are the responsible to save, retrieve and serialize (if needed) cache data. They
-are completely customizable and you can code or using another one's published on NPM.
+Storages are responsible for saving, retrieving and serializing (if needed) cache data. They
+are completely customizable and you can code your own, or use one published on NPM.
 
 They are meant to be the middleware between the cache interceptor and some sort of
 database (persistent or not) you may have. Our interceptors will call its methods
-internally to save and retrieve data. But you can do it manually to work programmatically
-on your way.
+internally to save and retrieve data, but you can do it manually to work programmatically
+your own way.
 
 Currently, two storages are included in the library by default:
 
@@ -23,7 +23,7 @@ Currently, two storages are included in the library by default:
 
 :::
 
-A memory storage is the simplest one. It works everywhere and its values are lost upon
+Memory storage is the simplest one. It works everywhere and its values are lost upon
 page reload or when the process is killed.
 
 If you are directly mutating some response property, you probably will face some reference
@@ -141,7 +141,7 @@ simple object to build the storage. It has 3 methods:
 
 ## Third Party Storages
 
-These are not guaranteed to work with the latest version of the library, neither are
+These are not guaranteed to work with the latest version of the library as neither are
 maintained by the axios cache interceptor team. But, as we provide a minimal interface for
 storages, you can use them as a base to also create your own.
 
@@ -199,5 +199,5 @@ const redisStorage = buildStorage({
 });
 ```
 
-However you can use the [`buildStorage`](#bui) function to integrate with ANY storage you
+However you can use the [`buildStorage`](#buildstorage) function to integrate with ANY storage you
 want, like `localForage`, `ioredis`, `memcache` and others.
