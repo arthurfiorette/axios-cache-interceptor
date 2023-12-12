@@ -94,8 +94,6 @@ export interface InternalCacheRequestConfig<R = any, D = any> extends CacheReque
  * @see https://axios-cache-interceptor.js.org/guide/getting-started
  */
 export interface AxiosCacheInstance extends CacheInstance, AxiosInstance {
-  new (config?: CacheRequestConfig): AxiosCacheInstance;
-
   /**
    * @template T1 The type returned by this response
    * @template R1 The custom response type that the request can return

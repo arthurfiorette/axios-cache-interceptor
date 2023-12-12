@@ -307,8 +307,8 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
         typeof cacheConfig.staleIfError === 'function'
           ? await cacheConfig.staleIfError(response, cache, error)
           : cacheConfig.staleIfError === true && staleHeader
-          ? staleHeader * 1000 //staleIfError is in seconds
-          : cacheConfig.staleIfError;
+            ? staleHeader * 1000 //staleIfError is in seconds
+            : cacheConfig.staleIfError;
 
       if (__ACI_DEV__) {
         axios.debug({

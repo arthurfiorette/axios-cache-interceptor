@@ -44,8 +44,8 @@ export const defaultHeaderInterpreter: HeaderInterpreter = (headers) => {
           maxStale !== undefined
             ? maxStale * 1000
             : staleWhileRevalidate !== undefined
-            ? staleWhileRevalidate * 1000
-            : undefined
+              ? staleWhileRevalidate * 1000
+              : undefined
       };
     }
   }
