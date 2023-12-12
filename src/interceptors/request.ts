@@ -1,9 +1,18 @@
 import { deferred } from 'fast-defer';
 import type { AxiosCacheInstance, CacheAxiosResponse } from '../cache/axios';
 import { Header } from '../header/headers';
-import type { CachedResponse, CachedStorageValue, LoadingStorageValue } from '../storage/types';
+import type {
+  CachedResponse,
+  CachedStorageValue,
+  LoadingStorageValue
+} from '../storage/types';
 import type { RequestInterceptor } from './build';
-import { ConfigWithCache, createValidateStatus, isMethodIn, updateStaleRequest } from './util';
+import {
+  ConfigWithCache,
+  createValidateStatus,
+  isMethodIn,
+  updateStaleRequest
+} from './util';
 
 export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
   const onFulfilled: RequestInterceptor['onFulfilled'] = async (config) => {
@@ -49,24 +58,23 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
 
     // Not cached, continue the request, and mark it as fetching
     // biome-ignore lint/suspicious/noConfusingLabels: required to break condition in simultaneous accesses
-    ignoreAndRequest: if (cache.state === 'empty' || cache.state === 'stale' || overrideCache) {
-      /**
-       * This checks for simultaneous access to a new key. The js event loop jumps on the
-       * first await statement, so the second (asynchronous call) request may have already
-       * started executing.
-       */
+    ignoreAndRequest: if (
+      cache.state === 'empty' ||
+      cache.state === 'stale' ||
+      overrideCache
+    ) {
+      // This checks for simultaneous access to a new key. The js event loop jumps on the
+      // first await statement, so the second (asynchronous call) request may have already
+      // started executing.
       if (axios.waiting[config.id] && !overrideCache) {
         cache = (await axios.storage.get(config.id, config)) as
           | CachedStorageValue
           | LoadingStorageValue;
 
-        /**
-         * This check is required when a request has it own cache deleted manually, lets
-         * say by a `axios.storage.delete(key)` and has a concurrent loading request.
-         * Because in this case, the cache will be empty and may still has a pending key
-         * on waiting map.
-         */
-        //@ts-expect-error read above
+        // @ts-expect-error This check is required when a request has it own cache deleted manually, lets
+        // say by a `axios.storage.delete(key)` and has a concurrent loading request.
+        // Because in this case, the cache will be empty and may still has a pending key
+        // on waiting map.
         if (cache.state !== 'empty') {
           if (__ACI_DEV__) {
             axios.debug({
@@ -82,11 +90,8 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
       // Create a deferred to resolve other requests for the same key when it's completed
       axios.waiting[config.id] = deferred();
 
-      /**
-       * Adds a default reject handler to catch when the request gets aborted without
-       * others waiting for it.
-       */
-
+      // Adds a default reject handler to catch when the request gets aborted without
+      // others waiting for it.
       axios.waiting[config.id]!.catch(() => undefined);
 
       await axios.storage.set(
@@ -102,13 +107,11 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
             : // Typescript doesn't know that cache.state here can only be 'empty' or 'stale'
               (cache.state as 'stale'),
 
-          // Eslint complains a lot :)
-
           data: cache.data as any,
 
           // If the cache is empty and asked to override it, use the current timestamp
-
-          createdAt: overrideCache && !cache.createdAt ? Date.now() : (cache.createdAt as any)
+          createdAt:
+            overrideCache && !cache.createdAt ? Date.now() : (cache.createdAt as any)
         },
         config
       );

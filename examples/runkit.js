@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 const { create: createAxios } = require('axios').default;
 const { setupCache } = require('axios-cache-interceptor');
 const { log } = console;

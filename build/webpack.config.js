@@ -1,10 +1,6 @@
-//@ts-check
-/* eslint-disable @typescript-eslint/no-var-requires */
-
 const path = require('path');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
 const { DefinePlugin } = require('webpack');
-
 const { version } = require('../package.json');
 
 const COPYRIGHT = `
