@@ -1,10 +1,10 @@
 # setupCache()
 
 The `setupCache` function receives the axios instance and a set of optional properties
-described below. They are used and shared by the entire application workflow.
+described below. This modifies the axios instance in place and returns it.
 
 ```ts
-const axios = setupCache(axios, OPTIONS);
+const axios = setupCache(axiosInstance, OPTIONS);
 ```
 
 ::: tip
@@ -12,6 +12,18 @@ const axios = setupCache(axios, OPTIONS);
 The `setupCache` function receives global options and all
 [request specifics](./config/request-specifics.md) ones too. This way, you can customize
 the defaults for all requests.
+
+:::
+
+::: tip
+
+If you want to use the same cache interceptor for all your axios instances, you can
+call `setupCache` with the default axios instance.
+
+```ts
+import Axios from 'axios';
+setupCache(Axios, OPTIONS);
+```
 
 :::
 
@@ -165,15 +177,15 @@ Read the [Debugging](./guide/debugging.md) page for the complete guide.
 
 ```ts
 // Will print debug info in the console.
-setupCache(axios, { debug: console.log });
+setupCache(axiosInstance, { debug: console.log });
 
 // Own logging platform.
-setupCache(axios, {
+setupCache(axiosInstance, {
   debug: ({ id, msg, data }) => myLoggerExample.emit({ id, msg, data })
 });
 
 // Disables debug. (default)
-setupCache(axios, { debug: undefined });
+setupCache(axiosInstance, { debug: undefined });
 ```
 
 :::
