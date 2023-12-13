@@ -18,18 +18,10 @@ npm install axios@^1 axios-cache-interceptor@^1
 
 ```html [Browser]
 <!-- Development UMD build for ES2017+ (~14.2 KiB) -->
-<script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@1.3.2/dev/index.bundle.js"
-  integrity="sha256-8ztORY8MY5U4qXNIQ1sEgJ4BliHUdn/v9VVzLwzL9wI="
-  crossorigin="anonymous"
-></script>
+<script src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@1/dev/index.bundle.js"></script>
 
 <!-- Production UMD build for ES5+ (~16.4 KiB) -->
-<script
-  src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@1.3.2/dist/index.bundle.js"
-  integrity="sha256-IntgxZHcB9wD20WbxK6df32kNwSsibK3VawPqVeWrVc="
-  crossorigin="anonymous"
-></script>
+<script src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@1/dist/index.bundle.js"></script>
 ```
 
 ```ts [Skypack]
@@ -131,6 +123,7 @@ Axios and Axios Cache Interceptor v1**
 
 | [Axios](https://github.com/axios/axios/releases) | [Axios Cache Interceptor](https://github.com/arthurfiorette/axios-cache-interceptor/releases) |
 | ------------------------------------------------ | --------------------------------------------------------------------------------------------- |
+| `>= v1.6`                                        | `>= v1.3.0`                                                                                   |
 | `>= v1.4`                                        | `>= v1.2.0`                                                                                   |
 | `>= v1.3.1`                                      | `>= v1`                                                                                       |
 | `>= v0.27`                                       | `>= v0.10.3`                                                                                  |
