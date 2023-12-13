@@ -233,4 +233,30 @@ describe('KeyGeneration', () => {
     assert.doesNotThrow(() => keyGenerator(recursive));
     assert.doesNotThrow(() => defaultKeyGenerator(recursive));
   });
+
+  it('works with URLSearchParams', () => {
+    const keyGenerator = defaultKeyGenerator;
+
+    const params = new URLSearchParams();
+    params.append('a', '1');
+    params.append('b', '2');
+
+    const key = keyGenerator({
+      baseURL: 'http://example.com',
+      url: '/test/path',
+      params
+    });
+
+    const params2 = new URLSearchParams();
+    params2.append('a', '2');
+    params2.append('b', '1');
+
+    const key2 = keyGenerator({
+      baseURL: 'http://example.com',
+      url: '/test/path',
+      params: params2
+    });
+
+    assert.notEqual(key, key2);
+  });
 });
