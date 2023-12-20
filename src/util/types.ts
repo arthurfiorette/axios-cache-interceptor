@@ -75,3 +75,8 @@ export interface CacheUpdaterRecord<R, D> {
  * You can use a function to implement your own cache updater function.
  */
 export type CacheUpdater<R, D> = CacheUpdaterFn<R, D> | CacheUpdaterRecord<R, D>;
+
+
+export interface ExcludeProperties {
+  paths?: string[];
+}

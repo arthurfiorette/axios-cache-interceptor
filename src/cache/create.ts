@@ -82,7 +82,9 @@ export function setupCache(axios: AxiosInstance, options: CacheOptions = {}): Ax
 
     override: options.override ?? false,
 
-    hydrate: options.hydrate ?? undefined
+    hydrate: options.hydrate ?? undefined,
+
+    exclude: options.exclude ?? undefined
   };
 
   // Apply interceptors

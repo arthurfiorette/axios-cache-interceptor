@@ -9,6 +9,23 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
   const onFulfilled: RequestInterceptor['onFulfilled'] = async (config) => {
     config.id = axios.generateKey(config);
 
+    if (axios.defaults.cache.exclude?.paths) {
+      const excludedPaths = axios.defaults.cache.exclude.paths
+      const isPathExcluded = excludedPaths.some((path) => Boolean(config.url?.match(path)))
+
+      if (isPathExcluded) {
+        if (__ACI_DEV__) {
+          axios.debug({
+            msg: `Ignoring cache for path ${config.url} because it matched with config.cache.exclude.paths`,
+            data: config
+          });
+        }
+
+        return config;
+      }
+
+    }
+
     if (config.cache === false) {
       if (__ACI_DEV__) {
         axios.debug({

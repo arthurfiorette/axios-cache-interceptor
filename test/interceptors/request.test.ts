@@ -353,4 +353,26 @@ describe('Request Interceptor', () => {
     assert.equal(headers2[Header.Pragma], undefined);
     assert.equal(headers2[Header.Expires], undefined);
   });
+
+  it('ensures request with urls in exclude.paths are not cached', async () => {
+    const axios = mockAxios({
+      exclude: {
+        paths: ['url']
+      }
+    });
+
+    const [_, req1] = await Promise.all([
+      axios.get('url'),
+      axios.get('url')
+    ]);
+
+    assert.equal(req1.cached, false);
+
+    const [__, req2] = await Promise.all([
+      axios.get('some-other'),
+      axios.get('some-other')
+    ]);
+
+    assert.ok(req2.cached);
+  });
 });
