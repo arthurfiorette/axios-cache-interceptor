@@ -218,7 +218,7 @@ export interface CacheProperties<R = unknown, D = unknown> {
    * be cached.
    * @default undefined
    *
-  */
+   */
   exclude?: ExcludeProperties;
 }
 

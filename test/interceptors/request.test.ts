@@ -361,17 +361,11 @@ describe('Request Interceptor', () => {
       }
     });
 
-    const [_, req1] = await Promise.all([
-      axios.get('url'),
-      axios.get('url')
-    ]);
+    const [_, req1] = await Promise.all([axios.get('url'), axios.get('url')]);
 
     assert.equal(req1.cached, false);
 
-    const [__, req2] = await Promise.all([
-      axios.get('some-other'),
-      axios.get('some-other')
-    ]);
+    const [__, req2] = await Promise.all([axios.get('some-other'), axios.get('some-other')]);
 
     assert.ok(req2.cached);
   });

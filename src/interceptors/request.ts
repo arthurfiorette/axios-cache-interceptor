@@ -10,8 +10,8 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
     config.id = axios.generateKey(config);
 
     if (axios.defaults.cache.exclude?.paths) {
-      const excludedPaths = axios.defaults.cache.exclude.paths
-      const isPathExcluded = excludedPaths.some((path) => Boolean(config.url?.match(path)))
+      const excludedPaths = axios.defaults.cache.exclude.paths;
+      const isPathExcluded = excludedPaths.some((path) => Boolean(config.url?.match(path)));
 
       if (isPathExcluded) {
         if (__ACI_DEV__) {
@@ -23,7 +23,6 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
 
         return config;
       }
-
     }
 
     if (config.cache === false) {

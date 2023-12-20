@@ -76,7 +76,6 @@ export interface CacheUpdaterRecord<R, D> {
  */
 export type CacheUpdater<R, D> = CacheUpdaterFn<R, D> | CacheUpdaterRecord<R, D>;
 
-
 export interface ExcludeProperties {
   paths?: string[];
 }
