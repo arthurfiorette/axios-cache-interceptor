@@ -214,7 +214,7 @@ export interface CacheProperties<R = unknown, D = unknown> {
       ) => void | Promise<void>);
 
   /**
-   * An object that will be tested against the response to indicate if it can
+   * An object that will be tested against the request to indicate if it can
    * be cached.
    * @default undefined
    *
