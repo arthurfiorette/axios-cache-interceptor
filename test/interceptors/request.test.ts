@@ -2,10 +2,7 @@ import assert from 'node:assert';
 import { describe, it, mock } from 'node:test';
 import type { AxiosAdapter, AxiosResponse } from 'axios';
 import { setTimeout } from 'timers/promises';
-import type {
-  CacheRequestConfig,
-  InternalCacheRequestConfig
-} from '../../src/cache/axios';
+import type { CacheRequestConfig, InternalCacheRequestConfig } from '../../src/cache/axios';
 import { Header } from '../../src/header/headers';
 import type { LoadingStorageValue } from '../../src/storage/types';
 import { mockAxios } from '../mocks/axios';
@@ -100,10 +97,7 @@ describe('Request Interceptor', () => {
   });
 
   it('Cache expiration', async () => {
-    const axios = mockAxios(
-      {},
-      { [Header.CacheControl]: 'max-age=1,stale-while-revalidate=10' }
-    );
+    const axios = mockAxios({}, { [Header.CacheControl]: 'max-age=1,stale-while-revalidate=10' });
 
     await axios.get('http://test.com', { cache: { interpretHeader: true } });
 
@@ -240,9 +234,7 @@ describe('Request Interceptor', () => {
       adapter: async (config: InternalCacheRequestConfig) => {
         await setTimeout(10);
 
-        const response = (await (axios.defaults.adapter as AxiosAdapter)(
-          config
-        )) as AxiosResponse;
+        const response = (await (axios.defaults.adapter as AxiosAdapter)(config)) as AxiosResponse;
 
         // Changes the response to be different from `true` (default)
         response.data = 'overridden response';
@@ -374,10 +366,7 @@ describe('Request Interceptor', () => {
     assert.equal(req0.cached, false);
     assert.equal(req1.cached, false);
 
-    const [req2, req3] = await Promise.all([
-      axios.get('some-other'),
-      axios.get('some-other')
-    ]);
+    const [req2, req3] = await Promise.all([axios.get('some-other'), axios.get('some-other')]);
 
     assert.equal(req2.cached, false);
     assert.ok(req3.cached);
@@ -395,18 +384,12 @@ describe('Request Interceptor', () => {
     assert.equal(req0.cached, false);
     assert.equal(req1.cached, false);
 
-    const [req2, req3] = await Promise.all([
-      axios.get('some-other'),
-      axios.get('some-other')
-    ]);
+    const [req2, req3] = await Promise.all([axios.get('some-other'), axios.get('some-other')]);
 
     assert.equal(req2.cached, false);
     assert.ok(req3.cached);
 
-    const [req4, req5] = await Promise.all([
-      axios.get('other/url'),
-      axios.get('other/url')
-    ]);
+    const [req4, req5] = await Promise.all([axios.get('other/url'), axios.get('other/url')]);
 
     assert.equal(req4.cached, false);
     assert.equal(req5.cached, false);
