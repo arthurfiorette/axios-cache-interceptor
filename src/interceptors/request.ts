@@ -33,6 +33,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
         if (
           url instanceof RegExp
             ? // Handles stateful regexes
+              // biome-ignore lint: reduces the number of checks
               ((url.lastIndex = 0), url.test(config.url))
             : config.url.includes(url)
         ) {
