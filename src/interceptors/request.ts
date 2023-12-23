@@ -12,6 +12,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
     if (config.cache === false) {
       if (__ACI_DEV__) {
         axios.debug({
+          id: config.id,
           msg: 'Ignoring cache because config.cache === false',
           data: config
         });
@@ -22,6 +23,35 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
 
     // merge defaults with per request configuration
     config.cache = { ...axios.defaults.cache, ...config.cache };
+
+    if (
+      typeof config.cache.cachePredicate === 'object' &&
+      config.cache.cachePredicate.ignoreUrls &&
+      config.url
+    ) {
+      for (const url of config.cache.cachePredicate.ignoreUrls) {
+        if (
+          url instanceof RegExp
+            ? // Handles stateful regexes
+              // biome-ignore lint: reduces the number of checks
+              ((url.lastIndex = 0), url.test(config.url))
+            : config.url.includes(url)
+        ) {
+          if (__ACI_DEV__) {
+            axios.debug({
+              id: config.id,
+              msg: `Ignored because url (${config.url}) matches ignoreUrls (${config.cache.cachePredicate.ignoreUrls})`,
+              data: {
+                url: config.url,
+                cachePredicate: config.cache.cachePredicate
+              }
+            });
+          }
+
+          return config;
+        }
+      }
+    }
 
     // Applies sufficient headers to prevent other cache systems to work along with this one
     //
@@ -36,6 +66,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
     if (!isMethodIn(config.method, config.cache.methods)) {
       if (__ACI_DEV__) {
         axios.debug({
+          id: config.id,
           msg: `Ignored because method (${config.method}) is not in cache.methods (${config.cache.methods})`
         });
       }

@@ -1,9 +1,8 @@
 import type { CacheAxiosResponse, CacheRequestConfig } from '../cache/axios';
 import type { CachedStorageValue, LoadingStorageValue, StorageValue } from '../storage/types';
 
-export type CachePredicate<R = unknown, D = unknown> = Exclude<
-  CachePredicateObject<R, D> | CachePredicateObject<R, D>['responseMatch'],
-  undefined
+export type CachePredicate<R = unknown, D = unknown> = NonNullable<
+  CachePredicateObject<R, D> | CachePredicateObject<R, D>['responseMatch']
 >;
 
 export interface CachePredicateObject<R = unknown, D = unknown> {
@@ -25,6 +24,14 @@ export interface CachePredicateObject<R = unknown, D = unknown> {
 
   /** Check if the response matches this predicate. */
   responseMatch?: (res: CacheAxiosResponse<R, D>) => MaybePromise<boolean>;
+
+  /**
+   * Ignores the request if their url matches any provided urls and/or regexes.
+   *
+   * - It checks against the `request.url` property, `baseURL` is not considered.
+   * - When only `baseURL` is specified, this property is ignored.
+   */
+  ignoreUrls?: (RegExp | string)[];
 }
 
 /**

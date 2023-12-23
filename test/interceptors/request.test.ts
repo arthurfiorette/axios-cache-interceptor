@@ -353,4 +353,45 @@ describe('Request Interceptor', () => {
     assert.equal(headers2[Header.Pragma], undefined);
     assert.equal(headers2[Header.Expires], undefined);
   });
+
+  it('ensures request with urls in exclude.paths are not cached', async () => {
+    const axios = mockAxios({
+      cachePredicate: {
+        ignoreUrls: ['url']
+      }
+    });
+
+    const [req0, req1] = await Promise.all([axios.get('url'), axios.get('url')]);
+
+    assert.equal(req0.cached, false);
+    assert.equal(req1.cached, false);
+
+    const [req2, req3] = await Promise.all([axios.get('some-other'), axios.get('some-other')]);
+
+    assert.equal(req2.cached, false);
+    assert.ok(req3.cached);
+  });
+
+  it('ensures request with urls in exclude.paths are not cached (regex)', async () => {
+    const axios = mockAxios({
+      cachePredicate: {
+        ignoreUrls: [/url/]
+      }
+    });
+
+    const [req0, req1] = await Promise.all([axios.get('my/url'), axios.get('my/url')]);
+
+    assert.equal(req0.cached, false);
+    assert.equal(req1.cached, false);
+
+    const [req2, req3] = await Promise.all([axios.get('some-other'), axios.get('some-other')]);
+
+    assert.equal(req2.cached, false);
+    assert.ok(req3.cached);
+
+    const [req4, req5] = await Promise.all([axios.get('other/url'), axios.get('other/url')]);
+
+    assert.equal(req4.cached, false);
+    assert.equal(req5.cached, false);
+  });
 });
