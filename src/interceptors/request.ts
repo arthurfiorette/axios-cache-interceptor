@@ -1,33 +1,27 @@
 import { deferred } from 'fast-defer';
 import type { AxiosCacheInstance, CacheAxiosResponse } from '../cache/axios';
 import { Header } from '../header/headers';
-import type { CachedResponse, CachedStorageValue, LoadingStorageValue } from '../storage/types';
+import type {
+  CachedResponse,
+  CachedStorageValue,
+  LoadingStorageValue
+} from '../storage/types';
 import type { RequestInterceptor } from './build';
-import { ConfigWithCache, createValidateStatus, isMethodIn, updateStaleRequest } from './util';
+import {
+  ConfigWithCache,
+  createValidateStatus,
+  isMethodIn,
+  updateStaleRequest
+} from './util';
 
 export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
   const onFulfilled: RequestInterceptor['onFulfilled'] = async (config) => {
     config.id = axios.generateKey(config);
 
-    if (axios.defaults.cache.exclude?.paths) {
-      const excludedPaths = axios.defaults.cache.exclude.paths;
-      const isPathExcluded = excludedPaths.some((path) => Boolean(config.url?.match(path)));
-
-      if (isPathExcluded) {
-        if (__ACI_DEV__) {
-          axios.debug({
-            msg: `Ignoring cache for path ${config.url} because it matched with config.cache.exclude.paths`,
-            data: config
-          });
-        }
-
-        return config;
-      }
-    }
-
     if (config.cache === false) {
       if (__ACI_DEV__) {
         axios.debug({
+          id: config.id,
           msg: 'Ignoring cache because config.cache === false',
           data: config
         });
@@ -38,6 +32,34 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
 
     // merge defaults with per request configuration
     config.cache = { ...axios.defaults.cache, ...config.cache };
+
+    if (
+      typeof config.cache.cachePredicate === 'object' &&
+      config.cache.cachePredicate.ignoreUrls &&
+      config.url
+    ) {
+      for (const url of config.cache.cachePredicate.ignoreUrls) {
+        if (
+          url instanceof RegExp
+            ? // Handles stateful regexes
+              ((url.lastIndex = 0), url.test(config.url))
+            : config.url.includes(url)
+        ) {
+          if (__ACI_DEV__) {
+            axios.debug({
+              id: config.id,
+              msg: `Ignored because url (${config.url}) matches ignoreUrls (${config.cache.cachePredicate.ignoreUrls})`,
+              data: {
+                url: config.url,
+                cachePredicate: config.cache.cachePredicate
+              }
+            });
+          }
+
+          return config;
+        }
+      }
+    }
 
     // Applies sufficient headers to prevent other cache systems to work along with this one
     //
@@ -52,6 +74,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
     if (!isMethodIn(config.method, config.cache.methods)) {
       if (__ACI_DEV__) {
         axios.debug({
+          id: config.id,
           msg: `Ignored because method (${config.method}) is not in cache.methods (${config.cache.methods})`
         });
       }
@@ -65,7 +88,11 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
 
     // Not cached, continue the request, and mark it as fetching
     // biome-ignore lint/suspicious/noConfusingLabels: required to break condition in simultaneous accesses
-    ignoreAndRequest: if (cache.state === 'empty' || cache.state === 'stale' || overrideCache) {
+    ignoreAndRequest: if (
+      cache.state === 'empty' ||
+      cache.state === 'stale' ||
+      overrideCache
+    ) {
       // This checks for simultaneous access to a new key. The js event loop jumps on the
       // first await statement, so the second (asynchronous call) request may have already
       // started executing.
@@ -113,7 +140,8 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
           data: cache.data as any,
 
           // If the cache is empty and asked to override it, use the current timestamp
-          createdAt: overrideCache && !cache.createdAt ? Date.now() : (cache.createdAt as any)
+          createdAt:
+            overrideCache && !cache.createdAt ? Date.now() : (cache.createdAt as any)
         },
         config
       );

@@ -12,7 +12,6 @@ import type {
 import type {
   CachePredicate,
   CacheUpdater,
-  ExcludeProperties,
   KeyGenerator,
   StaleIfErrorPredicate
 } from '../util/types';
@@ -212,14 +211,6 @@ export interface CacheProperties<R = unknown, D = unknown> {
           | CachedStorageValue
           | StaleStorageValue
       ) => void | Promise<void>);
-
-  /**
-   * An object that will be tested against the request to indicate if it can
-   * be cached.
-   * @default undefined
-   *
-   */
-  exclude?: ExcludeProperties;
 }
 
 /**

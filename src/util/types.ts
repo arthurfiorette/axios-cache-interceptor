@@ -1,9 +1,12 @@
 import type { CacheAxiosResponse, CacheRequestConfig } from '../cache/axios';
-import type { CachedStorageValue, LoadingStorageValue, StorageValue } from '../storage/types';
+import type {
+  CachedStorageValue,
+  LoadingStorageValue,
+  StorageValue
+} from '../storage/types';
 
-export type CachePredicate<R = unknown, D = unknown> = Exclude<
-  CachePredicateObject<R, D> | CachePredicateObject<R, D>['responseMatch'],
-  undefined
+export type CachePredicate<R = unknown, D = unknown> = NonNullable<
+  CachePredicateObject<R, D> | CachePredicateObject<R, D>['responseMatch']
 >;
 
 export interface CachePredicateObject<R = unknown, D = unknown> {
@@ -25,13 +28,23 @@ export interface CachePredicateObject<R = unknown, D = unknown> {
 
   /** Check if the response matches this predicate. */
   responseMatch?: (res: CacheAxiosResponse<R, D>) => MaybePromise<boolean>;
+
+  /**
+   * Ignores the request if their url matches any provided urls and/or regexes.
+   *
+   * - It checks against the `request.url` property, `baseURL` is not considered.
+   * - When only `baseURL` is specified, this property is ignored.
+   */
+  ignoreUrls?: (RegExp | string)[];
 }
 
 /**
  * A simple function that receives a cache request config and should return a string id
  * for it.
  */
-export type KeyGenerator<R = unknown, D = unknown> = (options: CacheRequestConfig<R, D>) => string;
+export type KeyGenerator<R = unknown, D = unknown> = (
+  options: CacheRequestConfig<R, D>
+) => string;
 
 export type MaybePromise<T> = T | Promise<T> | PromiseLike<T>;
 
@@ -52,7 +65,9 @@ export type StaleIfErrorPredicate<R, D> =
       error: Record<string, unknown>
     ) => MaybePromise<number | boolean>);
 
-export type CacheUpdaterFn<R, D> = (response: CacheAxiosResponse<R, D>) => MaybePromise<void>;
+export type CacheUpdaterFn<R, D> = (
+  response: CacheAxiosResponse<R, D>
+) => MaybePromise<void>;
 
 /**
  * A record for a custom cache updater for each specified request id.
@@ -75,7 +90,3 @@ export interface CacheUpdaterRecord<R, D> {
  * You can use a function to implement your own cache updater function.
  */
 export type CacheUpdater<R, D> = CacheUpdaterFn<R, D> | CacheUpdaterRecord<R, D>;
-
-export interface ExcludeProperties {
-  paths?: string[];
-}
