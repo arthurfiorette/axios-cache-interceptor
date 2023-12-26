@@ -1,6 +1,6 @@
 {
   "name": "axios-cache-interceptor",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Cache interceptor for axios",
   "keywords": [
     "axios",
