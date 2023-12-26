@@ -1,4 +1,4 @@
-import type { AxiosInstance } from 'axios';
+import type { Axios } from 'axios';
 import { defaultHeaderInterpreter } from '../header/interpreter';
 import { defaultRequestInterceptor } from '../interceptors/request';
 import { defaultResponseInterceptor } from '../interceptors/response';
@@ -26,7 +26,7 @@ export interface CacheOptions extends Partial<CacheInstance>, Partial<CachePrope
  * @returns The same instance with extended typescript types.
  * @see https://axios-cache-interceptor.js.org/config
  */
-export function setupCache(axios: AxiosInstance, options: CacheOptions = {}): AxiosCacheInstance {
+export function setupCache(axios: Axios, options: CacheOptions = {}): AxiosCacheInstance {
   const axiosCache = axios as AxiosCacheInstance;
 
   if (axiosCache.defaults.cache) {
