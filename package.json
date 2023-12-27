@@ -68,7 +68,7 @@
     "@types/node": "20.10.4",
     "@types/webpack": "5.28.5",
     "auto-changelog": "2.4.0",
-    "axios": "1.6.2",
+    "axios": "1.6.3",
     "c8": "8.0.1",
     "es-check": "7.1.1",
     "jsdom": "23.0.1",
