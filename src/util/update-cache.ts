@@ -1,6 +1,6 @@
-import type { CacheAxiosResponse } from '../cache/axios';
-import type { AxiosStorage } from '../storage/types';
-import type { CacheUpdater } from './types';
+import type { CacheAxiosResponse } from '../cache/axios.js';
+import type { AxiosStorage } from '../storage/types.js';
+import type { CacheUpdater } from './types.js';
 
 /** Function to update all caches, from CacheProperties.update, with the new data. */
 export async function updateCache<R, D>(

@@ -1,6 +1,6 @@
 import { parse } from 'cache-parser';
-import { Header } from './headers';
-import type { HeaderInterpreter } from './types';
+import { Header } from './headers.js';
+import type { HeaderInterpreter } from './types.js';
 
 export const defaultHeaderInterpreter: HeaderInterpreter = (headers) => {
   if (!headers) return 'not enough headers';

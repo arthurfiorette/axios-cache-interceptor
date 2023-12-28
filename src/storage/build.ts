@@ -1,7 +1,7 @@
-import type { CacheRequestConfig } from '../cache/axios';
-import { Header } from '../header/headers';
-import type { MaybePromise } from '../util/types';
-import type { AxiosStorage, CachedStorageValue, StaleStorageValue, StorageValue } from './types';
+import type { CacheRequestConfig } from '../cache/axios.js';
+import { Header } from '../header/headers.js';
+import type { MaybePromise } from '../util/types.js';
+import type { AxiosStorage, CachedStorageValue, StaleStorageValue, StorageValue } from './types.js';
 
 /** Returns true if the provided object was created from {@link buildStorage} function. */
 export const isStorage = (obj: unknown): obj is AxiosStorage =>

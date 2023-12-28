@@ -54,7 +54,12 @@ const config = ({
   devtool: devBuild ? 'source-map' : false,
 
   experiments: { outputModule: true },
-  resolve: { extensions: ['.ts', '.js'] },
+  resolve: {
+    extensionAlias: {
+      '.js': ['.ts', '.js'],
+    },
+    extensions: ['.ts', '.js']
+  },
 
   externals: inlineDeps
     ? {

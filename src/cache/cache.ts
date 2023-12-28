@@ -1,21 +1,21 @@
 import type { Method } from 'axios';
 import type { Deferred } from 'fast-defer';
-import type { HeaderInterpreter } from '../header/types';
-import type { AxiosInterceptor } from '../interceptors/build';
+import type { HeaderInterpreter } from '../header/types.js';
+import type { AxiosInterceptor } from '../interceptors/build.js';
 import type {
   AxiosStorage,
   CachedResponse,
   CachedStorageValue,
   LoadingStorageValue,
   StaleStorageValue
-} from '../storage/types';
+} from '../storage/types.js';
 import type {
   CachePredicate,
   CacheUpdater,
   KeyGenerator,
   StaleIfErrorPredicate
-} from '../util/types';
-import type { CacheAxiosResponse, CacheRequestConfig } from './axios';
+} from '../util/types.js';
+import type { CacheAxiosResponse, CacheRequestConfig } from './axios.js';
 
 /**
  * @template R The type returned by this response

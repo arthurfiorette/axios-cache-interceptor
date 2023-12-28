@@ -1,5 +1,5 @@
-import type { CacheAxiosResponse, CacheRequestConfig } from '../cache/axios';
-import type { CachedStorageValue, LoadingStorageValue, StorageValue } from '../storage/types';
+import type { CacheAxiosResponse, CacheRequestConfig } from '../cache/axios.js';
+import type { CachedStorageValue, LoadingStorageValue, StorageValue } from '../storage/types.js';
 
 export type CachePredicate<R = unknown, D = unknown> = NonNullable<
   CachePredicateObject<R, D> | CachePredicateObject<R, D>['responseMatch']
