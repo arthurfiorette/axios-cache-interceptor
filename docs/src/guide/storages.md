@@ -146,6 +146,7 @@ maintained by the axios cache interceptor team. But, as we provide a minimal int
 storages, you can use them as a base to also create your own.
 
 - [Node Redis v4](#node-redis-storage)
+- [IndexedDb](#indexeddb)
 - **Have another one?**
 - [Open a PR](https://github.com/arthurfiorette/axios-cache-interceptor/pulls) to add it
   here.
@@ -185,7 +186,7 @@ const redisStorage = buildStorage({
           //   Or if the cached value cannot enter in stale state.
           (value.state === 'stale' && value.ttl) ||
             (value.state === 'cached' && !canStale(value))
-          ? 
+          ?
             value.createdAt + value.ttl!
           : // otherwise, we can't determine when it should expire, so we keep
             //   it indefinitely.
@@ -201,3 +202,34 @@ const redisStorage = buildStorage({
 
 However you can use the [`buildStorage`](#buildstorage) function to integrate with ANY storage you
 want, like `localForage`, `ioredis`, `memcache` and others.
+
+## IndexedDB
+
+Here is an example of how to use the `idb-keyval` library to create a storage that uses
+IndexedDB.
+
+```ts
+import axios from 'axios';
+import { buildStorage } from 'axios-cache-interceptor';
+import { clear, del, get, set } from 'idb-keyval';
+
+const indexedDbStorage = buildStorage({
+  async find(key) {
+    const value = await get(key);
+
+    if (!value) {
+      return;
+    }
+
+    return JSON.parse(value);
+  },
+
+  async set(key, value) {
+    await set(key, JSON.stringify(value));
+  },
+
+  async remove(key) {
+    await del(key);
+  }
+});
+```
