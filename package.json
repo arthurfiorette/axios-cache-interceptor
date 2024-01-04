@@ -69,7 +69,7 @@
     "@types/webpack": "5.28.5",
     "auto-changelog": "2.4.0",
     "axios": "1.6.4",
-    "c8": "8.0.1",
+    "c8": "9.0.0",
     "es-check": "7.1.1",
     "jsdom": "23.0.1",
     "ts-loader": "9.5.1",
