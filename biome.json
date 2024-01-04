@@ -29,8 +29,6 @@
   "files": {
     "ignore": [
       "build/**/*",
-      "dist/**/*",
-      "dev/**/*",
       "coverage/**/*",
       "node_modules/**/*",
       "pnpm-lock.json",

@@ -3,7 +3,7 @@ import type { AxiosCacheInstance, CacheAxiosResponse } from '../cache/axios';
 import { Header } from '../header/headers';
 import type { CachedResponse, CachedStorageValue, LoadingStorageValue } from '../storage/types';
 import type { RequestInterceptor } from './build';
-import { ConfigWithCache, createValidateStatus, isMethodIn, updateStaleRequest } from './util';
+import { type ConfigWithCache, createValidateStatus, isMethodIn, updateStaleRequest } from './util';
 
 export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
   const onFulfilled: RequestInterceptor['onFulfilled'] = async (config) => {

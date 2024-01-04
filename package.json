@@ -18,29 +18,19 @@
   "license": "MIT",
   "author": "Arthur Fiorette <npm@arthur.place>",
   "sideEffects": false,
+  "type": "module",
+  "source": "./src/index.ts",
   "exports": {
-    ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs",
-      "types": "./dist/index.d.ts"
-    },
-    "./dev": {
-      "import": "./dev/index.mjs",
-      "require": "./dev/index.cjs",
-      "types": "./dist/index.d.ts"
-    },
-    "./package.json": "./package.json",
-    "./*": "./*"
+    "require": "./dist/index.cjs",
+    "default": "./dist/index.modern.js"
   },
   "main": "./dist/index.cjs",
-  "jsdelivr": "./dist/index.bundle.js",
+  "module": "./dist/index.module.js",
   "unpkg": "./dist/index.bundle.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "jsdelivr": "./dist/index.bundle.js",
   "scripts": {
     "benchmark": "cd benchmark && pnpm start",
-    "build": "sh build/build.sh",
-    "check": "sh build/check.sh",
+    "build": "bash build.sh",
     "docs:build": "vitepress build docs",
     "docs:dev": "vitepress dev docs --port 1227",
     "docs:serve": "vitepress serve docs",
@@ -66,18 +56,14 @@
     "@swc/helpers": "0.5.3",
     "@types/jsdom": "21.1.6",
     "@types/node": "20.10.4",
-    "@types/webpack": "5.28.5",
     "auto-changelog": "2.4.0",
     "axios": "1.6.4",
     "c8": "9.0.0",
-    "es-check": "7.1.1",
     "jsdom": "23.0.1",
-    "ts-loader": "9.5.1",
+    "microbundle": "^0.15.1",
     "tslib": "2.6.2",
     "typescript": "5.3.3",
-    "vitepress": "1.0.0-rc.35",
-    "webpack": "5.89.0",
-    "webpack-cli": "5.1.4"
+    "vitepress": "1.0.0-rc.35"
   },
   "peerDependencies": {
     "axios": "^1"

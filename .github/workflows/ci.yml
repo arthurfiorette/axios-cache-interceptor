@@ -34,9 +34,6 @@ jobs:
       - name: Build code
         run: pnpm build
 
-      - name: ESCheck
-        run: pnpm run check
-
       - name: Publish to Codecov
         uses: codecov/codecov-action@v3
         continue-on-error: true
