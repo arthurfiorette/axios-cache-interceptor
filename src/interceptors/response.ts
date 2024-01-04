@@ -1,13 +1,13 @@
 import type { AxiosResponseHeaders } from 'axios';
 import { parse } from 'cache-parser';
-import type { AxiosCacheInstance, CacheAxiosResponse, CacheRequestConfig } from '../cache/axios';
-import type { CacheProperties } from '../cache/cache';
-import { Header } from '../header/headers';
-import type { CachedStorageValue } from '../storage/types';
-import { testCachePredicate } from '../util/cache-predicate';
-import { updateCache } from '../util/update-cache';
-import type { ResponseInterceptor } from './build';
-import { createCacheResponse, isMethodIn } from './util';
+import type { AxiosCacheInstance, CacheAxiosResponse, CacheRequestConfig } from '../cache/axios.js';
+import type { CacheProperties } from '../cache/cache.js';
+import { Header } from '../header/headers.js';
+import type { CachedStorageValue } from '../storage/types.js';
+import { testCachePredicate } from '../util/cache-predicate.js';
+import { updateCache } from '../util/update-cache.js';
+import type { ResponseInterceptor } from './build.js';
+import { createCacheResponse, isMethodIn } from './util.js';
 
 export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseInterceptor {
   /**

@@ -1,10 +1,10 @@
 import assert from 'node:assert';
 import { describe, it } from 'node:test';
 import Axios, { AxiosError } from 'axios';
-import { setupCache } from '../../src/cache/create';
-import { Header } from '../../src/header/headers';
-import { mockAxios } from '../mocks/axios';
-import { mockDateNow } from '../utils';
+import { setupCache } from '../../src/cache/create.js';
+import { Header } from '../../src/header/headers.js';
+import { mockAxios } from '../mocks/axios.js';
+import { mockDateNow } from '../utils.js';
 
 describe('StaleIfError handling', () => {
   it('Handles thrown errors', async () => {

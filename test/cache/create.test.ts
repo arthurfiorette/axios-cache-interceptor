@@ -1,7 +1,7 @@
 import assert from 'node:assert';
 import { describe, it, mock } from 'node:test';
 import Axios from 'axios';
-import { setupCache } from '../../src/cache/create';
+import { setupCache } from '../../src/cache/create.js';
 
 describe('Axios Cache Interceptor instances', () => {
   it('Argument composition', () => {

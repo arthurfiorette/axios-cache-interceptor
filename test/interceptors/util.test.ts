@@ -1,8 +1,8 @@
 import assert from 'node:assert';
 import { describe, it } from 'node:test';
 import Axios from 'axios';
-import { createValidateStatus, isMethodIn } from '../../src/interceptors/util';
-import { mockAxios } from '../mocks/axios';
+import { createValidateStatus, isMethodIn } from '../../src/interceptors/util.js';
+import { mockAxios } from '../mocks/axios.js';
 
 describe('Util Functions', () => {
   it('validateStatus function', () => {

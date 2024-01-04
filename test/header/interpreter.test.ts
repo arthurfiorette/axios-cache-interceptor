@@ -1,8 +1,8 @@
 import assert from 'node:assert';
 import { describe, it } from 'node:test';
-import { Header } from '../../src/header/headers';
-import { defaultHeaderInterpreter } from '../../src/header/interpreter';
-import { mockAxios } from '../mocks/axios';
+import { Header } from '../../src/header/headers.js';
+import { defaultHeaderInterpreter } from '../../src/header/interpreter.js';
+import { mockAxios } from '../mocks/axios.js';
 
 describe('Header Interpreter', () => {
   it('Without CacheControl HTTP Header', () => {

@@ -1,4 +1,4 @@
-import type { CacheAxiosResponse } from '../cache/axios';
+import type { CacheAxiosResponse } from '../cache/axios.js';
 
 /**
  * The possible values are:
