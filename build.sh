@@ -14,13 +14,13 @@ microbundle --define __ACI_DEV__=true -o dev/index.js --tsconfig tsconfig.build.
 microbundle --define __ACI_DEV__=false -o dist/index.js --tsconfig tsconfig.build.json --generateTypes &
 
 # Add a simple index.d.ts file to type all dev builds
-echo "export * from '../dist/index';" | tee dev/index.d.ts \
+echo "export * from '../dist/index.js';" | tee dev/index.d.ts \
 dev/index.d.cts \
 dev/index.modern.d.ts \
 dev/index.module.d.ts \
 dev/index.bundle.d.ts > /dev/null &
 
-echo "export * from './index';" | tee dist/index.d.cts \
+echo "export * from './index.js';" | tee dist/index.d.cts \
 dist/index.modern.d.ts \
 dist/index.module.d.ts \
 dist/index.bundle.d.ts > /dev/null &

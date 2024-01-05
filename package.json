@@ -21,15 +21,22 @@
   "type": "module",
   "source": "./src/index.ts",
   "exports": {
-    "require": "./dist/index.cjs",
-    "default": "./dist/index.modern.js",
-    "types": "./dist/index.d.ts"
+    ".": {
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.modern.js"
+    },
+    "./dev": {
+      "require": "./dev/index.cjs",
+      "default": "./dev/index.modern.js"
+    },
+    "./package.json": "./package.json",
+    "./*": "./*"
   },
   "main": "./dist/index.cjs",
-  "module": "./dist/index.module.js",
-  "unpkg": "./dist/index.bundle.js",
-  "types": "./dist/index.d.ts",
   "jsdelivr": "./dist/index.bundle.js",
+  "unpkg": "./dist/index.bundle.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "benchmark": "cd benchmark && pnpm start",
     "build": "bash build.sh",
