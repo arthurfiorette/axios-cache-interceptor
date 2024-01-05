@@ -27,6 +27,10 @@ dist/index.bundle.d.ts > /dev/null &
 
 wait
 
+find dist -name '*.d.ts' ! -name 'index.bundle.d.ts' -exec sh -c 'i="$1"; cp "$i" "${i%.ts}.mts"' shell {} \;
+find dist -name '*.d.mts' -exec sed -i'.bak' -e "s/from '\(.*\)\.js'/from '\1.mjs'/" -e 's/import("\([a-z./-]*\)\.js")/import("\1.mjs")/g' {} \+
+find dist -name '*.d.mts.bak' -delete
+
 echo "Adding license to build files..."
 
 # Get the version from package.json
