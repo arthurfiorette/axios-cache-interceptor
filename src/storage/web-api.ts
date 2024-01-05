@@ -1,5 +1,5 @@
-import { buildStorage, canStale, isExpired } from './build.js'
-import type { StorageValue } from './types.js'
+import { buildStorage, canStale, isExpired } from './build.js';
+import type { StorageValue } from './types.js';
 
 /**
  * Creates a simple storage. You can persist his data by using `sessionStorage` or
