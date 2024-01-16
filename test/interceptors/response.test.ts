@@ -273,13 +273,19 @@ describe('Response Interceptor', () => {
   it('Works when modifying response', async () => {
     const axios = mockAxios();
 
-    const normal = await axios.get('url');
-    const transformed = await axios.get('url', {
+    // fresh response from server and transformed
+    const freshResponse = await axios.get('url', {
       transformResponse: (data: unknown) => [data]
     });
 
-    assert.ok(normal.data);
-    assert.deepEqual(transformed.data, [true]);
+    // cached response 
+    // should not transform again as already in desired format
+    const cachedResponse = await axios.get('url', {
+      transformResponse: (data: unknown) => [data]
+    });
+
+    assert.deepEqual(freshResponse.data, [true]);
+    assert.deepEqual(cachedResponse.data, [true]);
   });
 
   it('Works when modifying the error response', async () => {
