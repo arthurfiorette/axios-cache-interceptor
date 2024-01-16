@@ -354,6 +354,25 @@ describe('Request Interceptor', () => {
     assert.equal(headers2[Header.Expires], undefined);
   });
 
+  it('ensure cached data is not transformed', async () => {
+    const axios = mockAxios();
+
+    // data will transformed with first request
+    const res1 = await axios.get('url', {
+      transformResponse: (data: unknown) => [data]
+    });
+
+    assert.notEqual(res1.config.transformResponse, undefined);
+
+    // cached data should not transform the data as it is alread in desired format.
+    // transform function is nullified in this scenario
+    const res2 = await axios.get('url', {
+      transformResponse: (data: unknown) => [data]
+    });
+
+    assert.equal(res2.config.transformResponse, undefined);
+  });
+
   it('ensures request with urls in exclude.paths are not cached', async () => {
     const axios = mockAxios({
       cachePredicate: {
