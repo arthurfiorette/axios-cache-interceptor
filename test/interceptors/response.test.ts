@@ -278,7 +278,7 @@ describe('Response Interceptor', () => {
       transformResponse: (data: unknown) => [data]
     });
 
-    // cached response 
+    // cached response
     // should not transform again as already in desired format
     const cachedResponse = await axios.get('url', {
       transformResponse: (data: unknown) => [data]
