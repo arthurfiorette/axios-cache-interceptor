@@ -214,6 +214,11 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
       cachedResponse = cache.data;
     }
 
+    // The cached data is already transformed after receiving the response from the server. 
+    // Reapplying the transformation on the transformed data will have an unintended effect. 
+    // Since the cached data is already in the desired format, there is no need to apply the transformation function again.
+    config.transformResponse = undefined;
+
     // Even though the response interceptor receives this one from here,
     // it has been configured to ignore cached responses = true
     config.adapter = function cachedAdapter(): Promise<CacheAxiosResponse> {
