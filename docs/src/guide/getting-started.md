@@ -8,10 +8,6 @@ Add Axios Cache Interceptor and Axios to your project using your favorite packag
 
 ::: code-group
 
-```bash [Yarn]
-yarn add axios@^1 axios-cache-interceptor@^1
-```
-
 ```bash [NPM]
 npm install axios@^1 axios-cache-interceptor@^1
 ```
@@ -44,7 +40,6 @@ import { setupCache } from 'axios-cache-interceptor';
 
 const instance = Axios.create(); // [!code focus]
 const axios = setupCache(instance);// [!code focus]
-
 
 const req1 = axios.get('https://api.example.com/'); // [!code focus]
 const req2 = axios.get('https://api.example.com/'); // [!code focus]
