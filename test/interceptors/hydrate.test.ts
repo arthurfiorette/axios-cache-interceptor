@@ -1,8 +1,8 @@
 import assert from 'node:assert';
 import { describe, it, mock } from 'node:test';
-import { Header } from '../../src/header/headers';
-import { mockAxios } from '../mocks/axios';
-import { mockDateNow } from '../utils';
+import { Header } from '../../src/header/headers.js';
+import { mockAxios } from '../mocks/axios.js';
+import { mockDateNow } from '../utils.js';
 
 describe('Hydrate handling', () => {
   it('Hydrate is only called when a cache exists', async () => {

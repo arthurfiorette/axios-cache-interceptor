@@ -1,5 +1,5 @@
-import { buildStorage, canStale, isExpired } from './build';
-import type { AxiosStorage, NotEmptyStorageValue, StorageValue } from './types';
+import { buildStorage, canStale, isExpired } from './build.js';
+import type { AxiosStorage, NotEmptyStorageValue, StorageValue } from './types.js';
 
 /**
  * Modern function to natively deep clone.

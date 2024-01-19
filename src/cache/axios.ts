@@ -6,7 +6,7 @@ import type {
   AxiosResponseHeaders,
   InternalAxiosRequestConfig
 } from 'axios';
-import type { CacheInstance, CacheProperties } from './cache';
+import type { CacheInstance, CacheProperties } from './cache.js';
 
 /**
  * A slightly changed than the original axios response. Containing information about the

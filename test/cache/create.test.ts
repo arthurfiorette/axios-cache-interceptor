@@ -1,7 +1,7 @@
 import assert from 'node:assert';
 import { describe, it, mock } from 'node:test';
 import Axios from 'axios';
-import { setupCache } from '../../src/cache/create';
+import { setupCache } from '../../src/cache/create.js';
 
 describe('Axios Cache Interceptor instances', () => {
   it('Argument composition', () => {
@@ -21,7 +21,7 @@ describe('Axios Cache Interceptor instances', () => {
     assert.throws(() => setupCache(axios));
   });
 
-  it('Importing with __ACI_DEV__ true prints console warning', () => {
+  it('Importing with __ACI_DEV__ true prints console warning', async () => {
     assert.ok(__ACI_DEV__);
 
     const oldLog = console.error;
@@ -29,7 +29,7 @@ describe('Axios Cache Interceptor instances', () => {
     const consoleMock = mock.fn();
     console.error = consoleMock;
 
-    require('../../src/index');
+    await import('../../src/index.js');
 
     assert.equal(consoleMock.mock.callCount(), 1);
 

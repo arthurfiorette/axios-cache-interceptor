@@ -1,8 +1,8 @@
 import assert from 'node:assert';
 import { describe, it } from 'node:test';
-import type { CacheRequestConfig } from '../../src/cache/axios';
-import { buildKeyGenerator, defaultKeyGenerator } from '../../src/util/key-generator';
-import { mockAxios } from '../mocks/axios';
+import type { CacheRequestConfig } from '../../src/cache/axios.js';
+import { buildKeyGenerator, defaultKeyGenerator } from '../../src/util/key-generator.js';
+import { mockAxios } from '../mocks/axios.js';
 
 describe('KeyGeneration', () => {
   it('Generates different key for and id', () => {

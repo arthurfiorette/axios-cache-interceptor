@@ -1,12 +1,12 @@
 import assert from 'node:assert';
 import { describe, it } from 'node:test';
 import { Axios } from 'axios';
-import { buildStorage, canStale, isStorage } from '../../src/storage/build';
-import { buildMemoryStorage } from '../../src/storage/memory';
-import type { AxiosStorage, StorageValue } from '../../src/storage/types';
-import { buildWebStorage } from '../../src/storage/web-api';
-import { localStorage } from '../dom';
-import { mockAxios } from '../mocks/axios';
+import { buildStorage, canStale, isStorage } from '../../src/storage/build.js';
+import { buildMemoryStorage } from '../../src/storage/memory.js';
+import type { AxiosStorage, StorageValue } from '../../src/storage/types.js';
+import { buildWebStorage } from '../../src/storage/web-api.js';
+import { localStorage } from '../dom.js';
+import { mockAxios } from '../mocks/axios.js';
 
 describe('General storage functions', () => {
   it('isStorage() function', () => {

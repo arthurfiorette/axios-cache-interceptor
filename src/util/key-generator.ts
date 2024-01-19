@@ -1,7 +1,7 @@
 import type { Method } from 'axios';
 import { hash } from 'object-code';
-import type { CacheRequestConfig } from '../cache/axios';
-import type { KeyGenerator } from './types';
+import type { CacheRequestConfig } from '../cache/axios.js';
+import type { KeyGenerator } from './types.js';
 
 // Remove first and last '/' char, if present
 const SLASHES_REGEX = /^\/|\/$/g;
