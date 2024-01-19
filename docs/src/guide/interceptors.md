@@ -59,3 +59,33 @@ declare module 'axios-cache-interceptor' {
   }
 }
 ```
+
+## Streams and non-JSON
+
+Sometimes you may want to cache a response that is not `JSON`, or that is a `Stream`. Either created by another interceptor or even by the axios adapter itself.
+
+To do so, you can use the axios's native `transformResponse` option, which is a function that receives the response and returns a string or a buffer.
+
+**Axios Cache Interceptor** can only handle serializable data types, so you need to convert the response to a string or a buffer.
+
+```ts
+import Axios from 'axios';
+import { setupCache } from 'axios-cache-interceptor';
+
+const instance = Axios.create();
+const axios = setupCache(instance);
+// [!code focus:8]
+const response = await axios.get('my-url-that-returns-a-stream', {
+  responseType: 'stream',
+  transformResponse(response) {
+    // You will need to implement this function.
+    return convertStreamToStringOrObject(response.data);
+  }
+});
+
+response.data; // Will be a string and will be able to be cached.
+```
+
+This library cannot handle streams or buffers, so if you still need `response.data` to be a stream or buffer, you will need to cache it manually.
+
+If you can collect the response data into a serializable format, `axios-cache-interceptor` can handle it for you with help of the `transformResponse` option.
