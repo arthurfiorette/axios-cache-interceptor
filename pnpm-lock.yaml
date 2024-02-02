@@ -23,8 +23,8 @@ devDependencies:
     specifier: 1.5.3
     version: 1.5.3
   '@swc-node/register':
-    specifier: 1.6.8
-    version: 1.6.8(@swc/core@1.3.96)(typescript@5.3.3)
+    specifier: 1.8.0
+    version: 1.8.0(@swc/core@1.3.96)(@swc/types@0.1.5)(typescript@5.3.3)
   '@swc/helpers':
     specifier: 0.5.3
     version: 0.5.3
@@ -2061,23 +2061,25 @@ packages:
       string.prototype.matchall: 4.0.10
     dev: true
 
-  /@swc-node/core@1.10.6(@swc/core@1.3.96):
-    resolution: {integrity: sha512-lDIi/rPosmKIknWzvs2/Fi9zWRtbkx8OJ9pQaevhsoGzJSal8Pd315k1W5AIrnknfdAB4HqRN12fk6AhqnrEEw==}
+  /@swc-node/core@1.12.0(@swc/core@1.3.96)(@swc/types@0.1.5):
+    resolution: {integrity: sha512-AYrEmPL2BT46wbikHwSMR5IK98SelBEYH+ycjalUxJ5xYjEupjF8Fd+NkadKoZAzf5zDtysFKd5R1PY4QBHIiw==}
     engines: {node: '>= 10'}
     peerDependencies:
       '@swc/core': '>= 1.3'
+      '@swc/types': '>= 0.1'
     dependencies:
       '@swc/core': 1.3.96(@swc/helpers@0.5.3)
+      '@swc/types': 0.1.5
     dev: true
 
-  /@swc-node/register@1.6.8(@swc/core@1.3.96)(typescript@5.3.3):
-    resolution: {integrity: sha512-74ijy7J9CWr1Z88yO+ykXphV29giCrSpANQPQRooE0bObpkTO1g4RzQovIfbIaniBiGDDVsYwDoQ3FIrCE8HcQ==}
+  /@swc-node/register@1.8.0(@swc/core@1.3.96)(@swc/types@0.1.5)(typescript@5.3.3):
+    resolution: {integrity: sha512-8K3589HoBSmVmrEVrtr4K5sWEithpGDzcFGic81OW0A9sZY38IV5EGRODQWCk0SBDyLhaF+pid120vJAtsHo1A==}
     peerDependencies:
       '@swc/core': '>= 1.3'
       typescript: '>= 4.3'
     dependencies:
-      '@swc-node/core': 1.10.6(@swc/core@1.3.96)
-      '@swc-node/sourcemap-support': 0.3.0
+      '@swc-node/core': 1.12.0(@swc/core@1.3.96)(@swc/types@0.1.5)
+      '@swc-node/sourcemap-support': 0.4.0
       '@swc/core': 1.3.96(@swc/helpers@0.5.3)
       colorette: 2.0.20
       debug: 4.3.4
@@ -2085,11 +2087,12 @@ packages:
       tslib: 2.6.2
       typescript: 5.3.3
     transitivePeerDependencies:
+      - '@swc/types'
       - supports-color
     dev: true
 
-  /@swc-node/sourcemap-support@0.3.0:
-    resolution: {integrity: sha512-gqBJSmJMWomZFxlppaKea7NeAqFrDrrS0RMt24No92M3nJWcyI9YKGEQKl+EyJqZ5gh6w1s0cTklMHMzRwA1NA==}
+  /@swc-node/sourcemap-support@0.4.0:
+    resolution: {integrity: sha512-weuRmYTO+4yOtHtPZHXlPdA1dJJJp3QOoZAFZ6uZidu992F2X5v1fQdnb26xs1o3Ex/e2sYhRyY5R6NGNuoATQ==}
     dependencies:
       source-map-support: 0.5.21
       tslib: 2.6.2
