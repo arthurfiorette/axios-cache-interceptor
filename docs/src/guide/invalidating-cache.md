@@ -66,7 +66,7 @@ function createPost(data) {
           // Will perform a cache update for the `list-posts` respective
           // cache entry.
           'list-posts': (listPostsCache, createPostResponse) => {
-            // If the cache is does not has a cached state, we don't need
+            // If the cache doesn't have a cached state, we don't need
             // to update it
             if (listPostsCache.state !== 'cached') {
               return 'ignore';
