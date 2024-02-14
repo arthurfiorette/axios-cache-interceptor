@@ -331,7 +331,7 @@ export interface CacheInstance {
    * the complete guide.
    *
    * @default noop function
-   * @see https://axios-cache-interceptor.js.org/#/pages/development-mode
+   * @see https://axios-cache-interceptor.js.org/guide/debugging
    */
   debug: (this: void, msg: DebugObject) => void;
 }
