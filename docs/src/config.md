@@ -46,12 +46,21 @@ See the [Storages](./guide/storages.md) page for more information.
 - Type: `KeyGenerator<unknown, unknown>`
 - Default: `defaultKeyGenerator`
 
-The function used to create different keys for each request. Defaults to a function that
-priorizes the id, and if not specified, a string is generated using the `method`,
-`baseURL`, `params`, `data` and `url`.
+The `generateKey` property defines the function responsible for generating unique keys for each request cache.
 
-You can learn on how to use them on the
-[Request ID](./guide/request-id.md#custom-generator) page.
+By default, it employs a strategy that prioritizes the `id` if available, falling back to a string generated using various request properties. The default implementation generates a 32-bit hash key using the `method`, `baseURL`, `params`, `data`, and `url` of the request.
+
+While this default implementation offers reasonable uniqueness for most scenarios, it's worth noting that there's a [theoretical 50% probability of collisions after approximately 77,000 keys](https://preshing.com/20110504/hash-collision-probabilities/) have been generated.
+
+However, this limitation is typically inconsequential in browser environments due to their 5MB storage limit, which is reached long before the collision threshold.
+
+::: warning
+
+In any persistent cache scenario where hitting over 77K unique keys is a possibility, it's advisable to use a more robust hashing algorithm to mitigate collision risks. For such cases, consider implementing a custom key generator function using libraries like [`object-hash`](https://www.npmjs.com/package/object-hash) for generating hash keys with significantly lower collision probabilities.
+
+:::
+
+[Learn more about request ids.](./guide/request-id.md#custom-generator)
 
 ## waiting
 
