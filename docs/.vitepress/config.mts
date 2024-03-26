@@ -187,6 +187,10 @@ export default defineConfig({
   themeConfig: {
     socialLinks: [
       {
+        icon: 'discord',
+        link: 'https://axios-cache-interceptor.js.org/discord'
+      },
+      {
         icon: 'github',
         link: 'https://github.com/arthurfiorette/axios-cache-interceptor'
       },
