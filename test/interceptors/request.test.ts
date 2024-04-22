@@ -89,17 +89,23 @@ describe('Request Interceptor', () => {
     const response2 = await axios.get('http://test.com');
     assert.ok(response2.cached);
 
-    const response3 = await axios.get('http://test.com', { id: 'random-id' });
+    const response3 = await axios.get('http://test.com', {
+      id: 'random-id'
+    });
     assert.equal(response3.cached, false);
 
-    const response4 = await axios.get('http://test.com', { id: 'random-id' });
+    const response4 = await axios.get('http://test.com', {
+      id: 'random-id'
+    });
     assert.ok(response4.cached);
   });
 
   it('Cache expiration', async () => {
     const axios = mockAxios({}, { [Header.CacheControl]: 'max-age=1,stale-while-revalidate=10' });
 
-    await axios.get('http://test.com', { cache: { interpretHeader: true } });
+    await axios.get('http://test.com', {
+      cache: { interpretHeader: true }
+    });
 
     const resultCache = await axios.get('http://test.com');
     assert.ok(resultCache.cached);
@@ -134,6 +140,9 @@ describe('Request Interceptor', () => {
     const res3 = await axios.get('url', config);
 
     assert.equal(res1.cached, false);
+    const headers1 = res1.headers as Record<string, string>;
+    const headers2 = res2.headers as Record<string, string>;
+    assert.equal(headers1['x-mock-random'], headers2['x-mock-random']);
     assert.ok(res2.cached);
     assert.ok(res3.cached);
 
@@ -142,8 +151,9 @@ describe('Request Interceptor', () => {
 
     const res4 = await axios.get('url', config);
 
-    // Should be false because the cache couldn't be stale
-    assert.equal(res4.cached, false);
+    // Should be different because the call it may not serve stale
+    const headers4 = res4.headers as Record<string, string>;
+    assert.notEqual(headers1['x-mock-random'], headers4['x-mock-random']);
   });
 
   it('Expects two requests with different body are not cached', async () => {

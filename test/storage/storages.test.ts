@@ -1,9 +1,9 @@
 import assert from 'node:assert';
 import { describe, it } from 'node:test';
 import { Axios } from 'axios';
-import { buildStorage, canStale, isStorage } from '../../src/storage/build.js';
+import { buildStorage, canStale, mustRevalidate, isStorage } from '../../src/storage/build.js';
 import { buildMemoryStorage } from '../../src/storage/memory.js';
-import type { AxiosStorage, StorageValue } from '../../src/storage/types.js';
+import type { AxiosStorage, StorageValue, CachedStorageValue } from '../../src/storage/types.js';
 import { buildWebStorage } from '../../src/storage/web-api.js';
 import { localStorage } from '../dom.js';
 import { mockAxios } from '../mocks/axios.js';
@@ -150,41 +150,30 @@ describe('General storage functions', () => {
   });
 
   it('canStale() function with MustRevalidate', () => {
-    // Normal request, but without must-revalidate
-    assert.ok(
-      canStale({
-        data: {
-          headers: {
-            'Cache-Control': 'max-age=1'
-          },
-          data: true,
-          status: 200,
-          statusText: 'OK'
+    // Normal request, without must-revalidate
+    const entry: CachedStorageValue = {
+      data: {
+        headers: {
+          'Cache-Control': 'max-age=1'
         },
-        createdAt: Date.now(),
-        state: 'cached',
-        ttl: 1000,
-        staleTtl: 1000
-      })
-    );
+        data: true,
+        status: 200,
+        statusText: 'OK'
+      },
+      createdAt: Date.now(),
+      state: 'cached',
+      ttl: 1000,
+      staleTtl: 1000
+    };
 
-    // Normal request, but with must-revalidate
-    assert.equal(
-      canStale({
-        data: {
-          headers: {
-            'cache-control': 'must-revalidate, max-age=1'
-          },
-          data: true,
-          status: 200,
-          statusText: 'OK'
-        },
-        createdAt: Date.now(),
-        state: 'cached',
-        ttl: 1000,
-        staleTtl: 1000
-      }),
-      false
-    );
+    // Normal request, but without must-revalidate
+    assert.ok(canStale(entry));
+    assert.equal(mustRevalidate(entry), false);
+
+    // Now with must-revalidate
+    entry.data.headers['cache-control'] = 'must-revalidate, max-age=1';
+
+    assert.equal(canStale(entry), true);
+    assert.equal(mustRevalidate(entry), true);
   });
 });

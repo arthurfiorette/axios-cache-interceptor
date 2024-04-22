@@ -13,7 +13,8 @@ export type StorageValue =
   | StaleStorageValue
   | CachedStorageValue
   | LoadingStorageValue
-  | EmptyStorageValue;
+  | EmptyStorageValue
+  | MustRevalidateStorageValue;
 
 export type NotEmptyStorageValue = Exclude<StorageValue, EmptyStorageValue>;
 
@@ -23,6 +24,14 @@ export interface StaleStorageValue {
   staleTtl?: undefined;
   createdAt: number;
   state: 'stale';
+}
+
+export interface MustRevalidateStorageValue {
+  data: CachedResponse;
+  ttl?: number;
+  staleTtl?: undefined;
+  createdAt: number;
+  state: 'must-revalidate';
 }
 
 export interface CachedStorageValue {
@@ -37,7 +46,10 @@ export interface CachedStorageValue {
   state: 'cached';
 }
 
-export type LoadingStorageValue = LoadingEmptiedStorageValue | LoadingStaledStorageValue;
+export type LoadingStorageValue =
+  | LoadingEmptiedStorageValue
+  | LoadingStaledStorageValue
+  | LoadingRevalidateStorageValue;
 
 export interface LoadingEmptiedStorageValue {
   data?: undefined;
@@ -55,6 +67,15 @@ export interface LoadingStaledStorageValue {
   staleTtl?: undefined;
   createdAt: number;
   previous: 'stale';
+}
+
+export interface LoadingRevalidateStorageValue {
+  state: 'loading';
+  data: CachedResponse;
+  ttl?: undefined;
+  staleTtl?: undefined;
+  createdAt: number;
+  previous: 'must-revalidate';
 }
 
 export interface EmptyStorageValue {
