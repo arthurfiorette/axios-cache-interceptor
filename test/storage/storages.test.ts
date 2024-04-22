@@ -1,9 +1,9 @@
 import assert from 'node:assert';
 import { describe, it } from 'node:test';
 import { Axios } from 'axios';
-import { buildStorage, canStale, mustRevalidate, isStorage } from '../../src/storage/build.js';
+import { buildStorage, canStale, isStorage, mustRevalidate } from '../../src/storage/build.js';
 import { buildMemoryStorage } from '../../src/storage/memory.js';
-import type { AxiosStorage, StorageValue, CachedStorageValue } from '../../src/storage/types.js';
+import type { AxiosStorage, CachedStorageValue, StorageValue } from '../../src/storage/types.js';
 import { buildWebStorage } from '../../src/storage/web-api.js';
 import { localStorage } from '../dom.js';
 import { mockAxios } from '../mocks/axios.js';

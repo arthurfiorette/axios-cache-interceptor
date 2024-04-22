@@ -4,8 +4,8 @@ import type { CacheProperties } from '../cache/cache.js';
 import { Header } from '../header/headers.js';
 import type {
   CachedResponse,
-  StaleStorageValue,
-  MustRevalidateStorageValue
+  MustRevalidateStorageValue,
+  StaleStorageValue
 } from '../storage/types.js';
 
 /**
