@@ -21,15 +21,8 @@ function hasUniqueIdentifierHeader(value: CachedStorageValue | StaleStorageValue
 /** Returns true if value must be revalidated */
 export function mustRevalidate(value: CachedStorageValue | StaleStorageValue): boolean {
   // Must revalidate is a special case and should not serve stale values
-  if (
-    String(value.data.headers[Header.CacheControl])
-      // We could use cache-control's parse function, but this is way faster and simpler
-      .includes('must-revalidate')
-  ) {
-    return true;
-  }
-
-  return false;
+  // We could use cache-control's parse function, but this is way faster and simpler
+  return String(value.data.headers[Header.CacheControl]).includes('must-revalidate');
 }
 
 /** Returns true if this has sufficient properties to stale instead of expire. */

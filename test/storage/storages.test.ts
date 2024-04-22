@@ -166,7 +166,6 @@ describe('General storage functions', () => {
       staleTtl: 1000
     };
 
-    // Normal request, but without must-revalidate
     assert.ok(canStale(entry));
     assert.equal(mustRevalidate(entry), false);
 
