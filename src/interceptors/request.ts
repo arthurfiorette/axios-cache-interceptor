@@ -85,7 +85,12 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
 
     // Not cached, continue the request, and mark it as fetching
     // biome-ignore lint/suspicious/noConfusingLabels: required to break condition in simultaneous accesses
-    ignoreAndRequest: if (cache.state === 'empty' || cache.state === 'stale' || overrideCache) {
+    ignoreAndRequest: if (
+      cache.state === 'empty' ||
+      cache.state === 'stale' ||
+      cache.state === 'must-revalidate' ||
+      overrideCache
+    ) {
       // This checks for simultaneous access to a new key. The js event loop jumps on the
       // first await statement, so the second (asynchronous call) request may have already
       // started executing.
@@ -98,7 +103,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
         // say by a `axios.storage.delete(key)` and has a concurrent loading request.
         // Because in this case, the cache will be empty and may still has a pending key
         // on waiting map.
-        if (cache.state !== 'empty') {
+        if (cache.state !== 'empty' && cache.state !== 'must-revalidate') {
           if (__ACI_DEV__) {
             axios.debug({
               id: config.id,
@@ -128,7 +133,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
               ? 'stale'
               : 'empty'
             : // Typescript doesn't know that cache.state here can only be 'empty' or 'stale'
-              (cache.state as 'stale'),
+              (cache.state as 'stale' | 'must-revalidate'),
 
           data: cache.data as any,
 
@@ -138,7 +143,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
         config
       );
 
-      if (cache.state === 'stale') {
+      if (cache.state === 'stale' || cache.state === 'must-revalidate') {
         updateStaleRequest(cache, config as ConfigWithCache<unknown>);
 
         if (__ACI_DEV__) {
@@ -163,7 +168,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
       }
 
       // Hydrates any UI temporarily, if cache is available
-      if (cache.state === 'stale' || cache.data) {
+      if (cache.state === 'stale' || (cache.data && cache.state !== 'must-revalidate')) {
         await config.cache.hydrate?.(cache);
       }
 

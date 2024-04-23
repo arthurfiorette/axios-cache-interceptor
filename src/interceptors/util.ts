@@ -2,7 +2,11 @@ import type { Method } from 'axios';
 import type { CacheAxiosResponse, CacheRequestConfig } from '../cache/axios.js';
 import type { CacheProperties } from '../cache/cache.js';
 import { Header } from '../header/headers.js';
-import type { CachedResponse, StaleStorageValue } from '../storage/types.js';
+import type {
+  CachedResponse,
+  MustRevalidateStorageValue,
+  StaleStorageValue
+} from '../storage/types.js';
 
 /**
  * Creates a new validateStatus function that will use the one already used and also
@@ -33,7 +37,10 @@ export interface ConfigWithCache<D> extends CacheRequestConfig<unknown, D> {
  * This function updates the cache when the request is stale. So, the next request to the
  * server will be made with proper header / settings.
  */
-export function updateStaleRequest<D>(cache: StaleStorageValue, config: ConfigWithCache<D>): void {
+export function updateStaleRequest<D>(
+  cache: StaleStorageValue | MustRevalidateStorageValue,
+  config: ConfigWithCache<D>
+): void {
   config.headers ||= {};
 
   const { etag, modifiedSince } = config.cache;

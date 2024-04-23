@@ -207,7 +207,9 @@ export interface CacheProperties<R = unknown, D = unknown> {
     | undefined
     | ((
         cache:
-          | (LoadingStorageValue & { previous: 'stale' })
+          | (LoadingStorageValue & {
+              previous: 'stale' | 'must-revalidate';
+            })
           | CachedStorageValue
           | StaleStorageValue
       ) => void | Promise<void>);

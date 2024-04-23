@@ -18,17 +18,15 @@ function hasUniqueIdentifierHeader(value: CachedStorageValue | StaleStorageValue
   );
 }
 
+/** Returns true if value must be revalidated */
+export function mustRevalidate(value: CachedStorageValue | StaleStorageValue): boolean {
+  // Must revalidate is a special case and should not serve stale values
+  // We could use cache-control's parse function, but this is way faster and simpler
+  return String(value.data.headers[Header.CacheControl]).includes('must-revalidate');
+}
+
 /** Returns true if this has sufficient properties to stale instead of expire. */
 export function canStale(value: CachedStorageValue): boolean {
-  // Must revalidate is a special case and should not be staled
-  if (
-    String(value.data.headers[Header.CacheControl])
-      // We could use cache-control's parse function, but this is way faster and simpler
-      .includes('must-revalidate')
-  ) {
-    return false;
-  }
-
   if (hasUniqueIdentifierHeader(value)) {
     return true;
   }
@@ -48,7 +46,7 @@ export function canStale(value: CachedStorageValue): boolean {
 
 /**
  * Checks if the provided cache is expired. You should also check if the cache
- * {@link canStale}
+ * {@link canStale} and {@link mayUseStale}
  */
 export function isExpired(value: CachedStorageValue | StaleStorageValue): boolean {
   return value.ttl !== undefined && value.createdAt + value.ttl <= Date.now();
@@ -105,7 +103,11 @@ export function buildStorage({ set, find, remove }: BuildStorage): AxiosStorage 
         return { state: 'empty' };
       }
 
-      if (value.state === 'empty' || value.state === 'loading') {
+      if (
+        value.state === 'empty' ||
+        value.state === 'loading' ||
+        value.state === 'must-revalidate'
+      ) {
         return value;
       }
 
@@ -129,6 +131,11 @@ export function buildStorage({ set, find, remove }: BuildStorage): AxiosStorage 
         };
 
         await set(key, value, config);
+
+        // Must revalidate is a special case and should not serve stale values
+        if (mustRevalidate(value)) {
+          return { ...value, state: 'must-revalidate' };
+        }
       }
 
       // A second check in case the new stale value was created already expired.
