@@ -8,12 +8,18 @@ export const defaultHeaderInterpreter: HeaderInterpreter = (headers) => {
   const cacheControl: unknown = headers[Header.CacheControl];
 
   if (cacheControl) {
-    const { noCache, noStore, maxAge, maxStale, immutable, staleWhileRevalidate } = parse(
-      String(cacheControl)
-    );
+    const {
+      noCache,
+      noStore,
+      maxAge,
+      maxStale,
+      immutable,
+      staleWhileRevalidate,
+      private: _private
+    } = parse(String(cacheControl));
 
     // Header told that this response should not be cached.
-    if (noCache || noStore) {
+    if (noCache || noStore || (_private && typeof window === 'undefined')) {
       return 'dont cache';
     }
 
