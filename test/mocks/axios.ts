@@ -16,7 +16,7 @@ export function mockAxios(
   // Axios interceptors are a stack, so apply this after the cache interceptor
   axios.defaults.adapter = async (config) => {
     // Simply wait for 1ms to simulate a network request
-    await setTimeout(1);
+    await setTimeout(50);
 
     const should304: unknown =
       config.headers?.[Header.IfNoneMatch] || config.headers?.[Header.IfModifiedSince];
