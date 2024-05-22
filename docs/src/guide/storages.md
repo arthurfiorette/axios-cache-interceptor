@@ -241,7 +241,7 @@ This example implementation uses [node-cache](https://github.com/node-cache/node
 that this library is somewhat old, however it appears to work at the time of writing.
 
 ```ts
-import { StorageValue, buildStorage } from "axios-cache-interceptor";
+import { buildStorage } from "axios-cache-interceptor";
 import NodeCache from "node-cache";
 
 const cache = new NodeCache({ stdTTL: 60 * 60 * 24 * 7 });
