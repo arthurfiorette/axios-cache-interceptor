@@ -147,6 +147,7 @@ storages, you can use them as a base to also create your own.
 
 - [Node Redis v4](#node-redis-storage)
 - [IndexedDb](#indexeddb)
+- [Node Cache](#node-cache)
 - **Have another one?**
 - [Open a PR](https://github.com/arthurfiorette/axios-cache-interceptor/pulls) to add it
   here.
@@ -232,4 +233,39 @@ const indexedDbStorage = buildStorage({
     await del(key);
   }
 });
+```
+
+### Node Cache
+
+This example implementation uses [node-cache](https://github.com/node-cache/node-cache) as a storage method. Do note 
+that this library is somewhat old, however it appears to work at the time of writing.
+
+```ts
+import { StorageValue, buildStorage } from "axios-cache-interceptor";
+import NodeCache from "node-cache";
+
+const cache = new NodeCache({ stdTTL: 60 * 60 * 24 * 7 });
+
+const cacheStorage = buildStorage({
+  find(key) {
+    return new Promise((resolve) => {
+      let value = cache.get(key);
+
+      if (value == undefined) {
+        resolve(undefined);
+      } else {
+        resolve(value as StorageValue);
+      }
+    });
+  },
+
+  set(key, value) {
+    cache.set(key, value);
+  },
+
+  remove(key) {
+    cache.del(key);
+  },
+});
+
 ```
