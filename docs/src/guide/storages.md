@@ -248,6 +248,8 @@ const cache = new NodeCache({ stdTTL: 60 * 60 * 24 * 7 });
 
 const cacheStorage = buildStorage({
   find(key) {
+    return cache.get(key)
+  }
     return new Promise((resolve) => {
       let value = cache.get(key);
 
