@@ -40,8 +40,8 @@ importers:
         specifier: 2.4.0
         version: 2.4.0
       axios:
-        specifier: 1.7.1
-        version: 1.7.1
+        specifier: 1.7.2
+        version: 1.7.2
       c8:
         specifier: 9.1.0
         version: 9.1.0
@@ -59,7 +59,7 @@ importers:
         version: 5.4.5
       vitepress:
         specifier: 1.2.2
-        version: 1.2.2(@algolia/client-search@4.19.1)(@types/node@20.11.5)(axios@1.7.1)(postcss@8.4.32)(search-insights@2.6.0)(terser@5.26.0)(typescript@5.4.5)
+        version: 1.2.2(@algolia/client-search@4.19.1)(@types/node@20.11.5)(axios@1.7.2)(postcss@8.4.32)(search-insights@2.6.0)(terser@5.26.0)(typescript@5.4.5)
 
 packages:
 
@@ -1422,8 +1422,8 @@ packages:
     resolution: {integrity: sha512-DMD0KiN46eipeziST1LPP/STfDU0sufISXmjSgvVsoU2tqxctQeASejWcfNtxYKqETM1UxQ8sp2OrSBWpHY6sw==}
     engines: {node: '>= 0.4'}
 
-  axios@1.7.1:
-    resolution: {integrity: sha512-+LV37nQcd1EpFalkXksWNBiA17NZ5m5/WspmHGmZmdx1qBOg/VNq/c4eRJiA9VQQHBOs+N0ZhhdU10h2TyNK7Q==}
+  axios@1.7.2:
+    resolution: {integrity: sha512-2A8QhOMrbomlDuiLeK9XibIBzuHeRcqqNOHp0Cyp5EoJ1IFDh+XZH3A6BkXtv0K4gFGCI0Y4BM7B1wOEi0Rmgw==}
 
   babel-plugin-macros@3.1.0:
     resolution: {integrity: sha512-Cg7TFGpIr01vOQNODXOOaGz2NpCU5gl8x1qJFbb6hbZxR7XrcE2vtbAsTAbJ7/xwJtUuJEw8K8Zr/AE0LHlesg==}
@@ -4448,13 +4448,13 @@ snapshots:
       - '@vue/composition-api'
       - vue
 
-  '@vueuse/integrations@10.9.0(axios@1.7.1)(focus-trap@7.5.4)(vue@3.4.27(typescript@5.4.5))':
+  '@vueuse/integrations@10.9.0(axios@1.7.2)(focus-trap@7.5.4)(vue@3.4.27(typescript@5.4.5))':
     dependencies:
       '@vueuse/core': 10.9.0(vue@3.4.27(typescript@5.4.5))
       '@vueuse/shared': 10.9.0(vue@3.4.27(typescript@5.4.5))
       vue-demi: 0.14.7(vue@3.4.27(typescript@5.4.5))
     optionalDependencies:
-      axios: 1.7.1
+      axios: 1.7.2
       focus-trap: 7.5.4
     transitivePeerDependencies:
       - '@vue/composition-api'
@@ -4551,7 +4551,7 @@ snapshots:
 
   available-typed-arrays@1.0.5: {}
 
-  axios@1.7.1:
+  axios@1.7.2:
     dependencies:
       follow-redirects: 1.15.6
       form-data: 4.0.0
@@ -6244,7 +6244,7 @@ snapshots:
       fsevents: 2.3.3
       terser: 5.26.0
 
-  vitepress@1.2.2(@algolia/client-search@4.19.1)(@types/node@20.11.5)(axios@1.7.1)(postcss@8.4.32)(search-insights@2.6.0)(terser@5.26.0)(typescript@5.4.5):
+  vitepress@1.2.2(@algolia/client-search@4.19.1)(@types/node@20.11.5)(axios@1.7.2)(postcss@8.4.32)(search-insights@2.6.0)(terser@5.26.0)(typescript@5.4.5):
     dependencies:
       '@docsearch/css': 3.6.0
       '@docsearch/js': 3.6.0(@algolia/client-search@4.19.1)(search-insights@2.6.0)
@@ -6255,7 +6255,7 @@ snapshots:
       '@vue/devtools-api': 7.2.1(vue@3.4.27(typescript@5.4.5))
       '@vue/shared': 3.4.27
       '@vueuse/core': 10.9.0(vue@3.4.27(typescript@5.4.5))
-      '@vueuse/integrations': 10.9.0(axios@1.7.1)(focus-trap@7.5.4)(vue@3.4.27(typescript@5.4.5))
+      '@vueuse/integrations': 10.9.0(axios@1.7.2)(focus-trap@7.5.4)(vue@3.4.27(typescript@5.4.5))
       focus-trap: 7.5.4
       mark.js: 8.11.1
       minisearch: 6.3.0
