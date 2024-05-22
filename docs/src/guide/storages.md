@@ -250,16 +250,6 @@ const cacheStorage = buildStorage({
   find(key) {
     return cache.get(key)
   }
-    return new Promise((resolve) => {
-      let value = cache.get(key);
-
-      if (value == undefined) {
-        resolve(undefined);
-      } else {
-        resolve(value as StorageValue);
-      }
-    });
-  },
 
   set(key, value) {
     cache.set(key, value);
