@@ -12,8 +12,8 @@ importers:
   .:
     dependencies:
       cache-parser:
-        specifier: 1.2.4
-        version: 1.2.4
+        specifier: 1.2.5
+        version: 1.2.5
       fast-defer:
         specifier: 1.1.8
         version: 1.1.8
@@ -1485,8 +1485,8 @@ packages:
     engines: {node: '>=14.14.0'}
     hasBin: true
 
-  cache-parser@1.2.4:
-    resolution: {integrity: sha512-O0KwuHuJnbHUrghHi2kGp0SxnWSIBXTYt7M8WVhW0kbPRUNUKoE/Of6e1rRD6AAxmfxFunKnt90yEK09D+sc5g==}
+  cache-parser@1.2.5:
+    resolution: {integrity: sha512-Md/4VhAHByQ9frQ15WD6LrMNiVw9AEl/J7vWIXw+sxT6fSOpbtt6LHTp76vy8+bOESPBO94117Hm2bIjlI7XjA==}
 
   call-bind@1.0.5:
     resolution: {integrity: sha512-C3nQxfFZxFRVoJoGKKI8y3MOEo129NQ+FgQ08iye+Mk4zNZZGdjfs06bVTr+DBSlA66Q2VEcMki/cUCP4SercQ==}
@@ -4638,7 +4638,7 @@ snapshots:
       yargs: 17.7.2
       yargs-parser: 21.1.1
 
-  cache-parser@1.2.4: {}
+  cache-parser@1.2.5: {}
 
   call-bind@1.0.5:
     dependencies:
