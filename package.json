@@ -55,7 +55,7 @@
     "colors": "1.4.0"
   },
   "dependencies": {
-    "cache-parser": "1.2.4",
+    "cache-parser": "1.2.5",
     "fast-defer": "1.1.8",
     "object-code": "1.3.3"
   },
