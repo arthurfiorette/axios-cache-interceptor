@@ -350,6 +350,8 @@ describe('StaleIfError handling', () => {
 
     assert.ok(res1.cached);
     assert.ok(res2.cached);
+    assert.ok(res1.stale);
+    assert.ok(res2.stale);
 
     const cache = await axios.storage.get(id);
 
