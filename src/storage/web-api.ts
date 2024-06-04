@@ -24,8 +24,7 @@ import type { StorageValue } from './types.js';
 export function buildWebStorage(storage: Storage, prefix = 'axios-cache-') {
   return buildStorage({
     clear: () => {
-      const keys = Object.keys(storage);
-      for (const key of keys) {
+      for (const key in storage) {
         if (key.startsWith(prefix)) {
           storage.removeItem(key);
         }
