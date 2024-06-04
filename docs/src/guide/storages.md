@@ -139,6 +139,9 @@ simple object to build the storage. It has 3 methods:
   Receives the key and optionally the current request. It should return the value from the
   storage or `undefined` if not found.
 
+- `clear() => MaybePromise<void>`:
+  Clears all data from storage.
+
 ## Third Party Storages
 
 These are not guaranteed to work with the latest version of the library as neither are
