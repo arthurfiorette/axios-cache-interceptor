@@ -50,6 +50,11 @@ describe('General storage functions', () => {
         //@ts-expect-error ignore
         assert.ok(cr[symbol]);
         delete memory[key];
+      },
+      clear() {
+        for (const key in memory) {
+          delete memory[key];
+        }
       }
     });
 
