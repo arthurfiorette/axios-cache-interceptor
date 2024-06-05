@@ -65,6 +65,13 @@ export interface BuildStorage extends Omit<AxiosStorage, 'get'> {
     key: string,
     currentRequest?: CacheRequestConfig
   ) => MaybePromise<StorageValue | undefined>;
+
+  /**
+   * Deletes all values from the storage.
+   *
+   * @see https://axios-cache-interceptor.js.org/guide/storages#buildstorage
+   */
+  clear: () => MaybePromise<void>;
 }
 
 /**
@@ -82,7 +89,8 @@ export interface BuildStorage extends Omit<AxiosStorage, 'get'> {
  * const myStorage = buildStorage({
  *   find: () => {...},
  *   set: () => {...},
- *   remove: () => {...}
+ *   remove: () => {...},
+ *   clear: () => {...}
  * });
  *
  * const axios = setupCache(axios, { storage: myStorage });
@@ -90,12 +98,13 @@ export interface BuildStorage extends Omit<AxiosStorage, 'get'> {
  *
  * @see https://axios-cache-interceptor.js.org/guide/storages#buildstorage
  */
-export function buildStorage({ set, find, remove }: BuildStorage): AxiosStorage {
+export function buildStorage({ set, find, remove, clear }: BuildStorage): AxiosStorage {
   return {
     //@ts-expect-error - we don't want to expose this
     'is-storage': 1,
     set,
     remove,
+    clear,
     get: async (key, config) => {
       let value = await find(key, config);
 

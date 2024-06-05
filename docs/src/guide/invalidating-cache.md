@@ -142,6 +142,11 @@ if (someLogicThatShowsIfTheCacheShouldBeInvalidated) {
   // Deletes the current cache for the `list-posts` respective request.
   await axios.storage.remove('list-posts');
 }
+
+if (someLogicThatShowsIfTheCacheShouldBeInvalidated) {
+  // Deletes all cached data
+  await axios.storage.clear();
+}
 ```
 
 ## Keeping cache up to date

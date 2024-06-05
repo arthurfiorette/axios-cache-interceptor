@@ -29,6 +29,20 @@ export function testStorage(name: string, storage: AxiosStorage): void {
 
     assert.notEqual(result3, null);
     assert.equal(result3.state, 'empty');
+
+    await storage.set('key', {
+      state: 'cached',
+      createdAt: Date.now(),
+      ttl: 1000 * 60 * 5,
+      data: { ...EMPTY_RESPONSE, data: 'data' }
+    });
+
+    await storage.clear();
+
+    const result4 = await storage.get('key');
+
+    assert.notEqual(result4, null);
+    assert.equal(result4.state, 'empty');
   });
 
   it(`${name} storage staling`, async () => {

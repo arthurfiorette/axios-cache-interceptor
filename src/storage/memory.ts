@@ -97,6 +97,10 @@ export function buildMemoryStorage(
       }
 
       return value;
+    },
+
+    clear: () => {
+      storage.data = Object.create(null);
     }
   }) as MemoryStorage;
 
