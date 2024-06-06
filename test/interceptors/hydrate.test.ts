@@ -67,7 +67,7 @@ describe('Hydrate handling', () => {
       id,
       cache: { hydrate: m }
     });
-    
+
     assert.equal(m.mock.callCount(), 1);
     assert.ok(res2.cached);
     assert.equal(!!res2.stale, false);

@@ -414,9 +414,9 @@ describe('Request Interceptor', () => {
     assert.equal(req0.stale, undefined);
     assert.equal(req1.cached, false);
     assert.equal(req1.stale, undefined);
-    
+
     const [req2, req3] = await Promise.all([axios.get('some-other'), axios.get('some-other')]);
-    
+
     assert.equal(req2.cached, false);
     assert.equal(req2.stale, undefined);
     assert.ok(req3.cached);
@@ -436,9 +436,9 @@ describe('Request Interceptor', () => {
     assert.equal(req0.stale, undefined);
     assert.equal(req1.cached, false);
     assert.equal(req1.stale, undefined);
-    
+
     const [req2, req3] = await Promise.all([axios.get('some-other'), axios.get('some-other')]);
-    
+
     assert.equal(req2.cached, false);
     assert.equal(req2.stale, undefined);
     assert.ok(req3.cached);
