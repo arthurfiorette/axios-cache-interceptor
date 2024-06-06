@@ -40,6 +40,7 @@ describe('Hydrate handling', () => {
 
     assert.equal(m.mock.callCount(), 0);
     assert.ok(res2.cached);
+    assert.equal(res2.stale, false);
   });
 
   it('Hydrates when etag is set', async () => {
@@ -66,9 +67,10 @@ describe('Hydrate handling', () => {
       id,
       cache: { hydrate: m }
     });
-
+    
     assert.equal(m.mock.callCount(), 1);
     assert.ok(res2.cached);
+    assert.equal(!!res2.stale, false);
     assert.deepEqual(m.mock.calls[0]?.arguments, [cache]);
   });
 
@@ -92,6 +94,7 @@ describe('Hydrate handling', () => {
 
     assert.equal(m.mock.callCount(), 0);
     assert.equal(res2.cached, false);
+    assert.equal(res2.stale, undefined);
   });
 
   it('Only hydrates when stale while revalidate is not expired', async () => {
@@ -117,6 +120,7 @@ describe('Hydrate handling', () => {
 
     assert.equal(m.mock.callCount(), 0);
     assert.equal(res2.cached, false);
+    assert.equal(res2.stale, undefined);
   });
 
   it('Hydrates when force stale', async () => {
@@ -141,5 +145,6 @@ describe('Hydrate handling', () => {
     assert.equal(m.mock.callCount(), 1);
     assert.deepEqual(m.mock.calls[0]?.arguments, [cache]);
     assert.equal(res2.cached, false);
+    assert.equal(res2.stale, undefined);
   });
 });

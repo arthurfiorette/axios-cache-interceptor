@@ -66,9 +66,11 @@ describe('General storage functions', () => {
 
     assert.equal(res1.status, 200);
     assert.equal(res1.cached, false);
+    assert.equal(res1.stale, undefined);
 
     assert.equal(res2.status, 200);
     assert.ok(res2.cached);
+    assert.equal(res2.stale, false);
 
     assert.equal(res1.id, res2.id);
 
