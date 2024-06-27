@@ -44,6 +44,26 @@ describe('Header Interpreter', () => {
     assert.deepEqual(result, { cache: 1000 * 60 * 60 * 24 * 365 });
   });
 
+  it("Don't cache private, no-cache and no-store", () => {
+    const privateResult = defaultHeaderInterpreter({
+      [Header.CacheControl]: 'private'
+    });
+
+    assert.deepEqual(privateResult, 'dont cache');
+
+    const noCacheResult = defaultHeaderInterpreter({
+      [Header.CacheControl]: 'no-cache'
+    });
+
+    assert.deepEqual(noCacheResult, 'dont cache');
+
+    const noStoreResult = defaultHeaderInterpreter({
+      [Header.CacheControl]: 'no-store'
+    });
+
+    assert.deepEqual(noStoreResult, 'dont cache');
+  });
+
   it('MaxAge=10 and Age=3 and StaleWhileRevalidate Headers', () => {
     const result = defaultHeaderInterpreter({
       [Header.CacheControl]: 'max-age=10, stale-while-revalidate=5',
