@@ -33,3 +33,9 @@ This does not indicated if the request was capable of being cached or not, as op
 [`cache.override`](./request-specifics.md#cache-override) may have been enabled.
 
 :::
+
+## stale
+
+- Type: `boolean`
+
+A simple boolean indicating if the request returned data is from valid or stale cache.

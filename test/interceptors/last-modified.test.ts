@@ -24,6 +24,7 @@ describe('LastModified handling', () => {
 
     const response = await axios.get('url', config);
     assert.ok(response.cached);
+    assert.equal(response.stale, false);
     assert.ok(response.data);
 
     // Sleep entire max age time (using await to function as setImmediate)
@@ -32,6 +33,7 @@ describe('LastModified handling', () => {
     const response2 = await axios.get('url', config);
     // from revalidation
     assert.ok(response2.cached);
+    assert.equal(response.stale, false);
     assert.equal(response2.status, 200);
   });
 
@@ -48,6 +50,7 @@ describe('LastModified handling', () => {
 
     const response = await axios.get('url');
     assert.ok(response.cached);
+    assert.equal(response.stale, false);
     assert.ok(response.data);
 
     // Sleep entire max age time (using await to function as setImmediate)
@@ -56,6 +59,7 @@ describe('LastModified handling', () => {
     const response2 = await axios.get('url');
     // from revalidation
     assert.ok(response2.cached);
+    assert.equal(response.stale, false);
     assert.equal(response2.status, 200);
   });
 
@@ -69,12 +73,14 @@ describe('LastModified handling', () => {
 
     const response = await axios.get('url', config);
     assert.equal(response.cached, false);
+    assert.equal(response.stale, undefined);
     assert.ok(response.data);
     assert.equal(response.config.headers?.[Header.IfModifiedSince], undefined);
     assert.ok(response.headers?.[Header.XAxiosCacheLastModified]);
 
     const response2 = await axios.get('url', config);
     assert.ok(response2.cached);
+    assert.equal(!!response.stale, false);
     assert.ok(response2.data);
     assert.ok(response2.config.headers?.[Header.IfModifiedSince]);
     assert.ok(response2.headers?.[Header.XAxiosCacheLastModified]);

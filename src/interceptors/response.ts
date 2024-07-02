@@ -348,6 +348,7 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
 
         return {
           cached: true,
+          stale: true,
           config,
           id,
           data: cache.data.data,

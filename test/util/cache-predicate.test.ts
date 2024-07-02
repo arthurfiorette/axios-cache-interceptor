@@ -253,11 +253,14 @@ describe('CachePredicate', () => {
 
     assert.ok(req1.id);
     assert.equal(req1.cached, false);
+    assert.equal(req1.stale, undefined);
 
     assert.ok(req2.id);
     assert.equal(req2.cached, true);
+    assert.equal(req2.stale, false);
 
     assert.ok(req3.id);
     assert.equal(req3.cached, false);
+    assert.equal(req3.stale, undefined);
   });
 });

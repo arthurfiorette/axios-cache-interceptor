@@ -72,6 +72,7 @@ describe('Header Interpreter', () => {
     const result = await axios.get('http://test.com');
 
     assert.ok(result.cached);
+    assert.equal(result.stale, false);
   });
 
   it('Header Interpreter Stale with StaleWhileRevalidate and MaxStale', () => {
