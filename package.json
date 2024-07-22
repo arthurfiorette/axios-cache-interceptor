@@ -68,7 +68,7 @@
     "auto-changelog": "2.4.0",
     "axios": "1.7.2",
     "c8": "9.1.0",
-    "jsdom": "24.1.0",
+    "jsdom": "24.1.1",
     "microbundle": "^0.15.1",
     "tslib": "2.6.3",
     "typescript": "5.5.3",
