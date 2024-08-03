@@ -67,7 +67,7 @@
     "@types/node": "20.11.5",
     "auto-changelog": "2.4.0",
     "axios": "1.7.3",
-    "c8": "9.1.0",
+    "c8": "10.1.2",
     "jsdom": "24.1.1",
     "microbundle": "^0.15.1",
     "tslib": "2.6.3",
