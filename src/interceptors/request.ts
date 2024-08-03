@@ -239,6 +239,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
         status: cachedResponse.status,
         statusText: cachedResponse.statusText,
         cached: true,
+        stale: (cache as LoadingStorageValue).previous === 'stale',
 
         id: config.id!
       });

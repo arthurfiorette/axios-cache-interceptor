@@ -125,6 +125,7 @@ describe('StaleIfError handling', () => {
     assert.equal(response.statusText, cache.statusText);
     assert.strictEqual(response.headers, cache.headers);
     assert.ok(response.cached);
+    assert.ok(response.stale);
   });
 
   it('StaleIfError needs to be `true`', async () => {
@@ -242,6 +243,7 @@ describe('StaleIfError handling', () => {
     assert.equal(response.statusText, cache.statusText);
     assert.deepEqual(response.headers, cache.headers);
     assert.ok(response.cached);
+    assert.ok(response.stale);
   });
 
   it('StaleIfError with real 50X status code', async () => {
@@ -283,6 +285,7 @@ describe('StaleIfError handling', () => {
     assert.equal(response.statusText, cache.statusText);
     assert.deepEqual(response.headers, cache.headers);
     assert.ok(response.cached);
+    assert.ok(response.stale);
 
     const newResponse = await axios.get('url', {
       id,
@@ -350,6 +353,8 @@ describe('StaleIfError handling', () => {
 
     assert.ok(res1.cached);
     assert.ok(res2.cached);
+    assert.ok(res1.stale);
+    assert.ok(res2.stale);
 
     const cache = await axios.storage.get(id);
 
@@ -387,6 +392,7 @@ describe('StaleIfError handling', () => {
     assert.ok(response);
     assert.equal(response.id, id);
     assert.ok(response.cached);
+    assert.ok(response.stale);
     assert.ok(response.data);
 
     // Advances on time
@@ -434,6 +440,7 @@ describe('StaleIfError handling', () => {
     const data = await axios.get('url', { id });
 
     assert.equal(data.cached, false);
+    assert.equal(data.stale, undefined);
 
     try {
       await axios.get('url', { id, params: { fail: true } });

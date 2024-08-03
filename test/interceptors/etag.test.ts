@@ -14,6 +14,7 @@ describe('ETag handling', () => {
 
     const response = await axios.get('http://test.com', config);
     assert.ok(response.cached);
+    assert.equal(response.stale, false);
     assert.ok(response.data);
 
     // Sleep entire max age time.
@@ -22,6 +23,7 @@ describe('ETag handling', () => {
     const response2 = await axios.get('http://test.com', config);
     // from revalidation
     assert.ok(response2.cached);
+    assert.equal(response.stale, false);
     // ensure value from stale cache is kept
     assert.ok(response2.data);
   });
@@ -37,6 +39,7 @@ describe('ETag handling', () => {
 
     const response = await axios.get('http://test.com');
     assert.ok(response.cached);
+    assert.equal(response.stale, false);
     assert.ok(response.data);
 
     // Sleep entire max age time.
@@ -45,6 +48,7 @@ describe('ETag handling', () => {
     const response2 = await axios.get('http://test.com');
     // from revalidation
     assert.ok(response2.cached);
+    assert.equal(response.stale, false);
     // ensure value from stale cache is kept
     assert.ok(response2.data);
   });
@@ -61,6 +65,7 @@ describe('ETag handling', () => {
     const response = await axios.get('http://test.com', config);
     // from etag revalidation
     assert.ok(response.cached);
+    assert.equal(response.stale, false);
     assert.ok(response.data);
   });
 
@@ -70,12 +75,14 @@ describe('ETag handling', () => {
 
     const response = await axios.get('http://test.com', config);
     assert.equal(response.cached, false);
+    assert.equal(response.stale, undefined);
     assert.ok(response.data);
     assert.equal(response.config.headers?.[Header.IfModifiedSince], undefined);
     assert.equal(response.headers?.[Header.LastModified], undefined);
 
     const response2 = await axios.get('http://test.com', config);
     assert.ok(response2.cached);
+    assert.equal(!!response.stale, false);
     assert.ok(response2.data);
     assert.equal(response2.config.headers?.[Header.IfNoneMatch], 'fake-etag');
     assert.equal(response2.headers?.[Header.ETag], 'fake-etag-2');

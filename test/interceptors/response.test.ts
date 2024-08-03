@@ -81,6 +81,7 @@ describe('Response Interceptor', () => {
     const result = await fetch();
 
     assert.equal(result.cached, false);
+    assert.equal(result.stale, undefined);
   });
 
   it('HeaderInterpreter integration', async () => {
@@ -91,6 +92,7 @@ describe('Response Interceptor', () => {
     const resultNoCache = await axiosNoCache.get('http://test.com');
 
     assert.equal(resultNoCache.cached, false);
+    assert.equal(resultNoCache.stale, undefined);
 
     const axiosCache = mockAxios({}, { [Header.CacheControl]: `max-age=${60 * 60 * 24 * 365}` });
 
@@ -99,6 +101,7 @@ describe('Response Interceptor', () => {
     const resultCache = await axiosCache.get('http://test.com');
 
     assert.ok(resultCache.cached);
+    assert.equal(resultCache.stale, false);
   });
 
   it('Update cache integration', async () => {
@@ -150,6 +153,7 @@ describe('Response Interceptor', () => {
       cache: {
         ttl: (resp) => {
           assert.equal(resp.cached, false);
+          assert.equal(resp.stale, undefined);
           assert.ok(resp.config);
           assert.notEqual(resp.headers[XMockRandom], NaN);
           assert.equal(resp.status, 200);
@@ -325,6 +329,7 @@ describe('Response Interceptor', () => {
     // p2 should succeed as it was not aborted
     await assert.ok(response.data);
     await assert.equal(response.cached, false);
+    assert.equal(response.stale, undefined);
 
     const storage = await axios.storage.get(id);
 
@@ -348,6 +353,7 @@ describe('Response Interceptor', () => {
     const response = await axios.get('url', { id });
 
     assert.equal(response.cached, false);
+    assert.equal(response.stale, undefined);
     assert.ok(response.data);
 
     const storage = await axios.storage.get(id);

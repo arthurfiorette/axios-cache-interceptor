@@ -44,7 +44,9 @@ describe('Request Interceptor', () => {
     ]);
 
     assert.equal(resp1.cached, false);
+    assert.equal(resp1.stale, undefined);
     assert.ok(resp2.cached);
+    assert.equal(resp2.stale, false);
   });
 
   it('Concurrent requests with `cache: false`', async () => {
@@ -57,6 +59,7 @@ describe('Request Interceptor', () => {
     ]);
     for (const result of results) {
       assert.equal(result.cached, false);
+      assert.equal(result.stale, undefined);
     }
   });
 
@@ -78,6 +81,7 @@ describe('Request Interceptor', () => {
     ]);
 
     assert.equal(resp2.cached, false);
+    assert.equal(resp2.stale, undefined);
   });
 
   it('`response.cached` is present', async () => {
@@ -85,19 +89,23 @@ describe('Request Interceptor', () => {
 
     const response = await axios.get('http://test.com');
     assert.equal(response.cached, false);
+    assert.equal(response.stale, undefined);
 
     const response2 = await axios.get('http://test.com');
     assert.ok(response2.cached);
+    assert.equal(response2.stale, false);
 
     const response3 = await axios.get('http://test.com', {
       id: 'random-id'
     });
     assert.equal(response3.cached, false);
+    assert.equal(response3.stale, undefined);
 
     const response4 = await axios.get('http://test.com', {
       id: 'random-id'
     });
     assert.ok(response4.cached);
+    assert.equal(response4.stale, false);
   });
 
   it('Cache expiration', async () => {
@@ -109,12 +117,14 @@ describe('Request Interceptor', () => {
 
     const resultCache = await axios.get('http://test.com');
     assert.ok(resultCache.cached);
+    assert.equal(resultCache.stale, false);
 
     // Sleep entire max age time (using await to function as setImmediate)
     await mockDateNow(1000);
 
     const response2 = await axios.get('http://test.com');
     assert.equal(response2.cached, false);
+    assert.equal(response2.stale, undefined);
   });
 
   it('`must revalidate` does not allows stale', async () => {
@@ -140,11 +150,14 @@ describe('Request Interceptor', () => {
     const res3 = await axios.get('url', config);
 
     assert.equal(res1.cached, false);
+    assert.equal(res1.stale, undefined);
     const headers1 = res1.headers as Record<string, string>;
     const headers2 = res2.headers as Record<string, string>;
     assert.equal(headers1['x-mock-random'], headers2['x-mock-random']);
     assert.ok(res2.cached);
+    assert.equal(res2.stale, false);
     assert.ok(res3.cached);
+    assert.equal(res3.stale, false);
 
     // waits one second (using await to function as setImmediate)
     await mockDateNow(1000);
@@ -162,10 +175,12 @@ describe('Request Interceptor', () => {
     const result = await axios.get('url', { data: { a: 1 } });
 
     assert.equal(result.cached, false);
+    assert.equal(result.stale, undefined);
 
     const result2 = await axios.get('url', { data: { a: 2 } });
 
     assert.equal(result2.cached, false);
+    assert.equal(result2.stale, undefined);
   });
 
   it('Tests a request with really long keys', async () => {
@@ -230,6 +245,7 @@ describe('Request Interceptor', () => {
     const { id, ...initialResponse } = await axios.get('url');
 
     assert.equal(initialResponse.cached, false);
+    assert.equal(initialResponse.stale, undefined);
 
     // Ensure cache was populated
     const c1 = await axios.storage.get(id);
@@ -276,6 +292,7 @@ describe('Request Interceptor', () => {
       const c3 = await axios.storage.get(id);
 
       assert.equal(newResponse.cached, false);
+      assert.equal(newResponse.stale, undefined);
       assert.equal(c3.state, 'cached');
       assert.notEqual(c3.data, c1.data); // `'overridden response'`, not `true`
       assert.notEqual(c3.createdAt, c1.createdAt);
@@ -327,6 +344,7 @@ describe('Request Interceptor', () => {
       const c3 = await axios.storage.get(id);
 
       assert.equal(newResponse.cached, false);
+      assert.equal(newResponse.stale, undefined);
       assert.equal(c3.state, 'cached');
       assert.ok(c3.data);
       assert.notEqual(c3.createdAt, c1.createdAt);
@@ -393,12 +411,16 @@ describe('Request Interceptor', () => {
     const [req0, req1] = await Promise.all([axios.get('url'), axios.get('url')]);
 
     assert.equal(req0.cached, false);
+    assert.equal(req0.stale, undefined);
     assert.equal(req1.cached, false);
+    assert.equal(req1.stale, undefined);
 
     const [req2, req3] = await Promise.all([axios.get('some-other'), axios.get('some-other')]);
 
     assert.equal(req2.cached, false);
+    assert.equal(req2.stale, undefined);
     assert.ok(req3.cached);
+    assert.equal(req3.stale, false);
   });
 
   it('ensures request with urls in exclude.paths are not cached (regex)', async () => {
@@ -411,16 +433,22 @@ describe('Request Interceptor', () => {
     const [req0, req1] = await Promise.all([axios.get('my/url'), axios.get('my/url')]);
 
     assert.equal(req0.cached, false);
+    assert.equal(req0.stale, undefined);
     assert.equal(req1.cached, false);
+    assert.equal(req1.stale, undefined);
 
     const [req2, req3] = await Promise.all([axios.get('some-other'), axios.get('some-other')]);
 
     assert.equal(req2.cached, false);
+    assert.equal(req2.stale, undefined);
     assert.ok(req3.cached);
+    assert.equal(req3.stale, false);
 
     const [req4, req5] = await Promise.all([axios.get('other/url'), axios.get('other/url')]);
 
     assert.equal(req4.cached, false);
+    assert.equal(req4.stale, undefined);
     assert.equal(req5.cached, false);
+    assert.equal(req5.stale, undefined);
   });
 });
