@@ -62,7 +62,7 @@
   "devDependencies": {
     "@biomejs/biome": "1.5.3",
     "@swc-node/register": "1.9.0",
-    "@swc/helpers": "0.5.12",
+    "@swc/helpers": "0.5.13",
     "@types/jsdom": "21.1.7",
     "@types/node": "20.11.5",
     "auto-changelog": "2.4.0",
