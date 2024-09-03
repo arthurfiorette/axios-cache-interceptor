@@ -26,10 +26,10 @@ importers:
         version: 1.5.3
       '@swc-node/register':
         specifier: 1.9.0
-        version: 1.9.0(@swc/core@1.3.96(@swc/helpers@0.5.12))(@swc/types@0.1.5)(typescript@5.5.4)
+        version: 1.9.0(@swc/core@1.3.96(@swc/helpers@0.5.13))(@swc/types@0.1.5)(typescript@5.5.4)
       '@swc/helpers':
-        specifier: 0.5.12
-        version: 0.5.12
+        specifier: 0.5.13
+        version: 0.5.13
       '@types/jsdom':
         specifier: 21.1.7
         version: 21.1.7
@@ -1223,8 +1223,8 @@ packages:
   '@swc/counter@0.1.2':
     resolution: {integrity: sha512-9F4ys4C74eSTEUNndnER3VJ15oru2NumfQxS8geE+f3eB5xvfxpWyqE5XlVnxb/R14uoXi6SLbBwwiDSkv+XEw==}
 
-  '@swc/helpers@0.5.12':
-    resolution: {integrity: sha512-KMZNXiGibsW9kvZAO1Pam2JPTDBm+KSHMMHWdsyI/1DbIZjT2A6Gy3hblVXUMEDvUAKq+e0vL0X0o54owWji7g==}
+  '@swc/helpers@0.5.13':
+    resolution: {integrity: sha512-UoKGxQ3r5kYI9dALKJapMmuK+1zWM/H17Z1+iwnNmzcJRnfFuevZs375TA5rW31pu4BS4NoSy1fRsexDXfWn5w==}
 
   '@swc/types@0.1.5':
     resolution: {integrity: sha512-myfUej5naTBWnqOCc/MdVOLVjXUXtIA+NpDrDBKJtLLg2shUjBu3cZmB/85RyitKc55+lUUyl7oRfLOvkr2hsw==}
@@ -4353,16 +4353,16 @@ snapshots:
       magic-string: 0.25.9
       string.prototype.matchall: 4.0.10
 
-  '@swc-node/core@1.13.0(@swc/core@1.3.96(@swc/helpers@0.5.12))(@swc/types@0.1.5)':
+  '@swc-node/core@1.13.0(@swc/core@1.3.96(@swc/helpers@0.5.13))(@swc/types@0.1.5)':
     dependencies:
-      '@swc/core': 1.3.96(@swc/helpers@0.5.12)
+      '@swc/core': 1.3.96(@swc/helpers@0.5.13)
       '@swc/types': 0.1.5
 
-  '@swc-node/register@1.9.0(@swc/core@1.3.96(@swc/helpers@0.5.12))(@swc/types@0.1.5)(typescript@5.5.4)':
+  '@swc-node/register@1.9.0(@swc/core@1.3.96(@swc/helpers@0.5.13))(@swc/types@0.1.5)(typescript@5.5.4)':
     dependencies:
-      '@swc-node/core': 1.13.0(@swc/core@1.3.96(@swc/helpers@0.5.12))(@swc/types@0.1.5)
+      '@swc-node/core': 1.13.0(@swc/core@1.3.96(@swc/helpers@0.5.13))(@swc/types@0.1.5)
       '@swc-node/sourcemap-support': 0.5.0
-      '@swc/core': 1.3.96(@swc/helpers@0.5.12)
+      '@swc/core': 1.3.96(@swc/helpers@0.5.13)
       colorette: 2.0.20
       debug: 4.3.4
       pirates: 4.0.6
@@ -4407,7 +4407,7 @@ snapshots:
   '@swc/core-win32-x64-msvc@1.3.96':
     optional: true
 
-  '@swc/core@1.3.96(@swc/helpers@0.5.12)':
+  '@swc/core@1.3.96(@swc/helpers@0.5.13)':
     dependencies:
       '@swc/counter': 0.1.2
       '@swc/types': 0.1.5
@@ -4422,11 +4422,11 @@ snapshots:
       '@swc/core-win32-arm64-msvc': 1.3.96
       '@swc/core-win32-ia32-msvc': 1.3.96
       '@swc/core-win32-x64-msvc': 1.3.96
-      '@swc/helpers': 0.5.12
+      '@swc/helpers': 0.5.13
 
   '@swc/counter@0.1.2': {}
 
-  '@swc/helpers@0.5.12':
+  '@swc/helpers@0.5.13':
     dependencies:
       tslib: 2.7.0
 
