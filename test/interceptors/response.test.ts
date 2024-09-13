@@ -155,7 +155,7 @@ describe('Response Interceptor', () => {
           assert.equal(resp.cached, false);
           assert.equal(resp.stale, undefined);
           assert.ok(resp.config);
-          assert.notEqual(resp.headers[XMockRandom], NaN);
+          assert.notEqual(resp.headers[XMockRandom], Number.NaN);
           assert.equal(resp.status, 200);
           assert.equal(resp.statusText, '200 OK');
           assert.ok(resp.data);

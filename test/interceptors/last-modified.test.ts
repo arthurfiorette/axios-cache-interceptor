@@ -123,7 +123,7 @@ describe('LastModified handling', () => {
     const firstMyHeader: unknown = firstResponse.headers?.[XMockRandom];
 
     assert.ok(firstMyHeader);
-    assert.notEqual(Number(firstMyHeader), NaN);
+    assert.notEqual(Number(firstMyHeader), Number.NaN);
 
     // Second request with 304 Not Modified
     const secondResponse = await axios.get('url', {
@@ -132,7 +132,7 @@ describe('LastModified handling', () => {
     const secondMyHeader: unknown = secondResponse.headers?.[XMockRandom];
 
     assert.ok(secondMyHeader);
-    assert.notEqual(Number(secondMyHeader), NaN);
+    assert.notEqual(Number(secondMyHeader), Number.NaN);
     assert.notEqual(secondMyHeader, firstMyHeader);
   });
 });

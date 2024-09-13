@@ -2,15 +2,7 @@
   "name": "axios-cache-interceptor",
   "version": "1.5.3",
   "description": "Cache interceptor for axios",
-  "keywords": [
-    "axios",
-    "cache",
-    "interceptor",
-    "adapter",
-    "http",
-    "plugin",
-    "wrapper"
-  ],
+  "keywords": ["axios", "cache", "interceptor", "adapter", "http", "plugin", "wrapper"],
   "homepage": "https://axios-cache-interceptor.js.org",
   "bugs": "https://github.com/arthurfiorette/axios-cache-interceptor/issues",
   "repository": "https://github.com/arthurfiorette/axios-cache-interceptor.git",
@@ -48,7 +40,7 @@
     "version": "auto-changelog -p && cp CHANGELOG.md docs/src/others/changelog.md && git add CHANGELOG.md docs/src/others/changelog.md",
     "format": "biome format --write .",
     "lint": "biome check .",
-    "lint:fix": "biome check --apply-unsafe .",
+    "lint:fix": "biome check --write --unsafe .",
     "lint:ci": "biome ci ."
   },
   "resolutions": {
