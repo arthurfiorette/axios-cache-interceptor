@@ -50,7 +50,7 @@ HEADER="/*!
 
 # Function to prepend text to files
 prepend_header() {
-    find "$1" -type f \( -name '*.js' -o -name '*.d.ts' -o -name '*.d.mts' \) -print0 | while IFS= read -r -d '' file; do
+    find "$1" -type f \( -name '*.js' -o -name '*.d.ts' -o -name '*.cjs' -o -name '*.mjs' -o -name '*.d.mts' \) -print0 | while IFS= read -r -d '' file; do
         printf "%s%s" "$HEADER" "$(cat "$file")" > "$file"
     done
 }
