@@ -1,7 +1,7 @@
 import assert from 'node:assert';
 import { describe, it, mock } from 'node:test';
+import { setTimeout } from 'node:timers/promises';
 import type { AxiosAdapter, AxiosResponse } from 'axios';
-import { setTimeout } from 'timers/promises';
 import type { CacheRequestConfig, InternalCacheRequestConfig } from '../../src/cache/axios.js';
 import { Header } from '../../src/header/headers.js';
 import type { LoadingStorageValue } from '../../src/storage/types.js';

@@ -1,7 +1,7 @@
 const Benny = require('benny');
-const { execSync } = require('child_process');
-const { writeFileSync } = require('fs');
-const path = require('path');
+const { execSync } = require('node:child_process');
+const { writeFileSync } = require('node:fs');
+const path = require('node:path');
 
 // Outputs into the documentation folder
 const output = path.resolve(__dirname, '../docs/src/generated/benchmark.md');
