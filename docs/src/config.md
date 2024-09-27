@@ -75,7 +75,7 @@ some sort of listener of know when a request is waiting for other to finish.
 
  <Badge text="optional" type="warning"/>
 
-- Type: `HeadersInterpreter`
+- Type: `HeaderInterpreter`
 - Default: `defaultHeaderInterpreter`
 
 The function used to interpret all headers from a request and determine a time to live
@@ -102,9 +102,9 @@ The possible returns are:
 ::: details Example of a custom headerInterpreter
 
 ```ts
-import { setupCache, type HeadersInterpreter } from 'axios-cache-interceptor';
+import { setupCache, type HeaderInterpreter } from 'axios-cache-interceptor';
 
-const myHeaderInterpreter: HeadersInterpreter = (headers) => {
+const myHeaderInterpreter: HeaderInterpreter = (headers) => {
   if (headers['x-my-custom-header']) {
     const seconds = Number(headers['x-my-custom-header']);
 
