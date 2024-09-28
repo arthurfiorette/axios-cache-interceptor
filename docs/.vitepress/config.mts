@@ -164,7 +164,7 @@ export default defineConfig({
     [
       'script',
       {},
-      /* js */ `window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }`
+      /* js */ 'window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }'
     ],
 
     // Ld+Json
