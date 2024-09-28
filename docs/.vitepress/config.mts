@@ -152,19 +152,14 @@ export default defineConfig({
       }
     ],
 
-    // Analytics (Plausible) public available at https://plausible.arthur.one/axios-cache-interceptor.js.org
+    // Analytics (Plausible) public available at https://plausible.io/axios-cache-interceptor.js.org
     [
       'script',
       {
         defer: '',
         'data-domain': 'axios-cache-interceptor.js.org',
-        src: 'https://plausible.arthur.one/js/script.outbound-links.js'
+        src: 'https://plausible.io/js/script.js'
       }
-    ],
-    [
-      'script',
-      {},
-      /* js */ 'window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }'
     ],
 
     // Ld+Json
