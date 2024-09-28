@@ -51,7 +51,7 @@ jobs:
 
       - name: Deploy to latest
         if: ${{ github.event.inputs.version == 'latest' }}
-        uses: JamesIves/github-pages-deploy-action@v4
+        uses: JamesIves/github-pages-deploy-action@bfd213fc265f1b1f5bf8fdfec7771c9b1d59884c@v4.6.4
         with:
           folder: ./docs/.vitepress/dist
           clean: true
