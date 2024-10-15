@@ -78,3 +78,24 @@ Licensed under the **MIT**. See [`LICENSE`](LICENSE) for more informations.
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Farthurfiorette%2Faxios-cache-interceptor.svg?type=small)](https://app.fossa.com/projects/git%2Bgithub.com%2Farthurfiorette%2Faxios-cache-interceptor?ref=badge_small)
 
 <br />
+
+## Star History
+
+<a href="https://star-history.com/#arthurfiorette/axios-cache-interceptor&Date">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=arthurfiorette/axios-cache-interceptor&type=Date&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=arthurfiorette/axios-cache-interceptor&type=Date" />
+    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=arthurfiorette/axios-cache-interceptor&type=Date" />
+  </picture>
+</a>
+
+<br />
+<br />
+
+## All Thanks To Our Contributors:
+
+<a href="https://github.com/arthurfiorette/axios-cache-interceptor/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=arthurfiorette/axios-cache-interceptor" />
+</a>
+
+<br />
