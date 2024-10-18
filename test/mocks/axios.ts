@@ -9,7 +9,8 @@ export const XMockRandom = 'x-mock-random';
 export function mockAxios(
   options: CacheOptions = {},
   responseHeaders: Record<string, string> = {},
-  instance = Axios.create()
+  instance = Axios.create(),
+  data: () => any = () => true
 ): AxiosCacheInstance {
   const axios = setupCache(instance, options);
 
@@ -30,7 +31,7 @@ export function mockAxios(
         config,
         { config },
         {
-          data: true,
+          data: data(),
           status,
           statusText,
           headers: {
@@ -45,7 +46,7 @@ export function mockAxios(
     }
 
     return {
-      data: true,
+      data: data(),
       status,
       statusText,
       headers: {

@@ -94,7 +94,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
       // This checks for simultaneous access to a new key. The js event loop jumps on the
       // first await statement, so the second (asynchronous call) request may have already
       // started executing.
-      if (axios.waiting[config.id] && !overrideCache) {
+      if (axios.waiting.has(config.id) && !overrideCache) {
         cache = (await axios.storage.get(config.id, config)) as
           | CachedStorageValue
           | LoadingStorageValue;
@@ -116,11 +116,12 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
       }
 
       // Create a deferred to resolve other requests for the same key when it's completed
-      axios.waiting[config.id] = deferred();
+      const def = deferred<void>();
+      axios.waiting.set(config.id, def);
 
       // Adds a default reject handler to catch when the request gets aborted without
       // others waiting for it.
-      axios.waiting[config.id]!.catch(() => undefined);
+      def.catch(() => undefined);
 
       await axios.storage.set(
         config.id,
@@ -178,7 +179,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
     let cachedResponse: CachedResponse;
 
     if (cache.state === 'loading') {
-      const deferred = axios.waiting[config.id];
+      const deferred = axios.waiting.get(config.id);
 
       // The deferred may not exists when the process is using a persistent
       // storage and cancelled  in the middle of a request, this would result in
@@ -200,7 +201,28 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
       }
 
       try {
-        cachedResponse = await deferred;
+        // Deferred can't reuse the value because the user's storage might clone
+        // or mutate the value, so we need to ask it again.
+        // For example with memoryStorage + cloneData
+        await deferred;
+        const state = await axios.storage.get(config.id, config);
+
+        // This is a cache mismatch and should never happen, but in case it does,
+        // we need to redo the request all over again.
+        /* c8 ignore start */
+        if (!state.data) {
+          if (__ACI_DEV__) {
+            axios.debug({
+              id: config.id,
+              msg: 'Deferred resolved, but no data was found, requesting again'
+            });
+          }
+
+          return onFulfilled(config);
+        }
+        /* c8 ignore end */
+
+        cachedResponse = state.data;
       } catch (err) {
         if (__ACI_DEV__) {
           axios.debug({
@@ -211,10 +233,11 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
         }
 
         // Hydrates any UI temporarily, if cache is available
-        /* c8 ignore next 3 */
+        /* c8 ignore start */
         if (cache.data) {
           await config.cache.hydrate?.(cache);
         }
+        /* c8 ignore end */
 
         // The deferred is rejected when the request that we are waiting rejects its cache.
         // In this case, we need to redo the request all over again.

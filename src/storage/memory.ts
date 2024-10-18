@@ -1,12 +1,17 @@
 import { buildStorage, canStale, isExpired } from './build.js';
-import type { AxiosStorage, NotEmptyStorageValue, StorageValue } from './types.js';
+import type { AxiosStorage, StorageValue } from './types.js';
 
+/* c8 ignore start */
 /**
- * Modern function to natively deep clone.
- *
- * @link https://caniuse.com/mdn-api_structuredclone (07/03/2022 -> 59.4%)
+ * Clones an object using the structured clone algorithm if available, otherwise
+ * it uses JSON.parse(JSON.stringify(value)).
  */
-declare const structuredClone: (<T>(value: T) => T) | undefined;
+const clone: <T>(value: T) => T =
+  // https://caniuse.com/mdn-api_structuredclone (10/18/2023 92.51%)
+  typeof structuredClone === 'function'
+    ? structuredClone
+    : (value) => JSON.parse(JSON.stringify(value));
+/* c8 ignore stop */
 
 /**
  * Creates a simple in-memory storage. This means that if you need to persist data between
@@ -69,15 +74,9 @@ export function buildMemoryStorage(
         }
       }
 
-      storage.data[key] =
-        // Clone the value before storing to prevent future mutations
-        // from affecting cached data.
-        cloneData === 'double'
-          ? /* c8 ignore next 3 */
-            typeof structuredClone === 'function'
-            ? structuredClone(value)
-            : (JSON.parse(JSON.stringify(value)) as NotEmptyStorageValue)
-          : value;
+      // Clone the value before storing to prevent future mutations
+      // from affecting cached data.
+      storage.data[key] = cloneData === 'double' ? clone(value) : value;
     },
 
     remove: (key) => {
@@ -87,16 +86,7 @@ export function buildMemoryStorage(
     find: (key) => {
       const value = storage.data[key];
 
-      /* c8 ignore next 7 */
-      if (cloneData && value !== undefined) {
-        if (typeof structuredClone === 'function') {
-          return structuredClone(value);
-        }
-
-        return JSON.parse(JSON.stringify(value)) as StorageValue;
-      }
-
-      return value;
+      return cloneData && value !== undefined ? clone(value) : value;
     },
 
     clear: () => {
@@ -123,8 +113,6 @@ export function buildMemoryStorage(
       value = storage.data[key]!;
 
       if (value.state === 'empty') {
-        // this storage returns void.
-
         storage.remove(key);
         continue;
       }

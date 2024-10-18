@@ -4,6 +4,7 @@ import { setTimeout } from 'node:timers/promises';
 import type { AxiosAdapter, AxiosResponse } from 'axios';
 import type { CacheRequestConfig, InternalCacheRequestConfig } from '../../src/cache/axios.js';
 import { Header } from '../../src/header/headers.js';
+import { buildMemoryStorage } from '../../src/index.js';
 import type { LoadingStorageValue } from '../../src/storage/types.js';
 import { mockAxios } from '../mocks/axios.js';
 import { mockDateNow } from '../utils.js';
@@ -227,7 +228,7 @@ describe('Request Interceptor', () => {
     // it still has a waiting entry.
     const { state } = await axios.storage.get(ID);
     assert.equal(state, 'empty');
-    assert.ok(axios.waiting[ID]);
+    assert.ok(axios.waiting.get(ID));
 
     // This line should throw an error if this bug isn't fixed.
     await axios.get('url', { id: ID });
@@ -235,7 +236,7 @@ describe('Request Interceptor', () => {
     const { state: newState } = await axios.storage.get(ID);
 
     assert.notEqual(newState, 'empty');
-    assert.equal(axios.waiting[ID], undefined);
+    assert.equal(axios.waiting.get(ID), undefined);
   });
 
   it('`cache.override = true` with previous cache', async () => {
@@ -450,5 +451,41 @@ describe('Request Interceptor', () => {
     assert.equal(req4.stale, undefined);
     assert.equal(req5.cached, false);
     assert.equal(req5.stale, undefined);
+  });
+
+  it('clone works with concurrent requests', async () => {
+    const axios = mockAxios(
+      {
+        storage: buildMemoryStorage('double')
+      },
+      undefined,
+      undefined,
+      () => ({ a: 1 })
+    );
+
+    await Promise.all(
+      Array.from({ length: 10 }, async () => {
+        const result = await axios.get<{ a: 1 }>('/url');
+        result.data.a++;
+        assert.equal(result.data.a, 2);
+      })
+    );
+  });
+
+  it('clone works with sequential requests', async () => {
+    const axios = mockAxios(
+      {
+        storage: buildMemoryStorage('double')
+      },
+      undefined,
+      undefined,
+      () => ({ a: 1 })
+    );
+
+    for (let i = 0; i < 10; i++) {
+      const result = await axios.get<{ a: 1 }>('/url');
+      result.data.a++;
+      assert.equal(result.data.a, 2);
+    }
   });
 });

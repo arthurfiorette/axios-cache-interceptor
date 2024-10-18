@@ -20,9 +20,12 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
     await axios.storage.remove(responseId, config);
 
     // Rejects the deferred, if present
-    axios.waiting[responseId]?.reject();
+    const deferred = axios.waiting.get(responseId);
 
-    delete axios.waiting[responseId];
+    if (deferred) {
+      deferred.reject();
+      axios.waiting.delete(responseId);
+    }
   };
 
   const onFulfilled: ResponseInterceptor['onFulfilled'] = async (response) => {
@@ -200,12 +203,15 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
       data
     };
 
+    // Define this key as cache on the storage
+    await axios.storage.set(response.id, newCache, config);
+
     // Resolve all other requests waiting for this response
-    const waiting = axios.waiting[response.id];
+    const waiting = axios.waiting.get(response.id);
 
     if (waiting) {
-      waiting.resolve(newCache.data);
-      delete axios.waiting[response.id];
+      waiting.resolve();
+      axios.waiting.delete(response.id);
 
       if (__ACI_DEV__) {
         axios.debug({
@@ -214,9 +220,6 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
         });
       }
     }
-
-    // Define this key as cache on the storage
-    await axios.storage.set(response.id, newCache, config);
 
     if (__ACI_DEV__) {
       axios.debug({
@@ -323,10 +326,6 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
         // staleIfError is the number of seconds that stale is allowed to be used
         (typeof staleIfError === 'number' && cache.createdAt + staleIfError > Date.now())
       ) {
-        // Resolve all other requests waiting for this response
-        axios.waiting[id]?.resolve(cache.data);
-        delete axios.waiting[id];
-
         // re-mark the cache as stale
         await axios.storage.set(
           id,
@@ -337,6 +336,20 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
           },
           config
         );
+        // Resolve all other requests waiting for this response
+        const waiting = axios.waiting.get(id);
+
+        if (waiting) {
+          waiting.resolve();
+          axios.waiting.delete(id);
+
+          if (__ACI_DEV__) {
+            axios.debug({
+              id,
+              msg: 'Found waiting deferred(s) and resolved them'
+            });
+          }
+        }
 
         if (__ACI_DEV__) {
           axios.debug({

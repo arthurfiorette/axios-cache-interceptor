@@ -4,7 +4,6 @@ import type { HeaderInterpreter } from '../header/types.js';
 import type { AxiosInterceptor } from '../interceptors/build.js';
 import type {
   AxiosStorage,
-  CachedResponse,
   CachedStorageValue,
   LoadingStorageValue,
   StaleStorageValue
@@ -86,7 +85,7 @@ export interface CacheProperties<R = unknown, D = unknown> {
    * We use `methods` in a per-request configuration setup because sometimes you have
    * exceptions to the method rule.
    *
-   * @default ['get']
+   * @default ['get', 'head']
    * @see https://axios-cache-interceptor.js.org/config/request-specifics#cache-methods
    */
   methods: Lowercase<Method>[];
@@ -261,10 +260,10 @@ export interface CacheInstance {
    * You'd normally not need to change this, but it is exposed in case you need to use it
    * as some sort of listener of know when a request is waiting for other to finish.
    *
-   * @default { }
+   * @default new Map()
    * @see https://axios-cache-interceptor.js.org/config#waiting
    */
-  waiting: Record<string, Deferred<CachedResponse>>;
+  waiting: Map<string, Deferred<void>>;
 
   /**
    * The function used to interpret all headers from a request and determine a time to

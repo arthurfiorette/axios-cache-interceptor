@@ -62,14 +62,14 @@ In any persistent cache scenario where hitting over 77K unique keys is a possibi
 
 <Badge text="optional" type="warning"/>
 
-- Type: `Record<string, Deferred<CachedResponse>>`
-- Default: `{}`
+- Type: `Map<string, Deferred<void>>`
+- Default: `new Map`
 
 A simple object that will hold a promise for each pending request. Used to handle
 concurrent requests.
 
-You'd normally not need to change this, but it is exposed in case you need to use it as
-some sort of listener of know when a request is waiting for other to finish.
+You shouldn't change this property, but it is exposed in case you need to use it as some
+sort of listener or know when a request is waiting for others to finish.
 
 ## headerInterpreter
 
@@ -102,7 +102,10 @@ The possible returns are:
 ::: details Example of a custom headerInterpreter
 
 ```ts
-import { setupCache, type HeaderInterpreter } from 'axios-cache-interceptor';
+import {
+  setupCache,
+  type HeaderInterpreter
+} from 'axios-cache-interceptor';
 
 const myHeaderInterpreter: HeaderInterpreter = (headers) => {
   if (headers['x-my-custom-header']) {
@@ -186,7 +189,8 @@ setupCache(axiosInstance, { debug: console.log });
 
 // Own logging platform.
 setupCache(axiosInstance, {
-  debug: ({ id, msg, data }) => myLoggerExample.emit({ id, msg, data })
+  debug: ({ id, msg, data }) =>
+    myLoggerExample.emit({ id, msg, data })
 });
 
 // Disables debug. (default)

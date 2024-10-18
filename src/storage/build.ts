@@ -65,13 +65,6 @@ export interface BuildStorage extends Omit<AxiosStorage, 'get'> {
     key: string,
     currentRequest?: CacheRequestConfig
   ) => MaybePromise<StorageValue | undefined>;
-
-  /**
-   * Deletes all values from the storage.
-   *
-   * @see https://axios-cache-interceptor.js.org/guide/storages#buildstorage
-   */
-  clear: () => MaybePromise<void>;
 }
 
 /**
