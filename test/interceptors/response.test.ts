@@ -361,4 +361,33 @@ describe('Response Interceptor', () => {
     assert.equal(storage.state, 'cached');
     assert.equal(storage.data?.data, true);
   });
+
+  // https://github.com/arthurfiorette/axios-cache-interceptor/issues/922
+  it('Aborted requests do not clear its cache afterwards if previous request was cached', async () => {
+    const axios = mockAxios();
+
+    const id = '1';
+
+    // First request
+    await axios.get('url', { id });
+
+    // Second request cancelled
+    const controller = new AbortController();
+    const cancelled = axios.get('url', { id, signal: controller.signal });
+    controller.abort();
+    try {
+      await cancelled;
+      assert.fail('should have thrown an error');
+    } catch (error: any) {
+      assert.equal(error.code, 'ERR_CANCELED');
+    }
+
+    // Third request
+    const promise = axios.get('url', { id });
+
+    const response = await promise;
+
+    // Third request should still have cached data
+    await assert.equal(response.cached, true);
+  });
 });

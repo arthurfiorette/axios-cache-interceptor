@@ -15,9 +15,15 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
    *
    * Also update the waiting list for this key by rejecting it.
    */
-  const rejectResponse = async (responseId: string, config: CacheRequestConfig) => {
+  const rejectResponse = async (
+    responseId: string,
+    config: CacheRequestConfig,
+    clearCache = true
+  ) => {
     // Updates the cache to empty to prevent infinite loading state
-    await axios.storage.remove(responseId, config);
+    if (clearCache) {
+      await axios.storage.remove(responseId, config);
+    }
 
     // Rejects the deferred, if present
     const deferred = axios.waiting.get(responseId);
@@ -297,7 +303,11 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
       }
 
       // Rejects all other requests waiting for this response
-      await rejectResponse(id, config);
+      await rejectResponse(
+        id,
+        config,
+        error.code !== 'ERR_CANCELED' || (error.code === 'ERR_CANCELED' && cache.state !== 'cached')
+      );
 
       throw error;
     }
