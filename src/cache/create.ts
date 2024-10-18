@@ -39,7 +39,7 @@ export function setupCache(axios: AxiosInstance, options: CacheOptions = {}): Ax
     throw new Error('Use buildStorage() function');
   }
 
-  axiosCache.waiting = options.waiting || {};
+  axiosCache.waiting = options.waiting || new Map();
 
   axiosCache.generateKey = options.generateKey || defaultKeyGenerator;
 

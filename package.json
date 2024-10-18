@@ -1,6 +1,6 @@
 {
   "name": "axios-cache-interceptor",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Cache interceptor for axios",
   "keywords": ["axios", "cache", "interceptor", "adapter", "http", "plugin", "wrapper"],
   "homepage": "https://axios-cache-interceptor.js.org",

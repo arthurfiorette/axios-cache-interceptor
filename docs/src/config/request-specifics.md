@@ -148,7 +148,7 @@ and in this [StackOverflow](https://stackoverflow.com/a/62781874/14681561) answe
 <Badge text="optional" type="warning"/>
 
 - Type: `Method[]`
-- Default: `["get"]`
+- Default: `["get", "head"]`
 
 Specifies which methods we should handle and cache. This is where you can enable caching
 to `POST`, `PUT`, `DELETE` and other methods, as the default is only `GET`.
