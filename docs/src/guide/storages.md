@@ -38,7 +38,10 @@ For long running processes, you can avoid memory leaks by using playing with the
 
 ```ts
 import Axios from 'axios';
-import { setupCache, buildMemoryStorage } from 'axios-cache-interceptor';
+import {
+  setupCache,
+  buildMemoryStorage
+} from 'axios-cache-interceptor';
 
 setupCache(axios, {
   // You don't need to to that, as it is the default option.
@@ -140,7 +143,8 @@ simple object to build the storage. It has 3 methods:
   storage or `undefined` if not found.
 
 - `clear() => MaybePromise<void>`:
-  Clears all data from storage.
+  Clears all data from storage. **This method isn't used by the interceptor itself**, instead, its
+  here for you to use it programmatically.
 
 ## Third Party Storages
 
@@ -240,7 +244,7 @@ const indexedDbStorage = buildStorage({
 
 ### Node Cache
 
-This example implementation uses [node-cache](https://github.com/node-cache/node-cache) as a storage method. Do note 
+This example implementation uses [node-cache](https://github.com/node-cache/node-cache) as a storage method. Do note
 that this library is somewhat old, however it appears to work at the time of writing.
 
 ```ts

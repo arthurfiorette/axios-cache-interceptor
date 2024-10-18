@@ -136,9 +136,12 @@ export interface AxiosStorage {
   get: (key: string, currentRequest?: CacheRequestConfig) => MaybePromise<StorageValue>;
 
   /**
-   * Deletes all values from the storage.
+   * Deletes all values from the storage, this method isn't used by the interceptor
+   * and is here just for convenience.
+   *
+   * **All native storages implement them, but it's not required.**
    *
    * @see https://axios-cache-interceptor.js.org/guide/storages#buildstorage
    */
-  clear: () => MaybePromise<void>;
+  clear?: () => MaybePromise<void>;
 }
