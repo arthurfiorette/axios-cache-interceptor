@@ -361,4 +361,47 @@ describe('Response Interceptor', () => {
     assert.equal(storage.state, 'cached');
     assert.equal(storage.data?.data, true);
   });
+
+  // https://github.com/arthurfiorette/axios-cache-interceptor/issues/922
+  it('Aborted requests should preserve non-stale valid cache entries', async () => {
+    const instance = Axios.create({});
+    const axios = setupCache(instance, {});
+
+    const id = '1';
+
+    const cache = {
+      data: true,
+      headers: {},
+      status: 200,
+      statusText: 'Ok'
+    };
+
+    // Cache request
+    axios.storage.set(id, {
+      state: 'cached',
+      ttl: 5000,
+      createdAt: Date.now(),
+      data: cache
+    });
+
+    // First request cancelled immediately
+    const controller = new AbortController();
+    const cancelled = axios.get('http://unknown.url.lan:1234', { id, signal: controller.signal });
+    controller.abort();
+    try {
+      await cancelled;
+      assert.fail('should have thrown an error');
+    } catch (error: any) {
+      assert.equal(error.code, 'ERR_CANCELED');
+    }
+
+    // Second request cancelled after a macrotask
+    const controller2 = new AbortController();
+    const promise = axios.get('http://unknown.url.lan:1234', { id, signal: controller2.signal });
+    // Wait for eventual request to be sent
+    await new Promise((res) => setTimeout(res));
+    controller2.abort();
+    const response = await promise;
+    assert.ok(response.cached);
+  });
 });
