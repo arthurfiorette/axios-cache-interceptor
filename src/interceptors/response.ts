@@ -15,9 +15,15 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
    *
    * Also update the waiting list for this key by rejecting it.
    */
-  const rejectResponse = async (responseId: string, config: CacheRequestConfig) => {
+  const rejectResponse = async (
+    responseId: string,
+    config: CacheRequestConfig,
+    clearCache: boolean
+  ) => {
     // Updates the cache to empty to prevent infinite loading state
-    await axios.storage.remove(responseId, config);
+    if (clearCache) {
+      await axios.storage.remove(responseId, config);
+    }
 
     // Rejects the deferred, if present
     const deferred = axios.waiting.get(responseId);
@@ -116,7 +122,7 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
       !cache.data &&
       !(await testCachePredicate(response, cacheConfig.cachePredicate))
     ) {
-      await rejectResponse(response.id, config);
+      await rejectResponse(response.id, config, true);
 
       if (__ACI_DEV__) {
         axios.debug({
@@ -154,7 +160,7 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
 
       // Cache should not be used
       if (expirationTime === 'dont cache') {
-        await rejectResponse(response.id, config);
+        await rejectResponse(response.id, config, true);
 
         if (__ACI_DEV__) {
           axios.debug({
@@ -276,7 +282,7 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
       }
 
       // Rejects all other requests waiting for this response
-      await rejectResponse(id, config);
+      await rejectResponse(id, config, true);
 
       throw error;
     }
@@ -297,7 +303,12 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
       }
 
       // Rejects all other requests waiting for this response
-      await rejectResponse(id, config);
+      await rejectResponse(
+        id,
+        config,
+        // Do not clear cache if this request is cached, but the request was cancelled before returning the cached response
+        error.code !== 'ERR_CANCELED' || (error.code === 'ERR_CANCELED' && cache.state !== 'cached')
+      );
 
       throw error;
     }
@@ -381,7 +392,7 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
     }
 
     // Rejects all other requests waiting for this response
-    await rejectResponse(id, config);
+    await rejectResponse(id, config, true);
 
     throw error;
   };
