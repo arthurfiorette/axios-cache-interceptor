@@ -93,6 +93,25 @@ This will update the `list-posts` cache at the client side, making it equal to t
 When operations like this are possible to be made, they are the preferred. That's because
 we do not contact the server again and update ourselves the cache.
 
+::: tip
+
+**Note to Vue users:** If you modify an array as shown above and then assign the result
+data of the axios request to a Vue `ref`, you may have issues with the UI not updating.
+This is because the cached array is the same object as was returned from the previous request.
+You need to copy the array before modifying it:
+```ts
+listPostsCache.data.posts = [...listPostsCache.data.posts]
+listPostsCache.data.posts.push(createPostResponse.data);
+// or
+listPostsCache.data.posts = [...listPostsCache.data.posts, createPostResponse.data]
+```
+or before assigning it to the `ref`:
+```ts
+myRef.value = [...axios.get(url).data]
+```
+
+:::
+
 ## Through network
 
 Sometimes, the mutation you made is not simple enough and would need a lot of copied
