@@ -61,8 +61,8 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vitepress:
-        specifier: 1.4.5
-        version: 1.4.5(@algolia/client-search@4.19.1)(@types/node@22.9.0)(axios@1.7.7)(postcss@8.4.32)(search-insights@2.6.0)(terser@5.26.0)(typescript@5.6.3)
+        specifier: 1.5.0
+        version: 1.5.0(@algolia/client-search@4.19.1)(@types/node@22.9.0)(axios@1.7.7)(postcss@8.4.32)(search-insights@2.6.0)(terser@5.26.0)(typescript@5.6.3)
 
 packages:
 
@@ -998,6 +998,12 @@ packages:
     engines: {node: '>=12'}
     cpu: [x64]
     os: [win32]
+
+  '@iconify-json/simple-icons@1.2.11':
+    resolution: {integrity: sha512-AHCGDtBRqP+JzAbBzgO8uN/08CXxEmuaC6lQQZ3b5burKhRU12AJnJczwbUw2K5Mb/U85EpSUNhYMG3F28b8NA==}
+
+  '@iconify/types@2.0.0':
+    resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
 
   '@isaacs/cliui@8.0.2':
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
@@ -3219,8 +3225,8 @@ packages:
       terser:
         optional: true
 
-  vitepress@1.4.5:
-    resolution: {integrity: sha512-9K0k8kvdEbeowVCpKF/x0AySSq0Pr9pM8xufLgQcKMjsifwxtDjXJjcFhZv4LYw2dcpdYiBq2j7PnWi0tCaMCg==}
+  vitepress@1.5.0:
+    resolution: {integrity: sha512-q4Q/G2zjvynvizdB3/bupdYkCJe2umSAMv9Ju4d92E6/NXJ59z70xB0q5p/4lpRyAwflDsbwy1mLV9Q5+nlB+g==}
     hasBin: true
     peerDependencies:
       markdown-it-mathjax3: ^4
@@ -4359,6 +4365,12 @@ snapshots:
 
   '@esbuild/win32-x64@0.21.5':
     optional: true
+
+  '@iconify-json/simple-icons@1.2.11':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/types@2.0.0': {}
 
   '@isaacs/cliui@8.0.2':
     dependencies:
@@ -6725,10 +6737,11 @@ snapshots:
       fsevents: 2.3.3
       terser: 5.26.0
 
-  vitepress@1.4.5(@algolia/client-search@4.19.1)(@types/node@22.9.0)(axios@1.7.7)(postcss@8.4.32)(search-insights@2.6.0)(terser@5.26.0)(typescript@5.6.3):
+  vitepress@1.5.0(@algolia/client-search@4.19.1)(@types/node@22.9.0)(axios@1.7.7)(postcss@8.4.32)(search-insights@2.6.0)(terser@5.26.0)(typescript@5.6.3):
     dependencies:
       '@docsearch/css': 3.6.2
       '@docsearch/js': 3.6.2(@algolia/client-search@4.19.1)(search-insights@2.6.0)
+      '@iconify-json/simple-icons': 1.2.11
       '@shikijs/core': 1.22.2
       '@shikijs/transformers': 1.22.2
       '@shikijs/types': 1.22.2
