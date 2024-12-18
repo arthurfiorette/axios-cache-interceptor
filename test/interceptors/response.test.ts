@@ -109,6 +109,8 @@ describe('Response Interceptor', () => {
 
     const { id } = await axios.get('key01');
 
+    assert.ok(id !== undefined);
+
     await axios.get('key02', {
       cache: {
         update: {
@@ -135,6 +137,8 @@ describe('Response Interceptor', () => {
         interpretHeader: true
       }
     });
+
+    assert.ok(id !== undefined);
 
     const cache = await axios.storage.get(id);
 
@@ -206,6 +210,8 @@ describe('Response Interceptor', () => {
         }
       }
     });
+
+    assert.ok(id !== undefined);
 
     const cache = await axios.storage.get(id);
     assert.equal(cache.state, 'cached');
