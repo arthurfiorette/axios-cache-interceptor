@@ -1,4 +1,4 @@
-import type { Method } from 'axios';
+import type { AxiosResponse, Method } from 'axios';
 import type { Deferred } from 'fast-defer';
 import type { HeaderInterpreter } from '../header/types.js';
 import type { AxiosInterceptor } from '../interceptors/build.js';
@@ -321,7 +321,7 @@ export interface CacheInstance {
    * @default defaultResponseInterceptor
    * @see https://axios-cache-interceptor.js.org/config#responseinterceptor
    */
-  responseInterceptor: AxiosInterceptor<CacheAxiosResponse<unknown, unknown>>;
+  responseInterceptor: AxiosInterceptor<AxiosResponse<unknown, unknown>>;
 
   /**
    * The debug option will print debug information in the console. It is good if you need

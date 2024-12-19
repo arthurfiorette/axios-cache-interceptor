@@ -30,7 +30,7 @@ export interface CacheAxiosResponse<R = any, D = any> extends AxiosResponse<R, D
    *
    * @see https://axios-cache-interceptor.js.org/config/response-object#id
    */
-  id?: string;
+  id: string;
 
   /**
    * A simple boolean indicating if the request returned data from the cache or from the
@@ -43,7 +43,7 @@ export interface CacheAxiosResponse<R = any, D = any> extends AxiosResponse<R, D
    *
    * @see https://axios-cache-interceptor.js.org/config/response-object#cached
    */
-  cached?: boolean;
+  cached: boolean;
 
   /**
    * A simple boolean indicating if the request returned data is from valid or stale cache.
@@ -124,7 +124,7 @@ export interface AxiosCacheInstance extends CacheInstance, AxiosInstance {
 
   interceptors: {
     request: AxiosInterceptorManager<InternalCacheRequestConfig>;
-    response: AxiosInterceptorManager<CacheAxiosResponse>;
+    response: AxiosInterceptorManager<AxiosResponse>;
   };
 
   /** @template D The type that the request body use */
