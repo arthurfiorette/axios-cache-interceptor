@@ -37,7 +37,7 @@ export function testStorage(name: string, storage: AxiosStorage): void {
       data: { ...EMPTY_RESPONSE, data: 'data' }
     });
 
-    storage.clear && (await storage.clear());
+    await storage.clear?.();
 
     const result4 = await storage.get('key');
 
