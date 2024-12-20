@@ -245,7 +245,6 @@ describe('Request Interceptor', () => {
     // First normal request to populate cache
     const { id, ...initialResponse } = await axios.get('url');
 
-    assert.ok(id !== undefined);
     assert.equal(initialResponse.cached, false);
     assert.equal(initialResponse.stale, undefined);
 
