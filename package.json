@@ -65,7 +65,7 @@
     "microbundle": "^0.15.1",
     "tslib": "2.8.1",
     "typescript": "5.7.3",
-    "vitepress": "1.6.1"
+    "vitepress": "1.6.2"
   },
   "peerDependencies": {
     "axios": "^1"
