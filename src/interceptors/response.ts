@@ -34,7 +34,7 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
     }
   };
 
-  const onFulfilled: ResponseInterceptor['onFulfilled'] = async (response) => {
+  const onFulfilled: ResponseInterceptor['onFulfilled'] = async (response: CacheAxiosResponse) => {
     // When response.config is not present, the response is indeed a error.
     if (!response?.config) {
       if (__ACI_DEV__) {

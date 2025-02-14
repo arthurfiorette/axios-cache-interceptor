@@ -1,4 +1,5 @@
-import type { CacheAxiosResponse, InternalCacheRequestConfig } from '../cache/axios.js';
+import type { AxiosResponse } from 'axios';
+import type { InternalCacheRequestConfig } from '../cache/axios.js';
 
 /** See {@link AxiosInterceptorManager} */
 export interface AxiosInterceptor<T> {
@@ -11,4 +12,4 @@ export interface AxiosInterceptor<T> {
 }
 
 export type RequestInterceptor = AxiosInterceptor<InternalCacheRequestConfig<unknown, unknown>>;
-export type ResponseInterceptor = AxiosInterceptor<CacheAxiosResponse<unknown, unknown>>;
+export type ResponseInterceptor = AxiosInterceptor<AxiosResponse<unknown, unknown>>;
