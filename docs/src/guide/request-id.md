@@ -18,7 +18,7 @@ import { setupCache } from 'axios-cache-interceptor';
 
 const axios = setupCache(Axios);
 // [!code focus:5]
-// These two requests are from completely endpoints, but they will share
+// These two requests are from completely different endpoints, but they will share
 // the same resources and cache, as both have the same ID.
 const reqA = await axios.get('/a', { id: 'custom-id' });
 const reqB = await axios.get('/b', { id: 'custom-id' });
