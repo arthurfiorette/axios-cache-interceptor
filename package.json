@@ -57,7 +57,7 @@
     "@swc-node/register": "1.9.0",
     "@swc/helpers": "0.5.15",
     "@types/jsdom": "21.1.7",
-    "@types/node": "22.13.9",
+    "@types/node": "22.13.10",
     "auto-changelog": "2.5.0",
     "axios": "1.8.2",
     "c8": "10.1.3",
