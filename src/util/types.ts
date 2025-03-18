@@ -1,9 +1,5 @@
 import type { CacheAxiosResponse, CacheRequestConfig } from '../cache/axios.js';
-import type {
-  CachedStorageValue,
-  LoadingStorageValue,
-  StorageValue
-} from '../storage/types.js';
+import type { CachedStorageValue, LoadingStorageValue, StorageValue } from '../storage/types.js';
 
 export type CachePredicate<R = unknown, D = unknown> = NonNullable<
   CachePredicateObject<R, D> | CachePredicateObject<R, D>['responseMatch']
@@ -52,9 +48,7 @@ export interface CachePredicateObject<R = unknown, D = unknown> {
  * A simple function that receives a cache request config and should return a string id
  * for it.
  */
-export type KeyGenerator<R = unknown, D = unknown> = (
-  options: CacheRequestConfig<R, D>
-) => string;
+export type KeyGenerator<R = unknown, D = unknown> = (options: CacheRequestConfig<R, D>) => string;
 
 export type MaybePromise<T> = T | Promise<T> | PromiseLike<T>;
 
@@ -75,9 +69,7 @@ export type StaleIfErrorPredicate<R, D> =
       error: Record<string, unknown>
     ) => MaybePromise<number | boolean>);
 
-export type CacheUpdaterFn<R, D> = (
-  response: CacheAxiosResponse<R, D>
-) => MaybePromise<void>;
+export type CacheUpdaterFn<R, D> = (response: CacheAxiosResponse<R, D>) => MaybePromise<void>;
 
 /**
  * A record for a custom cache updater for each specified request id.

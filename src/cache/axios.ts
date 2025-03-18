@@ -123,8 +123,10 @@ export interface AxiosCacheInstance extends CacheInstance, AxiosInstance {
   };
 
   interceptors: {
-    request: AxiosInterceptorManager<InternalCacheRequestConfig>;
-    response: AxiosInterceptorManager<CacheAxiosResponse>;
+    request: AxiosInterceptorManager<InternalCacheRequestConfig<unknown, unknown>>;
+    response: AxiosInterceptorManager<
+      Partial<CacheAxiosResponse<unknown, unknown>> & AxiosResponse<unknown, unknown>
+    >;
   };
 
   /** @template D The type that the request body use */

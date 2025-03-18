@@ -1,4 +1,4 @@
-import type { Method } from 'axios';
+import type { AxiosResponse, Method } from 'axios';
 import type { Deferred } from 'fast-defer';
 import type { HeaderInterpreter } from '../header/types.js';
 import type { AxiosInterceptor } from '../interceptors/build.js';
@@ -15,7 +15,7 @@ import type {
   KeyGenerator,
   StaleIfErrorPredicate
 } from '../util/types.js';
-import type { CacheAxiosResponse, CacheRequestConfig } from './axios.js';
+import type { CacheAxiosResponse, InternalCacheRequestConfig } from './axios.js';
 
 /**
  * @template R The type returned by this response
@@ -314,7 +314,7 @@ export interface CacheInstance {
    * @default defaultRequestInterceptor
    * @see https://axios-cache-interceptor.js.org/config#requestinterceptor
    */
-  requestInterceptor: AxiosInterceptor<CacheRequestConfig<unknown, unknown>>;
+  requestInterceptor: AxiosInterceptor<InternalCacheRequestConfig<unknown, unknown>>;
 
   /**
    * The function that will be used to intercept the request after it is returned by the
@@ -332,7 +332,9 @@ export interface CacheInstance {
    * @default defaultResponseInterceptor
    * @see https://axios-cache-interceptor.js.org/config#responseinterceptor
    */
-  responseInterceptor: AxiosInterceptor<CacheAxiosResponse<unknown, unknown>>;
+  responseInterceptor: AxiosInterceptor<
+    Partial<CacheAxiosResponse<unknown, unknown>> & AxiosResponse<unknown, unknown>
+  >;
 
   /**
    * The debug option will print debug information in the console. It is good if you need

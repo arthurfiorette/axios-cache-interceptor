@@ -10,7 +10,7 @@ import {
   updateStaleRequest
 } from './util.js';
 
-export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
+export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInterceptor {
   const onFulfilled: RequestInterceptor['onFulfilled'] = async (config) => {
     config.id = axios.generateKey(config);
 
@@ -218,7 +218,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
             });
           }
 
-          return onFulfilled(config);
+          return onFulfilled!(config);
         }
         /* c8 ignore end */
 
@@ -241,7 +241,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
 
         // The deferred is rejected when the request that we are waiting rejects its cache.
         // In this case, we need to redo the request all over again.
-        return onFulfilled(config);
+        return onFulfilled!(config);
       }
     } else {
       cachedResponse = cache.data;
@@ -279,7 +279,6 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance) {
   };
 
   return {
-    onFulfilled,
-    apply: () => axios.interceptors.request.use(onFulfilled)
+    onFulfilled
   };
 }

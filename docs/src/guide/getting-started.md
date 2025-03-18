@@ -39,7 +39,7 @@ import Axios from 'axios';
 import { setupCache } from 'axios-cache-interceptor';
 
 const instance = Axios.create(); // [!code focus]
-const axios = setupCache(instance);// [!code focus]
+const axios = setupCache(instance); // [!code focus]
 
 const req1 = axios.get('https://api.example.com/'); // [!code focus]
 const req2 = axios.get('https://api.example.com/'); // [!code focus]
@@ -55,7 +55,7 @@ const Axios = require('axios');
 const { setupCache } = require('axios-cache-interceptor');
 
 const instance = Axios.create(); // [!code focus]
-const axios = setupCache(instance);// [!code focus]
+const axios = setupCache(instance); // [!code focus]
 
 const req1 = axios.get('https://api.example.com/'); // [!code focus]
 const req2 = axios.get('https://api.example.com/'); // [!code focus]
@@ -71,7 +71,7 @@ const Axios = window.axios;
 const { setupCache } = window.AxiosCacheInterceptor;
 
 const instance = Axios.create(); // [!code focus]
-const axios = setupCache(instance);// [!code focus]
+const axios = setupCache(instance); // [!code focus]
 
 const req1 = axios.get('https://api.example.com/'); // [!code focus]
 const req2 = axios.get('https://api.example.com/'); // [!code focus]
@@ -86,9 +86,8 @@ res2.cached; // true // [!code focus]
 import Axios from 'https://cdn.skypack.dev/axios';
 import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor';
 
-
 const instance = Axios.create(); // [!code focus]
-const axios = setupCache(instance);// [!code focus]
+const axios = setupCache(instance); // [!code focus]
 
 const req1 = axios.get('https://api.example.com/'); // [!code focus]
 const req2 = axios.get('https://api.example.com/'); // [!code focus]
@@ -118,7 +117,8 @@ Axios and Axios Cache Interceptor v1**
 
 | [Axios](https://github.com/axios/axios/releases) | [Axios Cache Interceptor](https://github.com/arthurfiorette/axios-cache-interceptor/releases) |
 | ------------------------------------------------ | --------------------------------------------------------------------------------------------- |
-| `>= v1.6`                                        | `>= v1.3.0`                                                                                   |
+| `>= v1.7.8`                                      | `>= v1.7.0`                                                                                   |
+| `>= v1.6`                                        | `>= v1.3.0 && <= 1.6.2`                                                                       |
 | `>= v1.4`                                        | `>= v1.2.0`                                                                                   |
 | `>= v1.3.1`                                      | `>= v1`                                                                                       |
 | `>= v0.27`                                       | `>= v0.10.3`                                                                                  |

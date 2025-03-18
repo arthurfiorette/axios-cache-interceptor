@@ -399,7 +399,6 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
 
   return {
     onFulfilled,
-    onRejected,
-    apply: () => axios.interceptors.response.use(onFulfilled, onRejected)
+    onRejected
   };
 }
