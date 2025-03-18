@@ -1,9 +1,23 @@
 import type { CacheAxiosResponse, CacheRequestConfig } from '../cache/axios.js';
-import type { CachedStorageValue, LoadingStorageValue, StorageValue } from '../storage/types.js';
+import type {
+  CachedStorageValue,
+  LoadingStorageValue,
+  StorageValue
+} from '../storage/types.js';
 
 export type CachePredicate<R = unknown, D = unknown> = NonNullable<
   CachePredicateObject<R, D> | CachePredicateObject<R, D>['responseMatch']
 >;
+
+/**
+ * A hint to the library about where the axios instance is being used.
+ *
+ * Used to take some decisions like handling or not `Cache-Control: private`.
+ *
+ * @default typeof window === 'undefined' ? 'server' : 'client'
+ * @see https://axios-cache-interceptor.js.org/config#location
+ */
+export type InstanceLocation = 'client' | 'server';
 
 export interface CachePredicateObject<R = unknown, D = unknown> {
   /** Matches if this function returned true. */
@@ -38,7 +52,9 @@ export interface CachePredicateObject<R = unknown, D = unknown> {
  * A simple function that receives a cache request config and should return a string id
  * for it.
  */
-export type KeyGenerator<R = unknown, D = unknown> = (options: CacheRequestConfig<R, D>) => string;
+export type KeyGenerator<R = unknown, D = unknown> = (
+  options: CacheRequestConfig<R, D>
+) => string;
 
 export type MaybePromise<T> = T | Promise<T> | PromiseLike<T>;
 
@@ -59,7 +75,9 @@ export type StaleIfErrorPredicate<R, D> =
       error: Record<string, unknown>
     ) => MaybePromise<number | boolean>);
 
-export type CacheUpdaterFn<R, D> = (response: CacheAxiosResponse<R, D>) => MaybePromise<void>;
+export type CacheUpdaterFn<R, D> = (
+  response: CacheAxiosResponse<R, D>
+) => MaybePromise<void>;
 
 /**
  * A record for a custom cache updater for each specified request id.

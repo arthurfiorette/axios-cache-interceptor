@@ -27,6 +27,29 @@ setupCache(Axios, OPTIONS);
 
 :::
 
+## location
+
+<Badge text="optional" type="warning"/>
+
+- Type: `InstanceLocation`
+- Default: `typeof window === 'undefined' ? 'server' : 'client'`
+
+A hint to the library about where the axios instance is being used.
+
+Used to take some decisions like handling or not `Cache-Control: private`.
+
+```ts
+// NodeJS
+const cache = setupCache(Axios.create(), {
+  location: 'server'
+});
+
+// Browser
+const cache = setupCache(Axios.create(), {
+  location: 'client'
+});
+```
+
 ## storage
 
 <Badge text="optional" type="warning"/>

@@ -11,6 +11,7 @@ import type {
 import type {
   CachePredicate,
   CacheUpdater,
+  InstanceLocation,
   KeyGenerator,
   StaleIfErrorPredicate
 } from '../util/types.js';
@@ -228,6 +229,16 @@ export interface CacheProperties<R = unknown, D = unknown> {
  * @see https://axios-cache-interceptor.js.org/config/request-specifics
  */
 export interface CacheInstance {
+  /**
+   * A hint to the library about where the axios instance is being used.
+   *
+   * Used to take some decisions like handling or not `Cache-Control: private`.
+   *
+   * @default typeof window === 'undefined' ? 'server' : 'client'
+   * @see https://axios-cache-interceptor.js.org/config#location
+   */
+  location: InstanceLocation;
+
   /**
    * A storage interface is the entity responsible for saving, retrieving and serializing
    * data received from network and requested when a axios call is made.

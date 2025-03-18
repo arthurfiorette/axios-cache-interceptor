@@ -156,7 +156,7 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
     let staleTtl: number | undefined;
 
     if (cacheConfig.interpretHeader) {
-      const expirationTime = axios.headerInterpreter(response.headers);
+      const expirationTime = axios.headerInterpreter(response.headers, axios.location);
 
       // Cache should not be used
       if (expirationTime === 'dont cache') {

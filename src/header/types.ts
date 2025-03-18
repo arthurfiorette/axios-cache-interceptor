@@ -1,4 +1,5 @@
 import type { CacheAxiosResponse } from '../cache/axios.js';
+import type { InstanceLocation } from '../util/types.js';
 
 /**
  * The possible values are:
@@ -34,4 +35,7 @@ export type InterpreterResult =
  *   **milliseconds** to cache the response.
  * @see https://axios-cache-interceptor.js.org/config#headerinterpreter
  */
-export type HeaderInterpreter = (headers?: CacheAxiosResponse['headers']) => InterpreterResult;
+export type HeaderInterpreter = (
+  headers: CacheAxiosResponse['headers'],
+  location: InstanceLocation
+) => InterpreterResult;

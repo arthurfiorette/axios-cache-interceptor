@@ -1,9 +1,9 @@
 import assert from 'node:assert';
 import { describe, it } from 'node:test';
-import type { CacheRequestConfig } from '../../src/cache/axios.js';
 import { Header } from '../../src/header/headers.js';
 import { XMockRandom, mockAxios } from '../mocks/axios.js';
 import { mockDateNow } from '../utils.js';
+import type { CacheRequestConfig } from '../../src/cache/axios.js';
 
 describe('LastModified handling', () => {
   it('Last modified header handling', async () => {

@@ -33,6 +33,8 @@ export function setupCache(axios: AxiosInstance, options: CacheOptions = {}): Ax
     throw new Error('setupCache() should be called only once');
   }
 
+  axiosCache.location = typeof window === 'undefined' ? 'server' : 'client';
+
   axiosCache.storage = options.storage || buildMemoryStorage();
 
   if (!isStorage(axiosCache.storage)) {
