@@ -68,7 +68,7 @@
     "jsdom": "26.0.0",
     "microbundle": "^0.15.1",
     "tslib": "2.8.1",
-    "typescript": "5.8.2",
+    "typescript": "5.8.3",
     "vitepress": "1.6.3"
   },
   "peerDependencies": {
