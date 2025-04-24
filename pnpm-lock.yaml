@@ -22,8 +22,8 @@ importers:
         version: 1.3.3
     devDependencies:
       '@arthurfiorette/biomejs-config':
-        specifier: 1.0.7
-        version: 1.0.7
+        specifier: 1.0.8
+        version: 1.0.8
       '@biomejs/biome':
         specifier: 1.9.4
         version: 1.9.4
@@ -162,8 +162,8 @@ packages:
     resolution: {integrity: sha512-lFMjJTrFL3j7L9yBxwYfCq2k6qqwHyzuUl/XBnif78PWTJYyL/dfowQHWE3sp6U6ZzqWiiIZnpTMO96zhkjwtg==}
     engines: {node: '>=6.0.0'}
 
-  '@arthurfiorette/biomejs-config@1.0.7':
-    resolution: {integrity: sha512-kdu5fIdtrlHwO5iSQDpzIA+uHioX/5Avo8dZoy3W0mvLcGNP2Ei9F3BfsBDm+AwnxT3oQ5X/eKIDjWswNfk0FA==}
+  '@arthurfiorette/biomejs-config@1.0.8':
+    resolution: {integrity: sha512-Fv+XQ/DgIQ7acBBq1JWfBTbxpYIVxt/SXPkLQN6nSFi4GQjmMHRorpD7DyJmxh7OkXgz/IORRhTbXGcMmvNJXw==}
 
   '@asamuzakjp/css-color@3.1.1':
     resolution: {integrity: sha512-hpRD68SV2OMcZCsrbdkccTw5FXjNDLo5OuqSHyHZfwweGsDWZwDJ2+gONyNAbazZclobMirACLw0lk8WVxIqxA==}
@@ -3711,7 +3711,7 @@ snapshots:
       '@jridgewell/gen-mapping': 0.3.3
       '@jridgewell/trace-mapping': 0.3.18
 
-  '@arthurfiorette/biomejs-config@1.0.7': {}
+  '@arthurfiorette/biomejs-config@1.0.8': {}
 
   '@asamuzakjp/css-color@3.1.1':
     dependencies:
