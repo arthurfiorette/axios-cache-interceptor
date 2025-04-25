@@ -424,6 +424,28 @@ describe('Request Interceptor', () => {
     assert.equal(req3.stale, false);
   });
 
+  it('ensures request with urls in whitelistedUrls are cached', async () => {
+    const axios = mockAxios({
+      cachePredicate: {
+        whitelistedUrls: ['cache']
+      }
+    });
+
+    const [req0, req1] = await Promise.all([axios.get('url'), axios.get('url')]);
+
+    assert.equal(req0.cached, false);
+    assert.equal(req0.stale, undefined);
+    assert.equal(req1.cached, false);
+    assert.equal(req1.stale, undefined);
+
+    const [req2, req3] = await Promise.all([axios.get('cache-url'), axios.get('cache-url')]);
+
+    assert.equal(req2.cached, false);
+    assert.equal(req2.stale, undefined);
+    assert.ok(req3.cached);
+    assert.equal(req3.stale, false);
+  });
+
   it('ensures request with urls in exclude.paths are not cached (regex)', async () => {
     const axios = mockAxios({
       cachePredicate: {
@@ -451,6 +473,65 @@ describe('Request Interceptor', () => {
     assert.equal(req4.stale, undefined);
     assert.equal(req5.cached, false);
     assert.equal(req5.stale, undefined);
+  });
+
+  it('ensures request with urls in whitelistedUrls are cached (regex)', async () => {
+    const axios = mockAxios({
+      cachePredicate: {
+        whitelistedUrls: [/keep/]
+      }
+    });
+
+    const [req0, req1] = await Promise.all([axios.get('my/url'), axios.get('my/url')]);
+
+    assert.equal(req0.cached, false);
+    assert.equal(req0.stale, undefined);
+    assert.equal(req1.cached, false);
+    assert.equal(req1.stale, undefined);
+
+    const [req2, req3] = await Promise.all([axios.get('keep-url'), axios.get('keep-url')]);
+
+    assert.equal(req2.cached, false);
+    assert.equal(req2.stale, undefined);
+    assert.ok(req3.cached);
+    assert.equal(req3.stale, false);
+
+    const [req4, req5] = await Promise.all([axios.get('keep/url'), axios.get('keep/url')]);
+
+    assert.equal(req4.cached, false);
+    assert.equal(req4.stale, undefined);
+    assert.ok(req5.cached);
+    assert.equal(req5.stale, false);
+  });
+
+  it('ensures request with urls matching ignoreUrls and whitelistedUrls are not cached (regex)', async () => {
+    const axios = mockAxios({
+      cachePredicate: {
+        ignoreUrls: ['url'],
+        whitelistedUrls: [/keep/]
+      }
+    });
+
+    const [req0, req1] = await Promise.all([axios.get('my/url'), axios.get('my/url')]);
+
+    assert.equal(req0.cached, false);
+    assert.equal(req0.stale, undefined);
+    assert.equal(req1.cached, false);
+    assert.equal(req1.stale, undefined);
+
+    const [req2, req3] = await Promise.all([axios.get('keep-url'), axios.get('keep-url')]);
+
+    assert.equal(req2.cached, false);
+    assert.equal(req2.stale, undefined);
+    assert.equal(req3.cached, false);
+    assert.equal(req3.stale, undefined);
+
+    const [req4, req5] = await Promise.all([axios.get('keep-link'), axios.get('keep-link')]);
+
+    assert.equal(req4.cached, false);
+    assert.equal(req4.stale, undefined);
+    assert.ok(req5.cached);
+    assert.equal(req5.stale, false);
   });
 
   it('clone works with concurrent requests', async () => {

@@ -29,6 +29,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
     // merge defaults with per request configuration
     config.cache = { ...axios.defaults.cache, ...config.cache };
 
+    // ignoreUrls (blacklist)
     if (
       typeof config.cache.cachePredicate === 'object' &&
       config.cache.cachePredicate.ignoreUrls &&
@@ -55,6 +56,54 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
 
           return config;
         }
+      }
+    }
+
+    // whitelistedUrls
+    if (
+      typeof config.cache.cachePredicate === 'object' &&
+      config.cache.cachePredicate.whitelistedUrls &&
+      config.url
+    ) {
+      let matched = false;
+
+      for (const url of config.cache.cachePredicate.whitelistedUrls) {
+        if (
+          url instanceof RegExp
+            ? // Handles stateful regexes
+              // biome-ignore lint: reduces the number of checks
+              ((url.lastIndex = 0), url.test(config.url))
+            : config.url.includes(url)
+        ) {
+          matched = true;
+
+          if (__ACI_DEV__) {
+            axios.debug({
+              id: config.id,
+              msg: `Cached because url (${config.url}) matches whitelistedUrls (${config.cache.cachePredicate.whitelistedUrls})`,
+              data: {
+                url: config.url,
+                cachePredicate: config.cache.cachePredicate
+              }
+            });
+          }
+          break;
+        }
+      }
+
+      if (!matched) {
+        if (__ACI_DEV__) {
+          axios.debug({
+            id: config.id,
+            msg: `Ignored because url (${config.url}) does not match any whitelistedUrls (${config.cache.cachePredicate.whitelistedUrls})`,
+            data: {
+              url: config.url,
+              cachePredicate: config.cache.cachePredicate
+            }
+          });
+        }
+
+        return config;
       }
     }
 
