@@ -182,10 +182,10 @@ exceptions to the method rule.
   _(These default status codes follows RFC 7231)_
 
 An object or function that will be tested against the response to indicate if it can be
-cached. You can use `statusCheck`, `containsHeader`, `ignoreUrls`, `whitelistedUrls` and `responseMatch` to test against
+cached. You can use `statusCheck`, `containsHeader`, `ignoreUrls`, `allowUrls` and `responseMatch` to test against
 the response.
 
-If both `ignoreUrls` & `whitelistedUrls` are matched, `ignoreUrls` take precidence.
+If both `ignoreUrls` & `allowUrls` are matched, `ignoreUrls` take precedence.
 
 ```ts{5,8,13}
 axios.get<{ auth: { status: string } }>('url', {
@@ -209,7 +209,7 @@ axios.get<{ auth: { status: string } }>('url', {
       ignoreUrls: [/^\/api/]
 
       // only cache request urls that includes "weekly"
-      whitelistedUrls: ['weekly']
+      allowUrls: ['weekly']
     }
   }
 });

@@ -35,3 +35,11 @@ export async function testCachePredicate<R = unknown, D = unknown>(
 
   return true;
 }
+
+export function regexOrStringMatch(matchPattern: string | RegExp, configUrl: string) {
+  return matchPattern instanceof RegExp
+    ? // Handles stateful regexes
+      // biome-ignore lint: reduces the number of checks
+      ((matchPattern.lastIndex = 0), matchPattern.test(configUrl))
+    : configUrl.includes(matchPattern);
+}

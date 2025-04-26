@@ -48,9 +48,9 @@ export interface CachePredicateObject<R = unknown, D = unknown> {
    *
    * - It checks against the `request.url` property, `baseURL` is not considered.
    * - When only `baseURL` is specified, this property is ignored.
-   * - If both `ignoreUrls` & `whitelistedUrls` are matched, `ignoreUrls` take precidence.
+   * - If both `ignoreUrls` & `allowUrls` are matched, `ignoreUrls` take precedence.
    */
-  whitelistedUrls?: (RegExp | string)[];
+  allowUrls?: (RegExp | string)[];
 }
 
 /**
