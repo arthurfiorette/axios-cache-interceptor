@@ -3,7 +3,6 @@ import type { AxiosCacheInstance, CacheAxiosResponse } from '../cache/axios.js';
 import { Header } from '../header/headers.js';
 import type { CachedResponse, CachedStorageValue, LoadingStorageValue } from '../storage/types.js';
 import { regexOrStringMatch } from '../util/cache-predicate.js';
-import type { CachePredicateObject } from '../util/types.js';
 import type { RequestInterceptor } from './build.js';
 import {
   type ConfigWithCache,
@@ -63,32 +62,35 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
     ) {
       let matched = false;
 
-      function logDebug(matched: boolean, cachePredicate: CachePredicateObject) {
-        if (__ACI_DEV__) {
-          axios.debug({
-            id: config.id,
-            msg: `${matched ? 'Cached' : 'Ignored'} because url (${config.url}) ${matched ? 'matches' : 'does not match any'} allowUrls (${cachePredicate.allowUrls})`,
-            data: {
-              url: config.url,
-              cachePredicate: cachePredicate
-            }
-          });
-        }
-      }
-
       for (const url of config.cache.cachePredicate.allowUrls) {
         if (regexOrStringMatch(url, config.url)) {
           matched = true;
 
-          logDebug(matched, config.cache.cachePredicate);
-
+          if (__ACI_DEV__) {
+            axios.debug({
+              id: config.id,
+              msg: `Cached because url (${config.url}) matches allowUrls (${config.cache.cachePredicate.allowUrls})`,
+              data: {
+                url: config.url,
+                cachePredicate: config.cache.cachePredicate
+              }
+            });
+          }
           break;
         }
       }
 
       if (!matched) {
-        logDebug(matched, config.cache.cachePredicate);
-
+        if (__ACI_DEV__) {
+          axios.debug({
+            id: config.id,
+            msg: `Ignored because url (${config.url}) does not match any allowUrls (${config.cache.cachePredicate.allowUrls})`,
+            data: {
+              url: config.url,
+              cachePredicate: config.cache.cachePredicate
+            }
+          });
+        }
         return config;
       }
     }
