@@ -2,6 +2,7 @@ import { deferred } from 'fast-defer';
 import type { AxiosCacheInstance, CacheAxiosResponse } from '../cache/axios.js';
 import { Header } from '../header/headers.js';
 import type { CachedResponse, CachedStorageValue, LoadingStorageValue } from '../storage/types.js';
+import { regexOrStringMatch } from '../util/cache-predicate.js';
 import type { RequestInterceptor } from './build.js';
 import {
   type ConfigWithCache,
@@ -29,19 +30,14 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
     // merge defaults with per request configuration
     config.cache = { ...axios.defaults.cache, ...config.cache };
 
+    // ignoreUrls (blacklist)
     if (
       typeof config.cache.cachePredicate === 'object' &&
       config.cache.cachePredicate.ignoreUrls &&
       config.url
     ) {
       for (const url of config.cache.cachePredicate.ignoreUrls) {
-        if (
-          url instanceof RegExp
-            ? // Handles stateful regexes
-              // biome-ignore lint: reduces the number of checks
-              ((url.lastIndex = 0), url.test(config.url))
-            : config.url.includes(url)
-        ) {
+        if (regexOrStringMatch(url, config.url)) {
           if (__ACI_DEV__) {
             axios.debug({
               id: config.id,
@@ -55,6 +51,47 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
 
           return config;
         }
+      }
+    }
+
+    // allowUrls
+    if (
+      typeof config.cache.cachePredicate === 'object' &&
+      config.cache.cachePredicate.allowUrls &&
+      config.url
+    ) {
+      let matched = false;
+
+      for (const url of config.cache.cachePredicate.allowUrls) {
+        if (regexOrStringMatch(url, config.url)) {
+          matched = true;
+
+          if (__ACI_DEV__) {
+            axios.debug({
+              id: config.id,
+              msg: `Cached because url (${config.url}) matches allowUrls (${config.cache.cachePredicate.allowUrls})`,
+              data: {
+                url: config.url,
+                cachePredicate: config.cache.cachePredicate
+              }
+            });
+          }
+          break;
+        }
+      }
+
+      if (!matched) {
+        if (__ACI_DEV__) {
+          axios.debug({
+            id: config.id,
+            msg: `Ignored because url (${config.url}) does not match any allowUrls (${config.cache.cachePredicate.allowUrls})`,
+            data: {
+              url: config.url,
+              cachePredicate: config.cache.cachePredicate
+            }
+          });
+        }
+        return config;
       }
     }
 

@@ -42,6 +42,15 @@ export interface CachePredicateObject<R = unknown, D = unknown> {
    * - When only `baseURL` is specified, this property is ignored.
    */
   ignoreUrls?: (RegExp | string)[];
+
+  /**
+   * Ignores the request if their url does not match any provided urls and/or regexes.
+   *
+   * - It checks against the `request.url` property, `baseURL` is not considered.
+   * - When only `baseURL` is specified, this property is ignored.
+   * - If both `ignoreUrls` & `allowUrls` are matched, `ignoreUrls` take precedence.
+   */
+  allowUrls?: (RegExp | string)[];
 }
 
 /**

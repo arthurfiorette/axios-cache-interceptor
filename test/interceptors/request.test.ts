@@ -453,6 +453,165 @@ describe('Request Interceptor', () => {
     assert.equal(req5.stale, undefined);
   });
 
+  it('ensures request with urls in allowUrls are cached', async () => {
+    const axios = mockAxios({
+      cachePredicate: {
+        allowUrls: ['keep']
+      }
+    });
+
+    const [req0, req1] = await Promise.all([axios.get('url'), axios.get('url')]);
+
+    assert.equal(req0.cached, false);
+    assert.equal(req0.stale, undefined);
+    assert.equal(req1.cached, false);
+    assert.equal(req1.stale, undefined);
+
+    const [req2, req3] = await Promise.all([axios.get('keep-url'), axios.get('keep-url')]);
+
+    assert.equal(req2.cached, false);
+    assert.equal(req2.stale, undefined);
+    assert.ok(req3.cached);
+    assert.equal(req3.stale, false);
+  });
+
+  it('ensures request with urls in allowUrls are cached (regex)', async () => {
+    const axios = mockAxios({
+      cachePredicate: {
+        allowUrls: [/keep/]
+      }
+    });
+
+    const [req0, req1] = await Promise.all([axios.get('my/url'), axios.get('my/url')]);
+
+    assert.equal(req0.cached, false);
+    assert.equal(req0.stale, undefined);
+    assert.equal(req1.cached, false);
+    assert.equal(req1.stale, undefined);
+
+    const [req2, req3] = await Promise.all([axios.get('keep-url'), axios.get('keep-url')]);
+
+    assert.equal(req2.cached, false);
+    assert.equal(req2.stale, undefined);
+    assert.ok(req3.cached);
+    assert.equal(req3.stale, false);
+
+    const [req4, req5] = await Promise.all([axios.get('keep/url'), axios.get('keep/url')]);
+
+    assert.equal(req4.cached, false);
+    assert.equal(req4.stale, undefined);
+    assert.ok(req5.cached);
+    assert.equal(req5.stale, false);
+  });
+
+  it('ensures request with urls matching ignoreUrls and allowUrls are not cached', async () => {
+    const axios = mockAxios({
+      cachePredicate: {
+        ignoreUrls: ['ignore'],
+        allowUrls: ['keep']
+      }
+    });
+
+    const [req0, req1] = await Promise.all([axios.get('ignore/link'), axios.get('ignore/link')]);
+
+    assert.equal(req0.cached, false);
+    assert.equal(req0.stale, undefined);
+    assert.equal(req1.cached, false);
+    assert.equal(req1.stale, undefined);
+
+    const [req2, req3] = await Promise.all([axios.get('keep/link'), axios.get('keep/link')]);
+
+    assert.equal(req2.cached, false);
+    assert.equal(req2.stale, undefined);
+    assert.ok(req3.cached);
+    assert.equal(req3.stale, false);
+
+    const [req4, req5] = await Promise.all([axios.get('keep/ignore'), axios.get('keep/ignore')]);
+
+    assert.equal(req4.cached, false);
+    assert.equal(req4.stale, undefined);
+    assert.equal(req5.cached, false);
+    assert.equal(req5.stale, undefined);
+
+    const [req6, req7] = await Promise.all([
+      axios.get('ignore/ignore'),
+      axios.get('ignore/ignore')
+    ]);
+
+    assert.equal(req6.cached, false);
+    assert.equal(req6.stale, undefined);
+    assert.equal(req7.cached, false);
+    assert.equal(req7.stale, undefined);
+
+    const [req8, req9] = await Promise.all([axios.get('ignore/keep'), axios.get('ignore/keep')]);
+
+    assert.equal(req8.cached, false);
+    assert.equal(req8.stale, undefined);
+    assert.equal(req9.cached, false);
+    assert.equal(req9.stale, undefined);
+
+    const [req10, req11] = await Promise.all([axios.get('keep/keep'), axios.get('keep/keep')]);
+
+    assert.equal(req10.cached, false);
+    assert.equal(req10.stale, undefined);
+    assert.ok(req11.cached);
+    assert.equal(req11.stale, false);
+  });
+
+  it('ensures request with urls matching ignoreUrls and allowUrls are not cached (regex)', async () => {
+    const axios = mockAxios({
+      cachePredicate: {
+        ignoreUrls: [/ignore/],
+        allowUrls: [/keep/]
+      }
+    });
+
+    const [req0, req1] = await Promise.all([axios.get('ignore/link'), axios.get('ignore/link')]);
+
+    assert.equal(req0.cached, false);
+    assert.equal(req0.stale, undefined);
+    assert.equal(req1.cached, false);
+    assert.equal(req1.stale, undefined);
+
+    const [req2, req3] = await Promise.all([axios.get('keep/link'), axios.get('keep/link')]);
+
+    assert.equal(req2.cached, false);
+    assert.equal(req2.stale, undefined);
+    assert.ok(req3.cached);
+    assert.equal(req3.stale, false);
+
+    const [req4, req5] = await Promise.all([axios.get('keep/ignore'), axios.get('keep/ignore')]);
+
+    assert.equal(req4.cached, false);
+    assert.equal(req4.stale, undefined);
+    assert.equal(req5.cached, false);
+    assert.equal(req5.stale, undefined);
+
+    const [req6, req7] = await Promise.all([
+      axios.get('ignore/ignore'),
+      axios.get('ignore/ignore')
+    ]);
+
+    assert.equal(req6.cached, false);
+    assert.equal(req6.stale, undefined);
+    assert.equal(req7.cached, false);
+    assert.equal(req7.stale, undefined);
+
+    const [req8, req9] = await Promise.all([axios.get('ignore/keep'), axios.get('ignore/keep')]);
+
+    assert.equal(req8.cached, false);
+    assert.equal(req8.stale, undefined);
+    assert.equal(req9.cached, false);
+    assert.equal(req9.stale, undefined);
+
+    const [req10, req11] = await Promise.all([axios.get('keep/keep'), axios.get('keep/keep')]);
+
+    assert.equal(req10.cached, false);
+    assert.equal(req10.stale, undefined);
+    assert.ok(req11.cached);
+    assert.equal(req11.stale, false);
+  });
+
   it('clone works with concurrent requests', async () => {
     const axios = mockAxios(
       {
