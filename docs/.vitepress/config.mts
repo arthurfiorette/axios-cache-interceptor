@@ -11,9 +11,7 @@ const VERSION = isVersion > -1 ? process.argv[isVersion + 1].slice(1, -1) : 'Lat
 const BASE_URL = isVersion > -1 ? process.argv[isVersion + 1] : '/';
 
 console.log(
-  isVersion > -1
-    ? `Building docs for version ${VERSION}`
-    : 'Building docs for latest version'
+  isVersion > -1 ? `Building docs for version ${VERSION}` : 'Building docs for latest version'
 );
 
 const description =
@@ -56,22 +54,10 @@ export default defineConfig({
   head: [
     // Attach a custom favicon
     ['link', { rel: 'icon', href: `${BASE_URL}favicon.ico', type: 'image/x-icon` }],
-    [
-      'link',
-      { rel: 'apple-touch-icon', sizes: '57x57', href: `${BASE_URL}apple-icon-57x57.png` }
-    ],
-    [
-      'link',
-      { rel: 'apple-touch-icon', sizes: '60x60', href: `${BASE_URL}apple-icon-60x60.png` }
-    ],
-    [
-      'link',
-      { rel: 'apple-touch-icon', sizes: '72x72', href: `${BASE_URL}apple-icon-72x72.png` }
-    ],
-    [
-      'link',
-      { rel: 'apple-touch-icon', sizes: '76x76', href: `${BASE_URL}apple-icon-76x76.png` }
-    ],
+    ['link', { rel: 'apple-touch-icon', sizes: '57x57', href: `${BASE_URL}apple-icon-57x57.png` }],
+    ['link', { rel: 'apple-touch-icon', sizes: '60x60', href: `${BASE_URL}apple-icon-60x60.png` }],
+    ['link', { rel: 'apple-touch-icon', sizes: '72x72', href: `${BASE_URL}apple-icon-72x72.png` }],
+    ['link', { rel: 'apple-touch-icon', sizes: '76x76', href: `${BASE_URL}apple-icon-76x76.png` }],
     [
       'link',
       {
@@ -151,10 +137,7 @@ export default defineConfig({
 
     ['link', { rel: 'manifest', href: `${BASE_URL}manifest.json` }],
     ['meta', { name: 'msapplication-TileColor', content: '#e5972a' }],
-    [
-      'meta',
-      { name: 'msapplication-TileImage', content: `${BASE_URL}ms-icon-144x144.png` }
-    ],
+    ['meta', { name: 'msapplication-TileImage', content: `${BASE_URL}ms-icon-144x144.png` }],
     ['meta', { name: 'theme-color', content: '#e5972a' }],
     ['meta', { name: 'description', content: description }],
 
@@ -251,16 +234,13 @@ export default defineConfig({
         items: [
           { text: 'Latest', link: url },
           { text: 'v0.x', link: `${url}/v0/` }
-        ].filter((i) =>
-          BASE_URL === '/' ? i.text !== 'Latest' : !i.link.includes(BASE_URL)
-        )
+        ].filter((i) => (BASE_URL === '/' ? i.text !== 'Latest' : !i.link.includes(BASE_URL)))
       }
     ],
 
     //! Temp link for testing, will be changed to the real one before merged to production
     editLink: {
-      pattern:
-        'https://github.com/arthurfiorette/axios-cache-interceptor/edit/main/docs/src/:path'
+      pattern: 'https://github.com/arthurfiorette/axios-cache-interceptor/edit/main/docs/src/:path'
     },
 
     footer: {
@@ -318,6 +298,6 @@ export default defineConfig({
       light: 'kanagawa-lotus'
     },
 
-    typographer: true,
+    typographer: true
   }
 });
