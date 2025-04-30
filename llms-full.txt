@@ -1,0 +1,1744 @@
+---
+url: 'https://axios-cache-interceptor.js.org/guide/comparison.md'
+---
+# Comparison
+
+> This comparison page aims to be detailed, unbiased, and up-to-date. If you see any
+> information that may be inaccurate or could be improved otherwise, please feel free to
+> suggest changes.
+
+## Cache Features
+
+```
+✅ Supported 1st-class and documented.
+🔶 Supported and documented, but requires custom user-code to implement.
+🟡 Can be done, may not be documented.
+🛑 Not officially supported or documented.
+```
+
+|                                                                              | Axios Cache Interceptor |                          Axios Cache Adapter                           |       Cachios        |
+| :--------------------------------------------------------------------------: | :---------------------: | :--------------------------------------------------------------------: | :------------------: |
+|                               Compared version                               |         Latest          |                                 2.7.3                                  |        3.1.1         |
+| Expiration with [TTL](https://developer.mozilla.org/en-US/docs/Glossary/TTL) |           ✅            |                                   ✅                                   |          ✅          |
+|                          Per-request configuration                           |           ✅            |                                   ✅                                   |          ✅          |
+|                          Global and custom instance                          |           ✅            |                                   ✅                                   |          ✅          |
+|                             Cache-Control header                             |           ✅            |                                   ✅                                   |          🛑          |
+|                             Expires & Age header                             |           ✅            |                                   🟡                                   |          🛑          |
+|                        ETag and If-None-Match header                         |           ✅            |                                   🛑                                   |          🛑          |
+|                           If-Modified-Size header                            |           ✅            |                                   🛑                                   |          🛑          |
+|                                 Bundle size                                  |    **4.4Kb** (gzip)     |                             18.9Kb (gzip)                              |    19.5Kb (gzip)     |
+|                            Typescript declaration                            |  ✅ (Custom interface)  |                         ✅ (Applied globally)                          | ✅(Applied globally) |
+|                              Custom cache keys                               |           ✅            |                                   ✅                                   |          ✅          |
+|                              Multiple storages                               |           ✅            |                         🔶 (Only localForage)                          |          ✅          |
+|                            Built-in redis storage                            |           🔶            |                                   ✅                                   |          🟡          |
+|                         Handles storage quota errors                         |           ✅            |                                   ✅                                   |          ✅          |
+|                            Node & Web compatible                             |           ✅            |                                   ✅                                   |          🛑          |
+|                      Invalidate cache based on response                      |           ✅            |                                   ✅                                   |          🛑          |
+|                        Update cache based on response                        |           ✅            |                                   🟡                                   |          🟡          |
+|                Predicate to test if request should be cached                 |           ✅            |                                   ✅                                   |          🛑          |
+|                             Concurrent requests                              |           ✅            | 🔶[#231](https://github.com/RasCarlito/axios-cache-adapter/issues/231) |          🛑          |
+|                       Cache fallback on network errors                       |           ✅            |                                   ✅                                   |          ✅          |
+|                           Debug / Development mode                           |           ✅            |                                   ✅                                   |          🛑          |
+
+## Benchmark
+
+The
+[benchmark](https://github.com/arthurfiorette/axios-cache-interceptor/blob/main/benchmark/index.js)
+is composed of axios throughput tests to compare the performance of this library,
+`axios-cache-adapter` and axios as it is.
+
+<<< @/generated/benchmark.md {5,11}
+
+---
+
+---
+url: 'https://axios-cache-interceptor.js.org/guide/debugging.md'
+---
+# Debugging
+
+I'm certainly sure that along the way you will find some cache behavior that is not the
+expected to the current situation. To help with that, the library has a separate robust
+build with support to debug logs enabled.
+
+You can use it by changing the `setupCache` import:
+
+::: code-group
+
+```ts [EcmaScript]
+import Axios from 'axios';
+
+// Only import from `/dev` where you import `setupCache`.
+import { setupCache } from 'axios-cache-interceptor'; // [!code --]
+import { setupCache } from 'axios-cache-interceptor/dev'; // [!code ++]
+
+// same object, but with updated typings.
+const axios = setupCache(Axios, {
+  debug: console.log // [!code ++]
+});
+```
+
+```ts [Common JS]
+const Axios = require('axios');
+
+// Only import from `/dev` where you import `setupCache`.
+const { setupCache } = require('axios-cache-interceptor'); // [!code --]
+const { setupCache } = require('axios-cache-interceptor/dev'); // [!code ++]
+
+// same object, but with updated typings.
+const axios = setupCache(Axios, {
+  debug: console.log // [!code ++]
+});
+```
+
+```ts{3,4} [Browser]
+const Axios = window.axios;
+
+// Choose development bundle. // [!code ++]
+const { setupCache } = window.AxiosCacheInterceptor;
+
+// same object, but with updated typings.
+const axios = setupCache(Axios, {
+  debug: console.log // [!code ++]
+});
+```
+
+```ts {5,11} [Skypack]
+import Axios from 'https://cdn.skypack.dev/axios';
+
+// Only import from `/dev` where you import `setupCache`.
+import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor'; // [!code --]
+import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor/dev'; // [!code ++]
+
+// same object, but with updated typings.
+const axios = setupCache(Axios, {
+  debug: console.log // [!code ++]
+});
+```
+
+:::
+
+And much more, depending on your context, situation and configuration. **Any misbehavior
+that you find will have a log to explain it.**
+
+::: details Sample of logs sent to console.
+
+```json
+[
+  {
+    "id": "-644704205",
+    "msg": "Sending request, waiting …",
+    "data": { "overrideCache": false, "state": "empty" }
+  },
+  {
+    "id": "-644704205",
+    "msg": "Waiting list had an deferred for this key, waiting for it to finish"
+  },
+  {
+    "id": "-644704205",
+    "msg": "Detected concurrent request, waiting for it to finish"
+  },
+  {
+    "id": "-644704205",
+    "msg": "Useful response configuration found",
+    "data": {
+      "cacheConfig": {
+        /*...*/
+      },
+      "cacheResponse": {
+        "data": {
+          /*...*/
+        },
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          /*...*/
+        }
+      }
+    }
+  },
+  {
+    "id": "-644704205",
+    "msg": "Found waiting deferred(s) and resolved them"
+  },
+  {
+    "id": "-644704205",
+    "msg": "Returning cached response"
+  },
+
+  // First request ended, second call below:
+  {
+    "id": "-644704205",
+    "msg": "Response cached",
+    "data": {
+      "cache": {
+        /*...*/
+      },
+      "response": {
+        /*...*/
+      }
+    }
+  },
+  {
+    "id": "-644704205",
+    "msg": "Returning cached response"
+  }
+]
+```
+
+:::
+
+---
+
+---
+url: 'https://axios-cache-interceptor.js.org/guide/getting-started.md'
+---
+# Getting Started
+
+[Looking for axios v0?](https://axios-cache-interceptor.js.org/v0/)
+
+## Install
+
+Add Axios Cache Interceptor and Axios to your project using your favorite package manager:
+
+::: code-group
+
+```bash [NPM]
+npm install axios@^1 axios-cache-interceptor@^1
+```
+
+```html [Browser]
+<!-- Development UMD build for ES2017+ (~14.2 KiB) -->
+<script src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@1/dev/index.bundle.js"></script>
+
+<!-- Production UMD build for ES5+ (~16.4 KiB) -->
+<script src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@1/dist/index.bundle.js"></script>
+```
+
+```ts [Skypack]
+import Axios from 'https://cdn.skypack.dev/axios';
+import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor';
+```
+
+:::
+
+## Setup
+
+After installing, you can import the package and apply the interceptor to your axios
+instance, as shown below:
+
+::: code-group
+
+```ts [EcmaScript]
+import Axios from 'axios';
+import { setupCache } from 'axios-cache-interceptor';
+
+const instance = Axios.create(); // [!code focus]
+const axios = setupCache(instance); // [!code focus]
+
+const req1 = axios.get('https://api.example.com/'); // [!code focus]
+const req2 = axios.get('https://api.example.com/'); // [!code focus]
+
+const [res1, res2] = await Promise.all([req1, req2]);
+
+res1.cached; // false // [!code focus]
+res2.cached; // true // [!code focus]
+```
+
+```ts [CommonJS]
+const Axios = require('axios');
+const { setupCache } = require('axios-cache-interceptor');
+
+const instance = Axios.create(); // [!code focus]
+const axios = setupCache(instance); // [!code focus]
+
+const req1 = axios.get('https://api.example.com/'); // [!code focus]
+const req2 = axios.get('https://api.example.com/'); // [!code focus]
+
+const [res1, res2] = await Promise.all([req1, req2]);
+
+res1.cached; // false // [!code focus]
+res2.cached; // true // [!code focus]
+```
+
+```ts [Browser]
+const Axios = window.axios;
+const { setupCache } = window.AxiosCacheInterceptor;
+
+const instance = Axios.create(); // [!code focus]
+const axios = setupCache(instance); // [!code focus]
+
+const req1 = axios.get('https://api.example.com/'); // [!code focus]
+const req2 = axios.get('https://api.example.com/'); // [!code focus]
+
+const [res1, res2] = await Promise.all([req1, req2]);
+
+res1.cached; // false // [!code focus]
+res2.cached; // true // [!code focus]
+```
+
+```ts [Skypack]
+import Axios from 'https://cdn.skypack.dev/axios';
+import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor';
+
+const instance = Axios.create(); // [!code focus]
+const axios = setupCache(instance); // [!code focus]
+
+const req1 = axios.get('https://api.example.com/'); // [!code focus]
+const req2 = axios.get('https://api.example.com/'); // [!code focus]
+
+const [res1, res2] = await Promise.all([req1, req2]);
+
+res1.cached; // false // [!code focus]
+res2.cached; // true // [!code focus]
+```
+
+:::
+
+Just the above is sufficient for most use cases. However, you can also customize each
+cache behavior by passing a configuration object to the `setupCache` function. And you can
+also customize some behaviors each request by using the `cache` option in the request
+config.
+
+## Support Table
+
+Most of axios v0 breaking changes were about typing issues, so your version may work with
+one outside of this table. **Axios and Axios Cache Interceptor v0 are not compatible with
+Axios and Axios Cache Interceptor v1**
+
+> **Note**: Axios was not defined as a `peerDependency` for all v0 versions, because it
+> had a non-stable semver version.
+> [See #145 (Comment)](https://github.com/arthurfiorette/axios-cache-interceptor/issues/145#issuecomment-1042710481)
+
+| [Axios](https://github.com/axios/axios/releases) | [Axios Cache Interceptor](https://github.com/arthurfiorette/axios-cache-interceptor/releases) |
+| ------------------------------------------------ | --------------------------------------------------------------------------------------------- |
+| `>= v1.7.8`                                      | `>= v1.7.0`                                                                                   |
+| `>= v1.6`                                        | `>= v1.3.0 && <= 1.6.2`                                                                       |
+| `>= v1.4`                                        | `>= v1.2.0`                                                                                   |
+| `>= v1.3.1`                                      | `>= v1`                                                                                       |
+| `>= v0.27`                                       | `>= v0.10.3`                                                                                  |
+| `>= v0.26`                                       | `>= v0.8.4`                                                                                   |
+| `~ v0.25`                                        | `~ v0.8.4`                                                                                    |
+| `~ v0.24`                                        | `>= v0.5 && <= 0.8.3`                                                                         |
+| `~ v0.23`                                        | `~ v0.4`                                                                                      |
+| `~ v0.22`                                        | `~ v0.3`                                                                                      |
+| `v0.21`                                          | `<= v0.2`                                                                                     |
+
+### Read More
+
+Some useful links to get you more familiar with the library:
+
+* [Debugging requests](./debugging.md)
+* [Storages](./storages.md)
+* [Global config](../config.md)
+* [Per request config](../config/request-specifics.md)
+* [Response object](../config/response-object.md)
+
+---
+
+---
+url: 'https://axios-cache-interceptor.js.org/guide.md'
+---
+# Introduction
+
+Axios Cache Interceptor is a, as it name says, a interceptor for axios to handle caching.
+It was created to help developers call axios multiple times without having to worry about
+overloading the network or coding himself a simple and buggy cache system.
+
+Each request goes through an interceptor applied to your axios instance. There, we handle
+each request and decide if we should send it to the network or return a cached response.
+
+## How it works
+
+By using axios interceptors instead of adapters, each request is passed through the
+interceptor before calling the adapter and before returning to the original caller.
+Adapters are the final step and they are responsible for the actual network call, so, by
+choosing to use interceptors, we create a minimally invasive approach that allows you to
+still use the axios adapter of your choice.
+
+Before the request is delivered to the adapter, our request interceptor checks if the
+request have already been cached and if it's a valid one, checks if the request should be
+cached (sometimes you don't want cache at all, and it's ok), if there's already a request
+sent to the network that we can wait for it and many more other checks.
+
+After the adapter gets the response, we check if it belongs to a *cacheable* request,
+saves it into the storage, resolves other requests awaiting for the same resource and
+finally returns the response to the original caller.
+
+## Features
+
+* TTL, Cache-Control and ETag.
+* Return previous cached request if the new one failed.
+* Handles parallel requests
+* 100% Customizable
+* Built-in storages like In-Memory, Local Storage and Session Storage.
+* Less than 4.3Kb minified and gzipped.
+* Development mode to debug your requests.
+* 22 times faster than using axios and 8% faster than `axios-cache-adapter`.
+* And much more...
+
+## Why not...?
+
+### axios-cache-adapter
+
+The creation of this library is heavily inspired by axios-cache-adapter. It was a great
+library but now it is unmaintained and has a lot of unresolved issues. Also, it weights
+more than 4x the size of this library with less features and less performance.
+
+### Fetch and some state management library?
+
+As this library was built to be used with axios and to handle storage itself, I can assure
+that it is more performant that any glued code you may find and/or write yourself. About
+state management libraries and other similar things,
+[this blog post](https://arthur.place/implications-of-cache-or-state) explains why cache
+is more correct, architectural way, instead of state.
+
+---
+
+---
+url: 'https://axios-cache-interceptor.js.org/guide/invalidating-cache.md'
+---
+# Invalidating Cache
+
+When using cache-first approaches to improve performance, data inconsistency becomes your
+major problem. That occurs because **you** can mutate data in the server and **others**
+also can too. It becomes impossible to really know what the current state of the data is in
+real time without communicating with the server.
+
+::: warning
+
+**All available revalidation methods only work when the request is successful.**
+
+If you are wanting to revalidate with a non standard `2XX` status code, make sure to
+enable it at [`validateStatus`](https://axios-http.com/docs/handling_errors) or revalidate
+it manually as shown [below](#updating-cache-through-external-sources).
+
+:::
+
+Take a look at this simple example:
+
+1. User lists all available posts, the server returns an empty array.
+2. User proceeds to create a new post, server returns 200 OK.
+3. Your frontend navigates to the post list page.
+4. The post list page still shows 0 posts because it had a recent cache for that request.
+5. Your client shows 0 posts, but the server actually has 1 post.
+
+## Revalidation after mutation
+
+In most cases, you are the one responsible for that inconsistency, like in the above
+example when the client itself initiated the mutation request. When that happens, you are
+capable of invalidating the cache for all places you have changed too.
+
+**The `cache.update` option is available for every request that you make, and it will be
+the go-to tool for invalidation.**
+
+::: tip
+
+By centralizing your requests into separate methods, you are more likely to keep track of
+custom IDs you use for each request, thus making it easier to reference and invalidate
+after.
+
+:::
+
+## Programmatically
+
+If the mutation you made was just simple changes, you can get the mutation response and
+programmatically update your cache.
+
+Again considering the first example, we can just do an `array.push` to the `list-posts`
+cache and we are good to go.
+
+```ts
+// Uses `list-posts` id to be able to reference it later.
+function listPosts() {
+  return axios.get('/posts', {
+    id: 'list-posts'
+  });
+}
+
+function createPost(data) {
+  return axios.post(
+    '/posts',
+    data,
+    /* [!code focus:25] */ {
+      cache: {
+        update: {
+          // Will perform a cache update for the `list-posts` respective
+          // cache entry.
+          'list-posts': (listPostsCache, createPostResponse) => {
+            // If the cache doesn't have a cached state, we don't need
+            // to update it
+            if (listPostsCache.state !== 'cached') {
+              return 'ignore';
+            }
+
+            // Imagine the server response for the `list-posts` request
+            // is: { posts: Post[]; }, and the `create-post` response
+            // comes with the newly created post.
+
+            // Adds the created post to the end of the post's list
+            listPostsCache.data.posts.push(createPostResponse.data);
+
+            // Return the same cache state, but a updated one.
+            return listPostsCache;
+          }
+        }
+      }
+    }
+  );
+}
+```
+
+This will update the `list-posts` cache at the client side, making it equal to the server.
+When operations like this are possible to be made, they are the preferred. That's because
+we do not contact the server again and update ourselves the cache.
+
+::: tip
+
+**Note to Vue users:** If you modify an array as shown above and then assign the result
+data of the axios request to a Vue `ref`, you may have issues with the UI not updating.
+This is because the cached array is the same object as was returned from the previous request.
+You need to copy the array before modifying it:
+
+```ts
+listPostsCache.data.posts = [...listPostsCache.data.posts]
+listPostsCache.data.posts.push(createPostResponse.data);
+// or
+listPostsCache.data.posts = [...listPostsCache.data.posts, createPostResponse.data]
+```
+
+or before assigning it to the `ref`:
+
+```ts
+myRef.value = [...axios.get(url).data]
+```
+
+:::
+
+## Through network
+
+Sometimes, the mutation you made is not simple enough and would need a lot of copied
+service code to replicate all changes the backend made, turning it into a duplication and
+maintenance nightmare.
+
+In those cases, you can just invalidate the cache and let the next request be forwarded to
+the server, and update the cache with the new network response.
+
+```ts
+// Uses `list-posts` id to be able to reference it later.
+function listPosts() {
+  return axios.get('/posts', {
+    // [!code focus:3]
+    id: 'list-posts'
+  });
+}
+
+function createPost(data) {
+  return axios.post('/posts', data, {
+    // [!code focus:9]
+    cache: {
+      update: {
+        // Internally calls the storage.remove('list-posts') and lets the
+        // next request be forwarded to the server without you having to
+        // do any checks.
+        'list-posts': 'delete'
+      }
+    }
+  });
+}
+```
+
+Still using the first example, while we are at the step **3**, automatically, the axios
+cache-interceptor instance will request the server again and do required changes in the
+cache before the promise resolves and your page gets rendered.
+
+## Through external sources
+
+If you have any other type of external communication, like when listening to a websocket
+for changes, you may want to update your axios cache without be in a request context.
+
+For that, you can operate the storage manually. It is simple as that:
+
+```ts
+if (someLogicThatShowsIfTheCacheShouldBeInvalidated) {
+  // Deletes the current cache for the `list-posts` respective request.
+  await axios.storage.remove('list-posts');
+}
+
+if (someLogicThatShowsIfTheCacheShouldBeInvalidated) {
+  // Deletes all cached data
+  await axios.storage.clear();
+}
+```
+
+## Keeping cache up to date
+
+If you were **not** the one responsible for that change, your client may not be aware that
+it has changed. E.g. When you are using a chat application, you may not be aware that a
+new message was sent to you.
+
+In such cases that we **do not** have a way to know that the cache is outdated, you may have to
+end up setting a custom time to live (TTL) for specific requests.
+
+```ts
+// Uses `list-posts` id to be able to reference it later.
+function listPosts() {
+  return axios.get('/posts', {
+    id: 'list-posts',
+    cache: {
+      ttl: 1000 * 60 // 1 minute.
+    }
+  });
+}
+
+function createPost(data) {
+  return axios.post('/posts', data, {
+    cache: {
+      update: {
+        // I still want to delete the cache when I KNOW things have
+        // changed, but, by setting a TTL of 1 minute, I ensure that
+        // 1 minute is the highest time interval that the cache MAY
+        // get outdated.
+        'list-posts': 'delete'
+      }
+    }
+  });
+}
+```
+
+## Summing up
+
+When applying any kind of cache to any kind of application, you chose to trade data
+consistency for performance. And, most of the time that is OK.
+
+*The best cache strategy is a combination of all of them. TTL, custom revalidation, stale
+while revalidate and all the others together are the best solution.*
+
+The only real tip here is to you put on a scale the amount of inconsistency you are
+willing to give up for the performance you are willing to gain. **Sometimes, not caching
+is the best solution.**
+
+---
+
+---
+url: 'https://axios-cache-interceptor.js.org/guide/interceptors.md'
+---
+# Other Interceptors
+
+When combining `axios-cache-interceptors` with other interceptors, you may encounter some
+inconsistences. Which is explained in the next section.
+
+## TL;DR
+
+* **Request** interceptors registered before `setupCache()` are ran before and
+  registrations made after are ran after.
+* **Response** interceptors registered before `setupCache()` are ran **after** and
+  registrations made after are ran **before**.
+
+## Explanation
+
+Axios interceptors are ran differently for the request and response ones.
+
+* **Request interceptors** are FILO *(First In Last Out)*
+* **Response interceptors** are FIFO *(First In First Out)*
+
+As explained better in the
+[Axios documentation](https://github.com/axios/axios#interceptors) and in
+[this issue](https://github.com/arthurfiorette/axios-cache-interceptor/issues/449#issuecomment-1370327566).
+
+```ts
+// This will be ran BEFORE the cache interceptor
+axios.interceptors.request.use((req) => req);
+
+// This will be ran AFTER the cache interceptor
+axios.interceptors.response.use((res) => res);
+
+setupCache(axios);
+
+// This will be ran AFTER the cache interceptor
+axios.interceptors.request.use((req) => req);
+
+// This will be ran BEFORE the cache interceptor
+axios.interceptors.response.use((res) => res);
+```
+
+***
+
+## Extending types
+
+When using axios-cache-interceptor, you'll note that it have a different type than the
+defaults `AxiosInstance`, `AxiosRequestConfig` and `AxiosResponse`. That's because was
+chosen to override axios's interfaces instead of extending, to avoid breaking changes with
+other libraries.
+
+However, this also means that when integrating with other packages or creating your own
+custom interceptor, you need to override/extend our own types, `CacheInstance`,
+`CacheRequestConfig` and `CacheAxiosResponse` to match your needs.
+
+This can be done as shown below:
+
+```ts
+declare module 'axios-cache-interceptor' {
+  interface CacheRequestConfig<R = unknown, D = unknown> {
+    customProperty: string;
+  }
+}
+```
+
+## Streams and non-JSON
+
+Sometimes you may want to cache a response that is not `JSON`, or that is a `Stream`. Either created by another interceptor or even by the axios adapter itself.
+
+To do so, you can use the axios's native `transformResponse` option, which is a function that receives the response and returns a string or a buffer.
+
+**Axios Cache Interceptor** can only handle serializable data types, so you need to convert the response to a string or a buffer.
+
+```ts
+import Axios from 'axios';
+import { setupCache } from 'axios-cache-interceptor';
+
+const instance = Axios.create();
+const axios = setupCache(instance);
+// [!code focus:8]
+const response = await axios.get('my-url-that-returns-a-stream', {
+  responseType: 'stream',
+  transformResponse(response) {
+    // You will need to implement this function.
+    return convertStreamToStringOrObject(response.data);
+  }
+});
+
+response.data; // Will be a string and will be able to be cached.
+```
+
+This library cannot handle streams or buffers, so if you still need `response.data` to be a stream or buffer, you will need to cache it manually.
+
+If you can collect the response data into a serializable format, `axios-cache-interceptor` can handle it for you with help of the `transformResponse` option.
+
+---
+
+---
+url: 'https://axios-cache-interceptor.js.org/guide/request-id.md'
+---
+# Request Id
+
+We can distinguish requests from each other by assigning an **non unique** `id` to each
+request. These IDs are the same provided to the storage as keys.
+
+Each ID is responsible for binding a cache to its request, for referencing or invalidating
+it later and to make the interceptor use the same cache for requests to the same endpoint
+and parameters.
+
+The default id generator is smart enough to generate the same ID for theoretically same
+requests. `{ baseURL: 'https://a.com/', url: '/b' }` **==** `{ url: 'https://a.com/b/' }`.
+
+::: code-group
+
+```ts [Different requests]
+import Axios from 'axios';
+import { setupCache } from 'axios-cache-interceptor';
+
+const axios = setupCache(Axios);
+// [!code focus:5]
+// These two requests are from completely different endpoints, but they will share
+// the same resources and cache, as both have the same ID.
+const reqA = await axios.get('/a', { id: 'custom-id' });
+const reqB = await axios.get('/b', { id: 'custom-id' });
+```
+
+```ts [Different contexts]
+import Axios from 'axios';
+import { setupCache } from 'axios-cache-interceptor';
+
+const axios = setupCache(Axios);
+// [!code focus:7]
+// You can use the same logic to create two caches for the same endpoint.
+// Allows you to have different use cases for the coincident same endpoint.
+const userForPageX = await axios.get('/users', { id: 'users-page-x' });
+const userForPageY = await axios.get('/users', { id: 'users-page-y' });
+```
+
+:::
+
+::: warning
+
+If you send two different requests forcefully with the same ID. This library will ignore
+any possible differences between them and share the same cache for both.
+
+:::
+
+## Custom Generator
+
+By default, the id generator extracts `method`, `baseURL`, `query`, `params`, `data` and `url`
+properties from the request object and hashes it into a number with
+[`object-code`](https://www.npmjs.com/package/object-code).
+
+While this default implementation offers reasonable uniqueness for most scenarios, it's worth noting that there's a [theoretical 50% probability of collisions after approximately 77,000 keys](https://preshing.com/20110504/hash-collision-probabilities/) have been generated.
+
+However, this limitation is typically inconsequential in browser environments due to their 5MB storage limit, which is reached long before the collision threshold.
+
+::: warning
+
+Consider implementing a custom key generator function using libraries like [`object-hash`](https://www.npmjs.com/package/object-hash) for generating hash keys with significantly lower collision probabilities when hitting over 77K unique keys is a possibility
+
+:::
+
+Here's an example of a generator that only uses the `url` and `method` and `custom`
+properties:
+
+```ts
+import Axios from 'axios';
+import { setupCache, buildKeyGenerator } from 'axios-cache-interceptor';
+
+const axios = setupCache(Axios, {
+  generateKey: buildKeyGenerator((request /* [!code focus:5] */) => ({
+    method: request.method,
+    url: request.url,
+    custom: logicWith(request.method, request.url)
+  }))
+});
+```
+
+---
+
+---
+url: 'https://axios-cache-interceptor.js.org/config/request-specifics.md'
+---
+# Request specifics
+
+Each request can have its own cache customization, by using the `cache` property. This
+way, you can have requests behaving differently from each other without much effort.
+
+The inline documentation is self explanatory, but here is a shortly brief of what each
+property does:
+
+::: tip
+
+You can override every request specific property when creating the cached axios client,
+the same way you do with the [global options](../config.md).
+
+:::
+
+## id
+
+* Type: `string`
+* default: *(auto generated by the current
+  [key generator](../guide/request-id.md#custom-generator))*
+
+The [Request ID](../guide/request-id.md) used in this request.
+
+It may have been generated by the [Key Generator](../guide/request-id.md#custom-generator)
+or a custom one provided by [`config.id`](./request-specifics.md#id)
+
+## cache
+
+* Type: `false` or `Partial<CacheProperties<R, D>>`.
+* Default: `{}` *(Inherits from global configuration)*
+
+::: tip
+
+As this property is optional, when not provided, all properties will inherit from global
+configuration
+
+:::
+
+The cache option available through the request config is where all the cache customization
+happens.
+
+Setting the `cache` property to `false` will disable the cache for this request.
+
+This does not mean that the cache will be excluded from the storage, in which case, you
+can do that by deleting the storage entry:
+
+```ts
+// Make a request with cache disabled.
+const { id: requestId } = await axios.get('url', { cache: false });
+
+// Delete the cache entry for this request.
+await axios.storage.remove(requestId);
+```
+
+## cache.ttl
+
+* Type: `number`
+* Default: `1000 * 60 * 5` *(5 Minutes)*
+
+::: warning
+
+When using [**interpretHeader**](#cache-interpretheader), this value will only be used if
+the interpreter can't determine their TTL value to override this one.
+
+:::
+
+The time until the cached value is expired in milliseconds.
+
+If a function is used, it will receive the complete response and waits to return a TTL
+value
+
+## cache.interpretHeader
+
+* Type: `boolean`
+* Default: `true`
+
+::: tip
+
+You can override the default behavior by changing the
+**[headerInterpreter](../config.md#headerinterpreter)** option.
+
+:::
+
+If activated, when the response is received, the `ttl` property will be inferred from the
+requests headers. As described in the MDN docs and HTML specification.
+
+See the actual implementation of the
+[`interpretHeader`](https://github.com/arthurfiorette/axios-cache-interceptor/blob/main/src/header/interpreter.ts)
+method for more information.
+
+## cache.cacheTakeover
+
+* Type: `boolean`
+* Default: `true`
+
+As most of our cache strategies depends on well known defined HTTP headers, most browsers
+also use those headers to define their own cache strategies and storages.
+
+::: details This can be seen when opening network tab in your browser's dev tools.
+
+![Network tab in Chrome Dev Tools](../assets/disk-cache-screenshot.png "A network disk-cache example")
+
+:::
+
+When your requested routes includes `Cache-Control` in their responses, you may end up
+with we and your browser caching the response, resulting in a **double layer of cache**.
+
+This option solves this by including some predefined headers in the request, that should
+tell any client / adapter to not cache the response, thus only we will cache it.
+
+**These are headers used in our specific request, it won't affect any other request or
+response that the server may handle.**
+
+Headers included:
+
+* `Cache-Control: no-cache`
+* `Pragma: no-cache`
+* `Expires: 0`
+
+::: warning
+
+This option will not work on most **CORS** requests, as the browser will throw
+`Request header field pragma is not allowed by Access-Control-Allow-Headers in preflight response.`.
+
+When you encounter this error, you need to make sure `Cache-Control`, `Pragma` and
+`Expires` headers are included into your server's `Access-Control-Allow-Headers` CORS
+configuration.
+
+If you cannot do such thing, you can fallback to disabling this option. Learn more on why
+it should be enabled at
+[#437](https://github.com/arthurfiorette/axios-cache-interceptor/issues/437#issuecomment-1361262194)
+and in this [StackOverflow](https://stackoverflow.com/a/62781874/14681561) answer.
+
+:::
+
+## cache.methods
+
+* Type: `Method[]`
+* Default: `["get", "head"]`
+
+Specifies which methods we should handle and cache. This is where you can enable caching
+to `POST`, `PUT`, `DELETE` and other methods, as the default is only `GET`.
+
+If you want to enable cache for `POST` requests, you can do:
+
+```ts
+// Globally enables caching for POST requests
+const axios = setupCache(instance, {
+  methods: ['get', 'post']
+});
+
+// Just for this request
+axios.post('url', data, {
+  cache: {
+    methods: ['post']
+  }
+});
+```
+
+We use `methods` in a per-request configuration setup because sometimes you have
+exceptions to the method rule.
+
+## cache.cachePredicate
+
+* Type: `CachePredicate<R, D>`
+* Default:
+  `{ statusCheck: (status) => [200, 203, 300, 301, 302, 404, 405, 410, 414, 501].includes(status) }`
+  *(These default status codes follows RFC 7231)*
+
+An object or function that will be tested against the response to indicate if it can be
+cached. You can use `statusCheck`, `containsHeader`, `ignoreUrls`, `allowUrls` and `responseMatch` to test against
+the response.
+
+If both `ignoreUrls` & `allowUrls` are matched, `ignoreUrls` take precedence.
+
+```ts{5,8,13}
+axios.get<{ auth: { status: string } }>('url', {
+  cache: {
+    cachePredicate: {
+      // Only cache if the response comes with a "good" status code
+      statusCheck: (status) =>  true, // some calculation
+
+      // Tests against any header present in the response.
+      containsHeaders: {
+        'x-custom-header-3': (value) => true // some calculation
+      },
+
+      // Check custom response body
+      responseMatch: ({ data }) => {
+        // Sample that only caches if the response is authenticated
+        return data.auth.status === 'authenticated';
+      },
+
+      // Ensures no request is cached if its url starts with "/api"
+      ignoreUrls: [/^\/api/]
+
+      // only cache request urls that includes "weekly"
+      allowUrls: ['weekly']
+    }
+  }
+});
+```
+
+## cache.update
+
+* Type: `CacheUpdater<R, D>`
+* Default: `{}`
+
+Once the request is resolved, this specifies what other responses should change their
+cache. Can be used to update the request or delete other caches. It is a simple `Record`
+with the request id.
+
+Here's an example with some basic login:
+
+Using a function instead of an object is supported but not recommended, as it's better to
+just consume the response normally and write your own code after it. But it\`s here in case
+you need it.
+
+```ts
+// Some requests id's
+let profileInfoId;
+let userInfoId;
+
+axios.post<{ auth: { user: User } }>(
+  'login',
+  { username, password },
+  {
+    cache: {
+      update: {
+        // Evicts the profile info cache, because now he is authenticated and the response needs to be re-fetched
+        [profileInfoId]: 'delete',
+
+        // An example that update the "user info response cache" when doing a login.
+        // Imagine this request is a login one.
+        [userInfoResponseId]: (cachedValue, response) => {
+          if (cachedValue.state !== 'cached') {
+            // Only needs to update if the response is cached
+            return 'ignore';
+          }
+
+          cachedValue.data = data;
+
+          // This returned value will be returned in next calls to the cache.
+          return cachedValue;
+        }
+      }
+    }
+  }
+);
+```
+
+## cache.etag
+
+* Type: `boolean`
+* Default: `true`
+
+If the request should handle
+[`ETag`](https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Headers/ETag) and
+[`If-None-Match support`](https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Headers/If-None-Match).
+Use a string to force a custom static value or true to use the previous response ETag.
+
+To use `true` (automatic ETag handling), `interpretHeader` option must be set to `true`.
+
+## cache.modifiedSince
+
+* Type: `boolean`
+* Default: `true`
+
+Use
+[`If-Modified-Since`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/If-Modified-Since)
+header in this request. Use a date to force a custom static value or true to use the last
+cached timestamp.
+
+If never cached before, the header is not set.
+
+If `interpretHeader` is set and a
+[`Last-Modified`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Last-Modified)
+header is sent to us, then value from that header is used, otherwise cache creation
+timestamp will be sent in
+[`If-Modified-Since`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/If-Modified-Since).
+
+## cache.staleIfError
+
+* Type: `number` or `boolean` or `StaleIfErrorPredicate<R, D>`
+* Default: `true`
+
+Enables cache to be returned if the response comes with an error, either by invalid status
+code, network errors and etc. You can filter the type of error that should be stale by
+using a predicate function.
+
+::: warning
+
+If the response is treated as error because of invalid status code *(like when using
+[statusCheck](#cache-cachepredicate))*, and this ends up `true`, the cache will be
+preserved over the "invalid" request.
+
+So, if you want to preserve the response, you can use the below predicate:
+
+:::
+
+```ts
+const customPredicate = (response, cache, error) => {
+  // Blocks staleIfError if has a response
+  return !response;
+
+  // Note that, this still respects axios default implementation
+  // and throws an error, (but it keeps the response)
+};
+```
+
+Types:
+
+* `number` -> the max time (in seconds) that the cache can be reused.
+* `boolean` -> `false` disables and `true` enables with infinite time if no value is
+  present on `stale-if-error` in Cache-Control.
+* `function` -> a predicate that can return `number` or `boolean` as described above.
+
+## cache.override
+
+* Type: `boolean`
+* Default: `false`
+
+This option bypasses the current cache and always make a new http request. This will not
+delete the current cache, it will just replace the cache when the response arrives.
+
+Unlike as `cache: false`, this will not disable the cache, it will just ignore the
+pre-request cache checks before making the request. This way, all post-request options are
+still available and will work as expected.
+
+## cache.hydrate
+
+* Type: `undefined | ((cache: StorageValue) => void | Promise<void>)`
+* Default: `undefined`
+
+Asynchronously called when a network request is needed to resolve the data, but an older
+one **and probably expired** cache exists. Its with the current data **BEFORE** the
+network travel starts, so you can use it to temporarily update your UI with expired data
+before the network returns.
+
+Hydrating your components with old data before the network resolves with the newer one is
+better than *flickering* your entire UI. This is even better when dealing with slower
+networks and persisted cache, like for mobile apps.
+
+::: warning
+
+If the axios call will return cached data, meaning no network will be involved, the
+hydrate **IS NOT CALLED**, as the axios promise will be resolved instantly.
+
+:::
+
+```ts {7,13}
+// Example of function that receives data and renders into a screen
+function render() {}
+
+const response = await axios.get(/* [!code focus:10] */ 'url', {
+  // This is called instantly if axios needs to make a network request
+  cache: {
+    hydrate: (cache) => render(cache.data)
+  }
+});
+
+// After the network lookup ends, we have fresh data and can
+// re-render the UI with confidence
+render(response.data);
+```
+
+---
+
+---
+url: 'https://axios-cache-interceptor.js.org/config/response-object.md'
+---
+# Response object
+
+Axios cache interceptor returns a slightly changed than the original axios response.
+Containing information about the cache and other needed properties.
+
+## id
+
+* Type: `string`
+
+The [Request ID](../guide/request-id.md) used in this request.
+
+It may have been generated by the [Key Generator](../guide/request-id.md#custom-generator)
+or a custom one provided by [`config.id`](./request-specifics.md#id)
+
+```ts
+const response = await axios.get('url', { id: 'my-overridden-id' });
+
+// This request used 'my-overridden-id' and
+// not the one generated by the key generator
+response.id === 'my-overridden-id';
+```
+
+## cached
+
+* Type: `boolean`
+
+A simple boolean indicating if the request returned data from the cache or from the
+network call.
+
+::: tip
+
+This does not indicated if the request was capable of being cached or not, as options like
+[`cache.override`](./request-specifics.md#cache-override) may have been enabled.
+
+:::
+
+## stale
+
+* Type: `boolean`
+
+A simple boolean indicating if the request returned data is from valid or stale cache.
+
+---
+
+---
+url: 'https://axios-cache-interceptor.js.org/generated/benchmark.md'
+---
+# Result
+
+Run at Sun, 29 Jan 2023 01:24:01 GMT
+
+Commit: 3db90e8c262c48d011fdd53bcda105512434e56e
+
+## CACHE INTERCEPTOR
+
+* Operations: 41275/s
+* Network requests: 1 of 205788
+* Performance: 100.00%
+
+## CACHE ADAPTER
+
+* Operations: 37683/s
+* Network requests: 2 of 185780
+* Performance: 91.30%
+
+## AXIOS
+
+* Operations: 1970/s
+* Network requests: 9773 of 9773
+* Performance: 4.77%
+
+---
+
+---
+url: 'https://axios-cache-interceptor.js.org/config.md'
+---
+# setupCache()
+
+The `setupCache` function receives the axios instance and a set of optional properties
+described below. This modifies the axios instance in place and returns it.
+
+```ts
+const axios = setupCache(axiosInstance, OPTIONS);
+```
+
+::: tip
+
+The `setupCache` function receives global options and all
+[request specifics](./config/request-specifics.md) ones too. This way, you can customize
+the defaults for all requests.
+
+:::
+
+::: tip
+
+If you want to use the same cache interceptor for all your axios instances, you can
+call `setupCache` with the default axios instance.
+
+```ts
+import Axios from 'axios';
+setupCache(Axios, OPTIONS);
+```
+
+:::
+
+## location
+
+* Type: `InstanceLocation`
+* Default: `typeof window === 'undefined' ? 'server' : 'client'`
+
+A hint to the library about where the axios instance is being used.
+
+Used to take some decisions like handling or not `Cache-Control: private`.
+
+```ts
+// NodeJS
+const cache = setupCache(Axios.create(), {
+  location: 'server'
+});
+
+// Browser
+const cache = setupCache(Axios.create(), {
+  location: 'client'
+});
+```
+
+## storage
+
+* Type: `AxiosStorage`
+* Default: `buildMemoryStorage()`
+
+A storage interface is the entity responsible for saving, retrieving and serializing data
+received from network and requested when a axios call is made.
+
+See the [Storages](./guide/storages.md) page for more information.
+
+## generateKey
+
+* Type: `KeyGenerator<unknown, unknown>`
+* Default: `defaultKeyGenerator`
+
+The `generateKey` property defines the function responsible for generating unique keys for each request cache.
+
+By default, it employs a strategy that prioritizes the `id` if available, falling back to a string generated using various request properties. The default implementation generates a 32-bit hash key using the `method`, `baseURL`, `params`, `data`, and `url` of the request.
+
+::: warning
+
+In any persistent cache scenario where hitting over 77K unique keys is a possibility, you should use a more robust hashing algorithm.
+
+[Read more](./guide/request-id.md#custom-generator)
+
+:::
+
+## waiting
+
+* Type: `Map<string, Deferred<void>>`
+* Default: `new Map`
+
+A simple object that will hold a promise for each pending request. Used to handle
+concurrent requests.
+
+You shouldn't change this property, but it is exposed in case you need to use it as some
+sort of listener or know when a request is waiting for others to finish.
+
+## headerInterpreter
+
+* Type: `HeaderInterpreter`
+* Default: `defaultHeaderInterpreter`
+
+The function used to interpret all headers from a request and determine a time to live
+(`ttl`) number.
+
+::: warning
+
+Many REST backends returns some variation of `Cache-Control: no-cache` or
+`Cache-Control: no-store` headers, which tell us to ignore caching at all. You shall
+disable `headerInterpreter` for those requests.
+
+*If the debug mode prints `Cache header interpreted as 'dont cache'` this is probably the
+reason.*
+
+:::
+
+The possible returns are:
+
+* `'dont cache'`: the request will not be cached.
+* `'not enough headers'`: the request will find other ways to determine the TTL value.
+* `number`: used as the TTL value.
+* `{ cache: number, stale: number }`: used as the TTL value and stale TTL value
+
+::: details Example of a custom headerInterpreter
+
+```ts
+import {
+  setupCache,
+  type HeaderInterpreter
+} from 'axios-cache-interceptor';
+
+const myHeaderInterpreter: HeaderInterpreter = (headers) => {
+  if (headers['x-my-custom-header']) {
+    const seconds = Number(headers['x-my-custom-header']);
+
+    if (seconds < 1) {
+      return 'dont cache';
+    }
+
+    return seconds;
+  }
+
+  return 'not enough headers';
+};
+```
+
+:::
+
+## requestInterceptor
+
+* Type: `AxiosInterceptor<CacheRequestConfig<unknown, unknown>>`
+* Default: `defaultRequestInterceptor()`
+
+The function that will be used to intercept the request before it is sent to the axios
+adapter.
+
+It is the main function of this library, as it is the bridge between the axios request and
+the cache.
+
+It wasn't meant to be changed, but if you need to, you can do it by passing a new function
+to this property.
+
+See its code for more information
+[here](https://github.com/arthurfiorette/axios-cache-interceptor/tree/main/src/interceptors).
+
+## responseInterceptor
+
+* Type: `AxiosInterceptor<CacheAxiosResponse<unknown, unknown>>`
+* Default: `defaultResponseInterceptor()`
+
+The function that will be used to intercept the request after it is returned by the axios
+adapter.
+
+It is the second most important function of this library, as it is the bridge between the
+axios response and the cache.
+
+It wasn't meant to be changed, but if you need to, you can do it by passing a new function
+to this property.
+
+See its code for more information
+[here](https://github.com/arthurfiorette/axios-cache-interceptor/tree/main/src/interceptors).
+
+## debug
+
+&#x20;
+
+* Type: `(msg: { id?: string; msg?: string; data?: unknown }) => void` or `undefined`
+* Default: `undefined`
+
+::: warning
+
+This option only works when targeting a [Development](./guide/debugging.md) build.
+
+:::
+
+The debug option will print debug information in the console. It is good if you need to
+trace any undesired behavior or issue. You can enable it by setting `debug` to a function
+that receives an string and returns nothing.
+
+Read the [Debugging](./guide/debugging.md) page for the complete guide.
+
+::: details Example of a custom debug function
+
+```ts
+// Will print debug info in the console.
+setupCache(axiosInstance, { debug: console.log });
+
+// Own logging platform.
+setupCache(axiosInstance, {
+  debug: ({ id, msg, data }) =>
+    myLoggerExample.emit({ id, msg, data })
+});
+
+// Disables debug. (default)
+setupCache(axiosInstance, { debug: undefined });
+```
+
+:::
+
+---
+
+---
+url: 'https://axios-cache-interceptor.js.org/guide/storages.md'
+---
+# Storages
+
+Storages are responsible for saving, retrieving and serializing (if needed) cache data. They
+are completely customizable and you can code your own, or use one published on NPM.
+
+They are meant to be the middleware between the cache interceptor and some sort of
+database (persistent or not) you may have. Our interceptors will call its methods
+internally to save and retrieve data, but you can do it manually to work programmatically
+your own way.
+
+Currently, two storages are included in the library by default:
+
+* [Memory Storage](#memory-storage) accessible with `buildMemoryStorage` *(works on Node
+  and Web)*
+* [Web Storage API](#web-storage-api) accessible with `buildWebStorage` *(works on Web
+  only)*
+
+## Memory Storage
+
+::: warning
+
+**This is the storage chosen by default**
+
+:::
+
+Memory storage is the simplest one. It works everywhere and its values are lost upon
+page reload or when the process is killed.
+
+If you are directly mutating some response property, you probably will face some reference
+issues because the storage will also get mutated. To avoid that, you can use the
+`clone: true` option to clone the response before saving it or `clone: 'double'` to also
+clone both ways, on `set()` and on `get()`. *Just like
+[#136](https://github.com/arthurfiorette/axios-cache-interceptor/issues/163) and many
+others.*
+
+For long running processes, you can avoid memory leaks by using playing with the
+`cleanupInterval` option. And can reduce memory usage with `maxEntries`.
+
+```ts
+import Axios from 'axios';
+import {
+  setupCache,
+  buildMemoryStorage
+} from 'axios-cache-interceptor';
+
+setupCache(axios, {
+  // You don't need to to that, as it is the default option.
+  storage: buildMemoryStorage(
+    /* cloneData default=*/ false,
+    /* cleanupInterval default=*/ false,
+    /* maxEntries default=*/ false
+  )
+});
+```
+
+Options:
+
+* **cloneData**: Use `true` if the data returned by `find()` should be cloned to avoid
+  mutating the original data outside the `set()` method. Use `'double'` to also clone
+  before saving value in storage using `set()`. Disabled is default
+
+* **cleanupInterval**: The interval in milliseconds to run a setInterval job of cleaning
+  old entries. If false, the job will not be created. Disabled is default
+
+* **maxEntries**: The maximum number of entries to keep in the storage. Its hard to
+  determine the size of the entries, so a smart FIFO order is used to determine eviction.
+  If false, no check will be done and you may grow up memory usage. Disabled is default
+
+## Web Storage API
+
+If you need persistent caching between page refreshes, you can use the `buildWebStorage`
+to get this behavior. It works by connecting our storage API to the browser's
+[Storage API](https://developer.mozilla.org/en-US/docs/Web/API/Storage).
+
+::: code-group
+
+```ts{7} [Local Storage]
+import Axios from 'axios';
+import { setupCache, buildWebStorage } from 'axios-cache-interceptor';
+
+setupCache(axios, { // [!code focus:5]
+  // As localStorage is a public storage, you can add a prefix
+  // to all keys to avoid collisions with other code.
+  storage: buildWebStorage(localStorage, 'axios-cache:')
+});
+```
+
+```ts{7} [Session Storage]
+import Axios from 'axios';
+import { setupCache, buildWebStorage } from 'axios-cache-interceptor';
+
+setupCache(axios, { // [!code focus:5]
+  // As sessionStorage is a public storage, you can add a prefix
+  // to all keys to avoid collisions with other code.
+  storage: buildWebStorage(sessionStorage, 'axios-cache:')
+});
+```
+
+```ts{4,7} [Custom Storage]
+import Axios from 'axios';
+import { setupCache, buildWebStorage } from 'axios-cache-interceptor';
+
+const myStorage = new Storage(); // [!code focus:5]
+
+setupCache(axios, {
+  storage: buildWebStorage(myStorage)
+});
+```
+
+:::
+
+### Browser quota
+
+From `v0.9.0` onwards, web storage is able to detect and evict older entries if the
+browser's quota is reached.
+
+The eviction is done by the following algorithm:
+
+1. Just saved an value and got an error. *(Probably quota exceeded)*
+2. Evicts all expired keys that cannot enter the `stale` state.
+3. If it fails again, evicts the oldest key with the given prefix.
+4. Repeat step 2 and 3 until the object can be saved or the storage has been emptied.
+5. If it still fails, the data is not saved. *Probably because the whole key is greater
+   than the quota or other libraries already consumed the whole usable space.*
+
+## buildStorage()
+
+All integrated storages are wrappers around the `buildStorage` function. External
+libraries use it and if you want to build your own, `buildStorage` is the way to go!
+
+The exported `buildStorage` function abstracts the storage interface and requires a super
+simple object to build the storage. It has 3 methods:
+
+* `set(key: string, value: NotEmptyStorageValue, currentRequest?: CacheRequestConfig): MaybePromise<void>`:
+  Receives the key and the value, and optionally the current request. It should save the
+  value in the storage.
+
+* `remove(key: string, currentRequest?: CacheRequestConfig): MaybePromise<void>`: Receives
+  the key and optionally the current request. It should remove the value from the storage.
+
+* `find(key: string, currentRequest?: CacheRequestConfig) => MaybePromise<StorageValue | undefined>`:
+  Receives the key and optionally the current request. It should return the value from the
+  storage or `undefined` if not found.
+
+* `clear() => MaybePromise<void>`:
+  Clears all data from storage. **This method isn't used by the interceptor itself**, instead, its
+  here for you to use it programmatically.
+
+## Third Party Storages
+
+These are not guaranteed to work with the latest version of the library as neither are
+maintained by the axios cache interceptor team. But, as we provide a minimal interface for
+storages, you can use them as a base to also create your own.
+
+* [Node Redis v4](#node-redis-storage)
+* [IndexedDb](#indexeddb)
+* [Node Cache](#node-cache)
+* **Have another one?**
+* [Open a PR](https://github.com/arthurfiorette/axios-cache-interceptor/pulls) to add it
+  here.
+
+## Node Redis storage
+
+The node redis storage implementation is listed here because it shows the only tricky part
+when implementing a storage with an third party client that allows auto-evicting entries,
+as show on the `PXAT` property.
+
+```ts{4}
+import { createClient } from 'redis'; // v4
+import { buildStorage, canStale } from 'axios-cache-interceptor';
+
+const client = createClient(/* connection config */);
+// [!code focus:36]
+const redisStorage = buildStorage({
+  find(key) {
+    return client
+      .get(`axios-cache-${key}`)
+      .then((result) => result && (JSON.parse(result) as StorageValue));
+  },
+
+  set(key, value, req) {
+    return client.set(`axios-cache-${key}`, JSON.stringify(value), {
+      PXAT:
+        // We don't want to keep indefinitely values in the storage if
+        // their request don't finish somehow. Either set its value as
+        // the TTL or 1 minute.
+        value.state === 'loading'
+          ? Date.now() +
+            (req?.cache && typeof req.cache.ttl === 'number'
+              ? req.cache.ttl
+              : // 1 minute in seconds
+                60000)
+          : // When a stale state has a determined value to expire, we can use it.
+          //   Or if the cached value cannot enter in stale state.
+          (value.state === 'stale' && value.ttl) ||
+            (value.state === 'cached' && !canStale(value))
+          ?
+            value.createdAt + value.ttl!
+          : // otherwise, we can't determine when it should expire, so we keep
+            //   it indefinitely.
+            undefined
+    });
+  },
+
+  remove(key) {
+    return client.del(`axios-cache-${key}`);
+  }
+});
+```
+
+However you can use the [`buildStorage`](#buildstorage) function to integrate with ANY storage you
+want, like `localForage`, `ioredis`, `memcache` and others.
+
+## IndexedDB
+
+Here is an example of how to use the `idb-keyval` library to create a storage that uses
+IndexedDB.
+
+```ts
+import axios from 'axios';
+import { buildStorage } from 'axios-cache-interceptor';
+import { clear, del, get, set } from 'idb-keyval';
+
+const indexedDbStorage = buildStorage({
+  async find(key) {
+    const value = await get(key);
+
+    if (!value) {
+      return;
+    }
+
+    return JSON.parse(value);
+  },
+
+  async set(key, value) {
+    await set(key, JSON.stringify(value));
+  },
+
+  async remove(key) {
+    await del(key);
+  }
+});
+```
+
+### Node Cache
+
+This example implementation uses [node-cache](https://github.com/node-cache/node-cache) as a storage method. Do note
+that this library is somewhat old, however it appears to work at the time of writing.
+
+```ts
+import { buildStorage } from "axios-cache-interceptor";
+import NodeCache from "node-cache";
+
+const cache = new NodeCache({ stdTTL: 60 * 60 * 24 * 7 });
+
+const cacheStorage = buildStorage({
+  find(key) {
+    return cache.get(key)
+  }
+
+  set(key, value) {
+    cache.set(key, value);
+  },
+
+  remove(key) {
+    cache.del(key);
+  },
+});
+
+```
+
+---
+
+---
+url: 'https://axios-cache-interceptor.js.org/index.md'
+---
+
