@@ -1,0 +1,74 @@
+#trusted-by-wrapper {
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+#small-text {
+  font-size: 0.8rem;
+  display: block;
+  margin: 1rem;
+  color: var(--vp-c-text-2);
+  text-align: center;
+}
+
+#small-text a {
+  color: var(--vp-c-text-1);
+  text-decoration: underline;
+}
+
+#small-text a:hover {
+  text-decoration: none;
+}
+
+#trusted-by {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background-color: var(--vp-c-bg-soft);
+  border-radius: 12px;
+  gap: 2rem;
+  width: min(100%, 1152px);
+  flex-wrap: wrap;
+  margin: 0 24px;
+  min-height: 20vh;
+  padding: 24px;
+}
+
+#trusted-by a {
+  filter: contrast(0);
+  width: 128px;
+  transition: all 0.2s ease-in;
+}
+
+#trusted-by a:hover {
+  filter: none;
+}
+
+@media (min-width: 960px) {
+  #trusted-by {
+    margin: 0 64px;
+  }
+}
+
+@media (min-width: 640px) {
+  #trusted-by {
+    margin: 0 48px;
+  }
+}
+
+.contributors {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.VPTeamMembers.medium.count-1 {
+  display: flex;
+  justify-content: center;
+}

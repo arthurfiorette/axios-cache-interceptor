@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { defineConfig } from 'vitepress';
+import llmstxt from 'vitepress-plugin-llms';
 
 const read = (relative) =>
   readFileSync(resolve(process.cwd(), 'docs', '.vitepress', relative), 'utf-8');
@@ -10,7 +11,9 @@ const VERSION = isVersion > -1 ? process.argv[isVersion + 1].slice(1, -1) : 'Lat
 const BASE_URL = isVersion > -1 ? process.argv[isVersion + 1] : '/';
 
 console.log(
-  isVersion > -1 ? `Building docs for version ${VERSION}` : 'Building docs for latest version'
+  isVersion > -1
+    ? `Building docs for version ${VERSION}`
+    : 'Building docs for latest version'
 );
 
 const description =
@@ -38,14 +41,37 @@ export default defineConfig({
   // Use git commit to get the timestamp of the last update
   lastUpdated: true,
 
+  vite: {
+    plugins: [
+      llmstxt({
+        domain: url,
+        description,
+        title: 'Axios Cache Interceptor',
+        ignoreFiles: ['others/license.md', 'others/changelog.md']
+      })
+    ]
+  },
+
   // Additional elements to render in the <head> tag in the page HTML
   head: [
     // Attach a custom favicon
     ['link', { rel: 'icon', href: `${BASE_URL}favicon.ico', type: 'image/x-icon` }],
-    ['link', { rel: 'apple-touch-icon', sizes: '57x57', href: `${BASE_URL}apple-icon-57x57.png` }],
-    ['link', { rel: 'apple-touch-icon', sizes: '60x60', href: `${BASE_URL}apple-icon-60x60.png` }],
-    ['link', { rel: 'apple-touch-icon', sizes: '72x72', href: `${BASE_URL}apple-icon-72x72.png` }],
-    ['link', { rel: 'apple-touch-icon', sizes: '76x76', href: `${BASE_URL}apple-icon-76x76.png` }],
+    [
+      'link',
+      { rel: 'apple-touch-icon', sizes: '57x57', href: `${BASE_URL}apple-icon-57x57.png` }
+    ],
+    [
+      'link',
+      { rel: 'apple-touch-icon', sizes: '60x60', href: `${BASE_URL}apple-icon-60x60.png` }
+    ],
+    [
+      'link',
+      { rel: 'apple-touch-icon', sizes: '72x72', href: `${BASE_URL}apple-icon-72x72.png` }
+    ],
+    [
+      'link',
+      { rel: 'apple-touch-icon', sizes: '76x76', href: `${BASE_URL}apple-icon-76x76.png` }
+    ],
     [
       'link',
       {
@@ -125,7 +151,10 @@ export default defineConfig({
 
     ['link', { rel: 'manifest', href: `${BASE_URL}manifest.json` }],
     ['meta', { name: 'msapplication-TileColor', content: '#e5972a' }],
-    ['meta', { name: 'msapplication-TileImage', content: `${BASE_URL}ms-icon-144x144.png` }],
+    [
+      'meta',
+      { name: 'msapplication-TileImage', content: `${BASE_URL}ms-icon-144x144.png` }
+    ],
     ['meta', { name: 'theme-color', content: '#e5972a' }],
     ['meta', { name: 'description', content: description }],
 
@@ -185,6 +214,7 @@ export default defineConfig({
 
   // `themeConfig` has JSDoc definitions for all the options
   themeConfig: {
+    logo: '/rocket.svg',
     socialLinks: [
       {
         icon: 'discord',
@@ -221,13 +251,16 @@ export default defineConfig({
         items: [
           { text: 'Latest', link: url },
           { text: 'v0.x', link: `${url}/v0/` }
-        ].filter((i) => (BASE_URL === '/' ? i.text !== 'Latest' : !i.link.includes(BASE_URL)))
+        ].filter((i) =>
+          BASE_URL === '/' ? i.text !== 'Latest' : !i.link.includes(BASE_URL)
+        )
       }
     ],
 
     //! Temp link for testing, will be changed to the real one before merged to production
     editLink: {
-      pattern: 'https://github.com/arthurfiorette/axios-cache-interceptor/edit/main/docs/src/:path'
+      pattern:
+        'https://github.com/arthurfiorette/axios-cache-interceptor/edit/main/docs/src/:path'
     },
 
     footer: {
@@ -235,10 +268,13 @@ export default defineConfig({
       copyright: 'Copyright (c) 2021-present Arthur Fiorette & Contributors'
     },
 
-    algolia: {
-      appId: 'WPY8IFS0UX',
-      apiKey: '8cc9e4ff3f98b5854346224aac791bbf',
-      indexName: 'axios-cache-interceptor-js'
+    search: {
+      provider: 'algolia',
+      options: {
+        appId: 'WPY8IFS0UX',
+        apiKey: '8cc9e4ff3f98b5854346224aac791bbf',
+        indexName: 'axios-cache-interceptor-js'
+      }
     },
 
     carbonAds: {
@@ -269,19 +305,19 @@ export default defineConfig({
           { text: 'Response Object', link: '/config/response-object' }
         ]
       },
-      {
-        text: 'Others',
-        items: [
-          { text: 'MIT License', link: '/others/license' },
-          { text: 'Changelog', link: '/others/changelog' },
-          { text: 'llms.txt', link: '/llms.txt' }
-        ]
-      }
+      { text: 'MIT License', link: '/others/license' },
+      { text: 'Changelog', link: '/others/changelog' },
+      { text: 'llms.txt', link: '/llms.txt' },
+      { text: 'llms-full.txt', link: '/llms-full.txt' }
     ]
   },
 
   markdown: {
-    lineNumbers: false,
-    typographer: true
+    theme: {
+      dark: 'kanagawa-wave',
+      light: 'kanagawa-lotus'
+    },
+
+    typographer: true,
   }
 });

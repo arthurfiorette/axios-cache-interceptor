@@ -2,7 +2,7 @@
 
 [Looking for axios v0?](https://axios-cache-interceptor.js.org/v0/)
 
-## Install Axios Cache Interceptor
+## Install
 
 Add Axios Cache Interceptor and Axios to your project using your favorite package manager:
 
@@ -27,7 +27,7 @@ import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor';
 
 :::
 
-## Setup Axios Cache Interceptor
+## Setup
 
 After installing, you can import the package and apply the interceptor to your axios
 instance, as shown below:

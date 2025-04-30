@@ -64,7 +64,6 @@ import {
   VPTeamMembers
 } from 'vitepress/theme'
 
- 
 const members = [
  {
     avatar: 'https://github.com/arthurfiorette.png',
@@ -91,4 +90,9 @@ const members = [
   <VPTeamMembers
     :members="members"
   />
+  <div class="contributors">
+    <a href="https://github.com/arthurfiorette/axios-cache-interceptor/graphs/contributors">
+      <img src="https://contrib.rocks/image?repo=arthurfiorette/axios-cache-interceptor" />
+    </a>
+  </div>
 </VPTeamPage>
