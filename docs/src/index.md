@@ -58,41 +58,19 @@ features:
 ---
 
 <script setup>
-import {
-  VPTeamPage,
-  VPTeamPageTitle,
-  VPTeamMembers
-} from 'vitepress/theme'
-
-const members = [
- {
-    avatar: 'https://github.com/arthurfiorette.png',
-    name: 'Arthur Fiorette',
-    title: 'Creator',
-    links: [
-      { icon: 'github', link: 'https://github.com/arthurfiorette' },
-      { icon: 'twitter', link: 'https://twitter.com/arthurfiorette' },
-      { icon: 'instagram', link: 'https://instagram.com/arthurfiorette' }
-    ]
-  },
-]
+import { VPTeamPageTitle } from 'vitepress/theme'
 </script>
 
-<VPTeamPage>
-  <VPTeamPageTitle>
-    <template #title>
-      Our Team
-    </template>
-    <template #lead>
-      Composed of a diverse group of people from all over the world through our open source community.
-    </template>
-  </VPTeamPageTitle>
-  <VPTeamMembers
-    :members="members"
-  />
-  <div class="contributors">
-    <a href="https://github.com/arthurfiorette/axios-cache-interceptor/graphs/contributors">
-      <img src="https://contrib.rocks/image?repo=arthurfiorette/axios-cache-interceptor" />
-    </a>
-  </div>
-</VPTeamPage>
+<VPTeamPageTitle>
+  <template #title>
+    Our Team
+  </template>
+  <template #lead>
+    Composed of a diverse group of people from all over the world through our open source community.
+  </template>
+</VPTeamPageTitle>
+<div class="contributors">
+  <a href="https://github.com/arthurfiorette/axios-cache-interceptor/graphs/contributors">
+    <img src="https://contrib.rocks/image?repo=arthurfiorette/axios-cache-interceptor" />
+  </a>
+</div>
