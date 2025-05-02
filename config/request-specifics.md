@@ -125,7 +125,7 @@ Headers included:
 This option will not work on most **CORS** requests, as the browser will throw
 `Request header field pragma is not allowed by Access-Control-Allow-Headers in preflight response.`.
 
-When you encounter this error, you need to make sure `Cache-Control`, `Pragma` and
+When you encounter CORS error, you need to make sure `Cache-Control`, `Pragma` and
 `Expires` headers are included into your server's `Access-Control-Allow-Headers` CORS
 configuration.
 
