@@ -18,6 +18,31 @@ const description =
   'Small and efficient cache interceptor for axios. Etag, Cache-Control, TTL, HTTP headers and more!';
 const url = 'https://axios-cache-interceptor.js.org';
 
+const llmsFullLink = `llms-full.txt`;
+
+const aiPrompt = `
+  You are a JavaScript expert assistant. Read the entire content from the following URL:
+
+  ${url}${BASE_URL}${llmsFullLink}
+  You are free to follow any links in the document to gather more information, if necessary.
+
+  The document is a comprehensive guide to the \`axios-cache-interceptor\` library, which is used for caching HTTP requests in Axios.
+
+  **Your task is to:**
+
+  1. Understand the purpose and functionality of the library.
+  2. Learn the key concepts, configuration options, and API methods described.
+  3. Retain information about advanced features, usage examples, and edge cases.
+  4. Be ready to answer technical questions or explain how to use the library, troubleshoot common issues, and compare it with other caching approaches in Axios.
+
+  Do not summarize yet. Just read and prepare to answer detailed questions.
+`.trim();
+
+const chatGptLink = new URL('https://chatgpt.com');
+chatGptLink.searchParams.set('model', 'gpt-4');
+chatGptLink.searchParams.set('hints', 'search');
+chatGptLink.searchParams.set('prompt', aiPrompt);
+
 export default defineConfig({
   // The language of the site. This will be used to set the `lang` attribute on the <html> element
   lang: 'en-US',
@@ -214,14 +239,6 @@ export default defineConfig({
       {
         icon: { svg: read('../src/public/jsdelivr.svg') },
         link: 'https://www.jsdelivr.com/package/npm/axios-cache-interceptor'
-      },
-      {
-        icon: { svg: read('../src/public/bundlephobia.svg') },
-        link: 'https://bundlephobia.com/package/axios-cache-interceptor'
-      },
-      {
-        icon: { svg: read('../src/public/packagephobia.svg') },
-        link: 'https://packagephobia.com/result?p=axios-cache-interceptor'
       }
     ],
 
@@ -265,6 +282,11 @@ export default defineConfig({
 
     sidebar: [
       {
+        text: 'Ask ChatGPT',
+        link: chatGptLink.toString(),
+        target: '_blank'
+      },
+      {
         text: 'Guide',
         items: [
           { text: 'Introduction', link: '/guide' },
@@ -288,7 +310,7 @@ export default defineConfig({
       { text: 'MIT License', link: '/others/license' },
       { text: 'Changelog', link: '/others/changelog' },
       { text: 'llms.txt', link: '/llms.txt' },
-      { text: 'llms-full.txt', link: '/llms-full.txt' }
+      { text: 'llms-full.txt', link: `/${llmsFullLink}` }
     ]
   },
 
