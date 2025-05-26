@@ -18,7 +18,7 @@ const description =
   'Small and efficient cache interceptor for axios. Etag, Cache-Control, TTL, HTTP headers and more!';
 const url = 'https://axios-cache-interceptor.js.org';
 
-const llmsFullLink = `llms-full.txt`;
+const llmsFullLink = 'llms-full.txt';
 
 const aiPrompt = `
   You are a JavaScript expert assistant. Read the entire content from the following URL:
