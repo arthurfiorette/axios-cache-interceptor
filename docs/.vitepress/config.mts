@@ -21,21 +21,23 @@ const url = 'https://axios-cache-interceptor.js.org';
 const llmsFullLink = 'llms-full.txt';
 
 const aiPrompt = `
-  You are a JavaScript expert assistant. Read the entire content from the following URL:
 
-  ${url}${BASE_URL}${llmsFullLink}
-  You are free to follow any links in the document to gather more information, if necessary.
+You are a JavaScript expert assistant. Read the entire content from the following URL:
 
-  The document is a comprehensive guide to the \`axios-cache-interceptor\` library, which is used for caching HTTP requests in Axios.
+${url}${BASE_URL}${llmsFullLink}
+You are free to follow any links in the document to gather more information, if necessary.
 
-  **Your task is to:**
+The document is a comprehensive guide to the \`axios-cache-interceptor\` library, which is used for caching HTTP requests in Axios.
 
-  1. Understand the purpose and functionality of the library.
-  2. Learn the key concepts, configuration options, and API methods described.
-  3. Retain information about advanced features, usage examples, and edge cases.
-  4. Be ready to answer technical questions or explain how to use the library, troubleshoot common issues, and compare it with other caching approaches in Axios.
+**Your task is to:**
 
-  Do not summarize yet. Just read and prepare to answer detailed questions.
+1. Understand the purpose and functionality of the library.
+2. Learn the key concepts, configuration options, and API methods described.
+3. Retain information about advanced features, usage examples, and edge cases.
+4. Be ready to answer technical questions or explain how to use the library, troubleshoot common issues, and compare it with other caching approaches in Axios.
+
+Do not summarize yet. Just read and prepare to answer detailed questions.
+
 `.trim();
 
 const chatGptLink = new URL('https://chatgpt.com');
