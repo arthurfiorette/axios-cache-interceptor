@@ -6,6 +6,7 @@ A cache interceptor for axios made with developers and performance in mind.
 
 ## Table of Contents
 
+
 ### Guide
 
 - [Introduction](https://axios-cache-interceptor.js.org/guide.md)
@@ -23,19 +24,10 @@ A cache interceptor for axios made with developers and performance in mind.
 - [Request specifics](https://axios-cache-interceptor.js.org/config/request-specifics.md)
 - [Response object](https://axios-cache-interceptor.js.org/config/response-object.md)
 
-### MIT License
 
 
-### Changelog
-
-
-### llms.txt
-
-
-### llms-full.txt
 
 
 ### Other
 
 - [Result](https://axios-cache-interceptor.js.org/generated/benchmark.md)
-- [Untitled](https://axios-cache-interceptor.js.org/index.md)
