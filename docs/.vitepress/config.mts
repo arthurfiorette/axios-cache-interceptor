@@ -43,6 +43,10 @@ chatGptLink.searchParams.set('model', 'gpt-4');
 chatGptLink.searchParams.set('hints', 'search');
 chatGptLink.searchParams.set('prompt', aiPrompt);
 
+console.log();
+console.log(chatGptLink.toString());
+console.log();
+
 export default defineConfig({
   // The language of the site. This will be used to set the `lang` attribute on the <html> element
   lang: 'en-US',
