@@ -61,8 +61,8 @@ importers:
         specifier: 1.6.3
         version: 1.6.3(@algolia/client-search@5.24.0)(@types/node@22.15.30)(axios@1.9.0)(postcss@8.5.3)(search-insights@2.17.3)(terser@5.39.0)(typescript@5.8.3)
       vitepress-plugin-llms:
-        specifier: 1.4.0
-        version: 1.4.0
+        specifier: 1.5.0
+        version: 1.5.0
 
 packages:
 
@@ -3575,8 +3575,8 @@ packages:
       terser:
         optional: true
 
-  vitepress-plugin-llms@1.4.0:
-    resolution: {integrity: sha512-szG5UVhY/sCHYmHMGloVTsgY9s/G8oqkUT9ZO3v2H/WZvg285rXrzdsDoqY2a9+98iiO5FJFR5WBu4DXChJXYw==}
+  vitepress-plugin-llms@1.5.0:
+    resolution: {integrity: sha512-+7WPf7LRPcaWHyF1OcCusgfa6YI2D3WFQ/M+UzDTmxcmN7xyFwx9MDSw4gPtsicLpAGfbOL2MwpUHJ4bjEpGrw==}
 
   vitepress@1.6.3:
     resolution: {integrity: sha512-fCkfdOk8yRZT8GD9BFqusW3+GggWYZ/rYncOfmgcDtP3ualNHCAg+Robxp2/6xfH1WwPHtGpPwv7mbA3qomtBw==}
@@ -7640,7 +7640,7 @@ snapshots:
       fsevents: 2.3.3
       terser: 5.39.0
 
-  vitepress-plugin-llms@1.4.0:
+  vitepress-plugin-llms@1.5.0:
     dependencies:
       byte-size: 9.0.1
       gray-matter: 4.0.3
