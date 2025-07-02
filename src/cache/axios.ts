@@ -87,6 +87,11 @@ export interface CacheRequestConfig<R = any, D = any> extends AxiosRequestConfig
    * @see https://axios-cache-interceptor.js.org/config/response-object#cache
    */
   cache?: false | Partial<CacheProperties<R, D>>;
+
+  /**
+   * A simple boolean indicating the others interceptors if the request will be cached.
+   */
+  cached?: boolean;
 }
 
 /** Cached version of type {@link InternalAxiosRequestConfig} */
