@@ -2,7 +2,7 @@ import assert from 'node:assert';
 import { describe, it } from 'node:test';
 import type { CacheRequestConfig } from '../../src/cache/axios.js';
 import { Header } from '../../src/header/headers.js';
-import { XMockRandom, mockAxios } from '../mocks/axios.js';
+import { mockAxios, XMockRandom } from '../mocks/axios.js';
 import { mockDateNow } from '../utils.js';
 
 describe('LastModified handling', () => {

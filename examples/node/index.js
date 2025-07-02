@@ -12,7 +12,7 @@ const api = setupCache(
 
 // Every time an api call reaches here, it will
 // make another internal request and forward the response.
-app.get('/', (req, res) => {
+app.get('/', (_req, res) => {
   api.get('/users').then(
     ({ data, cached, id }) => {
       res.json({

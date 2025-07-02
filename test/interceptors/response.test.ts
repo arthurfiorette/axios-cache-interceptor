@@ -4,7 +4,7 @@ import { setImmediate } from 'node:timers/promises';
 import Axios from 'axios';
 import { setupCache } from '../../src/cache/create.js';
 import { Header } from '../../src/header/headers.js';
-import { XMockRandom, mockAxios } from '../mocks/axios.js';
+import { mockAxios, XMockRandom } from '../mocks/axios.js';
 
 describe('Response Interceptor', () => {
   it('`storage.get` call without specified methods', async () => {
@@ -43,7 +43,7 @@ describe('Response Interceptor', () => {
     try {
       await axios.get('http://unknown.url.lan:1234');
       assert.fail('should have thrown an error');
-    } catch (error) {
+    } catch {
       assert.equal(spy.mock.callCount(), 0);
     }
   });
@@ -59,7 +59,7 @@ describe('Response Interceptor', () => {
     try {
       await axios.get('http://unknown.url.lan:1234');
       assert.fail('should have thrown an error');
-    } catch (error) {
+    } catch (_error) {
       assert.ok(spy.mock.callCount() >= 1);
     }
   });

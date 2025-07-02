@@ -45,7 +45,7 @@ export function buildWebStorage(storage: Storage, prefix = 'axios-cache-') {
 
       try {
         return save();
-      } catch (error) {
+      } catch {
         const allValues: [string, StorageValue][] = Object.entries(
           storage as Record<string, string>
         )
