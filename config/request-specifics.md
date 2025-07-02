@@ -101,7 +101,7 @@ also use those headers to define their own cache strategies and storages.
 
 ::: details This can be seen when opening network tab in your browser's dev tools.
 
-![Network tab in Chrome Dev Tools](../assets/disk-cache-screenshot.png "A network disk-cache example")
+![Network tab in Chrome Dev Tools](/assets/disk-cache-screenshot.DCgmRbJn.png "A network disk-cache example")
 
 :::
 
@@ -171,8 +171,8 @@ exceptions to the method rule.
   *(These default status codes follows RFC 7231)*
 
 An object or function that will be tested against the response to indicate if it can be
-cached. You can use `statusCheck`, `containsHeader`, `ignoreUrls`, `allowUrls` and `responseMatch` to test against
-the response.
+cached. You can use `statusCheck`, `containsHeader`, `ignoreUrls`, `allowUrls` and
+`responseMatch` to test against the response.
 
 If both `ignoreUrls` & `allowUrls` are matched, `ignoreUrls` take precedence.
 

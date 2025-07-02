@@ -401,8 +401,8 @@ url: 'https://axios-cache-interceptor.js.org/guide/invalidating-cache.md'
 
 When using cache-first approaches to improve performance, data inconsistency becomes your
 major problem. That occurs because **you** can mutate data in the server and **others**
-also can too. It becomes impossible to really know what the current state of the data is in
-real time without communicating with the server.
+also can too. It becomes impossible to really know what the current state of the data is
+in real time without communicating with the server.
 
 ::: warning
 
@@ -496,20 +496,20 @@ we do not contact the server again and update ourselves the cache.
 
 **Note to Vue users:** If you modify an array as shown above and then assign the result
 data of the axios request to a Vue `ref`, you may have issues with the UI not updating.
-This is because the cached array is the same object as was returned from the previous request.
-You need to copy the array before modifying it:
+This is because the cached array is the same object as was returned from the previous
+request. You need to copy the array before modifying it:
 
 ```ts
-listPostsCache.data.posts = [...listPostsCache.data.posts]
+listPostsCache.data.posts = [...listPostsCache.data.posts];
 listPostsCache.data.posts.push(createPostResponse.data);
 // or
-listPostsCache.data.posts = [...listPostsCache.data.posts, createPostResponse.data]
+listPostsCache.data.posts = [...listPostsCache.data.posts, createPostResponse.data];
 ```
 
 or before assigning it to the `ref`:
 
 ```ts
-myRef.value = [...axios.get(url).data]
+myRef.value = [...axios.get(url).data];
 ```
 
 :::
@@ -576,8 +576,8 @@ If you were **not** the one responsible for that change, your client may not be 
 it has changed. E.g. When you are using a chat application, you may not be aware that a
 new message was sent to you.
 
-In such cases that we **do not** have a way to know that the cache is outdated, you may have to
-end up setting a custom time to live (TTL) for specific requests.
+In such cases that we **do not** have a way to know that the cache is outdated, you may
+have to end up setting a custom time to live (TTL) for specific requests.
 
 ```ts
 // Uses `list-posts` id to be able to reference it later.
@@ -686,11 +686,14 @@ declare module 'axios-cache-interceptor' {
 
 ## Streams and non-JSON
 
-Sometimes you may want to cache a response that is not `JSON`, or that is a `Stream`. Either created by another interceptor or even by the axios adapter itself.
+Sometimes you may want to cache a response that is not `JSON`, or that is a `Stream`.
+Either created by another interceptor or even by the axios adapter itself.
 
-To do so, you can use the axios's native `transformResponse` option, which is a function that receives the response and returns a string or a buffer.
+To do so, you can use the axios's native `transformResponse` option, which is a function
+that receives the response and returns a string or a buffer.
 
-**Axios Cache Interceptor** can only handle serializable data types, so you need to convert the response to a string or a buffer.
+**Axios Cache Interceptor** can only handle serializable data types, so you need to
+convert the response to a string or a buffer.
 
 ```ts
 import Axios from 'axios';
@@ -710,9 +713,11 @@ const response = await axios.get('my-url-that-returns-a-stream', {
 response.data; // Will be a string and will be able to be cached.
 ```
 
-This library cannot handle streams or buffers, so if you still need `response.data` to be a stream or buffer, you will need to cache it manually.
+This library cannot handle streams or buffers, so if you still need `response.data` to be
+a stream or buffer, you will need to cache it manually.
 
-If you can collect the response data into a serializable format, `axios-cache-interceptor` can handle it for you with help of the `transformResponse` option.
+If you can collect the response data into a serializable format, `axios-cache-interceptor`
+can handle it for you with help of the `transformResponse` option.
 
 ---
 
@@ -768,17 +773,24 @@ any possible differences between them and share the same cache for both.
 
 ## Custom Generator
 
-By default, the id generator extracts `method`, `baseURL`, `query`, `params`, `data` and `url`
-properties from the request object and hashes it into a number with
+By default, the id generator extracts `method`, `baseURL`, `query`, `params`, `data` and
+`url` properties from the request object and hashes it into a number with
 [`object-code`](https://www.npmjs.com/package/object-code).
 
-While this default implementation offers reasonable uniqueness for most scenarios, it's worth noting that there's a [theoretical 50% probability of collisions after approximately 77,000 keys](https://preshing.com/20110504/hash-collision-probabilities/) have been generated.
+While this default implementation offers reasonable uniqueness for most scenarios, it's
+worth noting that there's a
+[theoretical 50% probability of collisions after approximately 77,000 keys](https://preshing.com/20110504/hash-collision-probabilities/)
+have been generated.
 
-However, this limitation is typically inconsequential in browser environments due to their 5MB storage limit, which is reached long before the collision threshold.
+However, this limitation is typically inconsequential in browser environments due to their
+5MB storage limit, which is reached long before the collision threshold.
 
 ::: warning
 
-Consider implementing a custom key generator function using libraries like [`object-hash`](https://www.npmjs.com/package/object-hash) for generating hash keys with significantly lower collision probabilities when hitting over 77K unique keys is a possibility
+Consider implementing a custom key generator function using libraries like
+[`object-hash`](https://www.npmjs.com/package/object-hash) for generating hash keys with
+significantly lower collision probabilities when hitting over 77K unique keys is a
+possibility
 
 :::
 
@@ -903,7 +915,7 @@ also use those headers to define their own cache strategies and storages.
 
 ::: details This can be seen when opening network tab in your browser's dev tools.
 
-![Network tab in Chrome Dev Tools](../assets/disk-cache-screenshot.png "A network disk-cache example")
+![Network tab in Chrome Dev Tools](/assets/disk-cache-screenshot.DCgmRbJn.png "A network disk-cache example")
 
 :::
 
@@ -973,8 +985,8 @@ exceptions to the method rule.
   *(These default status codes follows RFC 7231)*
 
 An object or function that will be tested against the response to indicate if it can be
-cached. You can use `statusCheck`, `containsHeader`, `ignoreUrls`, `allowUrls` and `responseMatch` to test against
-the response.
+cached. You can use `statusCheck`, `containsHeader`, `ignoreUrls`, `allowUrls` and
+`responseMatch` to test against the response.
 
 If both `ignoreUrls` & `allowUrls` are matched, `ignoreUrls` take precedence.
 
@@ -1269,8 +1281,8 @@ the defaults for all requests.
 
 ::: tip
 
-If you want to use the same cache interceptor for all your axios instances, you can
-call `setupCache` with the default axios instance.
+If you want to use the same cache interceptor for all your axios instances, you can call
+`setupCache` with the default axios instance.
 
 ```ts
 import Axios from 'axios';
@@ -1315,13 +1327,18 @@ See the [Storages](./guide/storages.md) page for more information.
 * Type: `KeyGenerator<unknown, unknown>`
 * Default: `defaultKeyGenerator`
 
-The `generateKey` property defines the function responsible for generating unique keys for each request cache.
+The `generateKey` property defines the function responsible for generating unique keys for
+each request cache.
 
-By default, it employs a strategy that prioritizes the `id` if available, falling back to a string generated using various request properties. The default implementation generates a 32-bit hash key using the `method`, `baseURL`, `params`, `data`, and `url` of the request.
+By default, it employs a strategy that prioritizes the `id` if available, falling back to
+a string generated using various request properties. The default implementation generates
+a 32-bit hash key using the `method`, `baseURL`, `params`, `data`, and `url` of the
+request.
 
 ::: warning
 
-In any persistent cache scenario where hitting over 77K unique keys is a possibility, you should use a more robust hashing algorithm.
+In any persistent cache scenario where hitting over 77K unique keys is a possibility, you
+should use a more robust hashing algorithm.
 
 [Read more](./guide/request-id.md#custom-generator)
 
@@ -1367,10 +1384,7 @@ The possible returns are:
 ::: details Example of a custom headerInterpreter
 
 ```ts
-import {
-  setupCache,
-  type HeaderInterpreter
-} from 'axios-cache-interceptor';
+import { setupCache, type HeaderInterpreter } from 'axios-cache-interceptor';
 
 const myHeaderInterpreter: HeaderInterpreter = (headers) => {
   if (headers['x-my-custom-header']) {
@@ -1450,8 +1464,7 @@ setupCache(axiosInstance, { debug: console.log });
 
 // Own logging platform.
 setupCache(axiosInstance, {
-  debug: ({ id, msg, data }) =>
-    myLoggerExample.emit({ id, msg, data })
+  debug: ({ id, msg, data }) => myLoggerExample.emit({ id, msg, data })
 });
 
 // Disables debug. (default)
@@ -1467,8 +1480,8 @@ url: 'https://axios-cache-interceptor.js.org/guide/storages.md'
 ---
 # Storages
 
-Storages are responsible for saving, retrieving and serializing (if needed) cache data. They
-are completely customizable and you can code your own, or use one published on NPM.
+Storages are responsible for saving, retrieving and serializing (if needed) cache data.
+They are completely customizable and you can code your own, or use one published on NPM.
 
 They are meant to be the middleware between the cache interceptor and some sort of
 database (persistent or not) you may have. Our interceptors will call its methods
@@ -1490,8 +1503,8 @@ Currently, two storages are included in the library by default:
 
 :::
 
-Memory storage is the simplest one. It works everywhere and its values are lost upon
-page reload or when the process is killed.
+Memory storage is the simplest one. It works everywhere and its values are lost upon page
+reload or when the process is killed.
 
 If you are directly mutating some response property, you probably will face some reference
 issues because the storage will also get mutated. To avoid that, you can use the
@@ -1505,10 +1518,7 @@ For long running processes, you can avoid memory leaks by using playing with the
 
 ```ts
 import Axios from 'axios';
-import {
-  setupCache,
-  buildMemoryStorage
-} from 'axios-cache-interceptor';
+import { setupCache, buildMemoryStorage } from 'axios-cache-interceptor';
 
 setupCache(axios, {
   // You don't need to to that, as it is the default option.
@@ -1609,9 +1619,8 @@ simple object to build the storage. It has 3 methods:
   Receives the key and optionally the current request. It should return the value from the
   storage or `undefined` if not found.
 
-* `clear() => MaybePromise<void>`:
-  Clears all data from storage. **This method isn't used by the interceptor itself**, instead, its
-  here for you to use it programmatically.
+* `clear() => MaybePromise<void>`: Clears all data from storage. **This method isn't used
+  by the interceptor itself**, instead, its here for you to use it programmatically.
 
 ## Third Party Storages
 
@@ -1675,8 +1684,8 @@ const redisStorage = buildStorage({
 });
 ```
 
-However you can use the [`buildStorage`](#buildstorage) function to integrate with ANY storage you
-want, like `localForage`, `ioredis`, `memcache` and others.
+However you can use the [`buildStorage`](#buildstorage) function to integrate with ANY
+storage you want, like `localForage`, `ioredis`, `memcache` and others.
 
 ## IndexedDB
 
@@ -1711,8 +1720,9 @@ const indexedDbStorage = buildStorage({
 
 ### Node Cache
 
-This example implementation uses [node-cache](https://github.com/node-cache/node-cache) as a storage method. Do note
-that this library is somewhat old, however it appears to work at the time of writing.
+This example implementation uses [node-cache](https://github.com/node-cache/node-cache) as
+a storage method. Do note that this library is somewhat old, however it appears to work at
+the time of writing.
 
 ```ts
 import { buildStorage } from "axios-cache-interceptor";

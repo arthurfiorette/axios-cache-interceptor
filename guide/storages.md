@@ -3,8 +3,8 @@ url: 'https://axios-cache-interceptor.js.org/guide/storages.md'
 ---
 # Storages
 
-Storages are responsible for saving, retrieving and serializing (if needed) cache data. They
-are completely customizable and you can code your own, or use one published on NPM.
+Storages are responsible for saving, retrieving and serializing (if needed) cache data.
+They are completely customizable and you can code your own, or use one published on NPM.
 
 They are meant to be the middleware between the cache interceptor and some sort of
 database (persistent or not) you may have. Our interceptors will call its methods
@@ -26,8 +26,8 @@ Currently, two storages are included in the library by default:
 
 :::
 
-Memory storage is the simplest one. It works everywhere and its values are lost upon
-page reload or when the process is killed.
+Memory storage is the simplest one. It works everywhere and its values are lost upon page
+reload or when the process is killed.
 
 If you are directly mutating some response property, you probably will face some reference
 issues because the storage will also get mutated. To avoid that, you can use the
@@ -41,10 +41,7 @@ For long running processes, you can avoid memory leaks by using playing with the
 
 ```ts
 import Axios from 'axios';
-import {
-  setupCache,
-  buildMemoryStorage
-} from 'axios-cache-interceptor';
+import { setupCache, buildMemoryStorage } from 'axios-cache-interceptor';
 
 setupCache(axios, {
   // You don't need to to that, as it is the default option.
@@ -145,9 +142,8 @@ simple object to build the storage. It has 3 methods:
   Receives the key and optionally the current request. It should return the value from the
   storage or `undefined` if not found.
 
-* `clear() => MaybePromise<void>`:
-  Clears all data from storage. **This method isn't used by the interceptor itself**, instead, its
-  here for you to use it programmatically.
+* `clear() => MaybePromise<void>`: Clears all data from storage. **This method isn't used
+  by the interceptor itself**, instead, its here for you to use it programmatically.
 
 ## Third Party Storages
 
@@ -211,8 +207,8 @@ const redisStorage = buildStorage({
 });
 ```
 
-However you can use the [`buildStorage`](#buildstorage) function to integrate with ANY storage you
-want, like `localForage`, `ioredis`, `memcache` and others.
+However you can use the [`buildStorage`](#buildstorage) function to integrate with ANY
+storage you want, like `localForage`, `ioredis`, `memcache` and others.
 
 ## IndexedDB
 
@@ -247,8 +243,9 @@ const indexedDbStorage = buildStorage({
 
 ### Node Cache
 
-This example implementation uses [node-cache](https://github.com/node-cache/node-cache) as a storage method. Do note
-that this library is somewhat old, however it appears to work at the time of writing.
+This example implementation uses [node-cache](https://github.com/node-cache/node-cache) as
+a storage method. Do note that this library is somewhat old, however it appears to work at
+the time of writing.
 
 ```ts
 import { buildStorage } from "axios-cache-interceptor";
