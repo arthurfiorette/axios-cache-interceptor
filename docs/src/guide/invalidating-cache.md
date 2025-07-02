@@ -2,8 +2,8 @@
 
 When using cache-first approaches to improve performance, data inconsistency becomes your
 major problem. That occurs because **you** can mutate data in the server and **others**
-also can too. It becomes impossible to really know what the current state of the data is in
-real time without communicating with the server.
+also can too. It becomes impossible to really know what the current state of the data is
+in real time without communicating with the server.
 
 ::: warning
 
@@ -97,17 +97,20 @@ we do not contact the server again and update ourselves the cache.
 
 **Note to Vue users:** If you modify an array as shown above and then assign the result
 data of the axios request to a Vue `ref`, you may have issues with the UI not updating.
-This is because the cached array is the same object as was returned from the previous request.
-You need to copy the array before modifying it:
+This is because the cached array is the same object as was returned from the previous
+request. You need to copy the array before modifying it:
+
 ```ts
-listPostsCache.data.posts = [...listPostsCache.data.posts]
+listPostsCache.data.posts = [...listPostsCache.data.posts];
 listPostsCache.data.posts.push(createPostResponse.data);
 // or
-listPostsCache.data.posts = [...listPostsCache.data.posts, createPostResponse.data]
+listPostsCache.data.posts = [...listPostsCache.data.posts, createPostResponse.data];
 ```
+
 or before assigning it to the `ref`:
+
 ```ts
-myRef.value = [...axios.get(url).data]
+myRef.value = [...axios.get(url).data];
 ```
 
 :::
@@ -174,8 +177,8 @@ If you were **not** the one responsible for that change, your client may not be 
 it has changed. E.g. When you are using a chat application, you may not be aware that a
 new message was sent to you.
 
-In such cases that we **do not** have a way to know that the cache is outdated, you may have to
-end up setting a custom time to live (TTL) for specific requests.
+In such cases that we **do not** have a way to know that the cache is outdated, you may
+have to end up setting a custom time to live (TTL) for specific requests.
 
 ```ts
 // Uses `list-posts` id to be able to reference it later.

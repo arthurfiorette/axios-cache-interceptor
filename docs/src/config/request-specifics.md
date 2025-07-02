@@ -182,8 +182,8 @@ exceptions to the method rule.
   _(These default status codes follows RFC 7231)_
 
 An object or function that will be tested against the response to indicate if it can be
-cached. You can use `statusCheck`, `containsHeader`, `ignoreUrls`, `allowUrls` and `responseMatch` to test against
-the response.
+cached. You can use `statusCheck`, `containsHeader`, `ignoreUrls`, `allowUrls` and
+`responseMatch` to test against the response.
 
 If both `ignoreUrls` & `allowUrls` are matched, `ignoreUrls` take precedence.
 

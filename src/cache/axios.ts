@@ -46,7 +46,8 @@ export interface CacheAxiosResponse<R = any, D = any> extends AxiosResponse<R, D
   cached: boolean;
 
   /**
-   * A simple boolean indicating if the request returned data is from valid or stale cache.
+   * A simple boolean indicating if the request returned data is from valid or stale
+   * cache.
    *
    * @see https://axios-cache-interceptor.js.org/config/response-object#stale
    */

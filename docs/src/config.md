@@ -17,8 +17,8 @@ the defaults for all requests.
 
 ::: tip
 
-If you want to use the same cache interceptor for all your axios instances, you can
-call `setupCache` with the default axios instance.
+If you want to use the same cache interceptor for all your axios instances, you can call
+`setupCache` with the default axios instance.
 
 ```ts
 import Axios from 'axios';
@@ -69,13 +69,18 @@ See the [Storages](./guide/storages.md) page for more information.
 - Type: `KeyGenerator<unknown, unknown>`
 - Default: `defaultKeyGenerator`
 
-The `generateKey` property defines the function responsible for generating unique keys for each request cache.
+The `generateKey` property defines the function responsible for generating unique keys for
+each request cache.
 
-By default, it employs a strategy that prioritizes the `id` if available, falling back to a string generated using various request properties. The default implementation generates a 32-bit hash key using the `method`, `baseURL`, `params`, `data`, and `url` of the request.
+By default, it employs a strategy that prioritizes the `id` if available, falling back to
+a string generated using various request properties. The default implementation generates
+a 32-bit hash key using the `method`, `baseURL`, `params`, `data`, and `url` of the
+request.
 
 ::: warning
 
-In any persistent cache scenario where hitting over 77K unique keys is a possibility, you should use a more robust hashing algorithm.
+In any persistent cache scenario where hitting over 77K unique keys is a possibility, you
+should use a more robust hashing algorithm.
 
 [Read more](./guide/request-id.md#custom-generator)
 
@@ -125,10 +130,7 @@ The possible returns are:
 ::: details Example of a custom headerInterpreter
 
 ```ts
-import {
-  setupCache,
-  type HeaderInterpreter
-} from 'axios-cache-interceptor';
+import { setupCache, type HeaderInterpreter } from 'axios-cache-interceptor';
 
 const myHeaderInterpreter: HeaderInterpreter = (headers) => {
   if (headers['x-my-custom-header']) {
@@ -212,8 +214,7 @@ setupCache(axiosInstance, { debug: console.log });
 
 // Own logging platform.
 setupCache(axiosInstance, {
-  debug: ({ id, msg, data }) =>
-    myLoggerExample.emit({ id, msg, data })
+  debug: ({ id, msg, data }) => myLoggerExample.emit({ id, msg, data })
 });
 
 // Disables debug. (default)

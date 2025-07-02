@@ -37,11 +37,15 @@ export async function testCachePredicate<R = unknown, D = unknown>(
 }
 
 /**
- * Determines whether a given URL matches a specified pattern, which can be either a string or a regular expression.
+ * Determines whether a given URL matches a specified pattern, which can be either a
+ * string or a regular expression.
  *
  * @param matchPattern - The pattern to match against
- *   - If it's a regular expression, it will be reset to ensure consistent behavior for stateful regular expressions.
+ *
+ *   - If it's a regular expression, it will be reset to ensure consistent behavior for
+ *       stateful regular expressions.
  *   - If it's a string, the function checks if the URL contains the string.
+ *
  * @param configUrl - The URL to test against the provided pattern; normally `config.url`.
  * @returns `true` if the `configUrl` matches the `matchPattern`
  */

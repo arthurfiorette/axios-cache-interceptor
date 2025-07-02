@@ -47,17 +47,24 @@ any possible differences between them and share the same cache for both.
 
 ## Custom Generator
 
-By default, the id generator extracts `method`, `baseURL`, `query`, `params`, `data` and `url`
-properties from the request object and hashes it into a number with
+By default, the id generator extracts `method`, `baseURL`, `query`, `params`, `data` and
+`url` properties from the request object and hashes it into a number with
 [`object-code`](https://www.npmjs.com/package/object-code).
 
-While this default implementation offers reasonable uniqueness for most scenarios, it's worth noting that there's a [theoretical 50% probability of collisions after approximately 77,000 keys](https://preshing.com/20110504/hash-collision-probabilities/) have been generated.
+While this default implementation offers reasonable uniqueness for most scenarios, it's
+worth noting that there's a
+[theoretical 50% probability of collisions after approximately 77,000 keys](https://preshing.com/20110504/hash-collision-probabilities/)
+have been generated.
 
-However, this limitation is typically inconsequential in browser environments due to their 5MB storage limit, which is reached long before the collision threshold.
+However, this limitation is typically inconsequential in browser environments due to their
+5MB storage limit, which is reached long before the collision threshold.
 
 ::: warning
 
-Consider implementing a custom key generator function using libraries like [`object-hash`](https://www.npmjs.com/package/object-hash) for generating hash keys with significantly lower collision probabilities when hitting over 77K unique keys is a possibility
+Consider implementing a custom key generator function using libraries like
+[`object-hash`](https://www.npmjs.com/package/object-hash) for generating hash keys with
+significantly lower collision probabilities when hitting over 77K unique keys is a
+possibility
 
 :::
 

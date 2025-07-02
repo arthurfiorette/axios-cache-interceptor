@@ -3,8 +3,8 @@ import type { AxiosStorage, StorageValue } from './types.js';
 
 /* c8 ignore start */
 /**
- * Clones an object using the structured clone algorithm if available, otherwise
- * it uses JSON.parse(JSON.stringify(value)).
+ * Clones an object using the structured clone algorithm if available, otherwise it uses
+ * JSON.parse(JSON.stringify(value)).
  */
 const clone: <T>(value: T) => T =
   // https://caniuse.com/mdn-api_structuredclone (10/18/2023 92.51%)
