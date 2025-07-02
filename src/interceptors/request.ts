@@ -14,6 +14,7 @@ import {
 export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInterceptor {
   const onFulfilled: RequestInterceptor['onFulfilled'] = async (config) => {
     config.id = axios.generateKey(config);
+    config.cached = false;
 
     if (config.cache === false) {
       if (__ACI_DEV__) {
@@ -304,6 +305,8 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
         id: config.id!
       });
     };
+
+    config.cached = true;
 
     if (__ACI_DEV__) {
       axios.debug({
