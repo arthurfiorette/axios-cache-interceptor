@@ -62,7 +62,7 @@
   },
   "devDependencies": {
     "@arthurfiorette/biomejs-config": "2.0.1",
-    "@biomejs/biome": "2.1.4",
+    "@biomejs/biome": "2.2.0",
     "@swc-node/register": "1.10.10",
     "@swc/helpers": "0.5.17",
     "@types/jsdom": "21.1.7",
