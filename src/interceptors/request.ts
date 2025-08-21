@@ -304,7 +304,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
       });
     };
 
-    console.log(config.adapter.name)
+    console.log(config.adapter.name);
 
     if (__ACI_DEV__) {
       axios.debug({
