@@ -300,10 +300,11 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
         statusText: cachedResponse.statusText,
         cached: true,
         stale: (cache as LoadingStorageValue).previous === 'stale',
-
         id: config.id!
       });
     };
+
+    console.log(config.adapter.name)
 
     if (__ACI_DEV__) {
       axios.debug({
