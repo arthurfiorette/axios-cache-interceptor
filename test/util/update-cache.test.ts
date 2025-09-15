@@ -5,12 +5,12 @@ import { defaultKeyGenerator } from '../../src/util/key-generator.js';
 import { mockAxios } from '../mocks/axios.js';
 
 const CACHE_KEY = defaultKeyGenerator({ url: 'https://example.com/' });
-const CACHED_VALUE: CachedStorageValue = Object.freeze({
+const CACHED_VALUE: CachedStorageValue = {
   createdAt: Date.now(),
   state: 'cached',
   ttl: Number.MAX_SAFE_INTEGER, // never expires
   data: { data: 'value', headers: {}, status: 200, statusText: '200 OK' }
-});
+} as const;
 
 describe('Tests UpdateCache', () => {
   it('`delete` key with CacheUpdaterFn', async () => {

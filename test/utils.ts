@@ -2,12 +2,12 @@ import { mock } from 'node:test';
 import { AxiosHeaders } from 'axios';
 import type { CacheAxiosResponse } from '../src/cache/axios.js';
 
-export const EMPTY_RESPONSE = Object.freeze({
+export const EMPTY_RESPONSE = {
   headers: {},
   status: 200,
   statusText: '200 OK',
   data: true
-});
+} as const;
 
 export function createResponse<R>(config: Partial<CacheAxiosResponse<R>>): CacheAxiosResponse {
   return {
