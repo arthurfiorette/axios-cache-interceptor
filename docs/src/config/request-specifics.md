@@ -123,7 +123,7 @@ response that the server may handle.**
 
 Headers included:
 
-- `Cache-Control: no-cache`
+- `Cache-Control: no-cache, no-store, must-revalidate`
 - `Pragma: no-cache`
 - `Expires: 0`
 
@@ -139,7 +139,7 @@ configuration.
 If you cannot do such thing, you can fallback to disabling this option. Learn more on why
 it should be enabled at
 [#437](https://github.com/arthurfiorette/axios-cache-interceptor/issues/437#issuecomment-1361262194)
-and in this [StackOverflow](https://stackoverflow.com/a/62781874/14681561) answer.
+and in this [StackOverflow](https://stackoverflow.com/a/2068407) answer.
 
 :::
 
