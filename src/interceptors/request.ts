@@ -99,8 +99,9 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
     //
     // Its currently used before isMethodIn because if the isMethodIn returns false, the request
     // shouldn't be cached an therefore neither in the browser.
+    // https://stackoverflow.com/a/2068407
     if (config.cache.cacheTakeover) {
-      config.headers[Header.CacheControl] ??= 'no-cache';
+      config.headers[Header.CacheControl] ??= 'no-cache, no-store, must-revalidate';
       config.headers[Header.Pragma] ??= 'no-cache';
       config.headers[Header.Expires] ??= '0';
     }
