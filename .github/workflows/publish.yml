@@ -6,11 +6,16 @@ on:
   workflow_dispatch:
 
 permissions:
-  id-token: write
+  id-token: write # Required for OIDC
+  contents: read
 
 jobs:
   publish:
     runs-on: ubuntu-latest
+
+    environment:
+      name: NPM Registry
+      url: https://www.npmjs.com/package/axios-cache-interceptor/v/${{ github.event.release.tag_name }}
 
     steps:
       - name: Checkout
@@ -35,7 +40,5 @@ jobs:
       - name: Build
         run: pnpm run build
 
-      - name: Publish to NPM
-        run: pnpm publish --access public --no-git-checks --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish to NPM # OIDC authentication
+        run: pnpm publish --access public --no-git-checks
