@@ -15,7 +15,7 @@ jobs:
 
     environment:
       name: NPM Registry
-      url: https://www.npmjs.com/package/axios-cache-interceptor/v/${{ github.event.release.tag_name }}
+      url: https://www.npmjs.com/package/axios-cache-interceptor
 
     steps:
       - name: Checkout
