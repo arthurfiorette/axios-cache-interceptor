@@ -103,8 +103,7 @@ method for more information.
 - Type: `boolean`
 - Default: `true`
 
-As most of our cache strategies depends on well known defined HTTP headers, most browsers
-also use those headers to define their own cache strategies and storages.
+As most of our cache strategies depend on well-known HTTP headers, most browsers also use those headers to define their own cache strategies and storages.
 
 ::: details This can be seen when opening network tab in your browser's dev tools.
 
@@ -112,34 +111,50 @@ also use those headers to define their own cache strategies and storages.
 
 :::
 
-When your requested routes includes `Cache-Control` in their responses, you may end up
-with we and your browser caching the response, resulting in a **double layer of cache**.
+When your requested routes include `Cache-Control` in their responses, you may end up with both the library and your browser caching the response, resulting in a **double layer of cache**.
 
-This option solves this by including some predefined headers in the request, that should
-tell any client / adapter to not cache the response, thus only we will cache it.
+This option solves this by including predefined headers in the request that instruct any client/adapter to not cache the response, thus ensuring only the library caches it.
 
-**These are headers used in our specific request, it won't affect any other request or
-response that the server may handle.**
+**These headers are added to your specific request and won't affect any other request or response that the server may handle.**
 
 Headers included:
 
-- `Cache-Control: no-cache`
+- `Cache-Control: no-cache, no-store, must-revalidate`
 - `Pragma: no-cache`
 - `Expires: 0`
 
-::: warning
+::: tip Alternative
 
-This option will not work on most **CORS** requests, as the browser will throw
-`Request header field pragma is not allowed by Access-Control-Allow-Headers in preflight response.`.
+While `cacheTakeover` works for most browsers according to [this StackOverflow answer](https://stackoverflow.com/a/2068407), in some rare edge cases it may be unreliable due to browser-specific cache behaviors or network intermediaries.
 
-When you encounter CORS error, you need to make sure `Cache-Control`, `Pragma` and
-`Expires` headers are included into your server's `Access-Control-Allow-Headers` CORS
-configuration.
+For maximum reliability, add a unique random query parameter instead:
 
-If you cannot do such thing, you can fallback to disabling this option. Learn more on why
-it should be enabled at
-[#437](https://github.com/arthurfiorette/axios-cache-interceptor/issues/437#issuecomment-1361262194)
-and in this [StackOverflow](https://stackoverflow.com/a/62781874/14681561) answer.
+```ts
+axios.get(
+  `/api/data?cachebuster=${Math.random().toString(36).slice(2)}`,
+  {
+    id: 'api-data-endpoint' // Keep same cache key despite different URLs
+  }
+);
+```
+
+Your backend can ignore the `cachebuster` value. This **guarantees** no browser caching while preserving axios-cache-interceptor functionality.
+
+:::
+
+::: warning CORS Considerations
+
+This option will not work on **CORS** requests with restricted headers, as the browser will throw:
+`Request header field Pragma is not allowed by Access-Control-Allow-Headers in preflight response.`
+
+When you encounter CORS errors, you need to ensure `Cache-Control`, `Pragma`, and `Expires` headers are included in your server's `Access-Control-Allow-Headers` CORS configuration.
+
+If you cannot modify the CORS configuration, you can:
+
+1. Disable this option (`cacheTakeover: false`)
+2. Use the query parameter approach mentioned above
+
+Learn more about why this should be enabled at [#437](https://github.com/arthurfiorette/axios-cache-interceptor/issues/437#issuecomment-1361262194) and in this [StackOverflow answer](https://stackoverflow.com/a/2068407).
 
 :::
 
