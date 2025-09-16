@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       cache-parser:
-        specifier: 1.2.5
-        version: 1.2.5
+        specifier: 1.2.6
+        version: 1.2.6
       fast-defer:
         specifier: 1.1.9
         version: 1.1.9
@@ -1744,8 +1744,8 @@ packages:
       monocart-coverage-reports:
         optional: true
 
-  cache-parser@1.2.5:
-    resolution: {integrity: sha512-Md/4VhAHByQ9frQ15WD6LrMNiVw9AEl/J7vWIXw+sxT6fSOpbtt6LHTp76vy8+bOESPBO94117Hm2bIjlI7XjA==}
+  cache-parser@1.2.6:
+    resolution: {integrity: sha512-SjjnKlWgrhDrAWKUxAvmZLRGDa6JExMfjSu59/pvpNoI6mEHYSLcLKUw2RtECEOINvf6dxJo35fY+T/scA0SUA==}
 
   call-bind-apply-helpers@1.0.2:
     resolution: {integrity: sha512-Sp1ablJ0ivDkSzjcaJdxEunN5/XvksFJ2sMBFfq6x0ryhQV/2b/KwFe21cMpmHtPOSij8K99/wSfoEuTObmuMQ==}
@@ -5636,7 +5636,7 @@ snapshots:
       yargs: 17.7.2
       yargs-parser: 21.1.1
 
-  cache-parser@1.2.5: {}
+  cache-parser@1.2.6: {}
 
   call-bind-apply-helpers@1.0.2:
     dependencies:

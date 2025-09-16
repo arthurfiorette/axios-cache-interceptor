@@ -56,7 +56,7 @@
     "version": "auto-changelog -p && cp CHANGELOG.md docs/src/others/changelog.md && git add CHANGELOG.md docs/src/others/changelog.md"
   },
   "dependencies": {
-    "cache-parser": "1.2.5",
+    "cache-parser": "1.2.6",
     "fast-defer": "1.1.9",
     "object-code": "1.3.3"
   },
