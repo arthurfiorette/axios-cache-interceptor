@@ -37,8 +37,8 @@ For long running processes, you can avoid memory leaks by using playing with the
 `cleanupInterval` option. And can reduce memory usage with `maxEntries`.
 
 ```ts
-import Axios from 'axios';
-import { setupCache, buildMemoryStorage } from 'axios-cache-interceptor';
+import Axios from "axios";
+import { setupCache, buildMemoryStorage } from "axios-cache-interceptor";
 
 setupCache(axios, {
   // You don't need to to that, as it is the default option.
@@ -46,7 +46,7 @@ setupCache(axios, {
     /* cloneData default=*/ false,
     /* cleanupInterval default=*/ false,
     /* maxEntries default=*/ false
-  )
+  ),
 });
 ```
 
@@ -184,8 +184,8 @@ const redisStorage = buildStorage({
           ? Date.now() +
             (req?.cache && typeof req.cache.ttl === 'number'
               ? req.cache.ttl
-              : // 1 minute in seconds
-                60000)
+              : // 1 minute in milliseconds
+                60_000)
           : // When a stale state has a determined value to expire, we can use it.
           //   Or if the cached value cannot enter in stale state.
           (value.state === 'stale' && value.ttl) ||
@@ -213,9 +213,9 @@ Here is an example of how to use the `idb-keyval` library to create a storage th
 IndexedDB.
 
 ```ts
-import axios from 'axios';
-import { buildStorage } from 'axios-cache-interceptor';
-import { clear, del, get, set } from 'idb-keyval';
+import axios from "axios";
+import { buildStorage } from "axios-cache-interceptor";
+import { clear, del, get, set } from "idb-keyval";
 
 const indexedDbStorage = buildStorage({
   async find(key) {
@@ -234,7 +234,7 @@ const indexedDbStorage = buildStorage({
 
   async remove(key) {
     await del(key);
-  }
+  },
 });
 ```
 
