@@ -187,8 +187,8 @@ const redisStorage = buildStorage({
           ? Date.now() +
             (req?.cache && typeof req.cache.ttl === 'number'
               ? req.cache.ttl
-              : // 1 minute in seconds
-                60000)
+              : // 1 minute in milliseconds
+                60_000)
           : // When a stale state has a determined value to expire, we can use it.
           //   Or if the cached value cannot enter in stale state.
           (value.state === 'stale' && value.ttl) ||

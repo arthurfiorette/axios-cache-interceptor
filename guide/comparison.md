@@ -46,5 +46,3 @@ The
 [benchmark](https://github.com/arthurfiorette/axios-cache-interceptor/blob/main/benchmark/index.js)
 is composed of axios throughput tests to compare the performance of this library,
 `axios-cache-adapter` and axios as it is.
-
-<<< @/generated/benchmark.md {5,11}
