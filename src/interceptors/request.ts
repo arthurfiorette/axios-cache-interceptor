@@ -3,7 +3,6 @@ import type { AxiosCacheInstance, CacheAxiosResponse } from '../cache/axios.js';
 import { Header } from '../header/headers.js';
 import type { CachedResponse, CachedStorageValue, LoadingStorageValue } from '../storage/types.js';
 import { regexOrStringMatch } from '../util/cache-predicate.js';
-import { createWaitingTimeout } from '../util/waiting-timeout.js';
 import type { RequestInterceptor } from './build.js';
 import {
   type ConfigWithCache,
@@ -161,15 +160,6 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
       // Adds a default reject handler to catch when the request gets aborted without
       // others waiting for it.
       def.catch(() => undefined);
-
-      // Prevent memory leaks when cache entries are evicted before responses complete
-      const timeoutId = createWaitingTimeout(axios, config.id, def, config);
-
-      // Clear the timeout if the deferred is resolved/rejected to avoid unnecessary cleanup
-      // Only add the finally handler if a timeout was actually created
-      if (timeoutId !== undefined) {
-        def.finally(() => clearTimeout(timeoutId));
-      }
 
       await axios.storage.set(
         config.id,

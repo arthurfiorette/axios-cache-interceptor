@@ -113,6 +113,10 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
         });
       }
 
+      // On limited storage scenarios, its possible the request was evicted while waiting
+      // for the response, in this case, state will be 'empty' again instead of loading.
+      // https://github.com/arthurfiorette/axios-cache-interceptor/issues/833
+      axios.waiting.delete(response.id);
       return response;
     }
 

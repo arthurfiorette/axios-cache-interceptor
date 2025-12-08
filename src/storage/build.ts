@@ -52,6 +52,56 @@ export function isExpired(value: CachedStorageValue | StaleStorageValue): boolea
   return value.ttl !== undefined && value.createdAt + value.ttl <= Date.now();
 }
 
+/**
+ * Defines which storage states are evicted first when cleaning up the storage.
+ */
+const StateEvictionOrder: Record<StorageValue['state'], number> = {
+  empty: 0,
+  'must-revalidate': 1,
+  stale: 2,
+  cached: 3,
+  // loading states usually don't have any data and are the most important ones
+  // to keep around
+  loading: 4
+};
+
+/**
+ * Is a comparator function that sorts storage entries by their eviction priority
+ * and, in the same group, by older first.
+ */
+export function storageEntriesSorter(
+  [, a]: [string, StorageValue],
+  [, b]: [string, StorageValue]
+): number {
+  const stateDiff = StateEvictionOrder[a.state] - StateEvictionOrder[b.state];
+  if (stateDiff !== 0) return stateDiff;
+  return (a.createdAt || 0) - (b.createdAt || 0);
+}
+
+/**
+ * Returns true if the storage entry can be removed according to its state and the
+ * provided maxStaleAge.
+ */
+export function canRemoveStorageEntry(value: StorageValue, maxStaleAge: number): boolean {
+  switch (value.state) {
+    case 'loading':
+      return false;
+
+    case 'empty':
+    case 'must-revalidate':
+      return true;
+
+    case 'cached':
+      return isExpired(value) && !canStale(value);
+
+    case 'stale':
+      if (maxStaleAge !== undefined && value.ttl !== undefined) {
+        return Date.now() > value.createdAt + value.ttl + maxStaleAge;
+      }
+      return false;
+  }
+}
+
 export interface BuildStorage extends Omit<AxiosStorage, 'get'> {
   /**
    * Returns the value for the given key. This method does not have to make checks for
@@ -74,7 +124,7 @@ export interface BuildStorage extends Omit<AxiosStorage, 'get'> {
  * The exported `buildStorage` function abstracts the storage interface and requires a
  * super simple object to build the storage.
  *
- * **Note**: You can only create an custom storage with this function.
+ * **Note**: You can only create custom storages with this function.
  *
  * @example
  *

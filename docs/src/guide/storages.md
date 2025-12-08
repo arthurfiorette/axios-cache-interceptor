@@ -192,9 +192,8 @@ const redisStorage = buildStorage({
             (value.state === 'cached' && !canStale(value))
           ?
             value.createdAt + value.ttl!
-          : // otherwise, we can't determine when it should expire, so we keep
-            //   it indefinitely.
-            undefined
+          : // otherwise, we can't determine when it should expire, so we keep to up an hour.
+            Date.now() + 60 * 60 * 1000
     });
   },
 
