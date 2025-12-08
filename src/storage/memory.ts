@@ -1,4 +1,4 @@
-import { buildStorage, canStale, isExpired } from './build.js';
+import { buildStorage, canRemoveStorageEntry, storageEntriesSorter } from './build.js';
 import type { AxiosStorage, StorageValue } from './types.js';
 
 /* c8 ignore start */
@@ -41,100 +41,89 @@ const clone: <T>(value: T) => T =
  *   default
  * @param {number | false} cleanupInterval The interval in milliseconds to run a
  *   setInterval job of cleaning old entries. If false, the job will not be created.
- *   Disabled is default
+ *   5 minutes (300_000) is default
  * @param {number | false} maxEntries The maximum number of entries to keep in the
  *   storage. Its hard to determine the size of the entries, so a smart FIFO order is used
  *   to determine eviction. If false, no check will be done and you may grow up memory
- *   usage. Disabled is default
+ *   usage. 1024 is default
+ * @param {number} maxStaleAge The maximum age in milliseconds a stale entry can stay
+ *   in the storage before being removed. Otherwise, stale-able entries would stay
+ *   indefinitely causing a memory leak eventually. 1 hour (3_600_000) is default
  */
 export function buildMemoryStorage(
   cloneData: boolean | 'double' = false,
-  cleanupInterval: number | false = false,
-  maxEntries: number | false = false
+  cleanupInterval: number | false = 5 * 60 * 1000,
+  maxEntries: number | false = 1024,
+  maxStaleAge: number = 60 * 60 * 1000
 ) {
+  function sortedEntries() {
+    return Array.from(storage.data.entries()).sort(storageEntriesSorter);
+  }
+
   const storage = buildStorage({
     set: (key, value) => {
-      if (maxEntries) {
-        let keys = Object.keys(storage.data);
+      // More entries than allowed, evict oldest ones
+      if (maxEntries && storage.data.size >= maxEntries) {
+        storage.cleanup();
 
-        // Tries to cleanup first
-        if (keys.length >= maxEntries) {
-          storage.cleanup();
+        // After cleanup, if still at or over capacity, manually evict entries
+        if (storage.data.size >= maxEntries) {
+          for (const [key] of sortedEntries()) {
+            storage.data.delete(key);
 
-          // Recalculates the keys
-          keys = Object.keys(storage.data);
-
-          // Keeps deleting until there's space
-          while (keys.length >= maxEntries) {
-            // There's always at least one key here, otherwise it would not be
-            // in the loop.
-
-            delete storage.data[keys.shift()!];
+            if (storage.data.size < maxEntries) {
+              break;
+            }
           }
         }
       }
 
       // Clone the value before storing to prevent future mutations
       // from affecting cached data.
-      storage.data[key] = cloneData === 'double' ? clone(value) : value;
+      storage.data.set(key, cloneData === 'double' ? clone(value) : value);
     },
 
     remove: (key) => {
-      delete storage.data[key];
+      storage.data.delete(key);
     },
 
     find: (key) => {
-      const value = storage.data[key];
-
+      const value = storage.data.get(key);
       return cloneData && value !== undefined ? clone(value) : value;
     },
 
     clear: () => {
-      storage.data = Object.create(null);
+      storage.data.clear();
     }
   }) as MemoryStorage;
 
-  storage.data = Object.create(null) as Record<string, StorageValue>;
+  storage.data = new Map();
 
   // When this program gets running for more than the specified interval, there's a good
   // chance of it being a long-running process or at least have a lot of entries. Therefore,
   // "faster" loop is more important than code readability.
   storage.cleanup = () => {
-    const keys = Object.keys(storage.data);
-
-    let i = -1;
-    let value: StorageValue;
-    let key: string;
-
-    // Looping forward, as older entries are more likely to be expired
-    // than newer ones.
-    while (++i < keys.length) {
-      key = keys[i]!;
-      value = storage.data[key]!;
-
-      if (value.state === 'empty') {
-        storage.remove(key);
-        continue;
-      }
-
-      // If the value is expired and can't be stale, remove it
-      if (value.state === 'cached' && isExpired(value) && !canStale(value)) {
-        // this storage returns void.
-
-        storage.remove(key);
+    for (const [key, value] of sortedEntries()) {
+      if (canRemoveStorageEntry(value, maxStaleAge)) {
+        storage.data.delete(key);
       }
     }
   };
 
   if (cleanupInterval) {
     storage.cleaner = setInterval(storage.cleanup, cleanupInterval);
+
+    // Attempt to unref the interval to not block Node.js from exiting
+    if (typeof storage.cleaner === 'object' && 'unref' in storage.cleaner) {
+      storage.cleaner.unref();
+    }
   }
 
   return storage;
 }
 
 export interface MemoryStorage extends AxiosStorage {
-  data: Record<string, StorageValue>;
+  data: Map<string, StorageValue>;
   /** The job responsible to cleaning old entries */
   cleaner: ReturnType<typeof setInterval>;
   /** Tries to remove any invalid entry from the memory */

@@ -58,7 +58,8 @@
   "dependencies": {
     "cache-parser": "1.2.6",
     "fast-defer": "1.1.9",
-    "object-code": "1.3.4"
+    "object-code": "1.3.4",
+    "try": "^1.0.2"
   },
   "devDependencies": {
     "@arthurfiorette/biomejs-config": "2.0.1",

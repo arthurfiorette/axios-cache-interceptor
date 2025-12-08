@@ -1,4 +1,5 @@
-import { buildStorage, canStale, isExpired } from './build.js';
+import { Result } from 'try';
+import { buildStorage, canRemoveStorageEntry } from './build.js';
 import type { StorageValue } from './types.js';
 
 /**
@@ -20,8 +21,19 @@ import type { StorageValue } from './types.js';
  * @param storage The type of web storage to use. localStorage or sessionStorage.
  * @param prefix The prefix to index the storage. Useful to prevent collision between
  *   multiple places using the same storage.
+ * @param {number} maxStaleAge The maximum age in milliseconds a stale entry can stay
+ *   in the storage before being removed. Otherwise, stale-able entries would stay
+ *   indefinitely causing a memory leak eventually. 1 hour (3_600_000) is default
  */
-export function buildWebStorage(storage: Storage, prefix = 'axios-cache-') {
+export function buildWebStorage(
+  storage: Storage,
+  prefix = 'axios-cache-',
+  maxStaleAge: number = 60 * 60 * 1000
+) {
+  function save(key: string, value: StorageValue) {
+    storage.setItem(prefix + key, JSON.stringify(value));
+  }
+
   return buildStorage({
     clear: () => {
       for (const key in storage) {
@@ -41,49 +53,81 @@ export function buildWebStorage(storage: Storage, prefix = 'axios-cache-') {
     },
 
     set: (key, value) => {
-      const save = () => storage.setItem(prefix + key, JSON.stringify(value));
+      const result = Result.try(save, key, value);
 
-      try {
-        return save();
-      } catch {
-        const allValues: [string, StorageValue][] = Object.entries(
-          storage as Record<string, string>
-        )
-          .filter((item) => item[0].startsWith(prefix))
-          .map((item) => [item[0], JSON.parse(item[1]) as StorageValue]);
-
-        // Remove all expired values
-        for (const value of allValues) {
-          if (value[1].state === 'cached' && isExpired(value[1]) && !canStale(value[1])) {
-            storage.removeItem(value[0]);
-          }
-        }
-
-        // Try save again after removing expired values
-        try {
-          return save();
-        } catch {
-          // Storage still full, try removing the oldest value until it can be saved
-
-          // Descending sort by createdAt
-          const sortedItems = allValues.sort(
-            (a, b) => (a[1].createdAt || 0) - (b[1].createdAt || 0)
-          );
-
-          for (const item of sortedItems) {
-            storage.removeItem(item[0]);
-
-            try {
-              return save();
-            } catch {
-              // This key didn't free all the required space
-            }
-          }
-        }
-
-        // Clear the cache for the specified key
-        storage.removeItem(prefix + key);
+      if (result.ok) {
+        return;
       }
+
+      // we cannot hide non quota errors
+      if (!isDomQuotaExceededError(result.error)) {
+        throw result.error;
+      }
+
+      const allValues: [string, StorageValue][] = Object.entries(storage as Record<string, string>)
+        .filter(([key]) => key.startsWith(prefix))
+        .map(([key, value]) => [key, JSON.parse(value) as StorageValue]);
+
+      // Remove all expired values
+      for (const [key, value] of allValues) {
+        if (canRemoveStorageEntry(value, maxStaleAge)) {
+          storage.removeItem(key);
+        }
+      }
+
+      // Try save again after removing expired values
+      const retry = Result.try(save, key, value);
+
+      if (retry.ok) {
+        return;
+      }
+
+      // we cannot hide non quota errors
+      if (!isDomQuotaExceededError(retry.error)) {
+        throw retry.error;
+      }
+
+      // Storage still full, try removing the oldest value until it can be saved
+
+      const descItems = allValues.sort((a, b) => (a[1].createdAt || 0) - (b[1].createdAt || 0));
+
+      // Keep looping until all items are removed or the save works
+      for (const item of descItems) {
+        storage.removeItem(item[0]);
+
+        const lastTry = Result.try(save, key, value);
+
+        if (lastTry.ok) {
+          return;
+        }
+
+        // we cannot hide non quota errors
+        if (!isDomQuotaExceededError(lastTry.error)) {
+          throw lastTry.error;
+        }
+      }
+
+      // Could not save even after removing all items, just ignore since its
+      // a storage quota issue.
     }
   });
+}
+
+function isDomQuotaExceededError(error: unknown): boolean {
+  // Check if it's a DOMException by duck-typing (works across different DOMException implementations)
+  const isDOMException =
+    error instanceof DOMException ||
+    (typeof error === 'object' &&
+      error !== null &&
+      'name' in error &&
+      error.constructor?.name === 'DOMException');
+
+  return (
+    isDOMException &&
+    // https://stackoverflow.com/a/23375082
+    'name' in (error as any) &&
+    ((error as any).name === 'QuotaExceededError' ||
+      (error as any).name === 'NS_ERROR_DOM_QUOTA_REACHED' ||
+      (error as any).name === 'QUOTA_EXCEEDED_ERR')
+  );
 }
