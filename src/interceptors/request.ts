@@ -182,7 +182,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
         config
       );
 
-      if (cache.state === 'stale' || cache.state === 'must-revalidate') {
+      if ((cache.state === 'stale' || cache.state === 'must-revalidate') && !overrideCache) {
         updateStaleRequest(cache, config as ConfigWithCache<unknown>);
 
         if (__ACI_DEV__) {

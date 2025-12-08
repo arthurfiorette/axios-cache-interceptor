@@ -135,4 +135,37 @@ describe('LastModified handling', () => {
     assert.notEqual(Number(secondMyHeader), Number.NaN);
     assert.notEqual(secondMyHeader, firstMyHeader);
   });
+
+  it('No If-Modified-Since header when override is true', async () => {
+    const axios = mockAxios(
+      {},
+      {
+        'last-modified': 'Wed, 21 Oct 2015 07:28:00 GMT',
+        'cache-control': 'max-age=1'
+      }
+    );
+
+    const config: CacheRequestConfig = {
+      id: 'same request',
+      cache: { interpretHeader: true, modifiedSince: true }
+    };
+
+    // Initial request to populate cache
+    const response1 = await axios.get('url', config);
+    assert.equal(response1.cached, false);
+    assert.equal(response1.status, 200);
+
+    // Sleep to make cache stale
+    await mockDateNow(1000);
+
+    // Request with override should not send If-Modified-Since and should get 200, not 304
+    const response2 = await axios.get('url', {
+      ...config,
+      cache: { ...config.cache, override: true }
+    });
+    assert.equal(response2.cached, false);
+    assert.equal(response2.stale, undefined);
+    assert.equal(response2.status, 200); // Should be 200, not 304
+    assert.equal(response2.config.headers?.[Header.IfModifiedSince], undefined);
+  });
 });
