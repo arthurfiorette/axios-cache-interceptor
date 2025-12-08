@@ -123,9 +123,15 @@ Headers included:
 - `Pragma: no-cache`
 - `Expires: 0`
 
-::: info Safari Compatibility
+::: info iOS Safari Compatibility
 
-The `max-age=0` directive was added to ensure compatibility with Safari (including iOS Safari), which has historically been more aggressive with caching and may not fully respect the `no-cache` directive alone. This combination of headers ensures reliable cache prevention across all major browsers.
+The `Pragma: no-cache` header is specifically required for iOS Safari compatibility due to a [WebKit bug (#170714)](https://bugs.webkit.org/show_bug.cgi?id=170714). While `Pragma` is an HTTP/1.0 header considered legacy, iOS Safari requires it to properly prevent caching. Without this header, iOS Safari may still cache responses despite the `Cache-Control` directives.
+
+Additionally, the `max-age=0` directive was added to ensure compatibility with Safari, which has historically been more aggressive with caching and may not fully respect the `no-cache` directive alone. This combination of headers ensures reliable cache prevention across all major browsers.
+
+For more details, see:
+- [Issue #579: iOS Safari caching behavior](https://github.com/arthurfiorette/axios-cache-interceptor/issues/579)
+- [Issue #471: Safari cache issues](https://github.com/arthurfiorette/axios-cache-interceptor/issues/471)
 
 :::
 

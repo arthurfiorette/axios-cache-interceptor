@@ -64,6 +64,20 @@ const axios = setupCache(Axios, {
 And much more, depending on your context, situation and configuration. **Any misbehavior
 that you find will have a log to explain it.**
 
+## Understanding Debug Messages
+
+To help you understand what each debug message means and what action is being taken, we've created comprehensive flow diagrams that document the entire request/response cycle and explain every debug message:
+
+- **[Debug Messages Guide](https://github.com/arthurfiorette/axios-cache-interceptor/blob/main/debug-messages-guide.mermaid)** - Complete guide explaining what each debug message means, why it occurred, and what happens next
+- **[Request/Response Flow Overview](https://github.com/arthurfiorette/axios-cache-interceptor/blob/main/request-response-flow-overview.mermaid)** - High-level diagram of the complete request flow
+- **[All Flow Diagrams](https://github.com/arthurfiorette/axios-cache-interceptor/blob/main/DIAGRAMS_README.md)** - Complete documentation of all available diagrams
+
+These diagrams will help you:
+- Understand what conditions led to a specific debug message
+- Follow the path your request takes through the interceptors
+- Troubleshoot unexpected caching behavior
+- Learn how different cache states transition
+
 ::: details Sample of logs sent to console.
 
 ```json
