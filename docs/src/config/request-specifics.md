@@ -30,7 +30,7 @@ or a custom one provided by [`config.id`](./request-specifics.md#id)
 
 <Badge text="optional" type="warning"/>
 
-- Type: `false` or `Partial<CacheProperties<R, D>>`.
+- Type: `Partial<CacheProperties<R, D>>`.
 - Default: `{}` _(Inherits from global configuration)_
 
 ::: tip
@@ -43,26 +43,15 @@ configuration
 The cache option available through the request config is where all the cache customization
 happens.
 
-You can pass an object with cache properties to customize cache behavior, or set it to
-`false` to disable caching for this request.
+You can pass an object with cache properties to customize cache behavior.
 
-::: warning DEPRECATED
-
-Setting `cache: false` is deprecated. Please use `cache: { enabled: false }` instead.
-
-:::
-
-This does not mean that the cache will be excluded from the storage, in which case, you
-can do that by deleting the storage entry:
+To disable caching for a specific request, use `cache: { enabled: false }`:
 
 ```ts
-// Make a request with cache disabled (new way - recommended).
+// Make a request with cache disabled
 const { id: requestId } = await axios.get('url', { cache: { enabled: false } });
 
-// Make a request with cache disabled (old way - deprecated).
-const { id: requestId } = await axios.get('url', { cache: false });
-
-// Delete the cache entry for this request.
+// Delete the cache entry for this request if needed
 await axios.storage.remove(requestId);
 ```
 
@@ -75,8 +64,7 @@ await axios.storage.remove(requestId);
 
 Whether the cache is enabled for this request.
 
-When set to `false`, the cache will be completely disabled for this request, similar to
-setting `cache: false` in the request config.
+When set to `false`, the cache will be completely disabled for this request.
 
 This is useful for **opt-in cache** scenarios where you want to disable cache globally
 but enable it for specific requests.

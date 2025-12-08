@@ -19,7 +19,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
       if (__ACI_DEV__) {
         axios.debug({
           id: config.id,
-          msg: 'Ignoring cache because config.cache === false (deprecated, use cache.enabled = false)',
+          msg: 'Ignoring cache because config.cache === false',
           data: config
         });
       }
