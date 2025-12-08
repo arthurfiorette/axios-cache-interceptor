@@ -87,4 +87,26 @@ describe('ETag handling', () => {
     assert.equal(response2.config.headers?.[Header.IfNoneMatch], 'fake-etag');
     assert.equal(response2.headers?.[Header.ETag], 'fake-etag-2');
   });
+
+  it('No If-None-Match header when override is true', async () => {
+    const axios = mockAxios({}, { etag: 'fakeEtag', 'cache-control': 'max-age=1' });
+    const config = { cache: { interpretHeader: true, etag: true } };
+
+    // Initial request to populate cache
+    const response1 = await axios.get('http://test.com', config);
+    assert.equal(response1.cached, false);
+    assert.equal(response1.status, 200);
+
+    // Sleep to make cache stale
+    await mockDateNow(1000);
+
+    // Request with override should not send If-None-Match and should get 200, not 304
+    const response2 = await axios.get('http://test.com', {
+      cache: { ...config.cache, override: true }
+    });
+    assert.equal(response2.cached, false);
+    assert.equal(response2.stale, undefined);
+    assert.equal(response2.status, 200); // Should be 200, not 304
+    assert.equal(response2.config.headers?.[Header.IfNoneMatch], undefined);
+  });
 });

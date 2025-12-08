@@ -182,7 +182,10 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
         config
       );
 
-      if (cache.state === 'stale' || cache.state === 'must-revalidate') {
+      // Skip adding conditional headers (If-None-Match, If-Modified-Since) when override is true.
+      // The override option is meant to bypass cache and get fresh data, not revalidate existing cache.
+      // Adding conditional headers would cause the server to return 304 Not Modified instead of fresh data.
+      if ((cache.state === 'stale' || cache.state === 'must-revalidate') && !overrideCache) {
         updateStaleRequest(cache, config as ConfigWithCache<unknown>);
 
         if (__ACI_DEV__) {
