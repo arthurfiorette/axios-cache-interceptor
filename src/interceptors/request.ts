@@ -161,6 +161,28 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
       // others waiting for it.
       def.catch(() => undefined);
 
+      // Set a timeout to automatically clean up the waiting entry to prevent memory leaks
+      // when entries are evicted from storage before the response completes.
+      // Use the axios timeout if configured, otherwise use a reasonable default.
+      const timeout = config.timeout || 30000; // Default 30 seconds if no timeout configured
+      const timeoutId = setTimeout(() => {
+        const waiting = axios.waiting.get(config.id!);
+        if (waiting === def) {
+          waiting.reject(new Error('Request timeout - waiting entry cleaned up'));
+          axios.waiting.delete(config.id!);
+
+          if (__ACI_DEV__) {
+            axios.debug({
+              id: config.id,
+              msg: 'Cleaned up waiting entry due to timeout'
+            });
+          }
+        }
+      }, timeout);
+
+      // Clear the timeout if the deferred is resolved/rejected to avoid unnecessary cleanup
+      def.finally(() => clearTimeout(timeoutId));
+
       await axios.storage.set(
         config.id,
         {

@@ -34,25 +34,6 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
     }
   };
 
-  /**
-   * Resolves the waiting deferred for a response, if present, and removes it from the waiting map.
-   */
-  const resolveWaiting = (responseId: string) => {
-    const waiting = axios.waiting.get(responseId);
-
-    if (waiting) {
-      waiting.resolve();
-      axios.waiting.delete(responseId);
-
-      if (__ACI_DEV__) {
-        axios.debug({
-          id: responseId,
-          msg: 'Found waiting deferred(s) and resolved them'
-        });
-      }
-    }
-  };
-
   const onFulfilled: ResponseInterceptor['onFulfilled'] = async (response) => {
     // When response.config is not present, the response is indeed a error.
     if (!response?.config) {
@@ -131,9 +112,6 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
           data: { cache, response }
         });
       }
-
-      // Clean up the waiting map if the cache was removed (e.g., due to maxEntries eviction)
-      resolveWaiting(response.id);
 
       return response;
     }
@@ -235,7 +213,19 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
     await axios.storage.set(response.id, newCache, config);
 
     // Resolve all other requests waiting for this response
-    resolveWaiting(response.id);
+    const waiting = axios.waiting.get(response.id);
+
+    if (waiting) {
+      waiting.resolve();
+      axios.waiting.delete(response.id);
+
+      if (__ACI_DEV__) {
+        axios.debug({
+          id: response.id,
+          msg: 'Found waiting deferred(s) and resolved them'
+        });
+      }
+    }
 
     if (__ACI_DEV__) {
       axios.debug({
@@ -358,7 +348,19 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
           config
         );
         // Resolve all other requests waiting for this response
-        resolveWaiting(id);
+        const waiting = axios.waiting.get(id);
+
+        if (waiting) {
+          waiting.resolve();
+          axios.waiting.delete(id);
+
+          if (__ACI_DEV__) {
+            axios.debug({
+              id,
+              msg: 'Found waiting deferred(s) and resolved them'
+            });
+          }
+        }
 
         if (__ACI_DEV__) {
           axios.debug({
