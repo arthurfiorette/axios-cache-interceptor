@@ -13,7 +13,7 @@ inconsistencies. Which is explained in the next section.
 
 ## Explanation
 
-Axios interceptors are ran differently for the request and response ones.
+Axios interceptors are run differently for the request and response ones.
 
 - **Request interceptors** are executed in **reverse order** - the last interceptor added runs first (LIFO - _Last In First Out_)
 - **Response interceptors** are executed in **normal order** - the first interceptor added runs first (FIFO - _First In First Out_)
@@ -23,18 +23,18 @@ As explained better in the
 [this issue](https://github.com/arthurfiorette/axios-cache-interceptor/issues/449#issuecomment-1370327566).
 
 ```ts
-// This will be ran BEFORE the cache interceptor
+// This will run BEFORE the cache interceptor
 axios.interceptors.request.use((req) => req);
 
-// This will be ran AFTER the cache interceptor
+// This will run AFTER the cache interceptor
 axios.interceptors.response.use((res) => res);
 
 setupCache(axios);
 
-// This will be ran AFTER the cache interceptor
+// This will run AFTER the cache interceptor
 axios.interceptors.request.use((req) => req);
 
-// This will be ran BEFORE the cache interceptor
+// This will run BEFORE the cache interceptor
 axios.interceptors.response.use((res) => res);
 ```
 
