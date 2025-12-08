@@ -57,6 +57,8 @@ export function setupCache(axios: AxiosInstance, options: CacheOptions = {}): Ax
 
   // CacheRequestConfig values
   axiosCache.defaults.cache = {
+    enabled: options.enabled ?? true,
+
     update: options.update || {},
 
     ttl: options.ttl ?? 1000 * 60 * 5,

@@ -23,6 +23,20 @@ import type { CacheAxiosResponse, InternalCacheRequestConfig } from './axios.js'
  */
 export interface CacheProperties<R = unknown, D = unknown> {
   /**
+   * Whether the cache is enabled for this request.
+   *
+   * When set to `false`, the cache will be completely disabled for this request,
+   * similar to setting `cache: false` in the request config.
+   *
+   * This is useful for opt-in cache scenarios where you want to disable cache globally
+   * but enable it for specific requests by setting `cache: { enabled: true }`.
+   *
+   * @default true
+   * @see https://axios-cache-interceptor.js.org/config/request-specifics#cache-enabled
+   */
+  enabled: boolean;
+
+  /**
    * The time until the cached value is expired in milliseconds.
    *
    * If a function is used, it will receive the complete response and waits to return a

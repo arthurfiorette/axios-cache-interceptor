@@ -79,14 +79,17 @@ export interface CacheRequestConfig<R = any, D = any> extends AxiosRequestConfig
    * The cache option available through the request config is where all the cache
    * customization happens.
    *
-   * Setting the `cache` property to `false` will disable the cache for this request.
+   * You can pass an object with cache properties to customize cache behavior.
+   *
+   * **Note:** Setting `cache: false` is still supported for backward compatibility, but
+   * will be removed in the next major release. Use `cache: { enabled: false }` instead.
    *
    * This does not mean that the current cache will be excluded from the storage.
    *
    * @default 'inherits from global configuration'
    * @see https://axios-cache-interceptor.js.org/config/response-object#cache
    */
-  cache?: false | Partial<CacheProperties<R, D>>;
+  cache?: Partial<CacheProperties<R, D>> | false;
 }
 
 /** Cached version of type {@link InternalAxiosRequestConfig} */

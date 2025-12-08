@@ -30,7 +30,7 @@ or a custom one provided by [`config.id`](./request-specifics.md#id)
 
 <Badge text="optional" type="warning"/>
 
-- Type: `false` or `Partial<CacheProperties<R, D>>`.
+- Type: `Partial<CacheProperties<R, D>>`.
 - Default: `{}` _(Inherits from global configuration)_
 
 ::: tip
@@ -43,17 +43,75 @@ configuration
 The cache option available through the request config is where all the cache customization
 happens.
 
-Setting the `cache` property to `false` will disable the cache for this request.
+You can pass an object with cache properties to customize cache behavior.
 
-This does not mean that the cache will be excluded from the storage, in which case, you
-can do that by deleting the storage entry:
+To disable caching for a specific request, use `cache: { enabled: false }`:
 
 ```ts
-// Make a request with cache disabled.
-const { id: requestId } = await axios.get('url', { cache: false });
+// Make a request with cache disabled
+const { id: requestId } = await axios.get('url', { cache: { enabled: false } });
 
-// Delete the cache entry for this request.
+// Delete the cache entry for this request if needed
 await axios.storage.remove(requestId);
+```
+
+## cache.enabled
+
+<Badge text="optional" type="warning"/>
+
+- Type: `boolean`
+- Default: `true`
+
+Whether the cache is enabled for this request.
+
+When set to `false`, the cache will be completely disabled for this request.
+
+This is useful for **opt-in cache** scenarios where you want to disable cache globally
+but enable it for specific requests.
+
+### Example: Opt-in Cache Pattern
+
+You can disable cache by default and enable it only for specific endpoints:
+
+```ts
+import { setupCache } from 'axios-cache-interceptor';
+
+// Setup axios with cache disabled by default
+const axios = setupCache(axiosInstance, {
+  enabled: false // Disable cache globally
+});
+
+// Most requests won't use cache
+await axios.get('/api/realtime-data'); // Not cached
+
+// Enable cache for specific heavy/expensive requests
+await axios.get('/api/heavy-computation', {
+  cache: {
+    enabled: true,
+    ttl: 1000 * 60 * 10 // Cache for 10 minutes
+  }
+}); // Cached
+```
+
+### Example: Traditional Pattern (Opt-out)
+
+The traditional pattern where cache is enabled by default:
+
+```ts
+import { setupCache } from 'axios-cache-interceptor';
+
+// Setup axios with cache enabled by default (this is the default behavior)
+const axios = setupCache(axiosInstance, {
+  enabled: true // or omit this as true is the default
+});
+
+// Most requests will use cache
+await axios.get('/api/user-profile'); // Cached
+
+// Disable cache for specific real-time endpoints
+await axios.get('/api/live-stock-prices', {
+  cache: { enabled: false }
+}); // Not cached
 ```
 
 ## cache.ttl
