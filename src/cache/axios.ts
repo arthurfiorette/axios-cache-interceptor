@@ -9,6 +9,11 @@ import type {
 import type { CacheInstance, CacheProperties } from './cache.js';
 
 /**
+ * @deprecated Setting `cache: false` is deprecated. Use `cache: { enabled: false }` instead.
+ */
+type DeprecatedFalse = false;
+
+/**
  * A slightly changed than the original axios response. Containing information about the
  * cache and other needed properties.
  *
@@ -79,17 +84,17 @@ export interface CacheRequestConfig<R = any, D = any> extends AxiosRequestConfig
    * The cache option available through the request config is where all the cache
    * customization happens.
    *
-   * Setting the `cache` property to `false` will disable the cache for this request.
+   * You can pass an object with cache properties to customize cache behavior.
    *
-   * **Note:** Setting `cache: false` is deprecated. Please use `cache: { enabled: false }` instead.
+   * Setting this to `false` will disable the cache for this request.
+   * **Note:** `cache: false` is deprecated. Use `cache: { enabled: false }` instead.
    *
    * This does not mean that the current cache will be excluded from the storage.
    *
    * @default 'inherits from global configuration'
    * @see https://axios-cache-interceptor.js.org/config/response-object#cache
-   * @deprecated Setting `cache: false` is deprecated, use `cache: { enabled: false }` instead
    */
-  cache?: false | Partial<CacheProperties<R, D>>;
+  cache?: Partial<CacheProperties<R, D>> | DeprecatedFalse;
 }
 
 /** Cached version of type {@link InternalAxiosRequestConfig} */
