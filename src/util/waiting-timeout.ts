@@ -35,7 +35,7 @@ export function createWaitingTimeout(
         : undefined;
 
   // Only create timeout if we have a valid value
-  if (!timeout || timeout <= 0) {
+  if (!timeout) {
     return undefined;
   }
 
