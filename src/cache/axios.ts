@@ -9,6 +9,8 @@ import type {
 import type { CacheInstance, CacheProperties } from './cache.js';
 
 /**
+ * Deprecated type for `cache: false`. Use `cache: { enabled: false }` instead.
+ * 
  * @deprecated Setting `cache: false` is deprecated. Use `cache: { enabled: false }` instead.
  */
 type DeprecatedFalse = false;
