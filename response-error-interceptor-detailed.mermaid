@@ -1,0 +1,79 @@
+flowchart TB
+    Start([Response Interceptor Entry<br/>onRejected - Error Handler]) --> CheckAxiosError{Is Axios error<br/>& config exists?}
+    
+    CheckAxiosError -->|No| Debug1[Debug: 'FATAL: Received non-axios error in rejected interceptor']
+    Debug1 --> ThrowError[Re-throw error]
+    
+    CheckAxiosError -->|Yes| ExtractData[Extract config, id, cache config, response]
+    ExtractData --> CheckCacheConfig{config.cache<br/>& id exist?}
+    
+    CheckCacheConfig -->|No| Debug2[Debug: 'Web request returned error but cache handling not enabled']
+    Debug2 --> ThrowError
+    
+    CheckCacheConfig -->|Yes| CheckMethod{Method in<br/>cache.methods?}
+    CheckMethod -->|No| Debug3[Debug: 'Ignored because method not in cache.methods']
+    Debug3 --> RejectWaiting1[Reject waiting requests<br/>Remove from storage]
+    RejectWaiting1 --> ThrowError
+    
+    CheckMethod -->|Yes| GetStorage[Get cache from storage]
+    GetStorage --> CheckStorageState{State === 'loading'<br/>AND previous === 'stale'?}
+    
+    CheckStorageState -->|No| Debug4[Debug: 'Caught an error in the request interceptor']
+    Debug4 --> CheckCancelled{Error code is<br/>ERR_CANCELED?}
+    
+    CheckCancelled -->|Yes & state is cached| KeepCache[Do not clear cache]
+    CheckCancelled -->|No or state not cached| RejectWaiting2[Reject waiting requests<br/>Remove from storage]
+    KeepCache --> ThrowError
+    RejectWaiting2 --> ThrowError
+    
+    CheckStorageState -->|Yes| CheckStaleIfError{config.staleIfError<br/>configured?}
+    CheckStaleIfError -->|No| Debug7
+    
+    CheckStaleIfError -->|Yes| Debug5[Debug: 'Found cache if stale config for rejected response']
+    Debug5 --> EvaluateStaleIfError{Evaluate<br/>staleIfError value}
+    
+    EvaluateStaleIfError -->|Function| CallFunction[Call staleIfError function<br/>with response, cache, error]
+    EvaluateStaleIfError -->|true & has stale-if-error header| ParseHeader[Parse stale-if-error from<br/>Cache-Control header]
+    EvaluateStaleIfError -->|Number| UseNumber[Use staleIfError value]
+    EvaluateStaleIfError -->|true & no header| UseBoolean[Use true value]
+    
+    CallFunction --> CheckResult
+    ParseHeader --> CheckResult
+    UseNumber --> CheckResult
+    UseBoolean --> CheckResult
+    
+    CheckResult{staleIfError === true<br/>OR within time window?}
+    CheckResult -->|No| Debug7[Debug: 'Received unknown error that could not be handled']
+    
+    CheckResult -->|Yes| RemarkStale[Re-mark cache as 'stale' in storage<br/>Update createdAt to now]
+    RemarkStale --> CheckWaiting{Deferred exists<br/>in waiting map?}
+    
+    CheckWaiting -->|Yes| ResolveDeferred[Resolve deferred promise<br/>Delete from waiting map]
+    CheckWaiting -->|No| Debug8
+    ResolveDeferred --> Debug6[Debug: 'Found waiting deferred(s) and resolved them']
+    
+    Debug6 --> Debug8[Debug: 'staleIfError resolved this response with cached data']
+    Debug8 --> ReturnStale[Return stale cached response:<br/>cached: true<br/>stale: true]
+    
+    Debug7 --> RejectWaiting3[Reject waiting requests<br/>Remove from storage]
+    RejectWaiting3 --> ThrowError
+    
+    ReturnStale --> End([Return stale response to client])
+    ThrowError --> EndError([Error thrown to client])
+    
+    style Start fill:#ffe1e1
+    style End fill:#e1f5e1
+    style EndError fill:#ffe1e1
+    style ReturnStale fill:#ffe8d1
+    style Debug1 fill:#fff4e1
+    style Debug2 fill:#fff4e1
+    style Debug3 fill:#fff4e1
+    style Debug4 fill:#fff4e1
+    style Debug5 fill:#fff4e1
+    style Debug6 fill:#fff4e1
+    style Debug7 fill:#fff4e1
+    style Debug8 fill:#fff4e1
+    style RejectWaiting1 fill:#ffe1e1
+    style RejectWaiting2 fill:#ffe1e1
+    style RejectWaiting3 fill:#ffe1e1
+    style ThrowError fill:#ffe1e1
