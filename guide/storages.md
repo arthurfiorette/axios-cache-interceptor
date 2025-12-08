@@ -37,7 +37,11 @@ clone both ways, on `set()` and on `get()`. *Just like
 others.*
 
 For long running processes, you can avoid memory leaks by using playing with the
-`cleanupInterval` option. And can reduce memory usage with `maxEntries`.
+`cleanupInterval` option. And can reduce memory usage with `maxEntries`. The `maxStaleAge`
+parameter helps prevent stale entries from accumulating indefinitely.
+
+The storage uses a JavaScript `Map` internally for efficient key-value lookups and
+iteration.
 
 ```ts
 import Axios from 'axios';
@@ -47,8 +51,9 @@ setupCache(axios, {
   // You don't need to to that, as it is the default option.
   storage: buildMemoryStorage(
     /* cloneData default=*/ false,
-    /* cleanupInterval default=*/ false,
-    /* maxEntries default=*/ false
+    /* cleanupInterval default=*/ 5 * 60 * 1000,
+    /* maxEntries default=*/ 1024,
+    /* maxStaleAge default=*/ 60 * 60 * 1000
   )
 });
 ```
@@ -60,11 +65,16 @@ Options:
   before saving value in storage using `set()`. Disabled is default
 
 * **cleanupInterval**: The interval in milliseconds to run a setInterval job of cleaning
-  old entries. If false, the job will not be created. Disabled is default
+  old entries. If false, the job will not be created. 5 minutes (300\_000) is default
 
 * **maxEntries**: The maximum number of entries to keep in the storage. Its hard to
   determine the size of the entries, so a smart FIFO order is used to determine eviction.
-  If false, no check will be done and you may grow up memory usage. Disabled is default
+  If false, no check will be done and you may grow up memory usage. 1024 is default
+
+* **maxStaleAge**: The maximum age in milliseconds a stale entry can stay in the storage
+  before being removed. This prevents stale-able entries (those with ETag or Last-Modified
+  headers) from staying indefinitely and causing memory leaks. 1 hour (3\_600\_000) is
+  default
 
 ## Web Storage API
 
@@ -100,14 +110,26 @@ setupCache(axios, { // [!code focus:5]
 import Axios from 'axios';
 import { setupCache, buildWebStorage } from 'axios-cache-interceptor';
 
-const myStorage = new Storage(); // [!code focus:5]
+const myStorage = new Storage(); // [!code focus:8]
 
 setupCache(axios, {
-  storage: buildWebStorage(myStorage)
+  storage: buildWebStorage(
+    myStorage,
+    'axios-cache:', // prefix
+    60 * 60 * 1000  // maxStaleAge (1 hour default)
+  )
 });
 ```
 
 :::
+
+Options:
+
+* **storage**: The Storage instance to use (e.g., `localStorage`, `sessionStorage`)
+* **prefix**: The prefix to add to all keys to avoid collisions. Default is `'axios-cache-'`
+* **maxStaleAge**: The maximum age in milliseconds a stale entry can stay in the storage
+  before being removed. Prevents memory leaks from stale-able entries. Default is 1 hour
+  (3\_600\_000)
 
 ### Browser quota
 
@@ -195,9 +217,8 @@ const redisStorage = buildStorage({
             (value.state === 'cached' && !canStale(value))
           ?
             value.createdAt + value.ttl!
-          : // otherwise, we can't determine when it should expire, so we keep
-            //   it indefinitely.
-            undefined
+          : // otherwise, we can't determine when it should expire, so we keep to up an hour.
+            Date.now() + 60 * 60 * 1000
     });
   },
 

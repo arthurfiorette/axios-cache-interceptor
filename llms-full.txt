@@ -47,6 +47,33 @@ The
 is composed of axios throughput tests to compare the performance of this library,
 `axios-cache-adapter` and axios as it is.
 
+```md {5,11}
+# Result
+
+Run at Sun, 29 Jan 2023 01:24:01 GMT
+
+Commit: 3db90e8c262c48d011fdd53bcda105512434e56e
+
+## CACHE INTERCEPTOR
+
+- Operations: 41275/s
+- Network requests: 1 of 205788
+- Performance: 100.00%
+
+## CACHE ADAPTER
+
+- Operations: 37683/s
+- Network requests: 2 of 185780
+- Performance: 91.30%
+
+## AXIOS
+
+- Operations: 1970/s
+- Network requests: 9773 of 9773
+- Performance: 4.77%
+
+```
+
 ---
 
 ---
@@ -627,35 +654,36 @@ inconsistencies. Which is explained in the next section.
 
 ## TL;DR
 
-* **Request** interceptors registered before `setupCache()` are ran before and
-  registrations made after are ran after.
-* **Response** interceptors registered before `setupCache()` are ran **after** and
-  registrations made after are ran **before**.
+* **Request** interceptors registered **before** `setupCache()` run **before** the cache
+  interceptor; those registered **after** `setupCache()` run **after** the cache interceptor.
+* **Response** interceptors registered **before** `setupCache()` run **after** the cache
+  interceptor; those registered **after** `setupCache()` run **before** the cache
+  interceptor.
 
 ## Explanation
 
-Axios interceptors are ran differently for the request and response ones.
+Axios interceptors are run differently for the request and response ones.
 
-* **Request interceptors** are FILO *(First In Last Out)*
-* **Response interceptors** are FIFO *(First In First Out)*
+* **Request interceptors** are executed in **reverse order** - the last interceptor added runs first (LIFO - *Last In First Out*)
+* **Response interceptors** are executed in **normal order** - the first interceptor added runs first (FIFO - *First In First Out*)
 
 As explained better in the
 [Axios documentation](https://github.com/axios/axios#interceptors) and in
 [this issue](https://github.com/arthurfiorette/axios-cache-interceptor/issues/449#issuecomment-1370327566).
 
 ```ts
-// This will be ran BEFORE the cache interceptor
+// This will run BEFORE the cache interceptor
 axios.interceptors.request.use((req) => req);
 
-// This will be ran AFTER the cache interceptor
+// This will run AFTER the cache interceptor
 axios.interceptors.response.use((res) => res);
 
 setupCache(axios);
 
-// This will be ran AFTER the cache interceptor
+// This will run AFTER the cache interceptor
 axios.interceptors.request.use((req) => req);
 
-// This will be ran BEFORE the cache interceptor
+// This will run BEFORE the cache interceptor
 axios.interceptors.response.use((res) => res);
 ```
 
@@ -841,7 +869,7 @@ or a custom one provided by [`config.id`](./request-specifics.md#id)
 
 ## cache
 
-* Type: `false` or `Partial<CacheProperties<R, D>>`.
+* Type: `Partial<CacheProperties<R, D>>`.
 * Default: `{}` *(Inherits from global configuration)*
 
 ::: tip
@@ -854,17 +882,73 @@ configuration
 The cache option available through the request config is where all the cache customization
 happens.
 
-Setting the `cache` property to `false` will disable the cache for this request.
+You can pass an object with cache properties to customize cache behavior.
 
-This does not mean that the cache will be excluded from the storage, in which case, you
-can do that by deleting the storage entry:
+To disable caching for a specific request, use `cache: { enabled: false }`:
 
 ```ts
-// Make a request with cache disabled.
-const { id: requestId } = await axios.get('url', { cache: false });
+// Make a request with cache disabled
+const { id: requestId } = await axios.get('url', { cache: { enabled: false } });
 
-// Delete the cache entry for this request.
+// Delete the cache entry for this request if needed
 await axios.storage.remove(requestId);
+```
+
+## cache.enabled
+
+* Type: `boolean`
+* Default: `true`
+
+Whether the cache is enabled for this request.
+
+When set to `false`, the cache will be completely disabled for this request.
+
+This is useful for **opt-in cache** scenarios where you want to disable cache globally
+but enable it for specific requests.
+
+### Example: Opt-in Cache Pattern
+
+You can disable cache by default and enable it only for specific endpoints:
+
+```ts
+import { setupCache } from 'axios-cache-interceptor';
+
+// Setup axios with cache disabled by default
+const axios = setupCache(axiosInstance, {
+  enabled: false // Disable cache globally
+});
+
+// Most requests won't use cache
+await axios.get('/api/realtime-data'); // Not cached
+
+// Enable cache for specific heavy/expensive requests
+await axios.get('/api/heavy-computation', {
+  cache: {
+    enabled: true,
+    ttl: 1000 * 60 * 10 // Cache for 10 minutes
+  }
+}); // Cached
+```
+
+### Example: Traditional Pattern (Opt-out)
+
+The traditional pattern where cache is enabled by default:
+
+```ts
+import { setupCache } from 'axios-cache-interceptor';
+
+// Setup axios with cache enabled by default (this is the default behavior)
+const axios = setupCache(axiosInstance, {
+  enabled: true // or omit this as true is the default
+});
+
+// Most requests will use cache
+await axios.get('/api/user-profile'); // Cached
+
+// Disable cache for specific real-time endpoints
+await axios.get('/api/live-stock-prices', {
+  cache: { enabled: false }
+}); // Not cached
 ```
 
 ## cache.ttl
@@ -924,9 +1008,15 @@ This option solves this by including predefined headers in the request that inst
 
 Headers included:
 
-* `Cache-Control: no-cache, no-store, must-revalidate`
+* `Cache-Control: no-cache, no-store, must-revalidate, max-age=0`
 * `Pragma: no-cache`
 * `Expires: 0`
+
+::: info Safari Compatibility
+
+The `max-age=0` directive was added to ensure compatibility with Safari (including iOS Safari), which has historically been more aggressive with caching and may not fully respect the `no-cache` directive alone. This combination of headers ensures reliable cache prevention across all major browsers.
+
+:::
 
 ::: tip Alternative
 
@@ -1527,7 +1617,11 @@ clone both ways, on `set()` and on `get()`. *Just like
 others.*
 
 For long running processes, you can avoid memory leaks by using playing with the
-`cleanupInterval` option. And can reduce memory usage with `maxEntries`.
+`cleanupInterval` option. And can reduce memory usage with `maxEntries`. The `maxStaleAge`
+parameter helps prevent stale entries from accumulating indefinitely.
+
+The storage uses a JavaScript `Map` internally for efficient key-value lookups and
+iteration.
 
 ```ts
 import Axios from 'axios';
@@ -1537,8 +1631,9 @@ setupCache(axios, {
   // You don't need to to that, as it is the default option.
   storage: buildMemoryStorage(
     /* cloneData default=*/ false,
-    /* cleanupInterval default=*/ false,
-    /* maxEntries default=*/ false
+    /* cleanupInterval default=*/ 5 * 60 * 1000,
+    /* maxEntries default=*/ 1024,
+    /* maxStaleAge default=*/ 60 * 60 * 1000
   )
 });
 ```
@@ -1550,11 +1645,16 @@ Options:
   before saving value in storage using `set()`. Disabled is default
 
 * **cleanupInterval**: The interval in milliseconds to run a setInterval job of cleaning
-  old entries. If false, the job will not be created. Disabled is default
+  old entries. If false, the job will not be created. 5 minutes (300\_000) is default
 
 * **maxEntries**: The maximum number of entries to keep in the storage. Its hard to
   determine the size of the entries, so a smart FIFO order is used to determine eviction.
-  If false, no check will be done and you may grow up memory usage. Disabled is default
+  If false, no check will be done and you may grow up memory usage. 1024 is default
+
+* **maxStaleAge**: The maximum age in milliseconds a stale entry can stay in the storage
+  before being removed. This prevents stale-able entries (those with ETag or Last-Modified
+  headers) from staying indefinitely and causing memory leaks. 1 hour (3\_600\_000) is
+  default
 
 ## Web Storage API
 
@@ -1590,14 +1690,26 @@ setupCache(axios, { // [!code focus:5]
 import Axios from 'axios';
 import { setupCache, buildWebStorage } from 'axios-cache-interceptor';
 
-const myStorage = new Storage(); // [!code focus:5]
+const myStorage = new Storage(); // [!code focus:8]
 
 setupCache(axios, {
-  storage: buildWebStorage(myStorage)
+  storage: buildWebStorage(
+    myStorage,
+    'axios-cache:', // prefix
+    60 * 60 * 1000  // maxStaleAge (1 hour default)
+  )
 });
 ```
 
 :::
+
+Options:
+
+* **storage**: The Storage instance to use (e.g., `localStorage`, `sessionStorage`)
+* **prefix**: The prefix to add to all keys to avoid collisions. Default is `'axios-cache-'`
+* **maxStaleAge**: The maximum age in milliseconds a stale entry can stay in the storage
+  before being removed. Prevents memory leaks from stale-able entries. Default is 1 hour
+  (3\_600\_000)
 
 ### Browser quota
 
@@ -1685,9 +1797,8 @@ const redisStorage = buildStorage({
             (value.state === 'cached' && !canStale(value))
           ?
             value.createdAt + value.ttl!
-          : // otherwise, we can't determine when it should expire, so we keep
-            //   it indefinitely.
-            undefined
+          : // otherwise, we can't determine when it should expire, so we keep to up an hour.
+            Date.now() + 60 * 60 * 1000
     });
   },
 
