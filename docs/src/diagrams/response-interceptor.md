@@ -1,3 +1,8 @@
+# Response Interceptor Flow
+
+This diagram shows the detailed flow through the response interceptor for successful responses.
+
+```mermaid
 flowchart TB
     Start([Response Interceptor Entry<br/>onFulfilled]) --> CheckConfig{response.config<br/>exists?}
     
@@ -106,3 +111,37 @@ flowchart TB
     style Debug10 fill:#fff4e1
     style RejectCache fill:#ffe1e1
     style RejectDontCache fill:#ffe1e1
+```
+
+## Key Points
+
+### Cache Predicate
+Determines if a response should be cached based on:
+- Status code (default: 200, 203, 300, 301, 302, 404, 405, 410, 414, 501)
+- Response matching custom predicate
+- Required headers present
+
+### Header Interpretation
+When `interpretHeader` is enabled, the interceptor reads:
+- `Cache-Control`: max-age, immutable, no-cache, no-store, etc.
+- `Expires`: HTTP/1.0 fallback
+- `Age`: For calculating remaining TTL
+
+### TTL Calculation
+1. If `interpretHeader` is true, parse response headers
+2. If headers say "dont cache", reject
+3. If headers provide TTL, use it
+4. Otherwise, fall back to `config.ttl`
+5. If TTL is a function, call it with the response
+
+### Deferred Resolution
+When caching succeeds, all waiting concurrent requests are notified:
+- Deferred promise is resolved
+- Waiting requests can now access the cached data
+- No duplicate network requests needed
+
+## Related
+
+- [Request Interceptor](/diagrams/request-interceptor) - How requests enter the system
+- [Error Handler](/diagrams/response-error-interceptor) - What happens on errors
+- [Header Interpreter](/diagrams/header-interpreter) - How headers are parsed

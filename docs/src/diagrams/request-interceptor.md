@@ -1,3 +1,8 @@
+# Request Interceptor Flow
+
+This diagram shows the detailed flow through the request interceptor, including all branching conditions and debug messages.
+
+```mermaid
 flowchart TB
     Start([Request Interceptor Entry]) --> GenKey[Generate cache key via generateKey]
     
@@ -121,3 +126,38 @@ flowchart TB
     style IsMustRevalidate fill:#ffe8d1
     style IsLoading fill:#fff4e1
     style IsCached fill:#d1ffe1
+```
+
+## Key Decision Points
+
+### URL Filtering
+- **ignoreUrls**: Blacklist of URLs that should never be cached
+- **allowUrls**: Whitelist of URLs (if configured, only these URLs are cached)
+
+### Cache States
+- **empty**: No cached data, will make network request
+- **stale**: Has expired data, will revalidate with conditional headers
+- **must-revalidate**: Must check with server before using
+- **loading**: Request already in progress (concurrent access)
+- **cached**: Fresh data available, returned immediately
+
+### Concurrent Requests
+When multiple requests for the same resource occur simultaneously:
+1. First request creates a deferred promise and starts loading
+2. Subsequent requests wait for the deferred promise
+3. All requests share the same response once loaded
+
+### Conditional Requests
+For stale data, the interceptor adds headers to check if data changed:
+- `If-None-Match`: With ETag value
+- `If-Modified-Since`: With last modified timestamp
+
+Server responds with:
+- `304 Not Modified`: Data unchanged, use cached version
+- `200 OK`: Data changed, new response provided
+
+## Related
+
+- [Response Interceptor](/diagrams/response-interceptor) - What happens after the request
+- [Cache States](/diagrams/cache-states) - Understanding cache states
+- [Debug Messages](/diagrams/debug-messages) - What each debug message means

@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { defineConfig } from 'vitepress';
 import llmstxt from 'vitepress-plugin-llms';
+import { withMermaid } from 'vitepress-plugin-mermaid';
 
 const read = (relative) =>
   readFileSync(resolve(process.cwd(), 'docs', '.vitepress', relative), 'utf-8');
@@ -49,7 +50,7 @@ console.log();
 console.log(chatGptLink.toString());
 console.log();
 
-export default defineConfig({
+export default withMermaid(defineConfig({
   // The language of the site. This will be used to set the `lang` attribute on the <html> element
   lang: 'en-US',
   // Title for the site. This will be displayed in the nav bar also used as the suffix for all page titles
@@ -306,6 +307,19 @@ export default defineConfig({
         ]
       },
       {
+        text: 'Flow Diagrams',
+        items: [
+          { text: 'Overview', link: '/diagrams' },
+          { text: 'Request/Response Flow', link: '/diagrams/overview' },
+          { text: 'Request Interceptor', link: '/diagrams/request-interceptor' },
+          { text: 'Response Interceptor', link: '/diagrams/response-interceptor' },
+          { text: 'Error Handler', link: '/diagrams/response-error-interceptor' },
+          { text: 'Cache States', link: '/diagrams/cache-states' },
+          { text: 'Debug Messages', link: '/diagrams/debug-messages' },
+          { text: 'Header Interpreter', link: '/diagrams/header-interpreter' }
+        ]
+      },
+      {
         text: 'Config',
         items: [
           { text: 'Global Configuration', link: '/config' },
@@ -327,5 +341,11 @@ export default defineConfig({
     },
 
     typographer: true
+  },
+
+  // Mermaid plugin configuration
+  mermaid: {
+    // Optional: customize mermaid options
+    // theme: 'default'
   }
-});
+}));

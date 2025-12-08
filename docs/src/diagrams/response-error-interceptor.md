@@ -1,3 +1,8 @@
+# Response Error Handler Flow
+
+This diagram shows the detailed flow through the response interceptor when errors occur.
+
+```mermaid
 flowchart TB
     Start([Response Interceptor Entry<br/>onRejected - Error Handler]) --> CheckAxiosError{Is Axios error<br/>& config exists?}
     
@@ -77,3 +82,52 @@ flowchart TB
     style RejectWaiting2 fill:#ffe1e1
     style RejectWaiting3 fill:#ffe1e1
     style ThrowError fill:#ffe1e1
+```
+
+## Key Points
+
+### staleIfError
+Allows returning stale cached data instead of throwing an error:
+- Can be `true`, a number (milliseconds), or a function
+- Checks if stale data exists and is still within acceptable time window
+- Server `Cache-Control: stale-if-error` directive can also control this
+
+### Error Types
+
+#### Non-Axios Errors
+- Not an Axios error or missing config
+- Cannot be handled, error is re-thrown
+- May leave storage in loading state
+
+#### Axios Errors Without Cache
+- Error occurred but caching not enabled
+- Error is re-thrown normally
+
+#### Cached Errors (Recoverable)
+- Error occurred during revalidation of stale data
+- If `staleIfError` allows, return the stale data
+- Otherwise, reject cache and throw error
+
+### Cancelled Requests
+Special handling for `ERR_CANCELED`:
+- If state is already `cached`, keep the cache
+- Otherwise, clean up the loading state
+
+### Deferred Handling
+
+#### On Success (staleIfError returns data)
+- Deferred is resolved
+- Waiting requests get the stale data
+- Cache state is marked as `stale`
+
+#### On Failure
+- Deferred is rejected
+- Waiting requests are notified of failure
+- Cache is cleaned up
+- Error is thrown
+
+## Related
+
+- [Response Interceptor](/diagrams/response-interceptor) - Success path handling
+- [Request Interceptor](/diagrams/request-interceptor) - How requests start
+- [Cache States](/diagrams/cache-states) - State transitions
