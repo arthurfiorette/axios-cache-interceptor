@@ -366,7 +366,7 @@ describe('Request Interceptor', () => {
     const req1 = await axios.get('url');
 
     assert.deepEqual(Object.assign({}, req1.request.config.headers), {
-      [Header.CacheControl]: 'no-cache, no-store, must-revalidate',
+      [Header.CacheControl]: 'no-cache, no-store, must-revalidate, max-age=0',
       Accept: 'application/json, text/plain, */*',
       'Content-Type': undefined,
       [Header.Pragma]: 'no-cache',

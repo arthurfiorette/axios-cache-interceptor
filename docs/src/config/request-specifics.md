@@ -119,9 +119,15 @@ This option solves this by including predefined headers in the request that inst
 
 Headers included:
 
-- `Cache-Control: no-cache, no-store, must-revalidate`
+- `Cache-Control: no-cache, no-store, must-revalidate, max-age=0`
 - `Pragma: no-cache`
 - `Expires: 0`
+
+::: info Safari Compatibility
+
+The `max-age=0` directive was added to ensure compatibility with Safari (including iOS Safari), which has historically been more aggressive with caching and may not fully respect the `no-cache` directive alone. This combination of headers ensures reliable cache prevention across all major browsers.
+
+:::
 
 ::: tip Alternative
 
