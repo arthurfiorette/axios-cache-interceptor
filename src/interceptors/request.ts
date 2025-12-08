@@ -162,11 +162,8 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
       // others waiting for it.
       def.catch(() => undefined);
 
-      // Set a timeout to automatically clean up the waiting entry to prevent memory leaks
-      // when entries are evicted from storage before the response completes.
-      // The timeout logic is handled inside createWaitingTimeout
-      const requestId = config.id;
-      const timeoutId = createWaitingTimeout(axios, requestId, def, config);
+      // Prevent memory leaks when cache entries are evicted before responses complete
+      const timeoutId = createWaitingTimeout(axios, config.id, def, config);
 
       // Clear the timeout if the deferred is resolved/rejected to avoid unnecessary cleanup
       // Only add the finally handler if a timeout was actually created
