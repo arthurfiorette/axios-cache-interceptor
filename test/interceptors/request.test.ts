@@ -225,12 +225,12 @@ describe('Request Interceptor', () => {
     });
 
     // Expects that the cache is empty (deleted above) and
-    // it still has a waiting entry.
+    // the waiting entry has been cleaned up after the request completed.
     const { state } = await axios.storage.get(ID);
     assert.equal(state, 'empty');
-    assert.ok(axios.waiting.get(ID));
+    assert.equal(axios.waiting.get(ID), undefined);
 
-    // This line should throw an error if this bug isn't fixed.
+    // The second request should work fine and cache the result.
     await axios.get('url', { id: ID });
 
     const { state: newState } = await axios.storage.get(ID);

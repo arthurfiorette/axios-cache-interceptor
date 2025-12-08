@@ -113,6 +113,20 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
         });
       }
 
+      // Clean up the waiting map if the cache was removed (e.g., due to maxEntries eviction)
+      const waiting = axios.waiting.get(response.id);
+      if (waiting) {
+        waiting.resolve();
+        axios.waiting.delete(response.id);
+
+        if (__ACI_DEV__) {
+          axios.debug({
+            id: response.id,
+            msg: 'Cleaned up waiting entry for non-loading cache state'
+          });
+        }
+      }
+
       return response;
     }
 
