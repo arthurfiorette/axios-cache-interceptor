@@ -66,7 +66,8 @@ export function buildMemoryStorage(
       if (maxEntries && storage.data.size >= maxEntries) {
         storage.cleanup();
 
-        if (storage.data.size < maxEntries) {
+        // After cleanup, if still at or over capacity, manually evict entries
+        if (storage.data.size >= maxEntries) {
           for (const [key] of sortedEntries()) {
             storage.data.delete(key);
 
