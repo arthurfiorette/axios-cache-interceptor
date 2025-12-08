@@ -7,7 +7,9 @@ describe('Waiting Memory Leak', () => {
   it('should clean up waiting map when entry is evicted from storage due to maxEntries', async () => {
     // Create storage with maxEntries=2 to force eviction
     const storage = buildMemoryStorage(false, false, 2);
-    const axios = mockAxios({ storage, waitingTimeout: 100 });
+    const axios = mockAxios({ storage });
+    // Set a timeout on the axios instance for testing the cleanup mechanism
+    axios.defaults.timeout = 100;
 
     // Make 3 concurrent requests to different URLs
     // The first request should be evicted when the third one starts
@@ -31,7 +33,8 @@ describe('Waiting Memory Leak', () => {
   it('should clean up waiting map when loading entry is evicted during concurrent requests', async () => {
     // Create storage with maxEntries=1 to force aggressive eviction
     const storage = buildMemoryStorage(false, false, 1);
-    const axios = mockAxios({ storage, waitingTimeout: 100 });
+    const axios = mockAxios({ storage });
+    axios.defaults.timeout = 100;
 
     // Start two concurrent requests
     const promise1 = axios.get('url1');
@@ -56,7 +59,8 @@ describe('Waiting Memory Leak', () => {
 
   it('should handle multiple waves of concurrent requests with maxEntries', async () => {
     const storage = buildMemoryStorage(false, false, 2);
-    const axios = mockAxios({ storage, waitingTimeout: 100 });
+    const axios = mockAxios({ storage });
+    axios.defaults.timeout = 100;
 
     // First wave of requests
     await Promise.all([axios.get('url1'), axios.get('url2'), axios.get('url3')]);
