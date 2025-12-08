@@ -81,10 +81,13 @@ export interface CacheRequestConfig<R = any, D = any> extends AxiosRequestConfig
    *
    * Setting the `cache` property to `false` will disable the cache for this request.
    *
+   * **Note:** Setting `cache: false` is deprecated. Please use `cache: { enabled: false }` instead.
+   *
    * This does not mean that the current cache will be excluded from the storage.
    *
    * @default 'inherits from global configuration'
    * @see https://axios-cache-interceptor.js.org/config/response-object#cache
+   * @deprecated Setting `cache: false` is deprecated, use `cache: { enabled: false }` instead
    */
   cache?: false | Partial<CacheProperties<R, D>>;
 }

@@ -19,7 +19,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
       if (__ACI_DEV__) {
         axios.debug({
           id: config.id,
-          msg: 'Ignoring cache because config.cache === false',
+          msg: 'Ignoring cache because config.cache === false (deprecated, use cache.enabled = false)',
           data: config
         });
       }
@@ -29,6 +29,19 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
 
     // merge defaults with per request configuration
     config.cache = { ...axios.defaults.cache, ...config.cache };
+
+    // Check if cache is disabled via enabled flag
+    if (config.cache.enabled === false) {
+      if (__ACI_DEV__) {
+        axios.debug({
+          id: config.id,
+          msg: 'Ignoring cache because config.cache.enabled === false',
+          data: config
+        });
+      }
+
+      return config;
+    }
 
     // ignoreUrls (blacklist)
     if (
