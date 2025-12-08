@@ -213,6 +213,22 @@ export interface CacheProperties<R = unknown, D = unknown> {
           | CachedStorageValue
           | StaleStorageValue
       ) => void | Promise<void>);
+
+  /**
+   * The maximum time (in milliseconds) that a waiting entry can remain in the waiting map
+   * before being automatically cleaned up. This prevents memory leaks when cache entries
+   * are evicted before their responses complete.
+   *
+   * This timeout is independent of the axios request timeout and specifically controls
+   * how long deferred promises remain in the waiting map.
+   *
+   * If not set, falls back to `config.timeout`. If neither is set, no timeout is applied
+   * and waiting entries will only be cleaned up when their responses complete normally.
+   *
+   * @default undefined (falls back to config.timeout, then no timeout)
+   * @see https://axios-cache-interceptor.js.org/config/request-specifics#cache-waitingtimeout
+   */
+  waitingTimeout?: number;
 }
 
 /**

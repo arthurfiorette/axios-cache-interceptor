@@ -3,6 +3,7 @@ import type { AxiosCacheInstance, CacheAxiosResponse } from '../cache/axios.js';
 import { Header } from '../header/headers.js';
 import type { CachedResponse, CachedStorageValue, LoadingStorageValue } from '../storage/types.js';
 import { regexOrStringMatch } from '../util/cache-predicate.js';
+import { createWaitingTimeout } from '../util/waiting-timeout.js';
 import type { RequestInterceptor } from './build.js';
 import {
   type ConfigWithCache,
@@ -163,25 +164,32 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
 
       // Set a timeout to automatically clean up the waiting entry to prevent memory leaks
       // when entries are evicted from storage before the response completes.
-      // Use the axios timeout if configured, otherwise use a reasonable default.
-      const timeout = config.timeout || 30000; // Default 30 seconds if no timeout configured
-      const timeoutId = setTimeout(() => {
-        const waiting = axios.waiting.get(config.id!);
-        if (waiting === def) {
-          waiting.reject(new Error('Request timeout - waiting entry cleaned up'));
-          axios.waiting.delete(config.id!);
+      // Prefer waitingTimeout, then config.timeout, then no timeout (Infinity)
+      // The timeout should match the request timeout to avoid premature cleanup
+      // Note: axios defaults timeout to 0, which means no timeout
+      const waitingTimeout = config.cache.waitingTimeout;
+      const configTimeout = config.timeout;
+      const timeout =
+        waitingTimeout !== undefined
+          ? waitingTimeout
+          : configTimeout && configTimeout > 0
+            ? configTimeout
+            : Infinity;
 
-          if (__ACI_DEV__) {
-            axios.debug({
-              id: config.id,
-              msg: 'Cleaned up waiting entry due to timeout'
-            });
+      // Only set up the timeout if it's a positive number
+      let timeoutId: ReturnType<typeof setTimeout> | undefined;
+      if (timeout !== Infinity && timeout > 0) {
+        // Store the id outside the timeout callback to allow earlier GC of config
+        const requestId = config.id;
+        timeoutId = createWaitingTimeout(axios, requestId, def, timeout);
+
+        // Clear the timeout if the deferred is resolved/rejected to avoid unnecessary cleanup
+        def.finally(() => {
+          if (timeoutId !== undefined) {
+            clearTimeout(timeoutId);
           }
-        }
-      }, timeout);
-
-      // Clear the timeout if the deferred is resolved/rejected to avoid unnecessary cleanup
-      def.finally(() => clearTimeout(timeoutId));
+        });
+      }
 
       await axios.storage.set(
         config.id,
