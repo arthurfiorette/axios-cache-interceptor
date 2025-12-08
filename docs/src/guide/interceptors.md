@@ -5,17 +5,18 @@ inconsistencies. Which is explained in the next section.
 
 ## TL;DR
 
-- **Request** interceptors registered before `setupCache()` are ran before and
-  registrations made after are ran after.
-- **Response** interceptors registered before `setupCache()` are ran **after** and
-  registrations made after are ran **before**.
+- **Request** interceptors registered **before** `setupCache()` run **before** the cache
+  interceptor; those registered **after** `setupCache()` run **after** the cache interceptor.
+- **Response** interceptors registered **before** `setupCache()` run **after** the cache
+  interceptor; those registered **after** `setupCache()` run **before** the cache
+  interceptor.
 
 ## Explanation
 
 Axios interceptors are ran differently for the request and response ones.
 
-- **Request interceptors** are FILO _(First In Last Out)_
-- **Response interceptors** are FIFO _(First In First Out)_
+- **Request interceptors** are executed in **reverse order** - the last interceptor added runs first (LIFO - _Last In First Out_)
+- **Response interceptors** are executed in **normal order** - the first interceptor added runs first (FIFO - _First In First Out_)
 
 As explained better in the
 [Axios documentation](https://github.com/axios/axios#interceptors) and in
