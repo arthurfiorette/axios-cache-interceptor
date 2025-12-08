@@ -39,11 +39,7 @@ describe('Waiting Memory Leak', () => {
     assert.ok(result2.data);
 
     // The waiting map should be empty
-    assert.equal(
-      axios.waiting.size,
-      0,
-      `waiting map should be empty but has ${axios.waiting.size} entries`
-    );
+    assert.equal(axios.waiting.size, 0, 'waiting map should be empty but has entries');
   });
 
   it('should handle multiple waves of concurrent requests with maxEntries', async () => {
