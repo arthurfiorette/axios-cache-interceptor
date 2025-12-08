@@ -3594,6 +3594,7 @@ packages:
 
   try@1.0.2:
     resolution: {integrity: sha512-K30PGZQcpGNlwQaKPfKL4CkKY1LzRrxapVgtayJhpMNi6/w9Cr3Hze2m+DMUQnn12MOhm2piAoAJltfcvL1EOw==}
+    deprecated: Broken CJS exports, please upgrade to 1.0.3
 
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
