@@ -1,9 +1,8 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.2.4/schema.json",
+  "$schema": "node_modules/@biomejs/biome/configuration_schema.json",
   "extends": ["@arthurfiorette/biomejs-config"],
   "files": {
     "includes": [
-      "**",
       "!**/build/**/*",
       "!**/dist/**/*",
       "!**/dev/**/*",

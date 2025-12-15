@@ -61,7 +61,7 @@ describe('MemoryStorage', () => {
     assert.notEqual(storage.data.get('key'), null);
     assert.equal(storage.data.get('key')!.state, 'cached');
     assert.notEqual(storage.data.get('key')!.data, null);
-    assert.equal(storage.data.get('key')!.data!.data, 'data');
+    assert.equal(storage.data.get('key').data!.data, 'data');
 
     const result = (await storage.get('key')) as CachedStorageValue;
 
