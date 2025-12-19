@@ -282,7 +282,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
         // 1. An actual error occurred (network error, 4xx, 5xx, etc.) - should propagate
         // 2. A cancellation error (ERR_CANCELED) - should retry (don't propagate)
         // 3. The response wasn't cached due to cache predicate or headers (err will be undefined) - should retry
-        
+
         // If err is an axios error with ERR_CANCELED, the first request was cancelled
         // but that shouldn't affect other waiting requests - they should retry
         if (err && typeof err === 'object' && 'code' in err && err.code === 'ERR_CANCELED') {
@@ -303,7 +303,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
           return onFulfilled!(config);
         }
 
-        // If err is undefined or not an error, it means the first request succeeded 
+        // If err is undefined or not an error, it means the first request succeeded
         // but wasn't cached, so we should retry
         if (!err) {
           if (__ACI_DEV__) {

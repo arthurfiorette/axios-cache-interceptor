@@ -312,7 +312,8 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
         id,
         config,
         // Do not clear cache if this request is cached, but the request was cancelled before returning the cached response
-        error.code !== 'ERR_CANCELED' || (error.code === 'ERR_CANCELED' && cache.state !== 'cached'),
+        error.code !== 'ERR_CANCELED' ||
+          (error.code === 'ERR_CANCELED' && cache.state !== 'cached'),
         error
       );
 

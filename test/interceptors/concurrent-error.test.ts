@@ -1,5 +1,5 @@
 import assert from 'node:assert';
-import { describe, it, mock } from 'node:test';
+import { describe, it } from 'node:test';
 import Axios, { AxiosError } from 'axios';
 import { setupCache } from '../../src/cache/create.js';
 
@@ -13,7 +13,7 @@ describe('Concurrent Request Error Handling', () => {
     // Mock adapter that fails with 404 on first request
     axios.defaults.adapter = async (config) => {
       requestCount++;
-      
+
       throw new AxiosError(
         'Not Found',
         '404',
@@ -31,9 +31,7 @@ describe('Concurrent Request Error Handling', () => {
     };
 
     // Fire 10 concurrent requests
-    const requests = Array.from({ length: 10 }, () =>
-      axios.get('http://test.com/resource')
-    );
+    const requests = Array.from({ length: 10 }, () => axios.get('http://test.com/resource'));
 
     // All requests should fail
     const results = await Promise.allSettled(requests);
@@ -60,7 +58,7 @@ describe('Concurrent Request Error Handling', () => {
     // Mock adapter that fails with 400 on first request
     axios.defaults.adapter = async (config) => {
       requestCount++;
-      
+
       throw new AxiosError(
         'Bad Request',
         '400',
@@ -78,9 +76,7 @@ describe('Concurrent Request Error Handling', () => {
     };
 
     // Fire 100 concurrent requests to simulate the issue scenario
-    const requests = Array.from({ length: 100 }, () =>
-      axios.get('http://test.com/resource')
-    );
+    const requests = Array.from({ length: 100 }, () => axios.get('http://test.com/resource'));
 
     // All requests should fail
     const results = await Promise.allSettled(requests);
@@ -107,19 +103,12 @@ describe('Concurrent Request Error Handling', () => {
     // Mock adapter that fails with network error
     axios.defaults.adapter = async (config) => {
       requestCount++;
-      
-      throw new AxiosError(
-        'Network Error',
-        'ERR_NETWORK',
-        config,
-        { config }
-      );
+
+      throw new AxiosError('Network Error', 'ERR_NETWORK', config, { config });
     };
 
     // Fire 10 concurrent requests
-    const requests = Array.from({ length: 10 }, () =>
-      axios.get('http://test.com/resource')
-    );
+    const requests = Array.from({ length: 10 }, () => axios.get('http://test.com/resource'));
 
     // All requests should fail
     const results = await Promise.allSettled(requests);
@@ -146,7 +135,7 @@ describe('Concurrent Request Error Handling', () => {
     // Mock adapter that always fails
     axios.defaults.adapter = async (config) => {
       requestCount++;
-      
+
       throw new AxiosError(
         'Not Found',
         '404',
@@ -164,22 +153,18 @@ describe('Concurrent Request Error Handling', () => {
     };
 
     // First batch of concurrent requests
-    const batch1 = Array.from({ length: 5 }, () =>
-      axios.get('http://test.com/resource')
-    );
+    const batch1 = Array.from({ length: 5 }, () => axios.get('http://test.com/resource'));
 
     await Promise.allSettled(batch1);
-    
+
     const requestCountAfterBatch1 = requestCount;
     assert.equal(requestCountAfterBatch1, 1, 'First batch should make 1 request');
 
     // Second batch after first failed - should retry with new request
-    const batch2 = Array.from({ length: 5 }, () =>
-      axios.get('http://test.com/resource')
-    );
+    const batch2 = Array.from({ length: 5 }, () => axios.get('http://test.com/resource'));
 
     await Promise.allSettled(batch2);
-    
+
     // Second batch should also make only 1 request (deduplicated among themselves)
     assert.equal(requestCount, 2, 'Second batch should make 1 additional request');
   });
