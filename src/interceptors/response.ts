@@ -18,7 +18,8 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
   const rejectResponse = async (
     responseId: string,
     config: CacheRequestConfig,
-    clearCache: boolean
+    clearCache: boolean,
+    error?: unknown
   ) => {
     // Updates the cache to empty to prevent infinite loading state
     if (clearCache) {
@@ -29,7 +30,7 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
     const deferred = axios.waiting.get(responseId);
 
     if (deferred) {
-      deferred.reject();
+      deferred.reject(error);
       axios.waiting.delete(responseId);
     }
   };
@@ -286,7 +287,7 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
       }
 
       // Rejects all other requests waiting for this response
-      await rejectResponse(id, config, true);
+      await rejectResponse(id, config, true, error);
 
       throw error;
     }
@@ -311,7 +312,8 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
         id,
         config,
         // Do not clear cache if this request is cached, but the request was cancelled before returning the cached response
-        error.code !== 'ERR_CANCELED' || (error.code === 'ERR_CANCELED' && cache.state !== 'cached')
+        error.code !== 'ERR_CANCELED' || (error.code === 'ERR_CANCELED' && cache.state !== 'cached'),
+        error
       );
 
       throw error;
@@ -396,7 +398,7 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
     }
 
     // Rejects all other requests waiting for this response
-    await rejectResponse(id, config, true);
+    await rejectResponse(id, config, true, error);
 
     throw error;
   };
