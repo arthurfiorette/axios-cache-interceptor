@@ -1,7 +1,41 @@
 import assert from 'node:assert';
 import { describe, it } from 'node:test';
 import Axios, { AxiosError } from 'axios';
+import type { InternalCacheRequestConfig } from '../../src/cache/axios.js';
 import { setupCache } from '../../src/cache/create.js';
+
+/**
+ * Helper function to create a mock adapter that always throws an AxiosError
+ */
+function createErrorAdapter(
+  statusCode: number,
+  statusText: string,
+  errorCode?: string,
+  onRequest?: () => void
+) {
+  return async (config: InternalCacheRequestConfig) => {
+    onRequest?.();
+
+    const error = new AxiosError(
+      statusText,
+      errorCode || statusCode.toString(),
+      config,
+      { config },
+      errorCode
+        ? undefined
+        : {
+            data: { error: statusText },
+            status: statusCode,
+            statusText,
+            headers: {},
+            config,
+            request: { config }
+          }
+    );
+
+    throw error;
+  };
+}
 
 describe('Concurrent Request Error Handling', () => {
   it('All deduplicated requests should fail when first request fails with 4xx', async () => {
@@ -10,25 +44,10 @@ describe('Concurrent Request Error Handling', () => {
 
     let requestCount = 0;
 
-    // Mock adapter that fails with 404 on first request
-    axios.defaults.adapter = async (config) => {
+    // Mock adapter that fails with 404
+    axios.defaults.adapter = createErrorAdapter(404, 'Not Found', undefined, () => {
       requestCount++;
-
-      throw new AxiosError(
-        'Not Found',
-        '404',
-        config,
-        { config },
-        {
-          data: { error: 'Not found' },
-          status: 404,
-          statusText: 'Not Found',
-          headers: {},
-          config,
-          request: { config }
-        }
-      );
-    };
+    });
 
     // Fire 10 concurrent requests
     const requests = Array.from({ length: 10 }, () => axios.get('http://test.com/resource'));
@@ -55,25 +74,10 @@ describe('Concurrent Request Error Handling', () => {
 
     let requestCount = 0;
 
-    // Mock adapter that fails with 400 on first request
-    axios.defaults.adapter = async (config) => {
+    // Mock adapter that fails with 400
+    axios.defaults.adapter = createErrorAdapter(400, 'Bad Request', undefined, () => {
       requestCount++;
-
-      throw new AxiosError(
-        'Bad Request',
-        '400',
-        config,
-        { config },
-        {
-          data: { error: 'Bad request' },
-          status: 400,
-          statusText: 'Bad Request',
-          headers: {},
-          config,
-          request: { config }
-        }
-      );
-    };
+    });
 
     // Fire 100 concurrent requests to simulate the issue scenario
     const requests = Array.from({ length: 100 }, () => axios.get('http://test.com/resource'));
@@ -101,11 +105,9 @@ describe('Concurrent Request Error Handling', () => {
     let requestCount = 0;
 
     // Mock adapter that fails with network error
-    axios.defaults.adapter = async (config) => {
+    axios.defaults.adapter = createErrorAdapter(0, 'Network Error', 'ERR_NETWORK', () => {
       requestCount++;
-
-      throw new AxiosError('Network Error', 'ERR_NETWORK', config, { config });
-    };
+    });
 
     // Fire 10 concurrent requests
     const requests = Array.from({ length: 10 }, () => axios.get('http://test.com/resource'));
@@ -133,24 +135,9 @@ describe('Concurrent Request Error Handling', () => {
     let requestCount = 0;
 
     // Mock adapter that always fails
-    axios.defaults.adapter = async (config) => {
+    axios.defaults.adapter = createErrorAdapter(404, 'Not Found', undefined, () => {
       requestCount++;
-
-      throw new AxiosError(
-        'Not Found',
-        '404',
-        config,
-        { config },
-        {
-          data: { error: 'Not found' },
-          status: 404,
-          statusText: 'Not Found',
-          headers: {},
-          config,
-          request: { config }
-        }
-      );
-    };
+    });
 
     // First batch of concurrent requests
     const batch1 = Array.from({ length: 5 }, () => axios.get('http://test.com/resource'));

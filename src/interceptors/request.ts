@@ -332,8 +332,9 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
           });
         }
 
-        // Instead of retrying (which would cause multiple network requests for deduplicated calls),
-        // we propagate the error to all waiting requests so they fail together.
+        // Previously, all waiting requests would retry individually, causing multiple network calls.
+        // Now, instead of retrying (which would defeat deduplication), we propagate the error
+        // to all waiting requests so they fail together with the same error.
         throw err;
       }
     } else {
