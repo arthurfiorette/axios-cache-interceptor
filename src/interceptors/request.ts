@@ -278,63 +278,17 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
 
         cachedResponse = state.data;
       } catch (err) {
-        // The deferred was rejected. This can happen in several scenarios:
-        // 1. An actual error occurred (network error, 4xx, 5xx, etc.) - should propagate
-        // 2. A cancellation error (ERR_CANCELED) - should retry (don't propagate)
-        // 3. The response wasn't cached due to cache predicate or headers (err will be undefined) - should retry
-
-        // If err is an axios error with ERR_CANCELED, the first request was cancelled
-        // but that shouldn't affect other waiting requests - they should retry
-        if (err && typeof err === 'object' && 'code' in err && err.code === 'ERR_CANCELED') {
-          if (__ACI_DEV__) {
-            axios.debug({
-              id: config.id,
-              msg: 'Deferred rejected due to cancellation, requesting again'
-            });
-          }
-
-          // Hydrates any UI temporarily, if cache is available
-          /* c8 ignore start */
-          if (cache.data) {
-            await config.cache.hydrate?.(cache);
-          }
-          /* c8 ignore end */
-
-          return onFulfilled!(config);
-        }
-
-        // If err is undefined or not an error, it means the first request succeeded
-        // but wasn't cached, so we should retry
-        if (!err) {
-          if (__ACI_DEV__) {
-            axios.debug({
-              id: config.id,
-              msg: 'Deferred rejected without error (response not cached), requesting again'
-            });
-          }
-
-          // Hydrates any UI temporarily, if cache is available
-          /* c8 ignore start */
-          if (cache.data) {
-            await config.cache.hydrate?.(cache);
-          }
-          /* c8 ignore end */
-
-          return onFulfilled!(config);
-        }
-
-        // For actual errors (network errors, 4xx, 5xx, etc.), propagate them to all waiting requests
+        // The deferred was rejected by the first request that encountered an error.
+        // All deduplicated requests waiting on this deferred should fail with the same error
+        // to maintain consistency and prevent multiple network retries for the same resource.
         if (__ACI_DEV__) {
           axios.debug({
             id: config.id,
-            msg: 'Deferred rejected with error, propagating to all waiting requests',
+            msg: 'Deferred rejected, propagating error to all waiting requests',
             data: err
           });
         }
 
-        // Previously, all waiting requests would retry individually, causing multiple network calls.
-        // Now, instead of retrying (which would defeat deduplication), we propagate the error
-        // to all waiting requests so they fail together with the same error.
         throw err;
       }
     } else {

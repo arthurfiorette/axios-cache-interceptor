@@ -35,6 +35,23 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
     }
   };
 
+  /**
+   * Resolves the deferred for requests that succeeded but were not cached.
+   * Waiting requests will check storage and make their own requests if needed.
+   */
+  const resolveNonCachedResponse = async (responseId: string, config: CacheRequestConfig) => {
+    // Clear the cache to prevent stale data
+    await axios.storage.remove(responseId, config);
+
+    // Resolve the deferred, if present
+    const deferred = axios.waiting.get(responseId);
+
+    if (deferred) {
+      deferred.resolve();
+      axios.waiting.delete(responseId);
+    }
+  };
+
   const onFulfilled: ResponseInterceptor['onFulfilled'] = async (response) => {
     // When response.config is not present, the response is indeed a error.
     if (!response?.config) {
@@ -127,7 +144,7 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
       !cache.data &&
       !(await testCachePredicate(response, cacheConfig.cachePredicate))
     ) {
-      await rejectResponse(response.id, config, true);
+      await resolveNonCachedResponse(response.id, config);
 
       if (__ACI_DEV__) {
         axios.debug({
@@ -165,7 +182,7 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
 
       // Cache should not be used
       if (expirationTime === 'dont cache') {
-        await rejectResponse(response.id, config, true);
+        await resolveNonCachedResponse(response.id, config);
 
         if (__ACI_DEV__) {
           axios.debug({
