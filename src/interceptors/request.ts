@@ -278,24 +278,18 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
 
         cachedResponse = state.data;
       } catch (err) {
+        // The deferred was rejected by the first request that encountered an error.
+        // All deduplicated requests waiting on this deferred should fail with the same error
+        // to maintain consistency and prevent multiple network retries for the same resource.
         if (__ACI_DEV__) {
           axios.debug({
             id: config.id,
-            msg: 'Deferred rejected, requesting again',
+            msg: 'Deferred rejected, propagating error to all waiting requests',
             data: err
           });
         }
 
-        // Hydrates any UI temporarily, if cache is available
-        /* c8 ignore start */
-        if (cache.data) {
-          await config.cache.hydrate?.(cache);
-        }
-        /* c8 ignore end */
-
-        // The deferred is rejected when the request that we are waiting rejects its cache.
-        // In this case, we need to redo the request all over again.
-        return onFulfilled!(config);
+        throw err;
       }
     } else {
       cachedResponse = cache.data;
