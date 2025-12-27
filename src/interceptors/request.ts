@@ -236,7 +236,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
       // The override option is meant to bypass cache and get fresh data, not revalidate existing cache.
       // Adding conditional headers would cause the server to return 304 Not Modified instead of fresh data.
       if ((cache.state === 'stale' || cache.state === 'must-revalidate') && !overrideCache) {
-        updateStaleRequest(cache, config as ConfigWithCache<unknown>);
+        updateStaleRequest(cache, { ...config, cache: config.cache });
 
         if (__ACI_DEV__) {
           axios.debug({

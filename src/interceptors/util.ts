@@ -1,5 +1,9 @@
 import type { Method } from 'axios';
-import type { CacheAxiosResponse, CacheRequestConfig } from '../cache/axios.js';
+import type {
+  CacheAxiosResponse,
+  CacheRequestConfig,
+  InternalCacheRequestConfig
+} from '../cache/axios.js';
 import type { CacheProperties } from '../cache/cache.js';
 import { Header } from '../header/headers.js';
 import type {
@@ -29,7 +33,7 @@ export function isMethodIn(
   return methodList.some((method) => method === requestMethod);
 }
 
-export interface ConfigWithCache<D> extends CacheRequestConfig<unknown, D> {
+export interface ConfigWithCache<D> extends InternalCacheRequestConfig<unknown, D> {
   cache: Partial<CacheProperties<unknown, D>>;
 }
 
@@ -41,25 +45,24 @@ export function updateStaleRequest<D>(
   cache: StaleStorageValue | MustRevalidateStorageValue,
   config: ConfigWithCache<D>
 ): void {
-  config.headers ||= {};
-
   const { etag, modifiedSince } = config.cache;
 
   if (etag) {
-    const etagValue = etag === true ? (cache.data?.headers[Header.ETag] as unknown) : etag;
+    const etagValue = etag === true ? cache.data?.headers[Header.ETag] : etag;
 
     if (etagValue) {
-      config.headers[Header.IfNoneMatch] = etagValue;
+      config.headers.set(Header.IfNoneMatch, etagValue);
     }
   }
 
   if (modifiedSince) {
-    config.headers[Header.IfModifiedSince] =
+    config.headers.set(
+      Header.IfModifiedSince,
+      // If last-modified is not present, use the createdAt timestamp
       modifiedSince === true
-        ? // If last-modified is not present, use the createdAt timestamp
-          (cache.data.headers[Header.LastModified] as unknown) ||
-          new Date(cache.createdAt).toUTCString()
-        : modifiedSince.toUTCString();
+        ? cache.data.headers[Header.LastModified] || new Date(cache.createdAt).toUTCString()
+        : modifiedSince.toUTCString()
+    );
   }
 }
 
