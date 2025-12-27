@@ -1,4 +1,4 @@
-const http = require('http');
+const http = require('node:http');
 const axios = require('axios');
 const { setupCache } = require('./dev/index.cjs');
 
@@ -24,7 +24,7 @@ server.listen(5000);
 // Client making requests with different tokens
 const cachedAxios = setupCache(axios.create());
 
-const server2 = http.createServer(async (req, res) => {
+const server2 = http.createServer(async (_req, res) => {
   const authHeader = Math.random() < 0.5 ? 'Bearer 123' : 'Bearer 456';
 
   const response = await cachedAxios.get('http://localhost:5000', {
