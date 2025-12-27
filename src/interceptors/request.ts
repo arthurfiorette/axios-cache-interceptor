@@ -6,12 +6,7 @@ import { Header } from '../header/headers.js';
 import type { CachedResponse, LoadingStorageValue } from '../storage/types.js';
 import { regexOrStringMatch } from '../util/cache-predicate.js';
 import type { RequestInterceptor } from './build.js';
-import {
-  type ConfigWithCache,
-  createValidateStatus,
-  isMethodIn,
-  updateStaleRequest
-} from './util.js';
+import { createValidateStatus, isMethodIn, updateStaleRequest } from './util.js';
 
 export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInterceptor {
   const onFulfilled: RequestInterceptor['onFulfilled'] = async (config) => {
@@ -110,9 +105,13 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
     // shouldn't be cached an therefore neither in the browser.
     // https://stackoverflow.com/a/2068407
     if (config.cache.cacheTakeover) {
-      config.headers[Header.CacheControl] ??= 'no-cache, no-store, must-revalidate, max-age=0';
-      config.headers[Header.Pragma] ??= 'no-cache';
-      config.headers[Header.Expires] ??= '0';
+      config.headers.set(
+        Header.CacheControl,
+        'no-cache, no-store, must-revalidate, max-age=0',
+        false
+      );
+      config.headers.set(Header.Pragma, 'no-cache', false);
+      config.headers.set(Header.Expires, '0', false);
     }
 
     if (!isMethodIn(config.method, config.cache.methods)) {
@@ -232,7 +231,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
       // The override option is meant to bypass cache and get fresh data, not revalidate existing cache.
       // Adding conditional headers would cause the server to return 304 Not Modified instead of fresh data.
       if ((cache.state === 'stale' || cache.state === 'must-revalidate') && !overrideCache) {
-        updateStaleRequest(cache, config as ConfigWithCache<unknown>);
+        updateStaleRequest(cache, { ...config, cache: config.cache });
 
         if (__ACI_DEV__) {
           axios.debug({

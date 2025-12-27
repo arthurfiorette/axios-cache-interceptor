@@ -377,10 +377,23 @@ describe('Request Interceptor', () => {
       cache: { cacheTakeover: false }
     });
 
-    const headers2 = req2.request.config.headers as Record<string, string>;
-    assert.equal(headers2[Header.CacheControl], undefined);
-    assert.equal(headers2[Header.Pragma], undefined);
-    assert.equal(headers2[Header.Expires], undefined);
+    const headers2 = req2.request.config.headers;
+    assert.equal(headers2.get(Header.CacheControl), undefined);
+    assert.equal(headers2.get(Header.Pragma), undefined);
+    assert.equal(headers2.get(Header.Expires), undefined);
+
+    const req3 = await axios.get('url3', {
+      cache: { cacheTakeover: true },
+      headers: { PRAGma: 'my-custom-value' }
+    });
+
+    const headers3 = req3.request.config.headers;
+    assert.equal(
+      headers3.get(Header.CacheControl),
+      'no-cache, no-store, must-revalidate, max-age=0'
+    );
+    assert.equal(headers3.get(Header.Pragma), 'my-custom-value');
+    assert.equal(headers3.get(Header.Expires), '0');
   });
 
   it('ensure cached data is not transformed', async () => {

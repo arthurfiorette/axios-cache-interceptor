@@ -1,3 +1,5 @@
+import type { AxiosRequestHeaders, AxiosResponseHeaders } from 'axios';
+
 /**
  * Extracts specified header values from request headers.
  * Generic utility for extracting a subset of headers.
@@ -7,13 +9,13 @@
  * @returns Object with extracted header values
  */
 export function extractHeaders(
-  requestHeaders: Record<string, any>,
+  requestHeaders: AxiosRequestHeaders | AxiosResponseHeaders,
   headerNames: string[]
-): Record<string, string> {
-  const result: Record<string, string> = {};
+): Record<string, string | undefined> {
+  const result: Record<string, string | undefined> = {};
 
   for (const name of headerNames) {
-    result[name] = String(requestHeaders[name.toLowerCase()] || '');
+    result[name] = requestHeaders.get(name)?.toString();
   }
 
   return result;

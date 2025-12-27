@@ -2,8 +2,8 @@ import type {
   AxiosInstance,
   AxiosInterceptorManager,
   AxiosRequestConfig,
+  AxiosRequestHeaders,
   AxiosResponse,
-  AxiosResponseHeaders,
   InternalAxiosRequestConfig
 } from 'axios';
 import type { CacheInstance, CacheProperties } from './cache.js';
@@ -94,7 +94,7 @@ export interface CacheRequestConfig<R = any, D = any> extends AxiosRequestConfig
 
 /** Cached version of type {@link InternalAxiosRequestConfig} */
 export interface InternalCacheRequestConfig<R = any, D = any> extends CacheRequestConfig<R, D> {
-  headers: AxiosResponseHeaders;
+  headers: AxiosRequestHeaders;
 }
 
 /**
