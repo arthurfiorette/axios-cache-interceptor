@@ -1,5 +1,6 @@
 import assert from 'node:assert';
 import { describe, it } from 'node:test';
+import type { CacheProperties } from '../../src/index.js';
 import { mockAxios } from '../mocks/axios.js';
 
 describe('Cache Enabled Flag', () => {
@@ -125,7 +126,7 @@ describe('Cache Enabled Flag', () => {
     assert.equal(response2.stale, false);
 
     // Verify cache config is applied
-    assert.equal(response2.config.cache?.ttl, 1000 * 60 * 10);
+    assert.equal((response2.config.cache as CacheProperties)?.ttl, 1000 * 60 * 10);
   });
 
   it('Enabled flag overrides in request after global enabled', async () => {

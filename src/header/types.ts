@@ -30,6 +30,7 @@ export type InterpreterResult =
  * - `{ cache: number, stale: number }: used as the TTL value and stale TTL value`
  *
  * @param header The header object to interpret.
+ * @param location The instance location, either `'client'` or `'server'`.
  * @returns `false` if cache should not be used. `undefined` when provided headers was not
  *   enough to determine a valid value. Or a `number` containing the number of
  *   **milliseconds** to cache the response.

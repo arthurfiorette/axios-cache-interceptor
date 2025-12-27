@@ -7,9 +7,12 @@ describe('Expires HTTP Header', () => {
   it('Future Expires', () => {
     const date = new Date(new Date().getFullYear() + 1, 1, 1);
 
-    const result = defaultHeaderInterpreter({
-      [Header.Expires]: date.toUTCString()
-    });
+    const result = defaultHeaderInterpreter(
+      {
+        [Header.Expires]: date.toUTCString()
+      },
+      'client'
+    );
 
     const approx = date.getTime() - Date.now();
 
@@ -23,18 +26,24 @@ describe('Expires HTTP Header', () => {
   });
 
   it('Expires is used when invalid Cache-Control is provided', () => {
-    const result = defaultHeaderInterpreter({
-      [Header.CacheControl]: '',
-      [Header.Expires]: new Date(new Date().getFullYear() - 1, 1, 1).toUTCString()
-    });
+    const result = defaultHeaderInterpreter(
+      {
+        [Header.CacheControl]: '',
+        [Header.Expires]: new Date(new Date().getFullYear() - 1, 1, 1).toUTCString()
+      },
+      'client'
+    );
 
     assert.equal(result, 'dont cache');
   });
 
   it('Past Expires', () => {
-    const result = defaultHeaderInterpreter({
-      [Header.Expires]: new Date(new Date().getFullYear() - 1, 1, 1).toUTCString()
-    });
+    const result = defaultHeaderInterpreter(
+      {
+        [Header.Expires]: new Date(new Date().getFullYear() - 1, 1, 1).toUTCString()
+      },
+      'client'
+    );
 
     // Past means cache invalid
     assert.equal(result, 'dont cache');
