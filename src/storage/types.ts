@@ -17,7 +17,7 @@ export interface CachedResponseMeta {
    *   vary: { authorization: 'Bearer X' }
    * }
    */
-  vary?: Record<string, string>;
+  vary?: Record<string, string | undefined>;
 }
 
 export interface CachedResponse {

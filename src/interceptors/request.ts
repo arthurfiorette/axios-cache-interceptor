@@ -110,9 +110,13 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
     // shouldn't be cached an therefore neither in the browser.
     // https://stackoverflow.com/a/2068407
     if (config.cache.cacheTakeover) {
-      config.headers[Header.CacheControl] ??= 'no-cache, no-store, must-revalidate, max-age=0';
-      config.headers[Header.Pragma] ??= 'no-cache';
-      config.headers[Header.Expires] ??= '0';
+      config.headers.set(
+        Header.CacheControl,
+        'no-cache, no-store, must-revalidate, max-age=0',
+        false
+      );
+      config.headers.set(Header.Pragma, 'no-cache', false);
+      config.headers.set(Header.Expires, '0', false);
     }
 
     if (!isMethodIn(config.method, config.cache.methods)) {

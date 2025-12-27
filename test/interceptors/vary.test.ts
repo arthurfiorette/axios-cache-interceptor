@@ -36,11 +36,11 @@ describe('Vary Header Support', () => {
     });
 
     const resp2 = await axios.get('url', {
-      headers: { authorization: 'Bearer A', 'accept-language': 'en' }
+      headers: { authorization: 'Bearer A', 'Accept-Language': 'en' }
     });
 
     const resp3 = await axios.get('url', {
-      headers: { authorization: 'Bearer A', 'accept-language': 'fr' }
+      headers: { authorization: 'Bearer A', 'ACCEPT-LANGUAGE': 'fr' }
     });
 
     assert.equal(resp1.cached, false);
@@ -59,22 +59,22 @@ describe('Vary Header Support', () => {
       return { user: Math.random(), call: networkCallCount, timestamp: Date.now() };
     });
 
-    // 9 concurrent requests: 3 variations, 3 requests each
+    // 9 concurrent requests: 3 variations, 3 requests each (in different casing)
     const requests = [
       // 3 with Bearer A
       axios.get('url', { headers: { authorization: 'Bearer A' } }),
-      axios.get('url', { headers: { authorization: 'Bearer A' } }),
+      axios.get('url', { headers: { auTHORIZAtion: 'Bearer A' } }),
       axios.get('url', { headers: { authorization: 'Bearer A' } }),
 
       // 3 with Bearer B
-      axios.get('url', { headers: { authorization: 'Bearer B' } }),
-      axios.get('url', { headers: { authorization: 'Bearer B' } }),
-      axios.get('url', { headers: { authorization: 'Bearer B' } }),
+      axios.get('url', { headers: { Authorization: 'Bearer B' } }),
+      axios.get('url', { headers: { AUTHORIZATION: 'Bearer B' } }),
+      axios.get('url', { headers: { auTHOrization: 'Bearer B' } }),
 
       // 3 with Bearer C
-      axios.get('url', { headers: { authorization: 'Bearer C' } }),
-      axios.get('url', { headers: { authorization: 'Bearer C' } }),
-      axios.get('url', { headers: { authorization: 'Bearer C' } })
+      axios.get('url', { headers: { authOrization: 'Bearer C' } }),
+      axios.get('url', { headers: { authorIZAtion: 'Bearer C' } }),
+      axios.get('url', { headers: { authorizATion: 'Bearer C' } })
     ];
 
     const responses = await Promise.all(requests);
