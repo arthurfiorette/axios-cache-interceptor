@@ -1,7 +1,9 @@
 import { deferred } from 'fast-defer';
+import { compare as compareVary, parse as parseVary } from 'http-vary';
 import type { AxiosCacheInstance, CacheAxiosResponse } from '../cache/axios.js';
+import { extractHeaders } from '../header/extract.js';
 import { Header } from '../header/headers.js';
-import type { CachedResponse, CachedStorageValue, LoadingStorageValue } from '../storage/types.js';
+import type { CachedResponse, LoadingStorageValue } from '../storage/types.js';
 import { regexOrStringMatch } from '../util/cache-predicate.js';
 import type { RequestInterceptor } from './build.js';
 import {
@@ -13,7 +15,12 @@ import {
 
 export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInterceptor {
   const onFulfilled: RequestInterceptor['onFulfilled'] = async (config) => {
-    config.id = axios.generateKey(config);
+    config.id = axios.generateKey(config, {
+      vary:
+        config.cache && Array.isArray(config.cache.vary)
+          ? extractHeaders(config.headers, config.cache.vary)
+          : undefined
+    });
 
     if (config.cache === false) {
       if (__ACI_DEV__) {
@@ -134,6 +141,45 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
     let cache = await axios.storage.get(config.id, config);
     const overrideCache = config.cache.override;
 
+    // Checks for vary mismatches in cached responses before proceeding
+    // If a vary mismatch is detected, it will generate a new key based on the
+    // current request headers and re-fetch the cache.
+    if (
+      // Vary enabled
+      config.cache.vary !== false &&
+      // Had vary headers in cached response (cached or stale)
+      cache.data?.meta?.vary &&
+      // Previous response had Vary header to use
+      cache.data.headers[Header.Vary]
+    ) {
+      const vary = Array.isArray(config.cache.vary)
+        ? config.cache.vary
+        : parseVary(cache.data.headers[Header.Vary]);
+
+      // Compares current request headers with cached vary headers (meta.vary)
+      if (vary && vary !== '*' && !compareVary(vary, cache.data.meta?.vary, config.headers)) {
+        // Generate base key without id field (otherwise returns config.id)
+        const newKey = axios.generateKey(
+          { ...config, id: undefined },
+          { vary: extractHeaders(config.headers, vary) }
+        );
+
+        // If ends up being a new key, change the cache to the new one
+        if (config.id !== newKey) {
+          if (__ACI_DEV__) {
+            axios.debug({
+              id: config.id,
+              msg: 'Vary mismatch detected - using vary-aware key',
+              data: { oldKey: config.id, newKey }
+            });
+          }
+
+          config.id = newKey;
+          cache = await axios.storage.get(newKey, config);
+        }
+      }
+    }
+
     // Not cached, continue the request, and mark it as fetching
     // biome-ignore lint/suspicious/noConfusingLabels: required to break condition in simultaneous accesses
     ignoreAndRequest: if (
@@ -146,11 +192,9 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
       // first await statement, so the second (asynchronous call) request may have already
       // started executing.
       if (axios.waiting.has(config.id) && !overrideCache) {
-        cache = (await axios.storage.get(config.id, config)) as
-          | CachedStorageValue
-          | LoadingStorageValue;
+        cache = await axios.storage.get(config.id, config);
 
-        // @ts-expect-error This check is required when a request has it own cache deleted manually, lets
+        // This check is required when a request has it own cache deleted manually, lets
         // say by a `axios.storage.delete(key)` and has a concurrent loading request.
         // Because in this case, the cache will be empty and may still has a pending key
         // on waiting map.
@@ -276,6 +320,35 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
         }
         /* c8 ignore end */
 
+        // After waiting, check if this request's vary headers match the cached variant
+        // If mismatch, don't use the cache - make own request to prevent cache poisoning
+        if (
+          config.cache.vary !== false &&
+          state.data.meta?.vary &&
+          state.data.headers[Header.Vary]
+        ) {
+          const vary = Array.isArray(config.cache.vary)
+            ? config.cache.vary
+            : parseVary(state.data.headers[Header.Vary]);
+
+          // Compare vary headers - if mismatch, make own request
+          if (vary && vary !== '*' && !compareVary(vary, state.data.meta.vary, config.headers)) {
+            if (__ACI_DEV__) {
+              axios.debug({
+                id: config.id,
+                msg: 'Vary mismatch after deferred resolved - making own request instead of using cache',
+                data: {
+                  cachedVary: state.data.meta.vary,
+                  currentHeaders: extractHeaders(config.headers, vary)
+                }
+              });
+            }
+
+            // Don't use cached response - rerun interceptor logic but with new key
+            return onFulfilled!(config);
+          }
+        }
+
         cachedResponse = state.data;
       } catch (err) {
         // The deferred was rejected by the first request that encountered an error.
@@ -318,7 +391,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
     if (__ACI_DEV__) {
       axios.debug({
         id: config.id,
-        msg: 'Returning cached response'
+        msg: 'Overriding adapter to return cached response'
       });
     }
 

@@ -14,6 +14,9 @@ importers:
       fast-defer:
         specifier: ^1.1.9
         version: 1.1.9
+      http-vary:
+        specifier: ^1.0.3
+        version: 1.0.3
       object-code:
         specifier: ^2.0.0
         version: 2.0.0
@@ -2313,6 +2316,9 @@ packages:
   http-proxy-agent@7.0.2:
     resolution: {integrity: sha512-T1gkAiYYDWYx3V5Bmyu7HcfcvL7mUrTWiM6yOfa3PIphViJ/gFPbvidQ+veqSOHci/PxBcDabeUNCzpOODJZig==}
     engines: {node: '>= 14'}
+
+  http-vary@1.0.3:
+    resolution: {integrity: sha512-sx7Y8YTqF3o0mFJJvF66n8dbaE8v3liV1RgCz46XP5xK7dnzyZHvwMWRA115q5kjbCPBV65/nOMlgW54WLyiag==}
 
   https-proxy-agent@7.0.6:
     resolution: {integrity: sha512-vK9P5/iUfdl95AI+JVyUuIcVtd4ofvtrOr3HNtM2yxC9bnMbEdp3x01OhQNnjb8IJYi38VlTE3mBXwcfvywuSw==}
@@ -6316,6 +6322,8 @@ snapshots:
       debug: 4.4.3
     transitivePeerDependencies:
       - supports-color
+
+  http-vary@1.0.3: {}
 
   https-proxy-agent@7.0.6:
     dependencies:

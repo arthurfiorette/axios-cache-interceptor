@@ -49,7 +49,9 @@ To disable caching for a specific request, use `cache: { enabled: false }`:
 
 ```ts
 // Make a request with cache disabled
-const { id: requestId } = await axios.get('url', { cache: { enabled: false } });
+const { id: requestId } = await axios.get('url', {
+  cache: { enabled: false }
+});
 
 // Delete the cache entry for this request if needed
 await axios.storage.remove(requestId);
@@ -427,6 +429,36 @@ delete the current cache, it will just replace the cache when the response arriv
 Unlike as `cache: false`, this will not disable the cache, it will just ignore the
 pre-request cache checks before making the request. This way, all post-request options are
 still available and will work as expected.
+
+## cache.vary
+
+<Badge text="optional" type="warning"/>
+
+- Type: `string[] | boolean`
+- Default: `true`
+
+Configure HTTP Vary header handling.
+
+- `true`: Automatic vary handling (default, recommended)
+- `false`: Disable vary checking (**WARNING: can cause cache poisoning**)
+- `string[]`: Overrides server sent Vary and use specific request headers in cache key
+
+When the server responds with a `Vary` header, the cache key is adjusted to include the specified request headers:
+
+```ts
+// Request with Authorization header
+await axios.get('/api/users', {
+  headers: { authorization: 'Bearer token-A' }
+});
+// Server responds: Vary: Authorization
+// Cached with ID based on: url + method + params + {authorization: 'Bearer token-A'}
+
+// Different authorization = different cache
+await axios.get('/api/users', {
+  headers: { authorization: 'Bearer token-B' }
+});
+// Gets its own cache (different ID due to different authorization)
+```
 
 ## cache.hydrate
 

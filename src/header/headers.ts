@@ -108,5 +108,19 @@ export const Header = {
    * XAxiosCacheStaleIfError: <seconds>
    * ```
    */
-  XAxiosCacheStaleIfError: 'x-axios-cache-stale-if-error'
+  XAxiosCacheStaleIfError: 'x-axios-cache-stale-if-error',
+
+  /**
+   * Indicates which request headers affect the response content.
+   * Used to prevent cache poisoning when responses differ based on request headers.
+   *
+   * ```txt
+   * Vary: Authorization
+   * Vary: Authorization, Accept-Language
+   * Vary: *
+   * ```
+   *
+   * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Vary
+   */
+  Vary: 'vary'
 } as const;
