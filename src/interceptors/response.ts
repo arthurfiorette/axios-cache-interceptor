@@ -38,7 +38,7 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
     if (!response?.config) {
       if (__ACI_DEV__) {
         axios.debug({
-          msg: 'Response interceptor received an unknown response.',
+          msg: 'Unknown response received (not an Axios response)',
           data: response
         });
       }
@@ -72,7 +72,7 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
       if (__ACI_DEV__) {
         axios.debug({
           id: response.id,
-          msg: 'Response with config.cache falsy',
+          msg: 'Response received without cache config',
           data: response
         });
       }
@@ -90,8 +90,7 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
       if (__ACI_DEV__) {
         axios.debug({
           id: response.id,
-          msg: `Ignored because method (${config.method}) is not in cache.methods (${cacheConfig.methods})`,
-          data: { config, cacheConfig }
+          msg: `Method ${config.method} not cacheable (allowed: ${cacheConfig.methods})`
         });
       }
 
@@ -107,8 +106,8 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
       if (__ACI_DEV__) {
         axios.debug({
           id: response.id,
-          msg: "Response not cached and storage isn't loading",
-          data: { cache, response }
+          msg: 'Response received but storage not in loading state',
+          data: { cacheState: cache.state }
         });
       }
 
@@ -168,8 +167,7 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
         if (__ACI_DEV__) {
           axios.debug({
             id: response.id,
-            msg: `Cache header interpreted as 'dont cache'`,
-            data: { cache, response, expirationTime }
+            msg: 'Cache-Control header indicates: do not cache'
           });
         }
 
@@ -216,7 +214,7 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
         if (__ACI_DEV__) {
           axios.debug({
             id: response.id,
-            msg: 'Response has Vary: * - storing as stale'
+            msg: 'Vary: * detected, storing as stale'
           });
         }
 
@@ -244,8 +242,8 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
     if (__ACI_DEV__) {
       axios.debug({
         id: response.id,
-        msg: 'Useful response configuration found',
-        data: { cacheConfig, cacheResponse: data }
+        msg: 'Caching response',
+        data: { ttl, staleTtl, interpretHeader: cacheConfig.interpretHeader }
       });
     }
 
@@ -264,8 +262,8 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
     if (__ACI_DEV__) {
       axios.debug({
         id: response.id,
-        msg: 'Response cached',
-        data: { cache: newCache, response }
+        msg: 'Response cached successfully',
+        data: { state: newCache.state, ttl: newCache.ttl }
       });
     }
 
@@ -278,7 +276,7 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
     if (!error.isAxiosError || !error.config) {
       if (__ACI_DEV__) {
         axios.debug({
-          msg: 'FATAL: Received an non axios error in the rejected response interceptor, ignoring.',
+          msg: 'FATAL: Non-Axios error in response interceptor',
           data: error
         });
       }
@@ -298,7 +296,7 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
     if (!cacheConfig || !id) {
       if (__ACI_DEV__) {
         axios.debug({
-          msg: 'Web request returned an error but cache handling is not enabled',
+          msg: 'Request failed without cache config',
           data: { error }
         });
       }
@@ -310,8 +308,7 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
       if (__ACI_DEV__) {
         axios.debug({
           id,
-          msg: `Ignored because method (${config.method}) is not in cache.methods (${cacheConfig.methods})`,
-          data: { config, cacheConfig }
+          msg: `Method ${config.method} not cacheable (allowed: ${cacheConfig.methods})`
         });
       }
 
@@ -332,8 +329,12 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
       if (__ACI_DEV__) {
         axios.debug({
           id,
-          msg: 'Caught an error in the request interceptor',
-          data: { cache, error, config }
+          msg: 'Request error with unexpected cache state',
+          data: {
+            cacheState: cache.state,
+            previous: cache.state === 'loading' ? cache.previous : undefined,
+            errorCode: error.code
+          }
         });
       }
 
@@ -365,8 +366,8 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
       if (__ACI_DEV__) {
         axios.debug({
           id,
-          msg: 'Found cache if stale config for rejected response',
-          data: { error, config, staleIfError }
+          msg: 'staleIfError config found for failed request',
+          data: { staleIfError, createdAt: cache.createdAt }
         });
       }
 
@@ -403,8 +404,7 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
         if (__ACI_DEV__) {
           axios.debug({
             id,
-            msg: 'staleIfError resolved this response with cached data',
-            data: { error, config, cache }
+            msg: 'staleIfError: returning stale cache for failed request'
           });
         }
 
@@ -424,8 +424,8 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
     if (__ACI_DEV__) {
       axios.debug({
         id,
-        msg: 'Received an unknown error that could not be handled',
-        data: { error, config }
+        msg: 'Unhandled error, cleaning up',
+        data: { errorCode: error.code, errorMessage: error.message }
       });
     }
 

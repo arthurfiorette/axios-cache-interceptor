@@ -26,8 +26,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
       if (__ACI_DEV__) {
         axios.debug({
           id: config.id,
-          msg: 'Ignoring cache because config.cache === false',
-          data: config
+          msg: 'Cache disabled: config.cache === false'
         });
       }
 
@@ -42,8 +41,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
       if (__ACI_DEV__) {
         axios.debug({
           id: config.id,
-          msg: 'Ignoring cache because config.cache.enabled === false',
-          data: config
+          msg: 'Cache disabled: config.cache.enabled === false'
         });
       }
 
@@ -61,11 +59,8 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
           if (__ACI_DEV__) {
             axios.debug({
               id: config.id,
-              msg: `Ignored because url (${config.url}) matches ignoreUrls (${config.cache.cachePredicate.ignoreUrls})`,
-              data: {
-                url: config.url,
-                cachePredicate: config.cache.cachePredicate
-              }
+              msg: `URL ignored: matches ignoreUrls pattern`,
+              data: { url: config.url, pattern: url }
             });
           }
 
@@ -89,11 +84,8 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
           if (__ACI_DEV__) {
             axios.debug({
               id: config.id,
-              msg: `Cached because url (${config.url}) matches allowUrls (${config.cache.cachePredicate.allowUrls})`,
-              data: {
-                url: config.url,
-                cachePredicate: config.cache.cachePredicate
-              }
+              msg: `URL allowed: matches allowUrls pattern`,
+              data: { url: config.url, pattern: url }
             });
           }
           break;
@@ -104,11 +96,8 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
         if (__ACI_DEV__) {
           axios.debug({
             id: config.id,
-            msg: `Ignored because url (${config.url}) does not match any allowUrls (${config.cache.cachePredicate.allowUrls})`,
-            data: {
-              url: config.url,
-              cachePredicate: config.cache.cachePredicate
-            }
+            msg: `URL rejected: not in allowUrls`,
+            data: { url: config.url, allowUrls: config.cache.cachePredicate.allowUrls }
           });
         }
         return config;
@@ -130,7 +119,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
       if (__ACI_DEV__) {
         axios.debug({
           id: config.id,
-          msg: `Ignored because method (${config.method}) is not in cache.methods (${config.cache.methods})`
+          msg: `Method ${config.method} not cacheable (allowed: ${config.cache.methods})`
         });
       }
 
@@ -169,7 +158,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
           if (__ACI_DEV__) {
             axios.debug({
               id: config.id,
-              msg: 'Vary mismatch detected - using vary-aware key',
+              msg: 'Vary mismatch: switching to vary-aware key',
               data: { oldKey: config.id, newKey }
             });
           }
@@ -202,7 +191,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
           if (__ACI_DEV__) {
             axios.debug({
               id: config.id,
-              msg: 'Waiting list had an deferred for this key, waiting for it to finish'
+              msg: 'Concurrent request found, reusing result'
             });
           }
 
@@ -248,7 +237,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
         if (__ACI_DEV__) {
           axios.debug({
             id: config.id,
-            msg: 'Updated stale request'
+            msg: 'Stale revalidation: added conditional headers (If-None-Match/If-Modified-Since)'
           });
         }
       }
@@ -258,11 +247,8 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
       if (__ACI_DEV__) {
         axios.debug({
           id: config.id,
-          msg: 'Sending request, waiting for response',
-          data: {
-            overrideCache,
-            state: cache.state
-          }
+          msg: 'Making network request',
+          data: { overrideCache, cacheState: cache.state }
         });
       }
 
@@ -294,7 +280,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
       if (__ACI_DEV__) {
         axios.debug({
           id: config.id,
-          msg: 'Detected concurrent request, waiting for it to finish'
+          msg: 'Concurrent request detected, waiting...'
         });
       }
 
@@ -312,7 +298,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
           if (__ACI_DEV__) {
             axios.debug({
               id: config.id,
-              msg: 'Deferred resolved, but no data was found, requesting again'
+              msg: 'Concurrent request completed without data, retrying'
             });
           }
 
@@ -336,10 +322,10 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
             if (__ACI_DEV__) {
               axios.debug({
                 id: config.id,
-                msg: 'Vary mismatch after deferred resolved - making own request instead of using cache',
+                msg: 'Vary mismatch after concurrent request, making own request',
                 data: {
                   cachedVary: state.data.meta.vary,
-                  currentHeaders: extractHeaders(config.headers, vary)
+                  currentVary: extractHeaders(config.headers, vary)
                 }
               });
             }
@@ -357,7 +343,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
         if (__ACI_DEV__) {
           axios.debug({
             id: config.id,
-            msg: 'Deferred rejected, propagating error to all waiting requests',
+            msg: 'Concurrent request failed, propagating error',
             data: err
           });
         }
@@ -391,7 +377,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
     if (__ACI_DEV__) {
       axios.debug({
         id: config.id,
-        msg: 'Overriding adapter to return cached response'
+        msg: 'Using cached response'
       });
     }
 
