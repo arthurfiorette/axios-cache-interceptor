@@ -3,8 +3,8 @@ url: 'https://axios-cache-interceptor.js.org/config/response-object.md'
 ---
 # Response object
 
-Axios cache interceptor returns a slightly changed than the original axios response.
-Containing information about the cache and other needed properties.
+Axios cache interceptor returns a slightly different response than the original axios response.
+It contains information about the cache and other needed properties.
 
 ## id
 
@@ -32,7 +32,7 @@ network call.
 
 ::: tip
 
-This does not indicated if the request was capable of being cached or not, as options like
+This does not indicate if the request was capable of being cached or not, as options like
 [`cache.override`](./request-specifics.md#cache-override) may have been enabled.
 
 :::

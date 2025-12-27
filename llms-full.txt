@@ -156,7 +156,7 @@ that you find will have a log to explain it.**
   },
   {
     "id": "-644704205",
-    "msg": "Waiting list had an deferred for this key, waiting for it to finish"
+    "msg": "Waiting list had a deferred for this key, waiting for it to finish"
   },
   {
     "id": "-644704205",
@@ -365,9 +365,9 @@ url: 'https://axios-cache-interceptor.js.org/guide.md'
 ---
 # Introduction
 
-Axios Cache Interceptor is a, as it name says, a interceptor for axios to handle caching.
+Axios Cache Interceptor is an interceptor for axios, as its name says, to handle caching.
 It was created to help developers call axios multiple times without having to worry about
-overloading the network or coding himself a simple and buggy cache system.
+overloading the network or coding themselves a simple and buggy cache system.
 
 Each request goes through an interceptor applied to your axios instance. There, we handle
 each request and decide if we should send it to the network or return a cached response.
@@ -381,9 +381,9 @@ choosing to use interceptors, we create a minimally invasive approach that allow
 still use the axios adapter of your choice.
 
 Before the request is delivered to the adapter, our request interceptor checks if the
-request have already been cached and if it's a valid one, checks if the request should be
-cached (sometimes you don't want cache at all, and it's ok), if there's already a request
-sent to the network that we can wait for it and many more other checks.
+request has already been cached and if it's valid, checks if the request should be
+cached (sometimes you don't want cache at all, and that's ok), if there's already a request
+sent to the network that we can wait for, and many other checks.
 
 After the adapter gets the response, we check if it belongs to a *cacheable* request,
 saves it into the storage, resolves other requests awaiting for the same resource and
@@ -406,16 +406,16 @@ finally returns the response to the original caller.
 ### axios-cache-adapter
 
 The creation of this library is heavily inspired by axios-cache-adapter. It was a great
-library but now it is unmaintained and has a lot of unresolved issues. Also, it weights
-more than 4x the size of this library with less features and less performance.
+library but now it is unmaintained and has a lot of unresolved issues. Also, it weighs
+more than 4x the size of this library with fewer features and less performance.
 
 ### Fetch and some state management library?
 
 As this library was built to be used with axios and to handle storage itself, I can assure
-that it is more performant that any glued code you may find and/or write yourself. About
+that it is more performant than any glued code you may find and/or write yourself. About
 state management libraries and other similar things,
 [this blog post](https://arthur.place/implications-of-cache-or-state) explains why cache
-is more correct, architectural way, instead of state.
+is the more correct, architectural way, instead of state.
 
 ---
 
@@ -752,7 +752,7 @@ url: 'https://axios-cache-interceptor.js.org/guide/request-id.md'
 ---
 # Request Id
 
-We can distinguish requests from each other by assigning an **non unique** `id` to each
+We can distinguish requests from each other by assigning a **non-unique** `id` to each
 request. These IDs are the same provided to the storage as keys.
 
 Each ID is responsible for binding a cache to its request, for referencing or invalidating
@@ -846,7 +846,7 @@ url: 'https://axios-cache-interceptor.js.org/config/request-specifics.md'
 Each request can have its own cache customization, by using the `cache` property. This
 way, you can have requests behaving differently from each other without much effort.
 
-The inline documentation is self explanatory, but here is a shortly brief of what each
+The inline documentation is self explanatory, but here is a brief overview of what each
 property does:
 
 ::: tip
@@ -888,7 +888,9 @@ To disable caching for a specific request, use `cache: { enabled: false }`:
 
 ```ts
 // Make a request with cache disabled
-const { id: requestId } = await axios.get('url', { cache: { enabled: false } });
+const { id: requestId } = await axios.get('url', {
+  cache: { enabled: false }
+});
 
 // Delete the cache entry for this request if needed
 await axios.storage.remove(requestId);
@@ -1130,7 +1132,7 @@ Once the request is resolved, this specifies what other responses should change 
 cache. Can be used to update the request or delete other caches. It is a simple `Record`
 with the request id.
 
-Here's an example with some basic login:
+Here's an example with some basic logic:
 
 Using a function instead of an object is supported but not recommended, as it's better to
 just consume the response normally and write your own code after it. But it\`s here in case
@@ -1247,6 +1249,34 @@ Unlike as `cache: false`, this will not disable the cache, it will just ignore t
 pre-request cache checks before making the request. This way, all post-request options are
 still available and will work as expected.
 
+## cache.vary
+
+* Type: `string[] | boolean`
+* Default: `true`
+
+Configure HTTP Vary header handling.
+
+* `true`: Automatic vary handling (default, recommended)
+* `false`: Disable vary checking (**WARNING: can cause cache poisoning**)
+* `string[]`: Overrides server sent Vary and use specific request headers in cache key
+
+When the server responds with a `Vary` header, the cache key is adjusted to include the specified request headers:
+
+```ts
+// Request with Authorization header
+await axios.get('/api/users', {
+  headers: { authorization: 'Bearer token-A' }
+});
+// Server responds: Vary: Authorization
+// Cached with ID based on: url + method + params + {authorization: 'Bearer token-A'}
+
+// Different authorization = different cache
+await axios.get('/api/users', {
+  headers: { authorization: 'Bearer token-B' }
+});
+// Gets its own cache (different ID due to different authorization)
+```
+
 ## cache.hydrate
 
 * Type: `undefined | ((cache: StorageValue) => void | Promise<void>)`
@@ -1291,8 +1321,8 @@ url: 'https://axios-cache-interceptor.js.org/config/response-object.md'
 ---
 # Response object
 
-Axios cache interceptor returns a slightly changed than the original axios response.
-Containing information about the cache and other needed properties.
+Axios cache interceptor returns a slightly different response than the original axios response.
+It contains information about the cache and other needed properties.
 
 ## id
 
@@ -1320,7 +1350,7 @@ network call.
 
 ::: tip
 
-This does not indicated if the request was capable of being cached or not, as options like
+This does not indicate if the request was capable of being cached or not, as options like
 [`cache.override`](./request-specifics.md#cache-override) may have been enabled.
 
 :::
@@ -1468,7 +1498,7 @@ The function used to interpret all headers from a request and determine a time t
 
 ::: warning
 
-Many REST backends returns some variation of `Cache-Control: no-cache` or
+Many REST backends return some variation of `Cache-Control: no-cache` or
 `Cache-Control: no-store` headers, which tell us to ignore caching at all. You shall
 disable `headerInterpreter` for those requests.
 
@@ -1586,7 +1616,7 @@ url: 'https://axios-cache-interceptor.js.org/guide/storages.md'
 Storages are responsible for saving, retrieving and serializing (if needed) cache data.
 They are completely customizable and you can code your own, or use one published on NPM.
 
-They are meant to be the middleware between the cache interceptor and some sort of
+They are meant to act as middleware between the cache interceptor and some sort of
 database (persistent or not) you may have. Our interceptors will call its methods
 internally to save and retrieve data, but you can do it manually to work programmatically
 your own way.
@@ -1628,7 +1658,7 @@ import Axios from 'axios';
 import { setupCache, buildMemoryStorage } from 'axios-cache-interceptor';
 
 setupCache(axios, {
-  // You don't need to to that, as it is the default option.
+  // You don't need to do that, as it is the default option.
   storage: buildMemoryStorage(
     /* cloneData default=*/ false,
     /* cleanupInterval default=*/ 5 * 60 * 1000,
@@ -1647,9 +1677,9 @@ Options:
 * **cleanupInterval**: The interval in milliseconds to run a setInterval job of cleaning
   old entries. If false, the job will not be created. 5 minutes (300\_000) is default
 
-* **maxEntries**: The maximum number of entries to keep in the storage. Its hard to
+* **maxEntries**: The maximum number of entries to keep in the storage. It's hard to
   determine the size of the entries, so a smart FIFO order is used to determine eviction.
-  If false, no check will be done and you may grow up memory usage. 1024 is default
+  If false, no check will be done and you may grow memory usage. 1024 is default
 
 * **maxStaleAge**: The maximum age in milliseconds a stale entry can stay in the storage
   before being removed. This prevents stale-able entries (those with ETag or Last-Modified

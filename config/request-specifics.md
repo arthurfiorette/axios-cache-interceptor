@@ -6,7 +6,7 @@ url: 'https://axios-cache-interceptor.js.org/config/request-specifics.md'
 Each request can have its own cache customization, by using the `cache` property. This
 way, you can have requests behaving differently from each other without much effort.
 
-The inline documentation is self explanatory, but here is a shortly brief of what each
+The inline documentation is self explanatory, but here is a brief overview of what each
 property does:
 
 ::: tip
@@ -48,7 +48,9 @@ To disable caching for a specific request, use `cache: { enabled: false }`:
 
 ```ts
 // Make a request with cache disabled
-const { id: requestId } = await axios.get('url', { cache: { enabled: false } });
+const { id: requestId } = await axios.get('url', {
+  cache: { enabled: false }
+});
 
 // Delete the cache entry for this request if needed
 await axios.storage.remove(requestId);
@@ -290,7 +292,7 @@ Once the request is resolved, this specifies what other responses should change 
 cache. Can be used to update the request or delete other caches. It is a simple `Record`
 with the request id.
 
-Here's an example with some basic login:
+Here's an example with some basic logic:
 
 Using a function instead of an object is supported but not recommended, as it's better to
 just consume the response normally and write your own code after it. But it\`s here in case
@@ -406,6 +408,34 @@ delete the current cache, it will just replace the cache when the response arriv
 Unlike as `cache: false`, this will not disable the cache, it will just ignore the
 pre-request cache checks before making the request. This way, all post-request options are
 still available and will work as expected.
+
+## cache.vary
+
+* Type: `string[] | boolean`
+* Default: `true`
+
+Configure HTTP Vary header handling.
+
+* `true`: Automatic vary handling (default, recommended)
+* `false`: Disable vary checking (**WARNING: can cause cache poisoning**)
+* `string[]`: Overrides server sent Vary and use specific request headers in cache key
+
+When the server responds with a `Vary` header, the cache key is adjusted to include the specified request headers:
+
+```ts
+// Request with Authorization header
+await axios.get('/api/users', {
+  headers: { authorization: 'Bearer token-A' }
+});
+// Server responds: Vary: Authorization
+// Cached with ID based on: url + method + params + {authorization: 'Bearer token-A'}
+
+// Different authorization = different cache
+await axios.get('/api/users', {
+  headers: { authorization: 'Bearer token-B' }
+});
+// Gets its own cache (different ID due to different authorization)
+```
 
 ## cache.hydrate
 

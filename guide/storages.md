@@ -6,7 +6,7 @@ url: 'https://axios-cache-interceptor.js.org/guide/storages.md'
 Storages are responsible for saving, retrieving and serializing (if needed) cache data.
 They are completely customizable and you can code your own, or use one published on NPM.
 
-They are meant to be the middleware between the cache interceptor and some sort of
+They are meant to act as middleware between the cache interceptor and some sort of
 database (persistent or not) you may have. Our interceptors will call its methods
 internally to save and retrieve data, but you can do it manually to work programmatically
 your own way.
@@ -48,7 +48,7 @@ import Axios from 'axios';
 import { setupCache, buildMemoryStorage } from 'axios-cache-interceptor';
 
 setupCache(axios, {
-  // You don't need to to that, as it is the default option.
+  // You don't need to do that, as it is the default option.
   storage: buildMemoryStorage(
     /* cloneData default=*/ false,
     /* cleanupInterval default=*/ 5 * 60 * 1000,
@@ -67,9 +67,9 @@ Options:
 * **cleanupInterval**: The interval in milliseconds to run a setInterval job of cleaning
   old entries. If false, the job will not be created. 5 minutes (300\_000) is default
 
-* **maxEntries**: The maximum number of entries to keep in the storage. Its hard to
+* **maxEntries**: The maximum number of entries to keep in the storage. It's hard to
   determine the size of the entries, so a smart FIFO order is used to determine eviction.
-  If false, no check will be done and you may grow up memory usage. 1024 is default
+  If false, no check will be done and you may grow memory usage. 1024 is default
 
 * **maxStaleAge**: The maximum age in milliseconds a stale entry can stay in the storage
   before being removed. This prevents stale-able entries (those with ETag or Last-Modified
