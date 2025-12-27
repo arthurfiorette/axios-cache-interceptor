@@ -1,11 +1,31 @@
 import type { CacheAxiosResponse, CacheRequestConfig } from '../cache/axios.js';
 import type { MaybePromise } from '../util/types.js';
 
+/**
+ * Metadata for cache entry (extensible for future enhancements).
+ * Replaces x-axios-cache-* custom headers with cleaner structure.
+ */
+export interface CachedResponseMeta {
+  /**
+   * Subset of request headers that match the Vary header.
+   * Used to validate vary requirements on cache retrieval.
+   *
+   * @example
+   * // Response has Vary: Authorization
+   * // Request has headers: { authorization: 'Bearer X', 'other-header': 'value' }
+   * meta: {
+   *   vary: { authorization: 'Bearer X' }
+   * }
+   */
+  vary?: Record<string, string>;
+}
+
 export interface CachedResponse {
   data?: unknown;
   headers: CacheAxiosResponse['headers'];
   status: number;
   statusText: string;
+  meta?: CachedResponseMeta;
 }
 
 /** The value returned for a given key. */

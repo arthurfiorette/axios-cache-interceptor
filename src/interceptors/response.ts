@@ -1,7 +1,9 @@
 import type { AxiosResponseHeaders } from 'axios';
 import { parse } from 'cache-parser';
+import { parse as parseVary } from 'http-vary';
 import type { AxiosCacheInstance, CacheAxiosResponse, CacheRequestConfig } from '../cache/axios.js';
 import type { CacheProperties } from '../cache/cache.js';
+import { extractHeaders } from '../header/extract.js';
 import { Header } from '../header/headers.js';
 import type { CachedStorageValue } from '../storage/types.js';
 import { testCachePredicate } from '../util/cache-predicate.js';
@@ -11,44 +13,23 @@ import { createCacheResponse, isMethodIn } from './util.js';
 
 export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseInterceptor {
   /**
-   * Rejects cache for an response response.
-   *
-   * Also update the waiting list for this key by rejecting it.
+   * Replies a deferred stored in the axios waiting map. Use resolve to proceed checking the
+   * previously updated cache or reject to abort deduplicated requests with error.
    */
-  const rejectResponse = async (
-    responseId: string,
-    config: CacheRequestConfig,
-    clearCache: boolean,
-    error?: unknown
-  ) => {
-    // Updates the cache to empty to prevent infinite loading state
-    if (clearCache) {
-      await axios.storage.remove(responseId, config);
-    }
-
+  const replyDeferred = (responseId: string, mode: 'reject' | 'resolve', error?: any) => {
     // Rejects the deferred, if present
     const deferred = axios.waiting.get(responseId);
 
     if (deferred) {
-      deferred.reject(error);
+      deferred[mode](error);
       axios.waiting.delete(responseId);
-    }
-  };
 
-  /**
-   * Resolves the deferred for requests that succeeded but were not cached.
-   * Waiting requests will check storage and make their own requests if needed.
-   */
-  const resolveNonCachedResponse = async (responseId: string, config: CacheRequestConfig) => {
-    // Clear the cache to prevent stale data
-    await axios.storage.remove(responseId, config);
-
-    // Resolve the deferred, if present
-    const deferred = axios.waiting.get(responseId);
-
-    if (deferred) {
-      deferred.resolve();
-      axios.waiting.delete(responseId);
+      if (__ACI_DEV__) {
+        axios.debug({
+          id: responseId,
+          msg: `Found waiting deferred(s) and ${mode} them`
+        });
+      }
     }
   };
 
@@ -138,13 +119,13 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
       return response;
     }
 
-    // Config told that this response should be cached.
+    // Config told that this response should not be cached.
     if (
       // For 'loading' values (previous: stale), this check already ran in the past.
       !cache.data &&
       !(await testCachePredicate(response, cacheConfig.cachePredicate))
     ) {
-      await resolveNonCachedResponse(response.id, config);
+      replyDeferred(response.id, 'resolve');
 
       if (__ACI_DEV__) {
         axios.debug({
@@ -182,7 +163,7 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
 
       // Cache should not be used
       if (expirationTime === 'dont cache') {
-        await resolveNonCachedResponse(response.id, config);
+        replyDeferred(response.id, 'resolve');
 
         if (__ACI_DEV__) {
           axios.debug({
@@ -205,10 +186,55 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
       }
     }
 
-    const data = createCacheResponse(response, cache.data);
-
     if (typeof ttl === 'function') {
       ttl = await ttl(response);
+    }
+
+    const data = createCacheResponse(response, cache.data);
+
+    // Either stales response (Vary *) or sets request Vary headers into metadata
+    if (cacheConfig.vary !== false && response.headers[Header.Vary]) {
+      const vary = Array.isArray(cacheConfig.vary)
+        ? cacheConfig.vary
+        : parseVary(response.headers[Header.Vary]);
+
+      // For valid values, store the subset of request headers in the cache response
+      if (Array.isArray(vary)) {
+        data.meta ??= {};
+        data.meta.vary = extractHeaders(config.headers, vary);
+
+        if (__ACI_DEV__) {
+          axios.debug({
+            id: response.id,
+            msg: 'Storing response with Vary metadata',
+            data: { vary, extracted: data.meta.vary }
+          });
+        }
+
+        // RFC States * must revalidate every time per RFC 9110.
+      } else if (vary === '*') {
+        if (__ACI_DEV__) {
+          axios.debug({
+            id: response.id,
+            msg: 'Response has Vary: * - storing as stale'
+          });
+        }
+
+        // Marks cache as stale immediately
+        await axios.storage.set(
+          response.id,
+          {
+            state: 'stale',
+            createdAt: Date.now(),
+            data,
+            ttl
+          },
+          config
+        );
+
+        replyDeferred(response.id, 'resolve');
+        return response;
+      }
     }
 
     if (cacheConfig.staleIfError) {
@@ -233,21 +259,7 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
 
     // Define this key as cache on the storage
     await axios.storage.set(response.id, newCache, config);
-
-    // Resolve all other requests waiting for this response
-    const waiting = axios.waiting.get(response.id);
-
-    if (waiting) {
-      waiting.resolve();
-      axios.waiting.delete(response.id);
-
-      if (__ACI_DEV__) {
-        axios.debug({
-          id: response.id,
-          msg: 'Found waiting deferred(s) and resolved them'
-        });
-      }
-    }
+    replyDeferred(response.id, 'resolve');
 
     if (__ACI_DEV__) {
       axios.debug({
@@ -304,7 +316,8 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
       }
 
       // Rejects all other requests waiting for this response
-      await rejectResponse(id, config, true, error);
+      await axios.storage.remove(id, config);
+      replyDeferred(id, 'reject', error);
 
       throw error;
     }
@@ -324,15 +337,16 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
         });
       }
 
-      // Rejects all other requests waiting for this response
-      await rejectResponse(
-        id,
-        config,
-        // Do not clear cache if this request is cached, but the request was cancelled before returning the cached response
+      // Do not clear cache if this request is cached, but the request was cancelled before returning the cached response
+      if (
         error.code !== 'ERR_CANCELED' ||
-          (error.code === 'ERR_CANCELED' && cache.state !== 'cached'),
-        error
-      );
+        (error.code === 'ERR_CANCELED' && cache.state !== 'cached')
+      ) {
+        await axios.storage.remove(id, config);
+      }
+
+      // Rejects all other requests waiting for this response
+      replyDeferred(id, 'reject', error);
 
       throw error;
     }
@@ -416,7 +430,8 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
     }
 
     // Rejects all other requests waiting for this response
-    await rejectResponse(id, config, true, error);
+    await axios.storage.remove(id, config);
+    replyDeferred(id, 'reject', error);
 
     throw error;
   };

@@ -58,6 +58,7 @@
   "dependencies": {
     "cache-parser": "^1.2.6",
     "fast-defer": "^1.1.9",
+    "http-vary": "^1.0.3",
     "object-code": "^2.0.0",
     "try": "^1.0.3"
   },

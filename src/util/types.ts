@@ -1,5 +1,10 @@
 import type { CacheAxiosResponse, CacheRequestConfig } from '../cache/axios.js';
-import type { CachedStorageValue, LoadingStorageValue, StorageValue } from '../storage/types.js';
+import type {
+  CachedResponseMeta,
+  CachedStorageValue,
+  LoadingStorageValue,
+  StorageValue
+} from '../storage/types.js';
 
 export type CachePredicate<R = unknown, D = unknown> = NonNullable<
   CachePredicateObject<R, D> | CachePredicateObject<R, D>['responseMatch']
@@ -54,10 +59,15 @@ export interface CachePredicateObject<R = unknown, D = unknown> {
 }
 
 /**
- * A simple function that receives a cache request config and should return a string id
- * for it.
+ * A simple function that receives a cache request config and optional metadata,
+ * and should return a string id for it.
+ *
+ * The meta parameter can include vary header values for generating vary-aware cache keys.
  */
-export type KeyGenerator<R = unknown, D = unknown> = (options: CacheRequestConfig<R, D>) => string;
+export type KeyGenerator<R = unknown, D = unknown> = (
+  options: CacheRequestConfig<R, D>,
+  meta?: CachedResponseMeta
+) => string;
 
 export type MaybePromise<T> = T | Promise<T> | PromiseLike<T>;
 

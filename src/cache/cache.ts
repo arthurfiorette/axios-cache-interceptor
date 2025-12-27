@@ -227,6 +227,19 @@ export interface CacheProperties<R = unknown, D = unknown> {
           | CachedStorageValue
           | StaleStorageValue
       ) => void | Promise<void>);
+
+  /**
+   * Configure HTTP Vary header handling.
+   *
+   * - `true`: Enable automatic vary handling (default - recommended for security)
+   * - `false`: Disable vary checking (WARNING: can cause cache poisoning!)
+   * - `string[]`: Use specific request headers in cache key
+   *
+   * @default true
+   * @example ['authorization', 'accept-language']
+   * @see https://axios-cache-interceptor.js.org/config/request-specifics#cache-vary
+   */
+  vary: string[] | boolean;
 }
 
 /**

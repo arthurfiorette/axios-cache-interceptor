@@ -1,14 +1,15 @@
 import type { Method } from 'axios';
 import { hash } from 'object-code';
 import type { CacheRequestConfig } from '../cache/axios.js';
+import type { CachedResponseMeta } from '../storage/types.js';
 import type { KeyGenerator } from './types.js';
 
 // Remove first and last '/' char, if present
 const SLASHES_REGEX = /^\/|\/$/g;
 
 /**
- * Builds an generator that receives a {@link CacheRequestConfig} and returns a value
- * hashed by {@link hash}.
+ * Builds an generator that receives a {@link CacheRequestConfig} and optional metadata,
+ * and returns a value hashed by {@link hash}.
  *
  * The value is hashed into a signed integer when the returned value from the provided
  * generator is not a `string` or a `number`.
@@ -28,14 +29,14 @@ const SLASHES_REGEX = /^\/|\/$/g;
  * ```
  */
 export function buildKeyGenerator<R = unknown, D = unknown>(
-  generator: (request: CacheRequestConfig<R, D>) => unknown
+  generator: (request: CacheRequestConfig<R, D>, meta?: CachedResponseMeta) => unknown
 ): KeyGenerator<R, D> {
-  return (request) => {
+  return (request, meta) => {
     if (request.id) {
       return request.id;
     }
 
-    const key = generator(request);
+    const key = generator(request, meta);
 
     if (typeof key === 'string' || typeof key === 'number') {
       return `${key}`;
@@ -45,33 +46,36 @@ export function buildKeyGenerator<R = unknown, D = unknown>(
   };
 }
 
-export const defaultKeyGenerator = buildKeyGenerator(({ baseURL, url, method, params, data }) => {
-  // Remove trailing slashes to avoid generating different keys for the "same" final url.
-  if (baseURL !== undefined) {
-    baseURL = baseURL.replace(SLASHES_REGEX, '');
-  } else {
-    // just to have a consistent hash
-    baseURL = '';
-  }
+export const defaultKeyGenerator = buildKeyGenerator(
+  ({ baseURL, url, method, params, data }, meta) => {
+    // Remove trailing slashes to avoid generating different keys for the "same" final url.
+    if (baseURL !== undefined) {
+      baseURL = baseURL.replace(SLASHES_REGEX, '');
+    } else {
+      // just to have a consistent hash
+      baseURL = '';
+    }
 
-  if (url !== undefined) {
-    url = url.replace(SLASHES_REGEX, '');
-  } else {
-    // just to have a consistent hash
-    url = '';
-  }
+    if (url !== undefined) {
+      url = url.replace(SLASHES_REGEX, '');
+    } else {
+      // just to have a consistent hash
+      url = '';
+    }
 
-  if (method !== undefined) {
-    method = method.toLowerCase() as Method;
-  } else {
-    // just to have a consistent hash
-    method = 'get';
-  }
+    if (method !== undefined) {
+      method = method.toLowerCase() as Method;
+    } else {
+      // just to have a consistent hash
+      method = 'get';
+    }
 
-  return {
-    url: baseURL + (baseURL && url ? '/' : '') + url,
-    params: params,
-    method: method,
-    data: data
-  };
-});
+    return {
+      url: baseURL + (baseURL && url ? '/' : '') + url,
+      params,
+      method,
+      data,
+      ...meta
+    };
+  }
+);

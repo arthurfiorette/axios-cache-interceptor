@@ -10,25 +10,28 @@ mkdir dev/ dist/
 
 echo "Target cleared..."
 
-microbundle --define __ACI_DEV__=true -o dev/index.js --tsconfig tsconfig.build.json --generateTypes=false --target=node --format=esm,cjs,modern &
-microbundle --define __ACI_DEV__=false -o dist/index.js --tsconfig tsconfig.build.json --generateTypes --target=node --format=esm,cjs,modern &
+microbundle --define __ACI_DEV__=true  -o dev/index.js  --tsconfig tsconfig.build.json --generateTypes=false --target=node --format=esm,cjs,modern & p1=$!
+microbundle --define __ACI_DEV__=false -o dist/index.js --tsconfig tsconfig.build.json --generateTypes      --target=node --format=esm,cjs,modern & p2=$!
+microbundle --define __ACI_DEV__=true  -o dev/index.js  --tsconfig tsconfig.build.json --generateTypes=false --target=web  --format=umd & p3=$!
+microbundle --define __ACI_DEV__=false -o dist/index.js --tsconfig tsconfig.build.json --generateTypes      --target=web  --format=umd & p4=$!
 
-microbundle --define __ACI_DEV__=true -o dev/index.js --tsconfig tsconfig.build.json --generateTypes=false --target=web --format=umd &
-microbundle --define __ACI_DEV__=false -o dist/index.js --tsconfig tsconfig.build.json --generateTypes --target=web --format=umd &
+for pid in "$p1" "$p2" "$p3" "$p4"; do
+  wait "$pid" || exit 1
+done
+
+echo "Builds done!"
 
 # Add a simple index.d.ts file to type all dev builds
 echo "export * from '../dist/index.js';" | tee dev/index.d.ts \
 dev/index.d.cts \
 dev/index.modern.d.ts \
 dev/index.module.d.ts \
-dev/index.bundle.d.ts > /dev/null &
+dev/index.bundle.d.ts > /dev/null
 
 echo "export * from './index.js';" | tee dist/index.d.cts \
 dist/index.modern.d.ts \
 dist/index.module.d.ts \
-dist/index.bundle.d.ts > /dev/null &
-
-wait
+dist/index.bundle.d.ts > /dev/null
 
 # Creates a .d.mts copy of the .d.ts files with .mjs imports
 find dist -name '*.d.ts' ! -name 'index.bundle.d.ts' -exec sh -c 'i="$1"; cp "$i" "${i%.ts}.mts"' shell {} \;
