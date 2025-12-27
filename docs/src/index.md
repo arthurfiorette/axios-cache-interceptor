@@ -31,7 +31,7 @@ features:
   - icon: 📦
     title: Handy builds
     details:
-      No matter what's you JS setup, we got you covered! CDN, EcmaScript, UMD, CommonJS
+      No matter what your JS setup is, we got you covered! CDN, EcmaScript, UMD, CommonJS
       and URL imports.
 
   - icon: 🔩

@@ -3,7 +3,7 @@
 Each request can have its own cache customization, by using the `cache` property. This
 way, you can have requests behaving differently from each other without much effort.
 
-The inline documentation is self explanatory, but here is a shortly brief of what each
+The inline documentation is self explanatory, but here is a brief overview of what each
 property does:
 
 ::: tip
@@ -307,7 +307,7 @@ Once the request is resolved, this specifies what other responses should change 
 cache. Can be used to update the request or delete other caches. It is a simple `Record`
 with the request id.
 
-Here's an example with some basic login:
+Here's an example with some basic logic:
 
 Using a function instead of an object is supported but not recommended, as it's better to
 just consume the response normally and write your own code after it. But it`s here in case
