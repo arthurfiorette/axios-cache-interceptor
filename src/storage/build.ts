@@ -4,7 +4,6 @@ import type { MaybePromise } from '../util/types.js';
 import type { AxiosStorage, CachedStorageValue, StaleStorageValue, StorageValue } from './types.js';
 
 /**
- *
  * Returns true if the provided object was created from {@link buildStorage} function.
  *
  * @deprecated This function will be hidden in future versions. Please tell us why you need it at https://github.com/arthurfiorette/axios-cache-interceptor/issues/1158
