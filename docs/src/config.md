@@ -234,8 +234,7 @@ setupCache(axiosInstance, { debug: console.log });
 
 // Own logging platform.
 setupCache(axiosInstance, {
-  debug: ({ id, msg, data }) =>
-    myLoggerExample.emit({ id, msg, data })
+  debug: ({ id, msg, data }) => myLoggerExample.emit({ id, msg, data })
 });
 
 // Disables debug. (default)
