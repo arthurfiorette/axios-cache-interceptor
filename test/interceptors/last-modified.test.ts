@@ -76,14 +76,20 @@ describe('LastModified handling', () => {
     assert.equal(response.stale, undefined);
     assert.ok(response.data);
     assert.equal(response.config.headers?.[Header.IfModifiedSince], undefined);
-    assert.ok(response.headers?.[Header.XAxiosCacheLastModified]);
+
+    // Check meta.revalidation instead of headers
+    const cache = await axios.storage.get(response.id);
+    assert.ok(cache.data?.meta?.revalidation?.lastModified);
 
     const response2 = await axios.get('url', config);
     assert.ok(response2.cached);
     assert.equal(!!response.stale, false);
     assert.ok(response2.data);
     assert.ok(response2.config.headers?.[Header.IfModifiedSince]);
-    assert.ok(response2.headers?.[Header.XAxiosCacheLastModified]);
+
+    // Check meta.revalidation still present
+    const cache2 = await axios.storage.get(response2.id);
+    assert.ok(cache2.data?.meta?.revalidation?.lastModified);
   });
 
   it('ModifiedSince using cache timestamp', async () => {

@@ -18,6 +18,32 @@ export interface CachedResponseMeta {
    * }
    */
   vary?: Record<string, string | undefined>;
+
+  /**
+   * Revalidation metadata for conditional requests (304 Not Modified).
+   * Enables stale cache revalidation via `ETag` or `Last-Modified` validators.
+   *
+   * @example
+   * // ETag-based revalidation
+   * meta: { revalidation: { etag: 'W/123' } }
+   *
+   * @example
+   * // Last-Modified revalidation with cache timestamp
+   * meta: { revalidation: { lastModified: true } }
+   */
+  revalidation?: {
+    /**
+     * ETag value for `If-None-Match` header.
+     * Stored when `cache.etag` config provides a custom value.
+     */
+    etag?: string;
+
+    /**
+     * Last-Modified value for `If-Modified-Since` header.
+     * Can be a UTC date string or `true` to use cache creation timestamp.
+     */
+    lastModified?: string | true;
+  };
 }
 
 export interface CachedResponse {

@@ -50,16 +50,19 @@ describe('StaleIfError handling', () => {
     }
   });
 
-  it('XAxiosCacheStaleIfError is defined', async () => {
+  it('staleIfError works without x-axios-cache header', async () => {
     const axios = mockAxios({
       ttl: 127910 // random number
     });
 
-    const { headers } = await axios.get('url', {
+    const response = await axios.get('url', {
       cache: { staleIfError: true }
     });
 
-    assert.equal(headers[Header.XAxiosCacheStaleIfError], '127910');
+    // Verify cache entry exists and can be used for stale-if-error
+    const cache = await axios.storage.get(response.id);
+    assert.equal(cache.state, 'cached');
+    assert.equal(cache.ttl, 127910);
   });
 
   it('StaleIfError is `ignore` if `config.cache=false`', async () => {
