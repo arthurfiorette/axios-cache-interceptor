@@ -261,6 +261,7 @@ export interface CacheInstance {
    *
    * Used to take some decisions like handling or not `Cache-Control: private`.
    *
+   * @deprecated This property will be hidden in future versions. Please tell us why you need it at https://github.com/arthurfiorette/axios-cache-interceptor/issues/1158
    * @default typeof window === 'undefined' ? 'server' : 'client'
    * @see https://axios-cache-interceptor.js.org/config#location
    */
@@ -298,6 +299,7 @@ export interface CacheInstance {
    * You'd normally not need to change this, but it is exposed in case you need to use it
    * as some sort of listener of know when a request is waiting for other to finish.
    *
+   * @deprecated This property will be hidden in future versions. Please tell us why you need it at https://github.com/arthurfiorette/axios-cache-interceptor/issues/1158
    * @default new Map()
    * @see https://axios-cache-interceptor.js.org/config#waiting
    */
@@ -320,6 +322,7 @@ export interface CacheInstance {
    * - `'not enough headers'`: the request will find other ways to determine the TTL value.
    * - `number`: used as the TTL value.
    *
+   * @deprecated This property will be hidden in future versions. Please tell us why you need it at https://github.com/arthurfiorette/axios-cache-interceptor/issues/1158
    * @default defaultHeaderInterpreter
    * @see https://axios-cache-interceptor.js.org/config#headerinterpreter
    */
@@ -338,6 +341,7 @@ export interface CacheInstance {
    * See its code for more information
    * [here](https://github.com/arthurfiorette/axios-cache-interceptor/tree/main/src/interceptors).
    *
+   * @deprecated This property will be hidden in future versions. Please tell us why you need it at https://github.com/arthurfiorette/axios-cache-interceptor/issues/1158
    * @default defaultRequestInterceptor
    * @see https://axios-cache-interceptor.js.org/config#requestinterceptor
    */
@@ -356,6 +360,7 @@ export interface CacheInstance {
    * See its code for more information
    * [here](https://github.com/arthurfiorette/axios-cache-interceptor/tree/main/src/interceptors).
    *
+   * @deprecated This property will be hidden in future versions. Please tell us why you need it at https://github.com/arthurfiorette/axios-cache-interceptor/issues/1158
    * @default defaultResponseInterceptor
    * @see https://axios-cache-interceptor.js.org/config#responseinterceptor
    */

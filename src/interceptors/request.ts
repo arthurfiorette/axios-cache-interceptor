@@ -8,6 +8,9 @@ import { regexOrStringMatch } from '../util/cache-predicate.js';
 import type { RequestInterceptor } from './build.js';
 import { createValidateStatus, isMethodIn, updateStaleRequest } from './util.js';
 
+/**
+ * @deprecated This function will be hidden in future versions. Please tell us why you need it at https://github.com/arthurfiorette/axios-cache-interceptor/issues/1158
+ */
 export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInterceptor {
   const onFulfilled: RequestInterceptor['onFulfilled'] = async (config) => {
     config.id = axios.generateKey(config, {

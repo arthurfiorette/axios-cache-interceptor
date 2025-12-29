@@ -3,7 +3,11 @@ import { Header } from '../header/headers.js';
 import type { MaybePromise } from '../util/types.js';
 import type { AxiosStorage, CachedStorageValue, StaleStorageValue, StorageValue } from './types.js';
 
-/** Returns true if the provided object was created from {@link buildStorage} function. */
+/**
+ * Returns true if the provided object was created from {@link buildStorage} function.
+ *
+ * @deprecated This function will be hidden in future versions. Please tell us why you need it at https://github.com/arthurfiorette/axios-cache-interceptor/issues/1158
+ */
 export const isStorage = (obj: unknown): obj is AxiosStorage =>
   !!obj && !!(obj as Record<string, boolean>)['is-storage'];
 

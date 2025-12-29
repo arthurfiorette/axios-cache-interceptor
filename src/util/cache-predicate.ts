@@ -2,7 +2,11 @@ import type { CacheAxiosResponse } from '../cache/axios.js';
 
 import type { CachePredicate, CachePredicateObject } from './types.js';
 
-/** Tests an response against a {@link CachePredicateObject}. */
+/**
+ * Tests an response against a {@link CachePredicateObject}.
+ *
+ * @deprecated This function will be hidden in future versions. Please tell us why you need it at https://github.com/arthurfiorette/axios-cache-interceptor/issues/1158
+ */
 export async function testCachePredicate<R = unknown, D = unknown>(
   response: CacheAxiosResponse<R, D>,
   predicate: CachePredicate<R, D>
@@ -48,6 +52,8 @@ export async function testCachePredicate<R = unknown, D = unknown>(
  *
  * @param configUrl - The URL to test against the provided pattern; normally `config.url`.
  * @returns `true` if the `configUrl` matches the `matchPattern`
+ *
+ * @deprecated This function will be hidden in future versions. Please tell us why you need it at https://github.com/arthurfiorette/axios-cache-interceptor/issues/1158
  */
 export function regexOrStringMatch(matchPattern: string | RegExp, configUrl: string) {
   if (matchPattern instanceof RegExp) {
