@@ -2,7 +2,11 @@ import type { CacheAxiosResponse } from '../cache/axios.js';
 import type { AxiosStorage } from '../storage/types.js';
 import type { CacheUpdater } from './types.js';
 
-/** Function to update all caches, from CacheProperties.update, with the new data. */
+/**
+ * Function to update all caches, from CacheProperties.update, with the new data.
+ *
+ * @deprecated This function will be hidden in future versions. Please tell us why you need it at https://github.com/arthurfiorette/axios-cache-interceptor/issues/1158
+ */
 export async function updateCache<R, D>(
   storage: AxiosStorage,
   data: CacheAxiosResponse<R, D>,

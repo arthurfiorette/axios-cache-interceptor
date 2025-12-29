@@ -15,6 +15,8 @@ import type {
 /**
  * Creates a new validateStatus function that will use the one already used and also
  * accept status code 304.
+ *
+ * @deprecated This function will be hidden in future versions. Please tell us why you need it at https://github.com/arthurfiorette/axios-cache-interceptor/issues/1158
  */
 export function createValidateStatus(
   oldValidate?: CacheRequestConfig['validateStatus']
@@ -24,7 +26,11 @@ export function createValidateStatus(
     : (status) => (status >= 200 && status < 300) || status === 304;
 }
 
-/** Checks if the given method is in the methods array */
+/**
+ * Checks if the given method is in the methods array
+ *
+ * @deprecated This function will be hidden in future versions. Please tell us why you need it at https://github.com/arthurfiorette/axios-cache-interceptor/issues/1158
+ */
 export function isMethodIn(
   requestMethod: Method | string = 'get',
   methodList: Method[] = []
@@ -33,6 +39,9 @@ export function isMethodIn(
   return methodList.some((method) => method === requestMethod);
 }
 
+/**
+ * @deprecated This interface will be hidden in future versions. Please tell us why you need it at https://github.com/arthurfiorette/axios-cache-interceptor/issues/1158
+ */
 export interface ConfigWithCache<D> extends InternalCacheRequestConfig<unknown, D> {
   cache: Partial<CacheProperties<unknown, D>>;
 }
@@ -40,6 +49,8 @@ export interface ConfigWithCache<D> extends InternalCacheRequestConfig<unknown, 
 /**
  * This function updates the cache when the request is stale. So, the next request to the
  * server will be made with proper header / settings.
+ *
+ * @deprecated This function will be hidden in future versions. Please tell us why you need it at https://github.com/arthurfiorette/axios-cache-interceptor/issues/1158
  */
 export function updateStaleRequest<D>(
   cache: StaleStorageValue | MustRevalidateStorageValue,
@@ -69,6 +80,8 @@ export function updateStaleRequest<D>(
 /**
  * Creates the new date to the cache by the provided response. Also handles possible 304
  * Not Modified by updating response properties.
+ *
+ * @deprecated This function will be hidden in future versions. Please tell us why you need it at https://github.com/arthurfiorette/axios-cache-interceptor/issues/1158
  */
 export function createCacheResponse<R, D>(
   response: CacheAxiosResponse<R, D>,

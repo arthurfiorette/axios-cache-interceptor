@@ -11,6 +11,9 @@ import { updateCache } from '../util/update-cache.js';
 import type { ResponseInterceptor } from './build.js';
 import { createCacheResponse, isMethodIn } from './util.js';
 
+/**
+ * @deprecated This function will be hidden in future versions. Please tell us why you need it at https://github.com/arthurfiorette/axios-cache-interceptor/issues/1158
+ */
 export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseInterceptor {
   /**
    * Replies a deferred stored in the axios waiting map. Use resolve to proceed checking the

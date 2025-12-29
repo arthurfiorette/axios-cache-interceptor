@@ -92,7 +92,11 @@ export interface CacheRequestConfig<R = any, D = any> extends AxiosRequestConfig
   cache?: Partial<CacheProperties<R, D>> | false;
 }
 
-/** Cached version of type {@link InternalAxiosRequestConfig} */
+/**
+ * Cached version of type {@link InternalAxiosRequestConfig}
+ *
+ * @deprecated This interface will be hidden in future versions. Please tell us why you need it at https://github.com/arthurfiorette/axios-cache-interceptor/issues/1158
+ */
 export interface InternalCacheRequestConfig<R = any, D = any> extends CacheRequestConfig<R, D> {
   headers: AxiosRequestHeaders;
 }

@@ -2,6 +2,9 @@ import { parse } from 'cache-parser';
 import { Header } from './headers.js';
 import type { HeaderInterpreter } from './types.js';
 
+/**
+ * @deprecated This function will be hidden in future versions. Please tell us why you need it at https://github.com/arthurfiorette/axios-cache-interceptor/issues/1158
+ */
 export const defaultHeaderInterpreter: HeaderInterpreter = (headers, location) => {
   if (!headers) return 'not enough headers';
 

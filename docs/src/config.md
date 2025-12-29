@@ -29,6 +29,10 @@ setupCache(Axios, OPTIONS);
 
 ## location
 
+<a href="https://github.com/arthurfiorette/axios-cache-interceptor/issues/1158?utm_source=docs&utm_medium=badge&utm_campaign=deprecation">
+ <Badge text="deprecated" type="danger"/>
+</a>
+
 <Badge text="optional" type="warning"/>
 
 - Type: `InstanceLocation`
@@ -88,6 +92,10 @@ should use a more robust hashing algorithm.
 
 ## waiting
 
+<a href="https://github.com/arthurfiorette/axios-cache-interceptor/issues/1158?utm_source=docs&utm_medium=badge&utm_campaign=deprecation" target="_blank">
+ <Badge text="deprecated" type="danger"/>
+</a>
+
 <Badge text="optional" type="warning"/>
 
 - Type: `Map<string, Deferred<void>>`
@@ -101,7 +109,11 @@ sort of listener or know when a request is waiting for others to finish.
 
 ## headerInterpreter
 
- <Badge text="optional" type="warning"/>
+<a href="https://github.com/arthurfiorette/axios-cache-interceptor/issues/1158?utm_source=docs&utm_medium=badge&utm_campaign=deprecation" target="_blank">
+ <Badge text="deprecated" type="danger"/>
+</a>
+
+<Badge text="optional" type="warning"/>
 
 - Type: `HeaderInterpreter`
 - Default: `defaultHeaderInterpreter`
@@ -130,7 +142,10 @@ The possible returns are:
 ::: details Example of a custom headerInterpreter
 
 ```ts
-import { setupCache, type HeaderInterpreter } from 'axios-cache-interceptor';
+import {
+  setupCache,
+  type HeaderInterpreter
+} from 'axios-cache-interceptor';
 
 const myHeaderInterpreter: HeaderInterpreter = (headers) => {
   if (headers['x-my-custom-header']) {
@@ -151,6 +166,10 @@ const myHeaderInterpreter: HeaderInterpreter = (headers) => {
 
 ## requestInterceptor
 
+<a href="https://github.com/arthurfiorette/axios-cache-interceptor/issues/1158?utm_source=docs&utm_medium=badge&utm_campaign=deprecation" target="_blank">
+ <Badge text="deprecated" type="danger"/>
+</a>
+
 <Badge text="optional" type="warning"/>
 
 - Type: `AxiosInterceptor<CacheRequestConfig<unknown, unknown>>`
@@ -169,6 +188,10 @@ See its code for more information
 [here](https://github.com/arthurfiorette/axios-cache-interceptor/tree/main/src/interceptors).
 
 ## responseInterceptor
+
+<a href="https://github.com/arthurfiorette/axios-cache-interceptor/issues/1158?utm_source=docs&utm_medium=badge&utm_campaign=deprecation" target="_blank">
+ <Badge text="deprecated" type="danger"/>
+</a>
 
 <Badge text="optional" type="warning"/>
 
@@ -214,7 +237,8 @@ setupCache(axiosInstance, { debug: console.log });
 
 // Own logging platform.
 setupCache(axiosInstance, {
-  debug: ({ id, msg, data }) => myLoggerExample.emit({ id, msg, data })
+  debug: ({ id, msg, data }) =>
+    myLoggerExample.emit({ id, msg, data })
 });
 
 // Disables debug. (default)

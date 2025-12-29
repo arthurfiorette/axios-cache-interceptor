@@ -142,13 +142,6 @@ value
 - Type: `boolean`
 - Default: `true`
 
-::: tip
-
-You can override the default behavior by changing the
-**[headerInterpreter](../config.md#headerinterpreter)** option.
-
-:::
-
 If activated, when the response is received, the `ttl` property will be inferred from the
 requests headers. As described in the MDN docs and HTML specification.
 

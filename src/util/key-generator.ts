@@ -46,6 +46,9 @@ export function buildKeyGenerator<R = unknown, D = unknown>(
   };
 }
 
+/**
+ * @deprecated This function will be hidden in future versions. Please tell us why you need it at https://github.com/arthurfiorette/axios-cache-interceptor/issues/1158
+ */
 export const defaultKeyGenerator = buildKeyGenerator(
   ({ baseURL, url, method, params, data }, meta) => {
     // Remove trailing slashes to avoid generating different keys for the "same" final url.

@@ -8,6 +8,8 @@ import type { InstanceLocation } from '../util/types.js';
  * - `'not enough headers'`: the request will find other ways to determine the TTL value.
  * - `number`: used as the TTL value.
  * - `{ cache: number, stale: number }: used as the TTL value and stale TTL value`
+ *
+ * @deprecated This interface will be hidden in future versions. Please tell us why you need it at https://github.com/arthurfiorette/axios-cache-interceptor/issues/1158
  */
 export type InterpreterResult =
   | 'dont cache'
@@ -35,6 +37,8 @@ export type InterpreterResult =
  *   enough to determine a valid value. Or a `number` containing the number of
  *   **milliseconds** to cache the response.
  * @see https://axios-cache-interceptor.js.org/config#headerinterpreter
+ *
+ * @deprecated This interface will be hidden in future versions. Please tell us why you need it at https://github.com/arthurfiorette/axios-cache-interceptor/issues/1158
  */
 export type HeaderInterpreter = (
   headers: CacheAxiosResponse['headers'],
