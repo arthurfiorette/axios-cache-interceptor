@@ -142,10 +142,7 @@ The possible returns are:
 ::: details Example of a custom headerInterpreter
 
 ```ts
-import {
-  setupCache,
-  type HeaderInterpreter
-} from 'axios-cache-interceptor';
+import { setupCache, type HeaderInterpreter } from 'axios-cache-interceptor';
 
 const myHeaderInterpreter: HeaderInterpreter = (headers) => {
   if (headers['x-my-custom-header']) {
