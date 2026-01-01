@@ -182,20 +182,25 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
 
     const data = createCacheResponse(response, cache.data);
 
-    // Store revalidation metadata in meta instead of headers
+    // Store revalidation metadata in meta.revalidation (single source of truth)
     if (cacheConfig.etag || cacheConfig.modifiedSince) {
       data.meta ??= {};
       data.meta.revalidation = {};
 
-      // Store custom ETag value
-      if (cacheConfig.etag && cacheConfig.etag !== true) {
-        data.meta.revalidation.etag = cacheConfig.etag;
+      // ETag: store response's ETag or custom value
+      if (cacheConfig.etag) {
+        const etag = cacheConfig.etag === true ? response.headers[Header.ETag] : cacheConfig.etag;
+        if (etag) {
+          data.meta.revalidation.etag = etag;
+        }
       }
 
-      // Store Last-Modified value (date string or true for cache timestamp)
+      // Last-Modified: store response's Last-Modified, cache timestamp (true), or custom date
       if (cacheConfig.modifiedSince) {
         data.meta.revalidation.lastModified =
-          cacheConfig.modifiedSince === true ? true : cacheConfig.modifiedSince.toUTCString();
+          cacheConfig.modifiedSince === true
+            ? response.headers[Header.LastModified] || true
+            : cacheConfig.modifiedSince.toUTCString();
       }
     }
 
