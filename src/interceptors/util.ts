@@ -57,23 +57,48 @@ export function updateStaleRequest<D>(
   config: ConfigWithCache<D>
 ): void {
   const { etag, modifiedSince } = config.cache;
+  const revalidation = cache.data?.meta?.revalidation;
 
+  // Handle ETag revalidation
   if (etag) {
-    const etagValue = etag === true ? cache.data?.headers[Header.ETag] : etag;
+    let etagValue: string | undefined;
+
+    if (revalidation?.etag) {
+      // Prefer meta value (new format)
+      etagValue = revalidation.etag;
+    } else if (etag === true) {
+      // Fallback to response ETag header (backward compatibility)
+      etagValue = cache.data?.headers[Header.ETag];
+    } else {
+      // Custom value from config
+      etagValue = etag;
+    }
 
     if (etagValue) {
       config.headers.set(Header.IfNoneMatch, etagValue);
     }
   }
 
+  // Handle Last-Modified revalidation
   if (modifiedSince) {
-    config.headers.set(
-      Header.IfModifiedSince,
-      // If last-modified is not present, use the createdAt timestamp
-      modifiedSince === true
-        ? cache.data.headers[Header.LastModified] || new Date(cache.createdAt).toUTCString()
-        : modifiedSince.toUTCString()
-    );
+    let lastModifiedValue: string;
+
+    if (revalidation?.lastModified) {
+      // Prefer meta value (new format)
+      lastModifiedValue =
+        revalidation.lastModified === true
+          ? new Date(cache.createdAt).toUTCString()
+          : revalidation.lastModified;
+    } else if (modifiedSince === true) {
+      // Fallback to response Last-Modified header (backward compatibility)
+      lastModifiedValue =
+        cache.data.headers[Header.LastModified] || new Date(cache.createdAt).toUTCString();
+    } else {
+      // Custom Date from config
+      lastModifiedValue = modifiedSince.toUTCString();
+    }
+
+    config.headers.set(Header.IfModifiedSince, lastModifiedValue);
   }
 }
 

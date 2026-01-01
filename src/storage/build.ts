@@ -1,7 +1,13 @@
 import type { CacheRequestConfig } from '../cache/axios.js';
 import { Header } from '../header/headers.js';
 import type { MaybePromise } from '../util/types.js';
-import type { AxiosStorage, CachedStorageValue, StaleStorageValue, StorageValue } from './types.js';
+import type {
+  AxiosStorage,
+  CachedResponse,
+  CachedStorageValue,
+  StaleStorageValue,
+  StorageValue
+} from './types.js';
 
 /**
  * Returns true if the provided object was created from {@link buildStorage} function.
@@ -11,14 +17,54 @@ import type { AxiosStorage, CachedStorageValue, StaleStorageValue, StorageValue 
 export const isStorage = (obj: unknown): obj is AxiosStorage =>
   !!obj && !!(obj as Record<string, boolean>)['is-storage'];
 
-function hasUniqueIdentifierHeader(value: CachedStorageValue | StaleStorageValue): boolean {
+/**
+ * Migrates old header-based revalidation data to new meta.revalidation format.
+ * This ensures backward compatibility with existing cache entries.
+ *
+ * @deprecated Internal migration function. Will be removed when all cache entries
+ * have naturally expired and been recreated with new format.
+ */
+function migrateRevalidationHeaders(data: CachedResponse): void {
+  // Skip if already has meta.revalidation
+  if (data.meta?.revalidation) {
+    return;
+  }
+
+  const oldEtag = data.headers[Header.XAxiosCacheEtag];
+  const oldLastModified = data.headers[Header.XAxiosCacheLastModified];
+
+  if (oldEtag || oldLastModified) {
+    data.meta ??= {};
+    data.meta.revalidation = {};
+
+    if (oldEtag) {
+      data.meta.revalidation.etag = oldEtag;
+    }
+
+    if (oldLastModified) {
+      data.meta.revalidation.lastModified =
+        oldLastModified === 'use-cache-timestamp' ? true : oldLastModified;
+    }
+
+    delete data.headers[Header.XAxiosCacheEtag];
+    delete data.headers[Header.XAxiosCacheLastModified];
+    delete data.headers[Header.XAxiosCacheStaleIfError];
+  }
+}
+
+function hasRevalidationMetadata(value: CachedStorageValue | StaleStorageValue): boolean {
+  // Migrate old entries on-the-fly
+  migrateRevalidationHeaders(value.data);
+
   const headers = value.data.headers;
+  const revalidation = value.data.meta?.revalidation;
 
   return (
+    // Standard HTTP revalidation headers
     Header.ETag in headers ||
     Header.LastModified in headers ||
-    Header.XAxiosCacheEtag in headers ||
-    Header.XAxiosCacheLastModified in headers
+    // Revalidation metadata (new format)
+    !!(revalidation?.etag || revalidation?.lastModified)
   );
 }
 
@@ -31,7 +77,7 @@ export function mustRevalidate(value: CachedStorageValue | StaleStorageValue): b
 
 /** Returns true if this has sufficient properties to stale instead of expire. */
 export function canStale(value: CachedStorageValue): boolean {
-  if (hasUniqueIdentifierHeader(value)) {
+  if (hasRevalidationMetadata(value)) {
     return true;
   }
 
@@ -167,6 +213,11 @@ export function buildStorage({ set, find, remove, clear }: BuildStorage): AxiosS
         return value;
       }
 
+      // Migrate old x-axios-cache headers to meta.revalidation on-the-fly
+      if (value.state === 'cached' || value.state === 'stale') {
+        migrateRevalidationHeaders(value.data);
+      }
+
       // Handle cached values
       if (value.state === 'cached') {
         if (!isExpired(value)) {
@@ -199,7 +250,7 @@ export function buildStorage({ set, find, remove, clear }: BuildStorage): AxiosS
         return value;
       }
 
-      if (hasUniqueIdentifierHeader(value)) {
+      if (hasRevalidationMetadata(value)) {
         return value;
       }
 

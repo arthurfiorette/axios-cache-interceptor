@@ -175,6 +175,71 @@ describe('MemoryStorage', () => {
     assert.ok(storage.data.get('key3'));
   });
 
+  it('migrates old x-axios-cache headers to meta.revalidation', async () => {
+    const storage = buildMemoryStorage();
+
+    // Create old-format cache entry with x-axios-cache headers
+    await storage.set('old-etag', {
+      state: 'stale',
+      ttl: 5000,
+      createdAt: Date.now(),
+      data: {
+        status: 200,
+        statusText: 'OK',
+        headers: { [Header.XAxiosCacheEtag]: 'W/old-etag-value' }
+      }
+    });
+
+    await storage.set('old-lastmodified', {
+      state: 'stale',
+      ttl: 5000,
+      createdAt: Date.now(),
+      data: {
+        status: 200,
+        statusText: 'OK',
+        headers: { [Header.XAxiosCacheLastModified]: 'use-cache-timestamp' }
+      }
+    });
+
+    await storage.set('old-both', {
+      state: 'stale',
+      ttl: 5000,
+      createdAt: Date.now(),
+      data: {
+        status: 200,
+        statusText: 'OK',
+        headers: {
+          [Header.XAxiosCacheEtag]: 'W/combined-value',
+          [Header.XAxiosCacheLastModified]: 'Wed, 21 Oct 2015 07:28:00 GMT',
+          [Header.XAxiosCacheStaleIfError]: '3600'
+        }
+      }
+    });
+
+    // Access entries to trigger migration
+    const etag = await storage.get('old-etag');
+    const lastmod = await storage.get('old-lastmodified');
+    const both = await storage.get('old-both');
+
+    // Verify etag migration
+    assert.equal(etag.state, 'stale');
+    assert.equal(etag.data?.meta?.revalidation?.etag, 'W/old-etag-value');
+    assert.equal(etag.data?.headers[Header.XAxiosCacheEtag], undefined);
+
+    // Verify lastModified migration (string -> true conversion)
+    assert.equal(lastmod.state, 'stale');
+    assert.equal(lastmod.data?.meta?.revalidation?.lastModified, true);
+    assert.equal(lastmod.data?.headers[Header.XAxiosCacheLastModified], undefined);
+
+    // Verify combined migration
+    assert.equal(both.state, 'stale');
+    assert.equal(both.data?.meta?.revalidation?.etag, 'W/combined-value');
+    assert.equal(both.data?.meta?.revalidation?.lastModified, 'Wed, 21 Oct 2015 07:28:00 GMT');
+    assert.equal(both.data?.headers[Header.XAxiosCacheEtag], undefined);
+    assert.equal(both.data?.headers[Header.XAxiosCacheLastModified], undefined);
+    assert.equal(both.data?.headers[Header.XAxiosCacheStaleIfError], undefined);
+  });
+
   it('tests maxEntries with cleanup', async () => {
     const storage = buildMemoryStorage(false, false, 3);
 

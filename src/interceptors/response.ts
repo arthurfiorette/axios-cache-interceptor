@@ -146,17 +146,6 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
       }
     }
 
-    if (cacheConfig.etag && cacheConfig.etag !== true) {
-      response.headers[Header.XAxiosCacheEtag] = cacheConfig.etag;
-    }
-
-    if (cacheConfig.modifiedSince) {
-      response.headers[Header.XAxiosCacheLastModified] =
-        cacheConfig.modifiedSince === true
-          ? 'use-cache-timestamp'
-          : cacheConfig.modifiedSince.toUTCString();
-    }
-
     let ttl = cacheConfig.ttl || -1; // always set from global config
     let staleTtl: number | undefined;
 
@@ -192,6 +181,28 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
     }
 
     const data = createCacheResponse(response, cache.data);
+
+    // Store revalidation metadata in meta.revalidation (single source of truth)
+    if (cacheConfig.etag || cacheConfig.modifiedSince) {
+      data.meta ??= {};
+      data.meta.revalidation = {};
+
+      // ETag: store response's ETag or custom value
+      if (cacheConfig.etag) {
+        const etag = cacheConfig.etag === true ? response.headers[Header.ETag] : cacheConfig.etag;
+        if (etag) {
+          data.meta.revalidation.etag = etag;
+        }
+      }
+
+      // Last-Modified: store response's Last-Modified, cache timestamp (true), or custom date
+      if (cacheConfig.modifiedSince) {
+        data.meta.revalidation.lastModified =
+          cacheConfig.modifiedSince === true
+            ? response.headers[Header.LastModified] || true
+            : cacheConfig.modifiedSince.toUTCString();
+      }
+    }
 
     // Either stales response (Vary *) or sets request Vary headers into metadata
     if (cacheConfig.vary !== false && response.headers[Header.Vary]) {
@@ -236,10 +247,6 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
         replyDeferred(response.id, 'resolve');
         return response;
       }
-    }
-
-    if (cacheConfig.staleIfError) {
-      response.headers[Header.XAxiosCacheStaleIfError] = String(ttl);
     }
 
     if (__ACI_DEV__) {
