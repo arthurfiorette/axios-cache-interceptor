@@ -30,27 +30,22 @@ function migrateRevalidationHeaders(data: CachedResponse): void {
     return;
   }
 
-  // Check if old headers exist
-  const hasOldEtag = Header.XAxiosCacheEtag in data.headers;
-  const hasOldLastModified = Header.XAxiosCacheLastModified in data.headers;
+  const oldEtag = data.headers[Header.XAxiosCacheEtag];
+  const oldLastModified = data.headers[Header.XAxiosCacheLastModified];
 
-  if (hasOldEtag || hasOldLastModified) {
-    // Initialize meta structure
+  if (oldEtag || oldLastModified) {
     data.meta ??= {};
     data.meta.revalidation = {};
 
-    // Migrate etag
-    if (hasOldEtag) {
-      data.meta.revalidation.etag = data.headers[Header.XAxiosCacheEtag];
+    if (oldEtag) {
+      data.meta.revalidation.etag = oldEtag;
     }
 
-    // Migrate lastModified (convert old string format to new boolean format)
-    if (hasOldLastModified) {
-      const oldValue = data.headers[Header.XAxiosCacheLastModified];
-      data.meta.revalidation.lastModified = oldValue === 'use-cache-timestamp' ? true : oldValue;
+    if (oldLastModified) {
+      data.meta.revalidation.lastModified =
+        oldLastModified === 'use-cache-timestamp' ? true : oldLastModified;
     }
 
-    // Clean up old headers
     delete data.headers[Header.XAxiosCacheEtag];
     delete data.headers[Header.XAxiosCacheLastModified];
     delete data.headers[Header.XAxiosCacheStaleIfError];
