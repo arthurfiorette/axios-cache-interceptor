@@ -41,8 +41,7 @@ function migrateRevalidationHeaders(data: CachedResponse): void {
     // Migrate lastModified (convert old string format to new boolean format)
     if (hasOldLastModified) {
       const oldValue = data.headers[Header.XAxiosCacheLastModified];
-      data.meta.revalidation.lastModified =
-        oldValue === 'use-cache-timestamp' ? true : oldValue;
+      data.meta.revalidation.lastModified = oldValue === 'use-cache-timestamp' ? true : oldValue;
     }
 
     // Clean up old headers
