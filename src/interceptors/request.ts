@@ -143,7 +143,6 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
       // Previous response had Vary header to use
       cache.data.headers[Header.Vary]
     ) {
-      // [Authorization]
       const vary = Array.isArray(config.cache.vary)
         ? config.cache.vary
         : parseVary(cache.data.headers[Header.Vary]);
