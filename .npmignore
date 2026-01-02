@@ -5,9 +5,5 @@
 !LICENSE
 !README.md
 
-!src/**
-
 !dist/**
 !dev/**
-
-!examples/runkit.js
