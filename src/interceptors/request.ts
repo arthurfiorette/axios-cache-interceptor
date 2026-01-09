@@ -150,18 +150,21 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
       // Compares current request headers with cached vary headers (meta.vary)
       if (vary && vary !== '*' && !compareVary(vary, cache.data.meta?.vary, config.headers)) {
         // Generate base key without id field (otherwise returns config.id)
-        const newKey = axios.generateKey(
-          { ...config, id: undefined },
-          { vary: extractHeaders(config.headers, vary) }
-        );
+        const extractedHeaders = extractHeaders(config.headers, vary);
+        const newKey = axios.generateKey({ ...config, id: undefined }, { vary: extractedHeaders });
 
         // If ends up being a new key, change the cache to the new one
         if (config.id !== newKey) {
           if (__ACI_DEV__) {
             axios.debug({
               id: config.id,
-              msg: 'Vary mismatch: switching to vary-aware key',
-              data: { oldKey: config.id, newKey }
+              msg: 'Vary mismatch, switching to vary-aware key',
+              data: {
+                cachedHeaders: cache.data.meta.vary,
+                currentHeaders: extractedHeaders,
+                vary,
+                newKey
+              }
             });
           }
 
