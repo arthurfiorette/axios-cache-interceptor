@@ -356,8 +356,15 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
         await axios.storage.remove(id, config);
       }
 
-      // Rejects all other requests waiting for this response
-      replyDeferred(id, 'reject', error);
+      // Handle canceled requests differently from other errors
+      // Canceled requests should not propagate the error to waiting deduplicated requests
+      // Instead, resolve the deferred so waiting requests can make their own network call
+      if (error.code === 'ERR_CANCELED') {
+        replyDeferred(id, 'resolve');
+      } else {
+        // Rejects all other requests waiting for this response
+        replyDeferred(id, 'reject', error);
+      }
 
       throw error;
     }
