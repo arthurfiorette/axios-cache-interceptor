@@ -324,19 +324,17 @@ describe('Response Interceptor', () => {
       assert.equal(error.code, 'ERR_CANCELED');
     }
 
-    // p2 should also fail with the same cancellation error
-    // because it was waiting on the same deferred that was cancelled
-    try {
-      await promise;
-      assert.fail('should have thrown an error');
-    } catch (error: any) {
-      assert.equal(error.code, 'ERR_CANCELED');
-    }
+    // p2 should succeed by making its own network call
+    // This is the fix for the issue where canceled requests were incorrectly
+    // propagating errors to other waiting requests
+    const result = await promise;
+    assert.equal(result.cached, false); // Made a new network call
+    assert.ok(result.data);
 
     const storage = await axios.storage.get(id);
 
-    // Cache should be empty since the request was cancelled
-    assert.equal(storage.state, 'empty');
+    // Cache should now be populated from the successful second request
+    assert.equal(storage.state, 'cached');
   });
 
   it('Response gets cached even if there is a pending request without deferred.', async () => {
