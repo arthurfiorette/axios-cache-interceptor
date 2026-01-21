@@ -1,8 +1,8 @@
 import assert from 'node:assert';
 import { describe, it } from 'node:test';
 import { setTimeout } from 'node:timers/promises';
-import Axios, { AxiosError } from 'axios';
-import type { InternalCacheRequestConfig } from '../../src/cache/axios.js';
+import Axios from 'axios';
+import type { CacheAxiosResponse, InternalCacheRequestConfig } from '../../src/cache/axios.js';
 import { setupCache } from '../../src/cache/create.js';
 
 describe('Aborted Request Handling', () => {
@@ -17,7 +17,7 @@ describe('Aborted Request Handling', () => {
     // Mock adapter that simulates a network request
     axios.defaults.adapter = async (config: InternalCacheRequestConfig) => {
       requestCount++;
-      
+
       // Simulate network delay
       await setTimeout(100);
 
@@ -61,7 +61,7 @@ describe('Aborted Request Handling', () => {
 
     assert.equal(req2.data.success, true);
     assert.equal(req2.status, 200);
-    
+
     // The second request should have made a network call since the first was aborted
     assert.equal(requestCount, 2);
   });
@@ -70,7 +70,7 @@ describe('Aborted Request Handling', () => {
     const instance = Axios.create({});
     const axios = setupCache(instance, {
       interpretHeader: false,
-      debug: (msg) => {
+      debug: (_msg) => {
         // Uncomment to see debug logs like in the issue
         // console.log(JSON.stringify(msg, null, 2));
       }
@@ -81,7 +81,7 @@ describe('Aborted Request Handling', () => {
     // Mock adapter that simulates a network request
     axios.defaults.adapter = async (config: InternalCacheRequestConfig) => {
       requestCount++;
-      
+
       // Simulate network delay
       await setTimeout(50);
 
@@ -103,7 +103,7 @@ describe('Aborted Request Handling', () => {
 
     // After 10ms, abort the first request AND make the second request immediately
     // This is the key part - both happen in the same setTimeout
-    const req2Promise = new Promise((resolve, reject) => {
+    const req2Promise = new Promise<CacheAxiosResponse>((resolve, reject) => {
       setTimeout(10).then(() => {
         abortController.abort();
         const req2 = axios.get('https://dummyjson.com/products');
