@@ -19,18 +19,21 @@ function buildConfig(overrides: UserConfig) {
       entry: 'src/index.ts',
       tsconfig: 'tsconfig.build.json',
       clean: true,
+      inlineOnly: false, // Suppress bundling warnings for all formats
       format: {
         esm: {
           platform: 'neutral',
           target: ['esnext'],
           sourcemap: true,
-          minify: !!process.env.MINIFY
+          minify: !!process.env.MINIFY,
+          skipNodeModulesBundle: true // Don't bundle dependencies
         },
         cjs: {
           platform: 'node',
           target: ['esnext'],
           sourcemap: true,
-          minify: !!process.env.MINIFY
+          minify: !!process.env.MINIFY,
+          skipNodeModulesBundle: true // Don't bundle dependencies
         },
         umd: {
           plugins: [!!process.env.BUNDLE && unstableRolldownAdapter(analyzer())],
@@ -42,16 +45,22 @@ function buildConfig(overrides: UserConfig) {
           globalName: 'AxiosCacheInterceptor',
 
           // Parse dependencies source code to better tree shake them
-          alias: {
-            'object-code': import.meta.resolve('object-code/src/index.ts'),
-            'http-vary': import.meta.resolve('http-vary/src/index.ts'),
-            'cache-parser': import.meta.resolve('cache-parser/src/index.ts'),
-            'fast-defer': import.meta.resolve('fast-defer/src/index.ts')
+          resolve: {
+            alias: {
+              'object-code': path.resolve('./node_modules/object-code/src/index.ts'),
+              'http-vary': path.resolve('./node_modules/http-vary/src/index.ts'),
+              'cache-parser': path.resolve('./node_modules/cache-parser/src/index.ts'),
+              'fast-defer': path.resolve('./node_modules/fast-defer/src/index.ts')
+            }
           },
 
           // Keep previous output file structure
-          outputOptions: {
-            file: path.join(overrides.outDir ?? '', 'index.bundle.js')
+          outputOptions: (options) => {
+            const { dir, ...rest } = options;
+            return {
+              ...rest,
+              file: path.join(overrides.outDir ?? '', 'index.bundle.js')
+            };
           }
         }
       }
