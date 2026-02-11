@@ -46,3 +46,51 @@
 
 - Minimum: Node.js >=12
 - Uses `.nvmrc` for version specification
+
+## Running Specific Tests
+
+```bash
+# Run single test file
+pnpm test -- test/interceptors/vary.test.ts
+
+# Run multiple specific files
+pnpm test -- test/interceptors/request.test.ts test/interceptors/response.test.ts
+
+# Run only tests marked with .only
+pnpm test:only
+```
+
+## Build Tool Details
+
+- **tsdown**: Modern TypeScript bundler (replaces microbundle)
+- Outputs both production and development builds
+- Production: `__ACI_DEV__ = false` (debug stripped)
+- Development: `__ACI_DEV__ = true` (includes logging)
+- Generates TypeScript declarations for both CJS and ESM
+
+## Common Workflows
+
+### After Adding Feature
+
+```bash
+pnpm lint-fix      # Fix linting issues
+pnpm test:types    # Check TypeScript types
+pnpm test          # Run tests with coverage
+pnpm build         # Verify build works
+```
+
+### Debugging Issues
+
+```bash
+# Import from /dev and enable debug
+# See code_style_conventions.md for details
+pnpm test -- test/path/to/failing-test.test.ts
+```
+
+### Before Commit
+
+```bash
+pnpm lint-ci       # CI-level linting
+pnpm test:types    # Type check
+pnpm test          # All tests must pass
+```

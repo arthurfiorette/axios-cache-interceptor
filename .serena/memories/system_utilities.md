@@ -19,9 +19,28 @@
 
 ## Git Information
 
-- **Current Branch**: arthurfiorette/safari-takeover
+- **Current Branch**: main
 - **Main Branch**: main (use for PRs)
-- **Status**: Clean working directory
+- **Recent commits**: See git log for latest changes
+- **Remote**: https://github.com/arthurfiorette/axios-cache-interceptor
+
+### Common Git Workflows
+
+```bash
+# Check current status
+git status
+
+# View recent commits
+git log --oneline -10
+
+# Create feature branch
+git checkout -b feature/your-feature-name
+
+# Commit with co-author (when using Claude)
+git commit -m "feat: your feature description
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>"
+```
 
 ## Project Environment
 
