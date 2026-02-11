@@ -120,7 +120,7 @@ await axios.get('/api/live-stock-prices', {
 
 <Badge text="optional" type="warning"/>
 
-- Type: `number`
+- Type: `number | ((response: CacheAxiosResponse) => number | Promise<number>)`
 - Default: `1000 * 60 * 5` _(5 Minutes)_
 
 ::: warning
@@ -343,13 +343,10 @@ axios.post<{ auth: { user: User } }>(
 
 <Badge text="optional" type="warning"/>
 
-- Type: `boolean`
+- Type: `string | boolean`
 - Default: `true`
 
-If the request should handle
-[`ETag`](https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Headers/ETag) and
-[`If-None-Match support`](https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Headers/If-None-Match).
-Use a string to force a custom static value or true to use the previous response ETag.
+Configures [`ETag`](https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Headers/ETag) and [`If-None-Match`](https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Headers/If-None-Match) header handling for cache revalidation.
 
 To use `true` (automatic ETag handling), `interpretHeader` option must be set to `true`.
 
@@ -375,7 +372,7 @@ timestamp will be sent in
 
 ## cache.staleIfError
 
-- Type: `number` or `boolean` or `StaleIfErrorPredicate<R, D>`
+- Type: `number | boolean | StaleIfErrorPredicate<R, D>`
 - Default: `true`
 
 Enables cache to be returned if the response comes with an error, either by invalid status
@@ -384,9 +381,7 @@ using a predicate function.
 
 ::: warning
 
-If the response is treated as error because of invalid status code _(like when using
-[statusCheck](#cache-cachepredicate))_, and this ends up `true`, the cache will be
-preserved over the "invalid" request.
+If the response is treated as error because of invalid status code _(like when using [statusCheck](#cache-cachepredicate))_, and this ends up `true`, the cache will be preserved over the "invalid" request.
 
 So, if you want to preserve the response, you can use the below predicate:
 
@@ -397,17 +392,16 @@ const customPredicate = (response, cache, error) => {
   // Blocks staleIfError if has a response
   return !response;
 
-  // Note that, this still respects axios default implementation
-  // and throws an error, (but it keeps the response)
+  // Note that this still respects axios default implementation
+  // and throws an error (but it keeps the response)
 };
+
+axios.get('/api/data', {
+  cache: {
+    staleIfError: customPredicate
+  }
+});
 ```
-
-Types:
-
-- `number` -> the max time (in seconds) that the cache can be reused.
-- `boolean` -> `false` disables and `true` enables with infinite time if no value is
-  present on `stale-if-error` in Cache-Control.
-- `function` -> a predicate that can return `number` or `boolean` as described above.
 
 ## cache.override
 
@@ -460,10 +454,7 @@ await axios.get('/api/users', {
 - Type: `undefined | ((cache: StorageValue) => void | Promise<void>)`
 - Default: `undefined`
 
-Asynchronously called when a network request is needed to resolve the data, but an older
-one **and probably expired** cache exists. Its with the current data **BEFORE** the
-network travel starts, so you can use it to temporarily update your UI with expired data
-before the network returns.
+Asynchronously called when a network request is needed to resolve the data, but an older one **and probably expired** cache exists. Calls it with the current data **BEFORE** the network request starts, so you can use it to temporarily update your UI with expired data before the network returns.
 
 Hydrating your components with old data before the network resolves with the newer one is
 better than _flickering_ your entire UI. This is even better when dealing with slower

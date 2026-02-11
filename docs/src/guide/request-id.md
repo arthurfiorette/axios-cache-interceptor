@@ -1,7 +1,6 @@
 # Request Id
 
-We can distinguish requests from each other by assigning a **non-unique** `id` to each
-request. These IDs are the same provided to the storage as keys.
+We can distinguish requests from each other by assigning a unique `id` to each request. These IDs are provided to the storage as cache keys.
 
 Each ID is responsible for binding a cache to its request, for referencing or invalidating
 it later and to make the interceptor use the same cache for requests to the same endpoint

@@ -1,7 +1,6 @@
 # Other Interceptors
 
-When combining `axios-cache-interceptors` with other interceptors, you may encounter some
-inconsistencies. Which is explained in the next section.
+When combining `axios-cache-interceptor` with other interceptors, you may encounter some inconsistencies, which are explained in the next section.
 
 ## TL;DR
 
@@ -42,10 +41,7 @@ axios.interceptors.response.use((res) => res);
 
 ## Extending types
 
-When using axios-cache-interceptor, you'll note that it have a different type than the
-defaults `AxiosInstance`, `AxiosRequestConfig` and `AxiosResponse`. That's because was
-chosen to override axios's interfaces instead of extending, to avoid breaking changes with
-other libraries.
+When using axios-cache-interceptor, you'll note that it has a different type than the defaults `AxiosInstance`, `AxiosRequestConfig` and `AxiosResponse`. That's because we chose to override axios's interfaces instead of extending, to avoid breaking changes with other libraries.
 
 However, this also means that when integrating with other packages or creating your own
 custom interceptor, you need to override/extend our own types, `CacheInstance`,
