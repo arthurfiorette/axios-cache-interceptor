@@ -249,9 +249,10 @@ export default defineConfig({
     ],
 
     nav: [
-      { text: 'Guide', link: '/guide' },
-      { text: 'Config', link: '/config' },
-      { text: 'Others', link: '/others/license' },
+      { text: 'Journey', link: '/journey/' },
+      { text: 'Concepts', link: '/concepts/' },
+      { text: 'API', link: '/api/' },
+      { text: 'Examples', link: '/examples/' },
       {
         text: VERSION,
         items: [
@@ -293,7 +294,96 @@ export default defineConfig({
         target: '_blank'
       },
       {
-        text: 'Guide',
+        text: 'User Journey',
+        collapsed: false,
+        items: [
+          { text: 'Overview', link: '/journey/' },
+          { text: 'Installation', link: '/journey/installation' },
+          { text: 'Your First Cache', link: '/journey/first-cache' },
+          { text: 'Checking Cache', link: '/journey/checking-cache' },
+          { text: 'Caching POST', link: '/journey/caching-post-requests' },
+          { text: 'Persistent Storage', link: '/journey/persistent-storage' },
+          { text: 'Custom Storage', link: '/journey/custom-storage' },
+          { text: 'Invalidate on Mutation', link: '/journey/invalidate-on-mutation' },
+          { text: 'Preventing Stale Data', link: '/journey/preventing-stale-data' },
+          { text: 'Debugging Issues', link: '/journey/debugging-issues' },
+          { text: 'Production Checklist', link: '/journey/production-checklist' }
+        ]
+      },
+      {
+        text: 'Concepts',
+        collapsed: true,
+        items: [
+          { text: 'Overview', link: '/concepts/' },
+          { text: 'How It Works', link: '/concepts/how-it-works' },
+          { text: 'Request Lifecycle', link: '/concepts/request-lifecycle' },
+          { text: 'Storage States', link: '/concepts/storage-states' },
+          { text: 'Request Deduplication', link: '/concepts/request-deduplication' },
+          { text: 'HTTP Headers', link: '/concepts/http-caching-headers' },
+          { text: 'Cache Keys', link: '/concepts/cache-keys' },
+          { text: 'Storage Architecture', link: '/concepts/storage-architecture' },
+          { text: 'Header Interpretation', link: '/concepts/header-interpretation' },
+          { text: 'Stale Revalidation', link: '/concepts/stale-revalidation' },
+          { text: 'Vary Header', link: '/concepts/vary-header-handling' },
+          { text: 'Performance Model', link: '/concepts/performance-model' }
+        ]
+      },
+      {
+        text: 'API Reference',
+        collapsed: true,
+        items: [
+          { text: 'Overview', link: '/api/' },
+          {
+            text: 'Core API',
+            items: [
+              { text: 'setupCache()', link: '/api/setup-cache' },
+              { text: 'Request Config', link: '/api/request-config' },
+              { text: 'Response Object', link: '/api/response-object' }
+            ]
+          },
+          {
+            text: 'Storage',
+            items: [
+              { text: 'Storage Interface', link: '/api/storage-interface' },
+              { text: 'Memory Storage', link: '/api/memory-storage' },
+              { text: 'Web Storage', link: '/api/web-storage' },
+              { text: 'Build Storage', link: '/api/build-storage' }
+            ]
+          }
+        ]
+      },
+      {
+        text: 'Examples',
+        collapsed: true,
+        items: [
+          { text: 'Overview', link: '/examples/' },
+          { text: 'Basic Setup', link: '/examples/basic-setup' },
+          { text: 'Opt-in Cache', link: '/examples/opt-in-cache' },
+          { text: 'Redis Storage', link: '/examples/redis-storage' },
+          { text: 'IndexedDB Storage', link: '/examples/indexeddb-storage' },
+          { text: 'React Integration', link: '/examples/react-integration' },
+          { text: 'Vue Integration', link: '/examples/vue-integration' },
+          { text: 'Next.js SSR', link: '/examples/nextjs-ssr' },
+          { text: 'Testing', link: '/examples/testing-cached-code' }
+        ]
+      },
+      {
+        text: 'Troubleshooting',
+        collapsed: true,
+        items: [
+          { text: 'Overview', link: '/troubleshooting/' },
+          { text: 'Cache Not Working', link: '/troubleshooting/cache-not-working' },
+          { text: 'Stale Data Served', link: '/troubleshooting/stale-data-served' },
+          { text: 'Memory Leaks', link: '/troubleshooting/memory-leaks' },
+          { text: 'Cache Poisoning', link: '/troubleshooting/cache-poisoning' },
+          { text: 'CORS Errors', link: '/troubleshooting/cors-errors' },
+          { text: 'Concurrent Issues', link: '/troubleshooting/concurrent-issues' },
+          { text: 'TypeScript Errors', link: '/troubleshooting/typescript-errors' }
+        ]
+      },
+      {
+        text: 'Legacy Guide',
+        collapsed: true,
         items: [
           { text: 'Introduction', link: '/guide' },
           { text: 'Getting Started', link: '/guide/getting-started' },
@@ -306,17 +396,15 @@ export default defineConfig({
         ]
       },
       {
-        text: 'Config',
+        text: 'Resources',
+        collapsed: true,
         items: [
-          { text: 'Global Configuration', link: '/config' },
-          { text: 'Request Specifics', link: '/config/request-specifics' },
-          { text: 'Response Object', link: '/config/response-object' }
+          { text: 'MIT License', link: '/others/license' },
+          { text: 'Changelog', link: '/others/changelog' },
+          { text: 'llms.txt', link: '/llms.txt' },
+          { text: 'llms-full.txt', link: `/${llmsFullLink}` }
         ]
-      },
-      { text: 'MIT License', link: '/others/license' },
-      { text: 'Changelog', link: '/others/changelog' },
-      { text: 'llms.txt', link: '/llms.txt' },
-      { text: 'llms-full.txt', link: `/${llmsFullLink}` }
+      }
     ]
   },
 
