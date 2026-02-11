@@ -249,9 +249,10 @@ export default defineConfig({
     ],
 
     nav: [
-      { text: 'Guide', link: '/guide' },
-      { text: 'Config', link: '/config' },
-      { text: 'Others', link: '/others/license' },
+      { text: 'Journey', link: '/journey/' },
+      { text: 'Concepts', link: '/concepts/' },
+      { text: 'API', link: '/api/' },
+      { text: 'Examples', link: '/examples/' },
       {
         text: VERSION,
         items: [
@@ -293,7 +294,52 @@ export default defineConfig({
         target: '_blank'
       },
       {
-        text: 'Guide',
+        text: 'User Journey',
+        collapsed: false,
+        items: [
+          { text: 'Overview', link: '/journey/' },
+          { text: 'Getting Started', link: '/guide/getting-started' }
+        ]
+      },
+      {
+        text: 'Concepts',
+        collapsed: true,
+        items: [
+          { text: 'Overview', link: '/concepts/' }
+        ]
+      },
+      {
+        text: 'API Reference',
+        collapsed: true,
+        items: [
+          { text: 'Overview', link: '/api/' },
+          {
+            text: 'Core API',
+            items: [
+              { text: 'Global Configuration', link: '/config' },
+              { text: 'Request Config', link: '/config/request-specifics' },
+              { text: 'Response Object', link: '/config/response-object' }
+            ]
+          }
+        ]
+      },
+      {
+        text: 'Examples',
+        collapsed: true,
+        items: [
+          { text: 'Overview', link: '/examples/' }
+        ]
+      },
+      {
+        text: 'Troubleshooting',
+        collapsed: true,
+        items: [
+          { text: 'Overview', link: '/troubleshooting/' }
+        ]
+      },
+      {
+        text: 'Legacy Guide',
+        collapsed: true,
         items: [
           { text: 'Introduction', link: '/guide' },
           { text: 'Getting Started', link: '/guide/getting-started' },
@@ -306,17 +352,15 @@ export default defineConfig({
         ]
       },
       {
-        text: 'Config',
+        text: 'Resources',
+        collapsed: true,
         items: [
-          { text: 'Global Configuration', link: '/config' },
-          { text: 'Request Specifics', link: '/config/request-specifics' },
-          { text: 'Response Object', link: '/config/response-object' }
+          { text: 'MIT License', link: '/others/license' },
+          { text: 'Changelog', link: '/others/changelog' },
+          { text: 'llms.txt', link: '/llms.txt' },
+          { text: 'llms-full.txt', link: `/${llmsFullLink}` }
         ]
-      },
-      { text: 'MIT License', link: '/others/license' },
-      { text: 'Changelog', link: '/others/changelog' },
-      { text: 'llms.txt', link: '/llms.txt' },
-      { text: 'llms-full.txt', link: `/${llmsFullLink}` }
+      }
     ]
   },
 
