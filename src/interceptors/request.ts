@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import { deferred } from 'fast-defer';
 import { compare as compareVary, parse as parseVary } from 'http-vary';
 import type { AxiosCacheInstance, CacheAxiosResponse } from '../cache/axios.js';
@@ -248,6 +249,29 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
       }
 
       config.validateStatus = createValidateStatus(config.validateStatus);
+
+      // Wrap the adapter so that non-Axios errors (e.g. stream errors, protocol
+      // errors, bugs in third-party adapters) are converted to AxiosErrors.
+      // Without this, the response interceptor's onRejected cannot find the
+      // request id, leaving the deferred unsettled and future requests hanging.
+      const originalAdapter = config.adapter;
+      if (originalAdapter !== undefined) {
+        const wrapAdapter = (adapter: unknown) => {
+          if (typeof adapter !== 'function') return adapter;
+          return async (adapterConfig: any) => {
+            try {
+              return await (adapter as (c: any) => Promise<any>)(adapterConfig);
+            } catch (e: any) {
+              if (e && e.isAxiosError) throw e;
+              throw new AxiosError(e?.message, e?.code ?? 'ERR_UNKNOWN', adapterConfig);
+            }
+          };
+        };
+
+        config.adapter = Array.isArray(originalAdapter)
+          ? originalAdapter.map(wrapAdapter)
+          : wrapAdapter(originalAdapter);
+      }
 
       if (__ACI_DEV__) {
         axios.debug({

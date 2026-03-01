@@ -91,3 +91,37 @@ a stream or buffer, you will need to cache it manually.
 
 If you can collect the response data into a serializable format, `axios-cache-interceptor`
 can handle it for you with help of the `transformResponse` option.
+
+## Custom Adapters
+
+If you are writing a custom Axios adapter, **always throw an `AxiosError`** (not a plain
+`Error` or any other type) when the request fails. The cache interceptor relies on the
+`AxiosError.config` property to identify which in-flight request failed so it can clean up
+internal state (the deferred waiting map and the loading cache entry).
+
+If your adapter throws a non-`AxiosError`, the interceptor cannot determine which request
+failed, which will leave the cache entry stuck in a `loading` state and cause all
+subsequent requests to that key to hang. As of v1.11.5 the library automatically wraps
+function adapters to re-throw plain errors as `AxiosError`, so most cases are handled
+transparently. However, adapters that are resolved by name (e.g. `'http'`, `'fetch'`,
+`'xhr'`) or as string entries in an adapter array are not wrapped, because Axios resolves
+those names internally and the actual adapter function is never exposed through
+`config.adapter`. Make sure any such adapters throw `AxiosError` themselves.
+
+```ts
+import { AxiosError } from 'axios';
+
+// ✅ Correct – always throw AxiosError
+const myAdapter = async (config) => {
+  try {
+    // ... perform request ...
+  } catch (err) {
+    throw new AxiosError(err.message, err.code, config);
+  }
+};
+
+// ❌ Incorrect – plain errors bypass the cache error handler
+const badAdapter = async (config) => {
+  throw new TypeError('socket hang up'); // cache state becomes stuck!
+};
+```
