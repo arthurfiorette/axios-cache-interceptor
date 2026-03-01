@@ -101,8 +101,8 @@ internal state (the deferred waiting map and the loading cache entry).
 
 If your adapter throws a non-`AxiosError`, the interceptor cannot determine which request
 failed, which will leave the cache entry stuck in a `loading` state and cause all
-subsequent requests to that key to hang indefinitely. The library will emit a `console.warn`
-to alert you when this happens.
+subsequent requests to that key to hang indefinitely. The development build will log a
+debug message when this happens.
 
 ```ts
 import { AxiosError } from 'axios';

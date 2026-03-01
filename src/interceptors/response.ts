@@ -286,21 +286,10 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
     if (!error.isAxiosError || !error.config) {
       if (__ACI_DEV__) {
         axios.debug({
-          msg: 'FATAL: Non-Axios error in response interceptor',
+          msg: 'A non-AxiosError was thrown and the cache interceptor could not identify the failing request. The deferred and loading cache entry cannot be cleaned up. Custom adapters must always throw an AxiosError. See https://axios-cache-interceptor.js.org/guide/interceptors#custom-adapters',
           data: error
         });
       }
-
-      // Warn the user that their adapter threw a non-AxiosError. Without
-      // error.config we cannot identify the request, so the deferred and
-      // loading cache entry cannot be cleaned up.
-      console.warn(
-        'axios-cache-interceptor: A non-AxiosError was thrown by an adapter or interceptor. ' +
-          'Custom adapters must always throw an AxiosError so the cache interceptor can ' +
-          'identify the failing request and clean up its internal state. ' +
-          'See https://axios-cache-interceptor.js.org/guide/interceptors#custom-adapters',
-        error
-      );
 
       throw error;
     }
