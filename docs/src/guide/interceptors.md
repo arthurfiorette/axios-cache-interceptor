@@ -101,12 +101,8 @@ internal state (the deferred waiting map and the loading cache entry).
 
 If your adapter throws a non-`AxiosError`, the interceptor cannot determine which request
 failed, which will leave the cache entry stuck in a `loading` state and cause all
-subsequent requests to that key to hang. As of v1.11.5 the library automatically wraps
-function adapters to re-throw plain errors as `AxiosError`, so most cases are handled
-transparently. However, adapters that are resolved by name (e.g. `'http'`, `'fetch'`,
-`'xhr'`) or as string entries in an adapter array are not wrapped, because Axios resolves
-those names internally and the actual adapter function is never exposed through
-`config.adapter`. Make sure any such adapters throw `AxiosError` themselves.
+subsequent requests to that key to hang indefinitely. The library will emit a `console.warn`
+to alert you when this happens.
 
 ```ts
 import { AxiosError } from 'axios';
