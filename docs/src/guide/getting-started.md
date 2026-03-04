@@ -100,6 +100,9 @@ res2.cached; // true // [!code focus]
 
 :::
 
+`setupCache(instance)` attaches both cache interceptors by default. If you need custom
+interceptor ordering, see [Other Interceptors](./interceptors.md).
+
 Just the above is sufficient for most use cases. However, you can also customize each
 cache behavior by passing a configuration object to the `setupCache` function. And you can
 also customize some behaviors each request by using the `cache` option in the request

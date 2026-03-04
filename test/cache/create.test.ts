@@ -35,4 +35,11 @@ describe('Axios Cache Interceptor instances', () => {
 
     console.error = oldLog;
   });
+
+  it('allows disabling automatic registration', () => {
+    const instance = Axios.create();
+    const axios = setupCache(instance, { register: false });
+
+    assert.notEqual(axios, undefined);
+  });
 });

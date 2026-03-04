@@ -142,7 +142,10 @@ The possible returns are:
 ::: details Example of a custom headerInterpreter
 
 ```ts
-import { setupCache, type HeaderInterpreter } from 'axios-cache-interceptor';
+import {
+  setupCache,
+  type HeaderInterpreter
+} from 'axios-cache-interceptor';
 
 const myHeaderInterpreter: HeaderInterpreter = (headers) => {
   if (headers['x-my-custom-header']) {
@@ -207,6 +210,41 @@ to this property.
 See its code for more information
 [here](https://github.com/arthurfiorette/axios-cache-interceptor/tree/main/src/interceptors).
 
+## register
+
+<Badge text="optional" type="warning"/>
+
+- Type: `boolean`
+- Default: `true`
+
+Controls whether cache interceptors are automatically registered during `setupCache()`.
+
+- `true`: register both cache interceptors (default).
+- `false`: do not register cache interceptors automatically.
+
+Use `false` when you need full control over interceptor registration order.
+
+```ts
+import Axios from 'axios';
+import { setupCache } from 'axios-cache-interceptor';
+
+const axios = setupCache(Axios.create(), { register: false });
+
+// register your own interceptors first
+axios.interceptors.request.use((req) => req);
+axios.interceptors.response.use((res) => res);
+
+// then register cache interceptors manually
+axios.interceptors.request.use(
+  axios.requestInterceptor.onFulfilled,
+  axios.requestInterceptor.onRejected
+);
+axios.interceptors.response.use(
+  axios.responseInterceptor.onFulfilled,
+  axios.responseInterceptor.onRejected
+);
+```
+
 ## debug
 
 <Badge text="dev only" type="danger"/> <Badge text="optional" type="warning"/>
@@ -234,7 +272,8 @@ setupCache(axiosInstance, { debug: console.log });
 
 // Own logging platform.
 setupCache(axiosInstance, {
-  debug: ({ id, msg, data }) => myLoggerExample.emit({ id, msg, data })
+  debug: ({ id, msg, data }) =>
+    myLoggerExample.emit({ id, msg, data })
 });
 
 // Disables debug. (default)
