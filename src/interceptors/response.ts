@@ -1,15 +1,15 @@
 import type { AxiosResponseHeaders } from 'axios';
 import { parse } from 'cache-parser';
 import { parse as parseVary } from 'http-vary';
-import type { AxiosCacheInstance, CacheAxiosResponse, CacheRequestConfig } from '../cache/axios.js';
-import type { CacheProperties } from '../cache/cache.js';
-import { extractHeaders } from '../header/extract.js';
-import { Header } from '../header/headers.js';
-import type { CachedStorageValue } from '../storage/types.js';
-import { testCachePredicate } from '../util/cache-predicate.js';
-import { updateCache } from '../util/update-cache.js';
-import type { ResponseInterceptor } from './build.js';
-import { createCacheResponse, isMethodIn } from './util.js';
+import type { AxiosCacheInstance, CacheAxiosResponse, CacheRequestConfig } from '../cache/axios.ts';
+import type { CacheProperties } from '../cache/cache.ts';
+import { extractHeaders } from '../header/extract.ts';
+import { Header } from '../header/headers.ts';
+import type { CachedStorageValue } from '../storage/types.ts';
+import { testCachePredicate } from '../util/cache-predicate.ts';
+import { updateCache } from '../util/update-cache.ts';
+import type { ResponseInterceptor } from './build.ts';
+import { createCacheResponse, isMethodIn } from './util.ts';
 
 /**
  * @deprecated This function will be hidden in future versions. Please tell us why you need it at https://github.com/arthurfiorette/axios-cache-interceptor/issues/1158

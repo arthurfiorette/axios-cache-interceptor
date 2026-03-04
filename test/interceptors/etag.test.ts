@@ -1,8 +1,8 @@
 import assert from 'node:assert';
 import { describe, it } from 'node:test';
-import { Header } from '../../src/header/headers.js';
-import { mockAxios } from '../mocks/axios.js';
-import { mockDateNow } from '../utils.js';
+import { Header } from '../../src/header/headers.ts';
+import { mockAxios } from '../mocks/axios.ts';
+import { mockDateNow } from '../utils.ts';
 
 describe('ETag handling', () => {
   it('Etag Header', async () => {

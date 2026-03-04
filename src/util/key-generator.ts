@@ -1,8 +1,8 @@
 import type { Method } from 'axios';
 import { hash } from 'object-code';
-import type { CacheRequestConfig } from '../cache/axios.js';
-import type { CachedResponseMeta } from '../storage/types.js';
-import type { KeyGenerator } from './types.js';
+import type { CacheRequestConfig } from '../cache/axios.ts';
+import type { CachedResponseMeta } from '../storage/types.ts';
+import type { KeyGenerator } from './types.ts';
 
 // Remove first and last '/' char, if present
 const SLASHES_REGEX = /^\/|\/$/g;

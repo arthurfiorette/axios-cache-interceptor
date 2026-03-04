@@ -1,10 +1,10 @@
 import assert from 'node:assert';
 import { afterEach, describe, it } from 'node:test';
-import { buildWebStorage } from '../../src/storage/web-api.js';
-import { localStorage, sessionStorage } from '../dom.js';
-import { mockAxios } from '../mocks/axios.js';
-import { testStorageQuota } from './quota.js';
-import { testStorage } from './storages.js';
+import { buildWebStorage } from '../../src/storage/web-api.ts';
+import { localStorage, sessionStorage } from '../dom.ts';
+import { mockAxios } from '../mocks/axios.ts';
+import { testStorageQuota } from './quota.ts';
+import { testStorage } from './storages.ts';
 
 describe('Web Storages', () => {
   afterEach(() => {

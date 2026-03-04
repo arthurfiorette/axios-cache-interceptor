@@ -1,12 +1,12 @@
 import { deferred } from 'fast-defer';
 import { compare as compareVary, parse as parseVary } from 'http-vary';
-import type { AxiosCacheInstance, CacheAxiosResponse } from '../cache/axios.js';
-import { extractHeaders } from '../header/extract.js';
-import { Header } from '../header/headers.js';
-import type { CachedResponse, LoadingStorageValue } from '../storage/types.js';
-import { regexOrStringMatch } from '../util/cache-predicate.js';
-import type { RequestInterceptor } from './build.js';
-import { createValidateStatus, isMethodIn, updateStaleRequest } from './util.js';
+import type { AxiosCacheInstance, CacheAxiosResponse } from '../cache/axios.ts';
+import { extractHeaders } from '../header/extract.ts';
+import { Header } from '../header/headers.ts';
+import type { CachedResponse, LoadingStorageValue } from '../storage/types.ts';
+import { regexOrStringMatch } from '../util/cache-predicate.ts';
+import type { RequestInterceptor } from './build.ts';
+import { createValidateStatus, isMethodIn, updateStaleRequest } from './util.ts';
 
 /**
  * @deprecated This function will be hidden in future versions. Please tell us why you need it at https://github.com/arthurfiorette/axios-cache-interceptor/issues/1158

@@ -1,8 +1,8 @@
 import assert from 'node:assert';
 import { describe, it } from 'node:test';
 import Axios, { AxiosError } from 'axios';
-import type { InternalCacheRequestConfig } from '../../src/cache/axios.js';
-import { setupCache } from '../../src/cache/create.js';
+import type { InternalCacheRequestConfig } from '../../src/cache/axios.ts';
+import { setupCache } from '../../src/cache/create.ts';
 
 /**
  * Helper function to create a mock adapter that always throws an AxiosError

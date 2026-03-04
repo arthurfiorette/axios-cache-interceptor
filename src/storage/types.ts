@@ -1,5 +1,5 @@
-import type { CacheAxiosResponse, CacheRequestConfig } from '../cache/axios.js';
-import type { MaybePromise } from '../util/types.js';
+import type { CacheAxiosResponse, CacheRequestConfig } from '../cache/axios.ts';
+import type { MaybePromise } from '../util/types.ts';
 
 /**
  * Metadata for cache entry (extensible for future enhancements).

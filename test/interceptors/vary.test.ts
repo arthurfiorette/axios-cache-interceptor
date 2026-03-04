@@ -1,8 +1,8 @@
 import assert from 'node:assert';
 import { describe, it } from 'node:test';
-import { Header } from '../../src/header/headers.js';
-import { buildMemoryStorage } from '../../src/index.js';
-import { mockAxios } from '../mocks/axios.js';
+import { Header } from '../../src/header/headers.ts';
+import { buildMemoryStorage } from '../../src/index.ts';
+import { mockAxios } from '../mocks/axios.ts';
 
 describe('Vary Header Support', () => {
   it('caches when vary headers match (sequential)', async () => {

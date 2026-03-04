@@ -1,6 +1,6 @@
 import { mock } from 'node:test';
 import { AxiosHeaders } from 'axios';
-import type { CacheAxiosResponse } from '../src/cache/axios.js';
+import type { CacheAxiosResponse } from '../src/cache/axios.ts';
 
 export const EMPTY_RESPONSE = {
   headers: {},

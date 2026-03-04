@@ -1,7 +1,7 @@
 import assert from 'node:assert';
 import { describe, it, mock } from 'node:test';
 import Axios from 'axios';
-import { setupCache } from '../../src/cache/create.js';
+import { setupCache } from '../../src/cache/create.ts';
 
 describe('Axios Cache Interceptor instances', () => {
   it('Argument composition', () => {
@@ -29,7 +29,7 @@ describe('Axios Cache Interceptor instances', () => {
     const consoleMock = mock.fn();
     console.error = consoleMock;
 
-    await import('../../src/index.js');
+    await import('../../src/index.ts');
 
     assert.equal(consoleMock.mock.callCount(), 1);
 

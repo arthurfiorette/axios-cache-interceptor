@@ -2,12 +2,12 @@ import assert from 'node:assert';
 import { describe, it, mock } from 'node:test';
 import { setTimeout } from 'node:timers/promises';
 import type { AxiosAdapter, AxiosResponse } from 'axios';
-import type { CacheRequestConfig, InternalCacheRequestConfig } from '../../src/cache/axios.js';
-import { Header } from '../../src/header/headers.js';
-import { buildMemoryStorage } from '../../src/storage/memory.js';
-import type { LoadingStorageValue } from '../../src/storage/types.js';
-import { mockAxios } from '../mocks/axios.js';
-import { mockDateNow } from '../utils.js';
+import type { CacheRequestConfig, InternalCacheRequestConfig } from '../../src/cache/axios.ts';
+import { Header } from '../../src/header/headers.ts';
+import { buildMemoryStorage } from '../../src/storage/memory.ts';
+import type { LoadingStorageValue } from '../../src/storage/types.ts';
+import { mockAxios } from '../mocks/axios.ts';
+import { mockDateNow } from '../utils.ts';
 
 describe('Request Interceptor', () => {
   it('Against specified methods', async () => {

@@ -1,5 +1,5 @@
 import type { AxiosInterceptorManager } from 'axios';
-import type { CacheAxiosResponse, InternalCacheRequestConfig } from '../cache/axios.js';
+import type { CacheAxiosResponse, InternalCacheRequestConfig } from '../cache/axios.ts';
 
 /**
  * See {@link AxiosInterceptorManager}

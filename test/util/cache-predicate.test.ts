@@ -1,10 +1,10 @@
 import assert from 'node:assert';
 import { describe, it } from 'node:test';
 import { setImmediate } from 'node:timers/promises';
-import type { CachedStorageValue } from '../../src/storage/types.js';
-import { testCachePredicate } from '../../src/util/cache-predicate.js';
-import { mockAxios } from '../mocks/axios.js';
-import { createResponse } from '../utils.js';
+import type { CachedStorageValue } from '../../src/storage/types.ts';
+import { testCachePredicate } from '../../src/util/cache-predicate.ts';
+import { mockAxios } from '../mocks/axios.ts';
+import { createResponse } from '../utils.ts';
 
 describe('CachePredicate', () => {
   it('Empty usage', () => {
