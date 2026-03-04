@@ -25,7 +25,7 @@ url: 'https://axios-cache-interceptor.js.org/guide/comparison.md'
 |                             Cache-Control header                             |           ✅            |                                   ✅                                   |          🛑          |
 |                             Expires & Age header                             |           ✅            |                                   🟡                                   |          🛑          |
 |                        ETag and If-None-Match header                         |           ✅            |                                   🛑                                   |          🛑          |
-|                           If-Modified-Size header                            |           ✅            |                                   🛑                                   |          🛑          |
+|                           If-Modified-Since header                           |           ✅            |                                   🛑                                   |          🛑          |
 |                                 Bundle size                                  |    **4.4Kb** (gzip)     |                             18.9Kb (gzip)                              |    19.5Kb (gzip)     |
 |                            Typescript declaration                            |  ✅ (Custom interface)  |                         ✅ (Applied globally)                          | ✅(Applied globally) |
 |                              Custom cache keys                               |           ✅            |                                   ✅                                   |          ✅          |
