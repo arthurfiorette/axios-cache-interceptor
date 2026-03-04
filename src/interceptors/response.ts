@@ -286,11 +286,14 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
     if (!error.isAxiosError || !error.config) {
       if (__ACI_DEV__) {
         axios.debug({
-          msg: 'FATAL: Non-Axios error in response interceptor',
+          msg: 'A non-AxiosError was thrown and the cache interceptor could not identify the failing request. The deferred and loading cache entry cannot be cleaned up. Custom adapters must always throw an AxiosError. See https://axios-cache-interceptor.js.org/guide/interceptors#custom-adapters',
           data: error
         });
       }
 
+      // We should probably re-request the response to avoid an infinite loading state here
+      // but, since this is an unknown error, we cannot figure out what request ID to use.
+      // And the only solution is to let the storage actively reject the current loading state.
       throw error;
     }
 
