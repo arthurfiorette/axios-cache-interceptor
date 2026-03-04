@@ -1,5 +1,5 @@
-import type { CacheAxiosResponse } from '../cache/axios.js';
-import type { InstanceLocation } from '../util/types.js';
+import type { CacheAxiosResponse } from '../cache/axios.ts';
+import type { InstanceLocation } from '../util/types.ts';
 
 /**
  * The possible values are:

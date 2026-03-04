@@ -2,8 +2,8 @@ import assert from 'node:assert';
 import { describe, it } from 'node:test';
 import { setTimeout } from 'node:timers/promises';
 import Axios from 'axios';
-import type { CacheAxiosResponse, InternalCacheRequestConfig } from '../../src/cache/axios.js';
-import { setupCache } from '../../src/cache/create.js';
+import type { CacheAxiosResponse, InternalCacheRequestConfig } from '../../src/cache/axios.ts';
+import { setupCache } from '../../src/cache/create.ts';
 
 describe('Aborted Request Handling', () => {
   it('Second request should succeed after first request is aborted', async () => {

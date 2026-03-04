@@ -1,7 +1,7 @@
 import assert from 'node:assert';
 import { describe, it } from 'node:test';
-import type { CacheProperties } from '../../src/index.js';
-import { mockAxios } from '../mocks/axios.js';
+import type { CacheProperties } from '../../src/index.ts';
+import { mockAxios } from '../mocks/axios.ts';
 
 describe('Cache Enabled Flag', () => {
   it('Cache enabled by default (enabled: true)', async () => {

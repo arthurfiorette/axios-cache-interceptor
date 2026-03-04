@@ -3,14 +3,14 @@ import type {
   CacheAxiosResponse,
   CacheRequestConfig,
   InternalCacheRequestConfig
-} from '../cache/axios.js';
-import type { CacheProperties } from '../cache/cache.js';
-import { Header } from '../header/headers.js';
+} from '../cache/axios.ts';
+import type { CacheProperties } from '../cache/cache.ts';
+import { Header } from '../header/headers.ts';
 import type {
   CachedResponse,
   MustRevalidateStorageValue,
   StaleStorageValue
-} from '../storage/types.js';
+} from '../storage/types.ts';
 
 /**
  * Creates a new validateStatus function that will use the one already used and also

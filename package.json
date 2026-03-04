@@ -58,8 +58,8 @@
     "lint": "biome check .",
     "lint-ci": "biome ci .",
     "lint-fix": "biome check --write --unsafe .",
-    "test": "c8 --reporter lcov --reporter text node --import ./test/setup.js --enable-source-maps --test test/**/*.test.ts",
-    "test:only": "c8 --reporter lcov --reporter text node --import ./test/setup.js --enable-source-maps --test-only",
+    "test": "c8 --reporter lcov --reporter text node --import ./test/setup.ts --test test/**/*.test.ts",
+    "test:only": "c8 --reporter lcov --reporter text node --import ./test/setup.ts --test-only",
     "test:types": "tsc --noEmit",
     "version": "auto-changelog -p && cp CHANGELOG.md docs/src/others/changelog.md && git add CHANGELOG.md docs/src/others/changelog.md"
   },

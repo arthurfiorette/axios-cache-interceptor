@@ -1,10 +1,10 @@
 import assert from 'node:assert';
 import { describe, it } from 'node:test';
-import { Header } from '../../src/header/headers.js';
-import { buildMemoryStorage } from '../../src/storage/memory.js';
-import type { CachedStorageValue } from '../../src/storage/types.js';
-import { EMPTY_RESPONSE, mockDateNow } from '../utils.js';
-import { testStorage } from './storages.js';
+import { Header } from '../../src/header/headers.ts';
+import { buildMemoryStorage } from '../../src/storage/memory.ts';
+import type { CachedStorageValue } from '../../src/storage/types.ts';
+import { EMPTY_RESPONSE, mockDateNow } from '../utils.ts';
+import { testStorage } from './storages.ts';
 
 describe('MemoryStorage', () => {
   testStorage('MemoryStorage', buildMemoryStorage());

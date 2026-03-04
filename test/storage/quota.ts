@@ -1,8 +1,8 @@
 import assert from 'node:assert';
 import { it } from 'node:test';
-import { buildWebStorage } from '../../src/storage/web-api.js';
-import { mockAxios } from '../mocks/axios.js';
-import { EMPTY_RESPONSE } from '../utils.js';
+import { buildWebStorage } from '../../src/storage/web-api.ts';
+import { mockAxios } from '../mocks/axios.ts';
+import { EMPTY_RESPONSE } from '../utils.ts';
 
 const MAXIMUM_LIMIT = 5_000_000;
 

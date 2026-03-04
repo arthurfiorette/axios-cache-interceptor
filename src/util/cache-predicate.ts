@@ -1,6 +1,6 @@
-import type { CacheAxiosResponse } from '../cache/axios.js';
+import type { CacheAxiosResponse } from '../cache/axios.ts';
 
-import type { CachePredicate, CachePredicateObject } from './types.js';
+import type { CachePredicate, CachePredicateObject } from './types.ts';
 
 /**
  * Tests an response against a {@link CachePredicateObject}.

@@ -1,5 +1,5 @@
-import { buildStorage, canRemoveStorageEntry, storageEntriesSorter } from './build.js';
-import type { AxiosStorage, StorageValue } from './types.js';
+import { buildStorage, canRemoveStorageEntry, storageEntriesSorter } from './build.ts';
+import type { AxiosStorage, StorageValue } from './types.ts';
 
 /* c8 ignore start */
 /**

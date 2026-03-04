@@ -1,12 +1,12 @@
 import type { AxiosInstance } from 'axios';
-import { defaultHeaderInterpreter } from '../header/interpreter.js';
-import { defaultRequestInterceptor } from '../interceptors/request.js';
-import { defaultResponseInterceptor } from '../interceptors/response.js';
-import { isStorage } from '../storage/build.js';
-import { buildMemoryStorage } from '../storage/memory.js';
-import { defaultKeyGenerator } from '../util/key-generator.js';
-import type { AxiosCacheInstance } from './axios.js';
-import type { CacheInstance, CacheProperties } from './cache.js';
+import { defaultHeaderInterpreter } from '../header/interpreter.ts';
+import { defaultRequestInterceptor } from '../interceptors/request.ts';
+import { defaultResponseInterceptor } from '../interceptors/response.ts';
+import { isStorage } from '../storage/build.ts';
+import { buildMemoryStorage } from '../storage/memory.ts';
+import { defaultKeyGenerator } from '../util/key-generator.ts';
+import type { AxiosCacheInstance } from './axios.ts';
+import type { CacheInstance, CacheProperties } from './cache.ts';
 
 export interface CacheOptions extends Partial<CacheInstance>, Partial<CacheProperties> {}
 

@@ -1,8 +1,8 @@
 import assert from 'node:assert';
 import { describe, it, mock } from 'node:test';
-import type { CachedStorageValue } from '../../src/storage/types.js';
-import { defaultKeyGenerator } from '../../src/util/key-generator.js';
-import { mockAxios } from '../mocks/axios.js';
+import type { CachedStorageValue } from '../../src/storage/types.ts';
+import { defaultKeyGenerator } from '../../src/util/key-generator.ts';
+import { mockAxios } from '../mocks/axios.ts';
 
 const CACHE_KEY = defaultKeyGenerator({ url: 'https://example.com/' });
 const CACHED_VALUE: CachedStorageValue = {
