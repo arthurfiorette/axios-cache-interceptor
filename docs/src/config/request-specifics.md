@@ -132,8 +132,118 @@ the interpreter can't determine their TTL value to override this one.
 
 The time until the cached value is expired in milliseconds.
 
-If a function is used, it will receive the complete response and waits to return a TTL
-value
+### Type Definition
+
+This option accepts two value types:
+
+| Type       | Description                   | When to Use                                                      |
+| ---------- | ----------------------------- | ---------------------------------------------------------------- |
+| `number`   | Static TTL in milliseconds    | When all responses should have the same cache duration           |
+| `function` | Dynamic TTL based on response | When cache duration depends on response data, headers, or status |
+
+**Function Signature:**
+
+```ts
+type TTLFunction = (
+  response: CacheAxiosResponse
+) => number | Promise<number>;
+```
+
+**Parameters:**
+
+| Parameter  | Type                 | Description                                            |
+| ---------- | -------------------- | ------------------------------------------------------ |
+| `response` | `CacheAxiosResponse` | The complete Axios response object with cache metadata |
+
+**Return Value:**
+
+| Type              | Description                                 |
+| ----------------- | ------------------------------------------- |
+| `number`          | TTL in milliseconds                         |
+| `Promise<number>` | Asynchronously computed TTL in milliseconds |
+
+### Examples
+
+**Static TTL (Basic):**
+
+```ts
+axios.get('/api/users', {
+  cache: {
+    ttl: 1000 * 60 * 10 // 10 minutes
+  }
+});
+```
+
+**Dynamic TTL Based on Response Status:**
+
+```ts
+axios.get('/api/data', {
+  cache: {
+    ttl: (response) => {
+      // Cache successful responses longer
+      if (response.status === 200) {
+        return 1000 * 60 * 30; // 30 minutes
+      }
+      // Cache errors for shorter time
+      return 1000 * 60 * 5; // 5 minutes
+    }
+  }
+});
+```
+
+**TTL Based on Response Data:**
+
+```ts
+interface ApiResponse {
+  priority: 'high' | 'low';
+  data: unknown;
+}
+
+axios.get<ApiResponse>('/api/resource', {
+  cache: {
+    ttl: (response) => {
+      // Use different TTL based on response data
+      return response.data.priority === 'high'
+        ? 1000 * 60 * 60 // 1 hour for high priority
+        : 1000 * 60 * 10; // 10 minutes for low priority
+    }
+  }
+});
+```
+
+**Async TTL Calculation:**
+
+```ts
+axios.get('/api/dynamic', {
+  cache: {
+    ttl: async (response) => {
+      // Calculate based on external config or response headers
+      const config = await fetchCacheConfig();
+      return response.data.priority === 'high'
+        ? config.highPriorityTTL
+        : config.defaultTTL;
+    }
+  }
+});
+```
+
+**Server-Provided Expiration:**
+
+```ts
+interface ResourceResponse {
+  expiresIn: number; // seconds until expiration
+  data: unknown;
+}
+
+axios.get<ResourceResponse>('/api/resource', {
+  cache: {
+    ttl: (response) => {
+      // Use server-provided expiration time
+      return response.data.expiresIn * 1000; // Convert seconds to milliseconds
+    }
+  }
+});
+```
 
 ## cache.interpretHeader
 
@@ -348,44 +458,245 @@ axios.post<{ auth: { user: User } }>(
 
 Configures [`ETag`](https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Headers/ETag) and [`If-None-Match`](https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Headers/If-None-Match) header handling for cache revalidation.
 
+### Type Definition
+
+| Value Type | Behavior                                       | When to Use                                                                  |
+| ---------- | ---------------------------------------------- | ---------------------------------------------------------------------------- |
+| `true`     | Automatically uses ETag from previous response | Standard ETag-based revalidation (recommended)                               |
+| `false`    | Disables ETag handling                         | When server doesn't support ETags or you want to use `modifiedSince` instead |
+| `string`   | Forces a custom static ETag value              | Testing or special server requirements                                       |
+
 To use `true` (automatic ETag handling), `interpretHeader` option must be set to `true`.
+
+### Examples
+
+**Automatic ETag (Default):**
+
+```ts
+// First request
+const res1 = await axios.get('/api/users', {
+  cache: { etag: true }
+});
+// Server responds with: ETag: "abc123"
+
+// Second request after cache expires
+// Automatically sends: If-None-Match: "abc123"
+// Server responds with 304 Not Modified or new data with new ETag
+const res2 = await axios.get('/api/users');
+```
+
+**Force Custom Static ETag:**
+
+```ts
+axios.get('/api/resource', {
+  cache: {
+    etag: '"my-custom-etag-value"'
+  }
+});
+// Always sends: If-None-Match: "my-custom-etag-value"
+```
+
+**Disable ETag:**
+
+```ts
+axios.get('/api/realtime', {
+  cache: {
+    etag: false,
+    modifiedSince: false // Usually also disabled for realtime data
+  }
+});
+```
 
 ## cache.modifiedSince
 
 <Badge text="optional" type="warning"/>
 
-- Type: `boolean`
-- Default: `true`
+- Type: `Date | boolean`
+- Default: `false` (automatically set to `true` if `etag` is `false`)
 
-Use
-[`If-Modified-Since`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/If-Modified-Since)
-header in this request. Use a date to force a custom static value or true to use the last
-cached timestamp.
+Configures [`If-Modified-Since`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/If-Modified-Since) header handling for cache revalidation.
+
+### Type Definition
+
+| Value Type | Behavior                                                          | When to Use                                          |
+| ---------- | ----------------------------------------------------------------- | ---------------------------------------------------- |
+| `true`     | Automatically uses Last-Modified from response or cache timestamp | When server supports Last-Modified but not ETag      |
+| `false`    | Disables If-Modified-Since header                                 | Default when ETag is enabled (ETag takes precedence) |
+| `Date`     | Forces a custom static date value                                 | Testing or special server requirements               |
 
 If never cached before, the header is not set.
 
-If `interpretHeader` is set and a
-[`Last-Modified`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Last-Modified)
-header is sent to us, then value from that header is used, otherwise cache creation
-timestamp will be sent in
-[`If-Modified-Since`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/If-Modified-Since).
+If `interpretHeader` is set and a [`Last-Modified`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Last-Modified) header is sent to us, then the value from that header is used. Otherwise, the cache creation timestamp will be sent in [`If-Modified-Since`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/If-Modified-Since).
+
+### Examples
+
+**Automatic If-Modified-Since (When ETag is disabled):**
+
+```ts
+// First request
+const res1 = await axios.get('/api/document', {
+  cache: {
+    etag: false,
+    modifiedSince: true
+  }
+});
+// Server responds with: Last-Modified: Mon, 10 Feb 2025 10:00:00 GMT
+
+// Second request after cache expires
+// Automatically sends: If-Modified-Since: Mon, 10 Feb 2025 10:00:00 GMT
+const res2 = await axios.get('/api/document');
+```
+
+**Force Custom Date:**
+
+```ts
+axios.get('/api/data', {
+  cache: {
+    modifiedSince: new Date('2025-01-01T00:00:00Z')
+  }
+});
+// Always sends: If-Modified-Since: Wed, 01 Jan 2025 00:00:00 GMT
+```
+
+**Typical Configuration:**
+
+```ts
+// ETag preferred (default)
+axios.get('/api/modern', {
+  cache: {
+    etag: true,
+    modifiedSince: false // Default when etag is true
+  }
+});
+
+// If-Modified-Since for legacy servers
+axios.get('/api/legacy', {
+  cache: {
+    etag: false,
+    modifiedSince: true // Automatically set to true when etag is false
+  }
+});
+```
 
 ## cache.staleIfError
 
 - Type: `number | boolean | StaleIfErrorPredicate<R, D>`
 - Default: `true`
 
-Enables cache to be returned if the response comes with an error, either by invalid status
-code, network errors and etc. You can filter the type of error that should be stale by
-using a predicate function.
+Enables cache to be returned if the response comes with an error, either by invalid status code, network errors, etc. You can filter the type of error that should be stale by using a predicate function.
+
+### Type Definition
+
+This option accepts three value types:
+
+| Type       | Behavior                                                    | When to Use                                   |
+| ---------- | ----------------------------------------------------------- | --------------------------------------------- |
+| `true`     | Return stale cache for any error with infinite grace period | Default behavior, maximizes availability      |
+| `false`    | Never return stale cache on errors                          | When you want errors to propagate immediately |
+| `number`   | Max time in seconds that stale cache can be used            | Time-limited grace period for errors          |
+| `function` | Custom logic to determine if/when to use stale cache        | Complex error handling scenarios              |
+
+**Predicate Function Signature:**
+
+```ts
+type StaleIfErrorPredicate = (
+  networkResponse: CacheAxiosResponse | undefined,
+  cache: LoadingStorageValue & { previous: 'stale' },
+  error: Record<string, unknown>
+) => number | boolean | Promise<number | boolean>;
+```
+
+**Parameters:**
+
+| Parameter         | Type                                          | Description                                                                 |
+| ----------------- | --------------------------------------------- | --------------------------------------------------------------------------- |
+| `networkResponse` | `CacheAxiosResponse \| undefined`             | The failed network response if available, or `undefined` for network errors |
+| `cache`           | `LoadingStorageValue & { previous: 'stale' }` | The stale cache entry being considered for return                           |
+| `error`           | `Record<string, unknown>`                     | The error object from the failed request                                    |
+
+**Return Value:**
+
+| Type     | Meaning                                                              |
+| -------- | -------------------------------------------------------------------- |
+| `false`  | Do not return stale cache, propagate error                           |
+| `true`   | Return stale cache with infinite grace period                        |
+| `number` | Return stale cache only if it has been stale for less than N seconds |
 
 ::: warning
 
 If the response is treated as error because of invalid status code _(like when using [statusCheck](#cache-cachepredicate))_, and this ends up `true`, the cache will be preserved over the "invalid" request.
 
-So, if you want to preserve the response, you can use the below predicate:
-
 :::
+
+### Examples
+
+**Enable Stale-If-Error (Default):**
+
+```ts
+// Automatically returns stale cache on any error
+axios.get('/api/critical-data', {
+  cache: {
+    staleIfError: true
+  }
+});
+```
+
+**Time-Limited Stale Grace Period:**
+
+```ts
+// Return stale cache only if error occurs within 60 seconds of staleness
+axios.get('/api/data', {
+  cache: {
+    staleIfError: 60 // seconds
+  }
+});
+```
+
+**Conditional Stale Return (Predicate):**
+
+```ts
+axios.get('/api/users', {
+  cache: {
+    staleIfError: (response, cache, error) => {
+      // Only return stale cache for network errors, not bad status codes
+      if (response) {
+        return false; // Has response, don't use stale
+      }
+
+      // Network error - check cache age
+      const cacheAge = Date.now() - cache.createdAt;
+      const maxStaleAge = 1000 * 60 * 5; // 5 minutes
+
+      return cacheAge < maxStaleAge;
+    }
+  }
+});
+```
+
+**Different Behavior by Error Type:**
+
+```ts
+axios.get('/api/resource', {
+  cache: {
+    staleIfError: (response, cache, error) => {
+      // Network timeout: use stale cache
+      if (error.code === 'ECONNABORTED') {
+        return true;
+      }
+
+      // 5xx server errors: use stale cache for up to 30 seconds
+      if (response && response.status >= 500) {
+        return 30;
+      }
+
+      // 4xx client errors: don't use stale cache
+      return false;
+    }
+  }
+});
+```
+
+**Preserve Stale Only on Network Errors:**
 
 ```ts
 const customPredicate = (response, cache, error) => {
