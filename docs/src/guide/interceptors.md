@@ -1,14 +1,16 @@
 # Other Interceptors
 
-When combining `axios-cache-interceptor` with other interceptors, you may encounter some inconsistencies, which are explained in the next section.
+When combining `axios-cache-interceptor` with other interceptors, execution order matters.
+This page explains the default behavior and how to customize it.
 
 ## TL;DR
 
-- **Request** interceptors registered **before** `setupCache()` run **before** the cache
+- **Request** interceptors registered **before** `setupCache()` run **after** the cache
+  interceptor; those registered **after** `setupCache()` run **before** the cache interceptor.
+- **Response** interceptors registered **before** `setupCache()` run **before** the cache
   interceptor; those registered **after** `setupCache()` run **after** the cache interceptor.
-- **Response** interceptors registered **before** `setupCache()` run **after** the cache
-  interceptor; those registered **after** `setupCache()` run **before** the cache
-  interceptor.
+- By default, `setupCache(axios)` attaches both cache interceptors immediately.
+- You can disable automatic registration with `register: false` and register manually.
 
 ## Explanation
 
@@ -22,19 +24,47 @@ As explained better in the
 [this issue](https://github.com/arthurfiorette/axios-cache-interceptor/issues/449#issuecomment-1370327566).
 
 ```ts
-// This will run BEFORE the cache interceptor
+// This will run AFTER the cache interceptor
 axios.interceptors.request.use((req) => req);
 
-// This will run AFTER the cache interceptor
+// This will run BEFORE the cache interceptor
 axios.interceptors.response.use((res) => res);
 
 setupCache(axios);
 
-// This will run AFTER the cache interceptor
+// This will run BEFORE the cache interceptor
 axios.interceptors.request.use((req) => req);
 
-// This will run BEFORE the cache interceptor
+// This will run AFTER the cache interceptor
 axios.interceptors.response.use((res) => res);
+```
+
+## Custom order
+
+If you need full control, disable automatic registration and register cache interceptors
+yourself.
+
+```ts
+import Axios from 'axios';
+import { setupCache } from 'axios-cache-interceptor';
+
+const axios = setupCache(Axios.create(), { register: false });
+
+// Register cache response interceptor first (response interceptors are FIFO)
+axios.interceptors.response.use(
+  axios.responseInterceptor.onFulfilled,
+  axios.responseInterceptor.onRejected
+);
+
+// Register your own interceptors
+axios.interceptors.request.use((req) => req);
+axios.interceptors.response.use((res) => res);
+
+// Register cache request interceptor last (request interceptors are LIFO)
+axios.interceptors.request.use(
+  axios.requestInterceptor.onFulfilled,
+  axios.requestInterceptor.onRejected
+);
 ```
 
 ---

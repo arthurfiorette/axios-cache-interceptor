@@ -8,7 +8,19 @@ import { defaultKeyGenerator } from '../util/key-generator.ts';
 import type { AxiosCacheInstance } from './axios.ts';
 import type { CacheInstance, CacheProperties } from './cache.ts';
 
-export interface CacheOptions extends Partial<CacheInstance>, Partial<CacheProperties> {}
+export interface CacheOptions extends Partial<CacheInstance>, Partial<CacheProperties> {
+  /**
+   * Whether cache interceptors should be registered during setup.
+   *
+   * - `true`: register both request and response interceptors (default).
+   * - `false`: do not register cache interceptors automatically.
+   *
+   * Set to `false` when you need full control over interceptor registration order.
+   *
+   * @default true
+   */
+  register?: boolean;
+}
 
 /**
  * Apply the caching interceptors for a already created axios instance.
@@ -92,14 +104,16 @@ export function setupCache(axios: AxiosInstance, options: CacheOptions = {}): Ax
   };
 
   // Apply interceptors
-  axiosCache.interceptors.request.use(
-    axiosCache.requestInterceptor.onFulfilled,
-    axiosCache.requestInterceptor.onRejected
-  );
-  axiosCache.interceptors.response.use(
-    axiosCache.responseInterceptor.onFulfilled,
-    axiosCache.responseInterceptor.onRejected
-  );
+  if (options.register ?? true) {
+    axiosCache.interceptors.request.use(
+      axiosCache.requestInterceptor.onFulfilled,
+      axiosCache.requestInterceptor.onRejected
+    );
+    axiosCache.interceptors.response.use(
+      axiosCache.responseInterceptor.onFulfilled,
+      axiosCache.responseInterceptor.onRejected
+    );
+  }
 
   return axiosCache;
 }

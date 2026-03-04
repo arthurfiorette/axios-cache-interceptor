@@ -35,4 +35,42 @@ describe('Axios Cache Interceptor instances', () => {
 
     console.error = oldLog;
   });
+
+  it('allows disabling automatic registration', async () => {
+    const instance = Axios.create();
+    let requestCalls = 0;
+    let responseCalls = 0;
+
+    const axios = setupCache(instance, {
+      register: false,
+      requestInterceptor: {
+        onFulfilled(config) {
+          requestCalls++;
+          return config;
+        }
+      },
+      responseInterceptor: {
+        onFulfilled(response) {
+          responseCalls++;
+          return response;
+        }
+      }
+    });
+
+    axios.defaults.adapter = async (config) => ({
+      data: true,
+      status: 200,
+      statusText: '200 OK',
+      headers: {},
+      config,
+      request: { config }
+    });
+
+    await axios.get('url');
+
+    assert.equal(requestCalls, 0);
+    assert.equal(responseCalls, 0);
+
+    assert.notEqual(axios, undefined);
+  });
 });
