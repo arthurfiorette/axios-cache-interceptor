@@ -1,7 +1,7 @@
 import assert from 'node:assert';
 import { it } from 'node:test';
-import type { AxiosStorage } from '../../src/storage/types.js';
-import { EMPTY_RESPONSE, mockDateNow } from '../utils.js';
+import type { AxiosStorage } from '../../src/storage/types.ts';
+import { EMPTY_RESPONSE, mockDateNow } from '../utils.ts';
 
 export function testStorage(name: string, storage: AxiosStorage): void {
   it(`${name} storage methods`, async () => {

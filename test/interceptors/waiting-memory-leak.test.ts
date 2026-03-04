@@ -1,7 +1,7 @@
 import assert from 'node:assert';
 import { describe, it } from 'node:test';
-import { buildMemoryStorage } from '../../src/storage/memory.js';
-import { mockAxios } from '../mocks/axios.js';
+import { buildMemoryStorage } from '../../src/storage/memory.ts';
+import { mockAxios } from '../mocks/axios.ts';
 
 describe('Waiting Memory Leak', () => {
   it('should clean up waiting map when entry is evicted from storage due to maxEntries', async () => {

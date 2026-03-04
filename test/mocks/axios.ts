@@ -1,8 +1,8 @@
 import { setTimeout } from 'node:timers/promises';
 import Axios, { AxiosError } from 'axios';
-import type { AxiosCacheInstance } from '../../src/cache/axios.js';
-import { type CacheOptions, setupCache } from '../../src/cache/create.js';
-import { Header } from '../../src/header/headers.js';
+import type { AxiosCacheInstance } from '../../src/cache/axios.ts';
+import { type CacheOptions, setupCache } from '../../src/cache/create.ts';
+import { Header } from '../../src/header/headers.ts';
 
 export const XMockRandom = 'x-mock-random';
 

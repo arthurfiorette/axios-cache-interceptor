@@ -1,7 +1,7 @@
 import assert from 'node:assert';
 import { describe, it } from 'node:test';
-import { Header } from '../../src/header/headers.js';
-import { defaultHeaderInterpreter } from '../../src/header/interpreter.js';
+import { Header } from '../../src/header/headers.ts';
+import { defaultHeaderInterpreter } from '../../src/header/interpreter.ts';
 
 describe('Expires HTTP Header', () => {
   it('Future Expires', () => {

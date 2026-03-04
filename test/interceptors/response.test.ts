@@ -2,9 +2,9 @@ import assert from 'node:assert';
 import { describe, it, mock } from 'node:test';
 import { setImmediate } from 'node:timers/promises';
 import Axios from 'axios';
-import { setupCache } from '../../src/cache/create.js';
-import { Header } from '../../src/header/headers.js';
-import { mockAxios, XMockRandom } from '../mocks/axios.js';
+import { setupCache } from '../../src/cache/create.ts';
+import { Header } from '../../src/header/headers.ts';
+import { mockAxios, XMockRandom } from '../mocks/axios.ts';
 
 describe('Response Interceptor', () => {
   it('`storage.get` call without specified methods', async () => {

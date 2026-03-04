@@ -1,6 +1,6 @@
 import { Result } from 'try';
-import { buildStorage, canRemoveStorageEntry } from './build.js';
-import type { StorageValue } from './types.js';
+import { buildStorage, canRemoveStorageEntry } from './build.ts';
+import type { StorageValue } from './types.ts';
 
 /**
  * Creates a simple storage. You can persist his data by using `sessionStorage` or
