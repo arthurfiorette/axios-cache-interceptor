@@ -1,8 +1,8 @@
 # Invalidating Cache
 
 When using cache-first approaches to improve performance, data inconsistency becomes your
-major problem. That occurs because **you** can mutate data in the server and **others**
-also can too. It becomes impossible to really know what the current state of the data is
+major problem. That occurs because **you** can mutate data on the server and so can
+**others**. It becomes impossible to really know what the current state of the data is
 in real time without communicating with the server.
 
 ::: warning
@@ -25,9 +25,9 @@ Take a look at this simple example:
 
 ## Revalidation after mutation
 
-In most cases, you are the one responsible for that inconsistency, like in the above
-example when the client itself initiated the mutation request. When that happens, you are
-capable of invalidating the cache for all places you have changed too.
+In most cases, you are responsible for that inconsistency — as in the example above,
+where the client itself initiated the mutation request. When that happens, you can
+invalidate the cache for all the entries you have changed.
 
 **The `cache.update` option is available for every request that you make, and it will be
 the go-to tool for invalidation.**
@@ -90,8 +90,8 @@ function createPost(data) {
 ```
 
 This will update the `list-posts` cache at the client side, making it equal to the server.
-When operations like this are possible to be made, they are the preferred. That's because
-we do not contact the server again and update ourselves the cache.
+When such operations are possible, they are the preferred approach. That's because
+we do not contact the server again and can update the cache ourselves.
 
 ::: tip
 
@@ -148,14 +148,14 @@ function createPost(data) {
 }
 ```
 
-Still using the first example, while we are at the step **3**, automatically, the axios
-cache-interceptor instance will request the server again and do required changes in the
-cache before the promise resolves and your page gets rendered.
+Continuing with the first example, at step **3**, the axios-cache-interceptor instance
+will automatically request the server again and apply the necessary cache changes before
+the promise resolves and your page gets rendered.
 
 ## Through external sources
 
-If you have any other type of external communication, like when listening to a websocket
-for changes, you may want to update your axios cache without be in a request context.
+If you have any other type of external communication, such as a WebSocket listener for
+changes, you may want to update your axios cache outside of a request context.
 
 For that, you can operate the storage manually. It is simple as that:
 
@@ -206,14 +206,13 @@ function createPost(data) {
 }
 ```
 
-## Summing up
+## Summary
 
-When applying any kind of cache to any kind of application, you chose to trade data
-consistency for performance. And, most of the time that is OK.
+When applying any kind of cache to any application, you choose to trade data
+consistency for performance. And, most of the time, that is OK.
 
 _The best cache strategy is a combination of all of them. TTL, custom revalidation, stale
 while revalidate and all the others together are the best solution._
 
-The only real tip here is to you put on a scale the amount of inconsistency you are
-willing to give up for the performance you are willing to gain. **Sometimes, not caching
-is the best solution.**
+The only real advice is to weigh the amount of inconsistency you are willing to accept
+against the performance you want to gain. **Sometimes, not caching is the best solution.**

@@ -1,8 +1,7 @@
 # Debugging
 
-I'm certainly sure that along the way you will find some cache behavior that is not the
-expected to the current situation. To help with that, the library has a separate robust
-build with support to debug logs enabled.
+At some point, you may encounter cache behavior that does not match expectations. To help
+diagnose such issues, the library provides a separate build with debug logging enabled.
 
 You can use it by changing the `setupCache` import:
 
@@ -61,8 +60,8 @@ const axios = setupCache(Axios, {
 
 :::
 
-And much more, depending on your context, situation and configuration. **Any misbehavior
-that you find will have a log to explain it.**
+And much more, depending on your context, situation, and configuration. **Any misbehavior
+you encounter will have a log to explain it.**
 
 ::: details Sample of logs sent to console.
 

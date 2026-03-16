@@ -71,7 +71,7 @@ axios.interceptors.request.use(
 
 ## Extending types
 
-When using axios-cache-interceptor, you'll note that it has a different type than the defaults `AxiosInstance`, `AxiosRequestConfig` and `AxiosResponse`. That's because we chose to override axios's interfaces instead of extending, to avoid breaking changes with other libraries.
+When using axios-cache-interceptor, you'll notice that it has a different type than the defaults `AxiosInstance`, `AxiosRequestConfig` and `AxiosResponse`. That's because we chose to override axios's interfaces instead of extending, to avoid breaking changes with other libraries.
 
 However, this also means that when integrating with other packages or creating your own
 custom interceptor, you need to override/extend our own types, `CacheInstance`,
@@ -92,7 +92,7 @@ declare module 'axios-cache-interceptor' {
 Sometimes you may want to cache a response that is not `JSON`, or that is a `Stream`.
 Either created by another interceptor or even by the axios adapter itself.
 
-To do so, you can use the axios's native `transformResponse` option, which is a function
+To do so, you can use axios's native `transformResponse` option, which is a function
 that receives the response and returns a string or a buffer.
 
 **Axios Cache Interceptor** can only handle serializable data types, so you need to

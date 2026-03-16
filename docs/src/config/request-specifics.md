@@ -132,7 +132,7 @@ the interpreter can't determine their TTL value to override this one.
 
 The time until the cached value is expired in milliseconds.
 
-If a function is used, it will receive the complete response and waits to return a TTL
+If a function is used, it will receive the complete response and should return a TTL
 value
 
 The `ttl` is only applied when the response is **first cached**; changing it on follow-up
@@ -145,8 +145,8 @@ requests has no effect. See [#1024](https://github.com/arthurfiorette/axios-cach
 - Type: `boolean`
 - Default: `true`
 
-If activated, when the response is received, the `ttl` property will be inferred from the
-requests headers. As described in the MDN docs and HTML specification.
+If enabled, when the response is received, the `ttl` property will be inferred from the
+response headers, as described in the MDN docs and the HTTP specification.
 
 See the actual implementation of the
 [`interpretHeader`](https://github.com/arthurfiorette/axios-cache-interceptor/blob/main/src/header/interpreter.ts)
@@ -320,7 +320,7 @@ axios.post<{ auth: { user: User } }>(
   {
     cache: {
       update: {
-        // Evicts the profile info cache, because now he is authenticated and the response needs to be re-fetched
+        // Evicts the profile info cache, because the user is now authenticated and the response needs to be re-fetched
         [profileInfoId]: 'delete',
 
         // An example that update the "user info response cache" when doing a login.
