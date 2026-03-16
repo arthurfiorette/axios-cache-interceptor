@@ -72,7 +72,7 @@
   },
   "devDependencies": {
     "@arthurfiorette/biomejs-config": "2.0.1",
-    "@biomejs/biome": "2.4.5",
+    "@biomejs/biome": "2.4.7",
     "@types/jsdom": "28.0.0",
     "@types/node": "24.12.0",
     "auto-changelog": "2.5.0",
