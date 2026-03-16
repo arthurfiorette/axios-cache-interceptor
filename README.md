@@ -42,9 +42,9 @@
 - 🌐 No network waste!
 - 🔑 TypeScript!
 
-Axios Cache Interceptor is, as it name says, a interceptor for axios to handle caching. It
-was created to help developers call axios multiple times without having to worry about
-overloading the network or coding himself a simple and buggy cache system.
+Axios Cache Interceptor is, as its name says, an interceptor for axios to handle caching.
+It was created to help developers call axios multiple times without having to worry about
+overloading the network or implementing a simple and error-prone cache system.
 
 <br />
 
@@ -74,7 +74,7 @@ res2.cached; // true
 
 ## License
 
-Licensed under the **MIT**. See [`LICENSE`](LICENSE) for more informations.
+Licensed under the **MIT**. See [`LICENSE`](LICENSE) for more information.
 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Farthurfiorette%2Faxios-cache-interceptor.svg?type=small)](https://app.fossa.com/projects/git%2Bgithub.com%2Farthurfiorette%2Faxios-cache-interceptor?ref=badge_small)
 

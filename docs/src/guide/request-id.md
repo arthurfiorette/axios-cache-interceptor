@@ -39,7 +39,7 @@ const userForPageY = await axios.get('/users', { id: 'users-page-y' });
 
 ::: warning
 
-If you send two different requests forcefully with the same ID. This library will ignore
+If you forcefully send two different requests with the same ID, this library will ignore
 any possible differences between them and share the same cache for both.
 
 :::
@@ -67,7 +67,7 @@ possibility
 
 :::
 
-Here's an example of a generator that only uses the `url` and `method` and `custom`
+Here's an example of a generator that only uses the `url`, `method`, and `custom`
 properties:
 
 ```ts
