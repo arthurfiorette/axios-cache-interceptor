@@ -5,7 +5,7 @@ url: 'https://axios-cache-interceptor.js.org/guide.md'
 
 Axios Cache Interceptor is an interceptor for axios, as its name says, to handle caching.
 It was created to help developers call axios multiple times without having to worry about
-overloading the network or coding themselves a simple and buggy cache system.
+overloading the network or implementing a simple and error-prone cache system.
 
 Each request goes through an interceptor applied to your axios instance. There, we handle
 each request and decide if we should send it to the network or return a cached response.
@@ -24,7 +24,7 @@ cached (sometimes you don't want cache at all, and that's ok), if there's alread
 sent to the network that we can wait for, and many other checks.
 
 After the adapter gets the response, we check if it belongs to a *cacheable* request,
-saves it into the storage, resolves other requests awaiting for the same resource and
+saves it to the storage, resolves other requests waiting for the same resource and
 finally returns the response to the original caller.
 
 ## Features
@@ -50,7 +50,7 @@ more than 4x the size of this library with fewer features and less performance.
 ### Fetch and some state management library?
 
 As this library was built to be used with axios and to handle storage itself, I can assure
-that it is more performant than any glued code you may find and/or write yourself. About
+that it is more performant than any hand-rolled code you may find or write yourself. About
 state management libraries and other similar things,
 [this blog post](https://arthur.place/implications-of-cache-or-state) explains why cache
 is the more correct, architectural way, instead of state.

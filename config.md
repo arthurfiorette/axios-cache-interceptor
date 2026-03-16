@@ -57,7 +57,7 @@ const cache = setupCache(Axios.create(), {
 * Default: `buildMemoryStorage()`
 
 A storage interface is the entity responsible for saving, retrieving and serializing data
-received from network and requested when a axios call is made.
+received from the network when an axios call is made.
 
 See the [Storages](./guide/storages.md) page for more information.
 
@@ -227,7 +227,7 @@ This option only works when targeting a [Development](./guide/debugging.md) buil
 
 The debug option will print debug information in the console. It is good if you need to
 trace any undesired behavior or issue. You can enable it by setting `debug` to a function
-that receives an string and returns nothing.
+that receives a string and returns nothing.
 
 Read the [Debugging](./guide/debugging.md) page for the complete guide.
 

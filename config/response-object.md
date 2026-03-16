@@ -3,7 +3,7 @@ url: 'https://axios-cache-interceptor.js.org/config/response-object.md'
 ---
 # Response object
 
-Axios cache interceptor returns a slightly different response than the original axios response.
+Axios Cache Interceptor returns a slightly different response than the standard axios response.
 It contains information about the cache and other needed properties.
 
 ## id
@@ -41,4 +41,4 @@ This does not indicate if the request was capable of being cached or not, as opt
 
 * Type: `boolean`
 
-A simple boolean indicating if the request returned data is from valid or stale cache.
+A simple boolean indicating whether the returned data is from a valid or stale cache.

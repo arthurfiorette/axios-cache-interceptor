@@ -36,7 +36,7 @@ clone both ways, on `set()` and on `get()`. *Just like
 [#136](https://github.com/arthurfiorette/axios-cache-interceptor/issues/163) and many
 others.*
 
-For long running processes, you can avoid memory leaks by using playing with the
+For long-running processes, you can avoid memory leaks by tuning the
 `cleanupInterval` option. And can reduce memory usage with `maxEntries`. The `maxStaleAge`
 parameter helps prevent stale entries from accumulating indefinitely.
 
@@ -138,7 +138,7 @@ browser's quota is reached.
 
 The eviction is done by the following algorithm:
 
-1. Just saved an value and got an error. *(Probably quota exceeded)*
+1. Just saved a value and got an error. *(Probably quota exceeded)*
 2. Evicts all expired keys that cannot enter the `stale` state.
 3. If it fails again, evicts the oldest key with the given prefix.
 4. Repeat step 2 and 3 until the object can be saved or the storage has been emptied.
@@ -183,8 +183,8 @@ storages, you can use them as a base to also create your own.
 ## Node Redis storage
 
 The node redis storage implementation is listed here because it shows the only tricky part
-when implementing a storage with an third party client that allows auto-evicting entries,
-as show on the `PXAT` property.
+when implementing a storage with a third party client that allows auto-evicting entries,
+as shown in the `PXAT` property.
 
 ```ts{4}
 import { createClient } from 'redis'; // v4

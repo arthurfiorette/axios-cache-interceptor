@@ -81,9 +81,8 @@ url: 'https://axios-cache-interceptor.js.org/guide/debugging.md'
 ---
 # Debugging
 
-I'm certainly sure that along the way you will find some cache behavior that is not the
-expected to the current situation. To help with that, the library has a separate robust
-build with support to debug logs enabled.
+At some point, you may encounter cache behavior that does not match expectations. To help
+diagnose such issues, the library provides a separate build with debug logging enabled.
 
 You can use it by changing the `setupCache` import:
 
@@ -142,8 +141,8 @@ const axios = setupCache(Axios, {
 
 :::
 
-And much more, depending on your context, situation and configuration. **Any misbehavior
-that you find will have a log to explain it.**
+And much more, depending on your context, situation, and configuration. **Any misbehavior
+you encounter will have a log to explain it.**
 
 ::: details Sample of logs sent to console.
 
@@ -324,7 +323,7 @@ interceptor ordering, see [Other Interceptors](./interceptors.md).
 
 Just the above is sufficient for most use cases. However, you can also customize each
 cache behavior by passing a configuration object to the `setupCache` function. And you can
-also customize some behaviors each request by using the `cache` option in the request
+also customize some behaviors per request by using the `cache` option in the request
 config.
 
 ## Support Table
@@ -370,7 +369,7 @@ url: 'https://axios-cache-interceptor.js.org/guide.md'
 
 Axios Cache Interceptor is an interceptor for axios, as its name says, to handle caching.
 It was created to help developers call axios multiple times without having to worry about
-overloading the network or coding themselves a simple and buggy cache system.
+overloading the network or implementing a simple and error-prone cache system.
 
 Each request goes through an interceptor applied to your axios instance. There, we handle
 each request and decide if we should send it to the network or return a cached response.
@@ -389,7 +388,7 @@ cached (sometimes you don't want cache at all, and that's ok), if there's alread
 sent to the network that we can wait for, and many other checks.
 
 After the adapter gets the response, we check if it belongs to a *cacheable* request,
-saves it into the storage, resolves other requests awaiting for the same resource and
+saves it to the storage, resolves other requests waiting for the same resource and
 finally returns the response to the original caller.
 
 ## Features
@@ -415,7 +414,7 @@ more than 4x the size of this library with fewer features and less performance.
 ### Fetch and some state management library?
 
 As this library was built to be used with axios and to handle storage itself, I can assure
-that it is more performant than any glued code you may find and/or write yourself. About
+that it is more performant than any hand-rolled code you may find or write yourself. About
 state management libraries and other similar things,
 [this blog post](https://arthur.place/implications-of-cache-or-state) explains why cache
 is the more correct, architectural way, instead of state.
@@ -428,8 +427,8 @@ url: 'https://axios-cache-interceptor.js.org/guide/invalidating-cache.md'
 # Invalidating Cache
 
 When using cache-first approaches to improve performance, data inconsistency becomes your
-major problem. That occurs because **you** can mutate data in the server and **others**
-also can too. It becomes impossible to really know what the current state of the data is
+major problem. That occurs because **you** can mutate data on the server and so can
+**others**. It becomes impossible to really know what the current state of the data is
 in real time without communicating with the server.
 
 ::: warning
@@ -452,9 +451,9 @@ Take a look at this simple example:
 
 ## Revalidation after mutation
 
-In most cases, you are the one responsible for that inconsistency, like in the above
-example when the client itself initiated the mutation request. When that happens, you are
-capable of invalidating the cache for all places you have changed too.
+In most cases, you are responsible for that inconsistency — as in the example above,
+where the client itself initiated the mutation request. When that happens, you can
+invalidate the cache for all the entries you have changed.
 
 **The `cache.update` option is available for every request that you make, and it will be
 the go-to tool for invalidation.**
@@ -517,8 +516,8 @@ function createPost(data) {
 ```
 
 This will update the `list-posts` cache at the client side, making it equal to the server.
-When operations like this are possible to be made, they are the preferred. That's because
-we do not contact the server again and update ourselves the cache.
+When such operations are possible, they are the preferred approach. That's because
+we do not contact the server again and can update the cache ourselves.
 
 ::: tip
 
@@ -575,14 +574,14 @@ function createPost(data) {
 }
 ```
 
-Still using the first example, while we are at the step **3**, automatically, the axios
-cache-interceptor instance will request the server again and do required changes in the
-cache before the promise resolves and your page gets rendered.
+Continuing with the first example, at step **3**, the axios-cache-interceptor instance
+will automatically request the server again and apply the necessary cache changes before
+the promise resolves and your page gets rendered.
 
 ## Through external sources
 
-If you have any other type of external communication, like when listening to a websocket
-for changes, you may want to update your axios cache without be in a request context.
+If you have any other type of external communication, such as a WebSocket listener for
+changes, you may want to update your axios cache outside of a request context.
 
 For that, you can operate the storage manually. It is simple as that:
 
@@ -633,17 +632,16 @@ function createPost(data) {
 }
 ```
 
-## Summing up
+## Summary
 
-When applying any kind of cache to any kind of application, you chose to trade data
-consistency for performance. And, most of the time that is OK.
+When applying any kind of cache to any application, you choose to trade data
+consistency for performance. And, most of the time, that is OK.
 
 *The best cache strategy is a combination of all of them. TTL, custom revalidation, stale
 while revalidate and all the others together are the best solution.*
 
-The only real tip here is to you put on a scale the amount of inconsistency you are
-willing to give up for the performance you are willing to gain. **Sometimes, not caching
-is the best solution.**
+The only real advice is to weigh the amount of inconsistency you are willing to accept
+against the performance you want to gain. **Sometimes, not caching is the best solution.**
 
 ---
 
@@ -723,7 +721,7 @@ axios.interceptors.request.use(
 
 ## Extending types
 
-When using axios-cache-interceptor, you'll note that it has a different type than the defaults `AxiosInstance`, `AxiosRequestConfig` and `AxiosResponse`. That's because we chose to override axios's interfaces instead of extending, to avoid breaking changes with other libraries.
+When using axios-cache-interceptor, you'll notice that it has a different type than the defaults `AxiosInstance`, `AxiosRequestConfig` and `AxiosResponse`. That's because we chose to override axios's interfaces instead of extending, to avoid breaking changes with other libraries.
 
 However, this also means that when integrating with other packages or creating your own
 custom interceptor, you need to override/extend our own types, `CacheInstance`,
@@ -744,7 +742,7 @@ declare module 'axios-cache-interceptor' {
 Sometimes you may want to cache a response that is not `JSON`, or that is a `Stream`.
 Either created by another interceptor or even by the axios adapter itself.
 
-To do so, you can use the axios's native `transformResponse` option, which is a function
+To do so, you can use axios's native `transformResponse` option, which is a function
 that receives the response and returns a string or a buffer.
 
 **Axios Cache Interceptor** can only handle serializable data types, so you need to
@@ -850,7 +848,7 @@ const userForPageY = await axios.get('/users', { id: 'users-page-y' });
 
 ::: warning
 
-If you send two different requests forcefully with the same ID. This library will ignore
+If you forcefully send two different requests with the same ID, this library will ignore
 any possible differences between them and share the same cache for both.
 
 :::
@@ -878,7 +876,7 @@ possibility
 
 :::
 
-Here's an example of a generator that only uses the `url` and `method` and `custom`
+Here's an example of a generator that only uses the `url`, `method`, and `custom`
 properties:
 
 ```ts
@@ -1023,25 +1021,21 @@ the interpreter can't determine their TTL value to override this one.
 
 :::
 
-::: warning
+The time until the cached value is expired in milliseconds.
+
+If a function is used, it will receive the complete response and should return a TTL
+value
 
 The `ttl` is only applied when the response is **first cached**; changing it on follow-up
 requests has no effect. See [#1024](https://github.com/arthurfiorette/axios-cache-interceptor/issues/1024) for workarounds.
-
-:::
-
-The time until the cached value is expired in milliseconds.
-
-If a function is used, it will receive the complete response and waits to return a TTL
-value
 
 ## cache.interpretHeader
 
 * Type: `boolean`
 * Default: `true`
 
-If activated, when the response is received, the `ttl` property will be inferred from the
-requests headers. As described in the MDN docs and HTML specification.
+If enabled, when the response is received, the `ttl` property will be inferred from the
+response headers, as described in the MDN docs and the HTTP specification.
 
 See the actual implementation of the
 [`interpretHeader`](https://github.com/arthurfiorette/axios-cache-interceptor/blob/main/src/header/interpreter.ts)
@@ -1207,7 +1201,7 @@ axios.post<{ auth: { user: User } }>(
   {
     cache: {
       update: {
-        // Evicts the profile info cache, because now he is authenticated and the response needs to be re-fetched
+        // Evicts the profile info cache, because the user is now authenticated and the response needs to be re-fetched
         [profileInfoId]: 'delete',
 
         // An example that update the "user info response cache" when doing a login.
@@ -1370,7 +1364,7 @@ url: 'https://axios-cache-interceptor.js.org/config/response-object.md'
 ---
 # Response object
 
-Axios cache interceptor returns a slightly different response than the original axios response.
+Axios Cache Interceptor returns a slightly different response than the standard axios response.
 It contains information about the cache and other needed properties.
 
 ## id
@@ -1408,7 +1402,7 @@ This does not indicate if the request was capable of being cached or not, as opt
 
 * Type: `boolean`
 
-A simple boolean indicating if the request returned data is from valid or stale cache.
+A simple boolean indicating whether the returned data is from a valid or stale cache.
 
 ---
 
@@ -1500,7 +1494,7 @@ const cache = setupCache(Axios.create(), {
 * Default: `buildMemoryStorage()`
 
 A storage interface is the entity responsible for saving, retrieving and serializing data
-received from network and requested when a axios call is made.
+received from the network when an axios call is made.
 
 See the [Storages](./guide/storages.md) page for more information.
 
@@ -1670,7 +1664,7 @@ This option only works when targeting a [Development](./guide/debugging.md) buil
 
 The debug option will print debug information in the console. It is good if you need to
 trace any undesired behavior or issue. You can enable it by setting `debug` to a function
-that receives an string and returns nothing.
+that receives a string and returns nothing.
 
 Read the [Debugging](./guide/debugging.md) page for the complete guide.
 
@@ -1732,7 +1726,7 @@ clone both ways, on `set()` and on `get()`. *Just like
 [#136](https://github.com/arthurfiorette/axios-cache-interceptor/issues/163) and many
 others.*
 
-For long running processes, you can avoid memory leaks by using playing with the
+For long-running processes, you can avoid memory leaks by tuning the
 `cleanupInterval` option. And can reduce memory usage with `maxEntries`. The `maxStaleAge`
 parameter helps prevent stale entries from accumulating indefinitely.
 
@@ -1834,7 +1828,7 @@ browser's quota is reached.
 
 The eviction is done by the following algorithm:
 
-1. Just saved an value and got an error. *(Probably quota exceeded)*
+1. Just saved a value and got an error. *(Probably quota exceeded)*
 2. Evicts all expired keys that cannot enter the `stale` state.
 3. If it fails again, evicts the oldest key with the given prefix.
 4. Repeat step 2 and 3 until the object can be saved or the storage has been emptied.
@@ -1879,8 +1873,8 @@ storages, you can use them as a base to also create your own.
 ## Node Redis storage
 
 The node redis storage implementation is listed here because it shows the only tricky part
-when implementing a storage with an third party client that allows auto-evicting entries,
-as show on the `PXAT` property.
+when implementing a storage with a third party client that allows auto-evicting entries,
+as shown in the `PXAT` property.
 
 ```ts{4}
 import { createClient } from 'redis'; // v4
