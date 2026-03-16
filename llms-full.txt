@@ -350,6 +350,19 @@ Axios and Axios Cache Interceptor v1**
 | `~ v0.22`                                        | `~ v0.3`                                                                                      |
 | `v0.21`                                          | `<= v0.2`                                                                                     |
 
+## AI / LLM Skills
+
+If you are using an AI coding assistant, you can install the axios-cache-interceptor skill
+to give it up-to-date context about this library:
+
+```bash
+npx skills add axios-cache-interceptor
+```
+
+This uses the [Skills](https://github.com/vercel-labs/skills) framework. Once installed,
+your AI assistant will have access to the full API reference and usage patterns for this
+library.
+
 ### Read More
 
 Some useful links to get you more familiar with the library:
