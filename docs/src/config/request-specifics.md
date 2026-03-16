@@ -132,43 +132,8 @@ the interpreter can't determine their TTL value to override this one.
 
 ::: warning
 
-The `ttl` value is applied **once, when the response is first cached**. Changing `ttl` in
-subsequent requests for the same cache key will have no effect — the already-stored
-expiration time is used as-is until the cache entry naturally expires or is manually
-invalidated.
-
-See [issue #1024](https://github.com/arthurfiorette/axios-cache-interceptor/issues/1024)
-for a detailed discussion and workarounds.
-
-:::
-
-::: details Workaround: update the stored TTL before the request
-
-Add a request interceptor that reads the current cache entry and rewrites it with the new
-TTL before the library's own interceptor runs:
-
-```ts
-import { setupCache, buildMemoryStorage } from 'axios-cache-interceptor';
-
-const axios = setupCache(axiosInstance, {
-  storage: buildMemoryStorage()
-});
-
-axios.interceptors.request.use(async (config) => {
-  if (typeof config.cache === 'object' && typeof config.cache.ttl === 'number') {
-    const cacheKey = axios.generateKey(config);
-    const newTtl = config.cache.ttl;
-    const entry = await axios.storage.get(cacheKey);
-
-    if (entry.state === 'cached' && entry.ttl !== newTtl) {
-      // Rewrite the stored entry with the new TTL
-      await axios.storage.set(cacheKey, { ...entry, ttl: newTtl });
-    }
-  }
-
-  return config;
-});
-```
+The `ttl` is only applied when the response is **first cached**; changing it on follow-up
+requests has no effect. See [#1024](https://github.com/arthurfiorette/axios-cache-interceptor/issues/1024) for workarounds.
 
 :::
 
