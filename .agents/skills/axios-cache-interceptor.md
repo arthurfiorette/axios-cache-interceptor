@@ -4,6 +4,7 @@ A caching interceptor for [Axios](https://axios-http.com/) that prevents redunda
 
 - **npm**: `axios-cache-interceptor`
 - **docs**: https://axios-cache-interceptor.js.org
+- **llms.txt**: https://axios-cache-interceptor.js.org/llms.txt
 - **repo**: https://github.com/arthurfiorette/axios-cache-interceptor
 
 ## Installation
