@@ -130,6 +130,13 @@ the interpreter can't determine their TTL value to override this one.
 
 :::
 
+::: warning
+
+The `ttl` is only applied when the response is **first cached**; changing it on follow-up
+requests has no effect. See [#1024](https://github.com/arthurfiorette/axios-cache-interceptor/issues/1024) for workarounds.
+
+:::
+
 The time until the cached value is expired in milliseconds.
 
 If a function is used, it will receive the complete response and waits to return a TTL
