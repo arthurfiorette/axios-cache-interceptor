@@ -319,6 +319,9 @@ res2.cached; // true // [!code focus]
 
 :::
 
+`setupCache(instance)` attaches both cache interceptors by default. If you need custom
+interceptor ordering, see [Other Interceptors](./interceptors.md).
+
 Just the above is sufficient for most use cases. However, you can also customize each
 cache behavior by passing a configuration object to the `setupCache` function. And you can
 also customize some behaviors each request by using the `cache` option in the request
@@ -649,15 +652,17 @@ url: 'https://axios-cache-interceptor.js.org/guide/interceptors.md'
 ---
 # Other Interceptors
 
-When combining `axios-cache-interceptor` with other interceptors, you may encounter some inconsistencies, which are explained in the next section.
+When combining `axios-cache-interceptor` with other interceptors, execution order matters.
+This page explains the default behavior and how to customize it.
 
 ## TL;DR
 
-* **Request** interceptors registered **before** `setupCache()` run **before** the cache
+* **Request** interceptors registered **before** `setupCache()` run **after** the cache
+  interceptor; those registered **after** `setupCache()` run **before** the cache interceptor.
+* **Response** interceptors registered **before** `setupCache()` run **before** the cache
   interceptor; those registered **after** `setupCache()` run **after** the cache interceptor.
-* **Response** interceptors registered **before** `setupCache()` run **after** the cache
-  interceptor; those registered **after** `setupCache()` run **before** the cache
-  interceptor.
+* By default, `setupCache(axios)` attaches both cache interceptors immediately.
+* You can disable automatic registration with `register: false` and register manually.
 
 ## Explanation
 
@@ -671,19 +676,47 @@ As explained better in the
 [this issue](https://github.com/arthurfiorette/axios-cache-interceptor/issues/449#issuecomment-1370327566).
 
 ```ts
-// This will run BEFORE the cache interceptor
+// This will run AFTER the cache interceptor
 axios.interceptors.request.use((req) => req);
 
-// This will run AFTER the cache interceptor
+// This will run BEFORE the cache interceptor
 axios.interceptors.response.use((res) => res);
 
 setupCache(axios);
 
-// This will run AFTER the cache interceptor
+// This will run BEFORE the cache interceptor
 axios.interceptors.request.use((req) => req);
 
-// This will run BEFORE the cache interceptor
+// This will run AFTER the cache interceptor
 axios.interceptors.response.use((res) => res);
+```
+
+## Custom order
+
+If you need full control, disable automatic registration and register cache interceptors
+yourself.
+
+```ts
+import Axios from 'axios';
+import { setupCache } from 'axios-cache-interceptor';
+
+const axios = setupCache(Axios.create(), { register: false });
+
+// Register cache response interceptor first (response interceptors are FIFO)
+axios.interceptors.response.use(
+  axios.responseInterceptor.onFulfilled,
+  axios.responseInterceptor.onRejected
+);
+
+// Register your own interceptors
+axios.interceptors.request.use((req) => req);
+axios.interceptors.response.use((res) => res);
+
+// Register cache request interceptor last (request interceptors are LIFO)
+axios.interceptors.request.use(
+  axios.requestInterceptor.onFulfilled,
+  axios.requestInterceptor.onRejected
+);
 ```
 
 ***
@@ -987,6 +1020,13 @@ await axios.get('/api/live-stock-prices', {
 
 When using [**interpretHeader**](#cache-interpretheader), this value will only be used if
 the interpreter can't determine their TTL value to override this one.
+
+:::
+
+::: warning
+
+The `ttl` is only applied when the response is **first cached**; changing it on follow-up
+requests has no effect. See [#1024](https://github.com/arthurfiorette/axios-cache-interceptor/issues/1024) for workarounds.
 
 :::
 
@@ -1526,7 +1566,10 @@ The possible returns are:
 ::: details Example of a custom headerInterpreter
 
 ```ts
-import { setupCache, type HeaderInterpreter } from 'axios-cache-interceptor';
+import {
+  setupCache,
+  type HeaderInterpreter
+} from 'axios-cache-interceptor';
 
 const myHeaderInterpreter: HeaderInterpreter = (headers) => {
   if (headers['x-my-custom-header']) {
@@ -1579,6 +1622,39 @@ to this property.
 See its code for more information
 [here](https://github.com/arthurfiorette/axios-cache-interceptor/tree/main/src/interceptors).
 
+## register
+
+* Type: `boolean`
+* Default: `true`
+
+Controls whether cache interceptors are automatically registered during `setupCache()`.
+
+* `true`: register both cache interceptors (default).
+* `false`: do not register cache interceptors automatically.
+
+Use `false` when you need full control over interceptor registration order.
+
+```ts
+import Axios from 'axios';
+import { setupCache } from 'axios-cache-interceptor';
+
+const axios = setupCache(Axios.create(), { register: false });
+
+// register your own interceptors first
+axios.interceptors.request.use((req) => req);
+axios.interceptors.response.use((res) => res);
+
+// then register cache interceptors manually
+axios.interceptors.request.use(
+  axios.requestInterceptor.onFulfilled,
+  axios.requestInterceptor.onRejected
+);
+axios.interceptors.response.use(
+  axios.responseInterceptor.onFulfilled,
+  axios.responseInterceptor.onRejected
+);
+```
+
 ## debug
 
 &#x20;
@@ -1606,7 +1682,8 @@ setupCache(axiosInstance, { debug: console.log });
 
 // Own logging platform.
 setupCache(axiosInstance, {
-  debug: ({ id, msg, data }) => myLoggerExample.emit({ id, msg, data })
+  debug: ({ id, msg, data }) =>
+    myLoggerExample.emit({ id, msg, data })
 });
 
 // Disables debug. (default)
