@@ -1,3 +1,8 @@
+---
+name: axios-cache-interceptor
+description: A caching interceptor for Axios that prevents redundant network requests, handles concurrent request deduplication, and supports HTTP caching standards.
+---
+
 # axios-cache-interceptor
 
 A caching interceptor for [Axios](https://axios-http.com/) that prevents redundant network requests, handles concurrent request deduplication, and supports HTTP caching standards.
