@@ -141,7 +141,7 @@ If you are using an AI coding assistant, you can install the axios-cache-interce
 to give it up-to-date context about this library:
 
 ```bash
-npx skills add axios-cache-interceptor
+npx skills add arthurfiorette/axios-cache-interceptor
 ```
 
 This uses the [Skills](https://github.com/vercel-labs/skills) framework. Once installed,

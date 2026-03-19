@@ -14,7 +14,6 @@ A cache interceptor for axios made with developers and performance in mind.
 - [Storages](https://axios-cache-interceptor.js.org/guide/storages.md)
 - [Request Id](https://axios-cache-interceptor.js.org/guide/request-id.md)
 - [Invalidating Cache](https://axios-cache-interceptor.js.org/guide/invalidating-cache.md)
-- [Comparison](https://axios-cache-interceptor.js.org/guide/comparison.md)
 - [Other Interceptors](https://axios-cache-interceptor.js.org/guide/interceptors.md)
 
 ### Config
@@ -23,6 +22,3 @@ A cache interceptor for axios made with developers and performance in mind.
 - [Request specifics](https://axios-cache-interceptor.js.org/config/request-specifics.md)
 - [Response object](https://axios-cache-interceptor.js.org/config/response-object.md)
 
-### Other
-
-- [Result](https://axios-cache-interceptor.js.org/generated/benchmark.md)
