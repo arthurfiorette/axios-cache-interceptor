@@ -41,7 +41,6 @@ Do not summarize yet. Just read and prepare to answer detailed questions.
 `.trim();
 
 const chatGptLink = new URL('https://chatgpt.com');
-chatGptLink.searchParams.set('model', 'gpt-4');
 chatGptLink.searchParams.set('hints', 'search');
 chatGptLink.searchParams.set('prompt', aiPrompt);
 
@@ -301,7 +300,6 @@ export default defineConfig({
           { text: 'Storages', link: '/guide/storages' },
           { text: 'Request Id', link: '/guide/request-id' },
           { text: 'Invalidating Cache', link: '/guide/invalidating-cache' },
-          { text: 'Comparison', link: '/guide/comparison' },
           { text: 'Other Interceptors', link: '/guide/interceptors' }
         ]
       },
