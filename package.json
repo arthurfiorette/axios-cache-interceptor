@@ -76,7 +76,7 @@
     "@types/jsdom": "28.0.0",
     "@types/node": "24.12.0",
     "auto-changelog": "2.5.0",
-    "axios": "1.15.0",
+    "axios": "1.15.2",
     "c8": "11.0.0",
     "jsdom": "28.1.0",
     "tsdown": "0.21.10",
