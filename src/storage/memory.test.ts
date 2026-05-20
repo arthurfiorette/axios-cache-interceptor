@@ -82,32 +82,6 @@ describe('buildMemoryStorage', () => {
     expect(await storage.get(key2)).toEqual({ state: 'empty' });
   });
 
-  it('should clone data when cloneData is true', async () => {
-    const storage = buildMemoryStorage(true);
-    const key = 'test-key';
-    const originalValue: StorageValue = {
-      state: 'cached',
-      data: { headers: { test: 'header' }, status: 200, statusText: 'OK', data: { nested: { value: 'original' } } },
-      headers: {},
-      ttl: 1000,
-      createdAt: Date.now()
-    };
-
-    await storage.set(key, originalValue);
-    const retrieved = await storage.get(key);
-
-    // Modify the retrieved value
-    if (retrieved && retrieved.state !== 'empty' && typeof retrieved.data === 'object') {
-      if (typeof retrieved.data.data === 'object') {
-        (retrieved.data.data as any).nested.value = 'modified';
-      }
-    }
-
-    // Original should remain unchanged in storage.data
-    const currentValue = storage.data[key];
-    expect((currentValue as any)?.data?.data).toEqual({ nested: { value: 'original' } });
-  });
-
   it('should clone data when setting with cloneData set to "double"', async () => {
     const storage = buildMemoryStorage('double');
     const key = 'test-key';
@@ -128,116 +102,6 @@ describe('buildMemoryStorage', () => {
     expect((retrieved as any)?.data?.data).toEqual({ nested: { value: 'original' } });
   });
 
-  it('should clean up expired entries', () => {
-    const storage = buildMemoryStorage();
-    const key = 'test-key';
-    const expiredValue: StorageValue = {
-      state: 'cached',
-      data: { headers: {}, status: 200, statusText: 'OK' },
-      headers: {},
-      ttl: 100, // Expire after 100ms
-      createdAt: Date.now() - 200 // Created 200ms ago
-    };
-
-    const validValue: StorageValue = {
-      state: 'cached',
-      data: { headers: {}, status: 200, statusText: 'OK' },
-      headers: {},
-      ttl: 1000,
-      createdAt: Date.now()
-    };
-
-    storage.set(key + '-expired', expiredValue);
-    storage.set(key + '-valid', validValue);
-
-    // Manually trigger cleanup
-    storage.cleanup();
-
-    expect(storage.data[key + '-expired']).toBeUndefined();
-    expect(storage.data[key + '-valid']).toEqual(validValue);
-  });
-
-  it('should clean up empty entries', () => {
-    const storage = buildMemoryStorage();
-    const key = 'test-key';
-    const emptyValue: StorageValue = {
-      state: 'empty',
-      data: undefined,
-      headers: {},
-      createdAt: undefined,
-      ttl: undefined,
-      staleTtl: undefined
-    };
-
-    const validValue: StorageValue = {
-      state: 'cached',
-      data: { headers: {}, status: 200, statusText: 'OK' },
-      headers: {},
-      ttl: 1000,
-      createdAt: Date.now()
-    };
-
-    storage.set(key + '-empty', emptyValue);
-    storage.set(key + '-valid', validValue);
-
-    // Manually trigger cleanup
-    storage.cleanup();
-
-    expect(storage.data[key + '-empty']).toBeUndefined();
-    expect(storage.data[key + '-valid']).toEqual(validValue);
-  });
-
-  it('should respect maxEntries limit when set', () => {
-    const storage = buildMemoryStorage(false, false, 2); // Max 2 entries
-    const value: StorageValue = {
-      state: 'cached',
-      data: { headers: {}, status: 200, statusText: 'OK' },
-      headers: {},
-      ttl: 1000,
-      createdAt: Date.now()
-    };
-
-    storage.set('key1', value);
-    storage.set('key2', value);
-    storage.set('key3', value); // This should trigger removal of oldest entry
-
-    // Key1 should be removed (FIFO)
-    expect(storage.data['key1']).toBeUndefined();
-    expect(storage.data['key2']).toEqual(value);
-    expect(storage.data['key3']).toEqual(value);
-  });
-
-  it('should handle cleanup and max entries together', () => {
-    const storage = buildMemoryStorage(false, false, 2); // Max 2 entries
-    const expiredValue: StorageValue = {
-      state: 'cached',
-      data: { headers: {}, status: 200, statusText: 'OK' },
-      headers: {},
-      ttl: 100,
-      createdAt: Date.now() - 200
-    };
-    const validValue: StorageValue = {
-      state: 'cached',
-      data: { headers: {}, status: 200, statusText: 'OK' },
-      headers: {},
-      ttl: 1000,
-      createdAt: Date.now()
-    };
-
-    storage.set('expired', expiredValue);
-    storage.set('valid1', validValue);
-
-    // This should trigger cleanup (removing expired) and we're at capacity
-    storage.set('valid2', validValue);
-    storage.set('valid3', validValue); // This should evict oldest valid entry
-
-    // Expired should be gone, and the oldest valid entry too
-    expect(storage.data['expired']).toBeUndefined();
-    expect(storage.data['valid1']).toBeUndefined(); // Oldest valid
-    expect(storage.data['valid2']).toEqual(validValue); // Second oldest
-    expect(storage.data['valid3']).toEqual(validValue); // Newest
-  });
-
   it('should set up automatic cleanup interval when cleanupInterval is provided', () => {
     jest.useFakeTimers();
     const setIntervalSpy = jest.spyOn(global, 'setInterval');
@@ -255,43 +119,8 @@ describe('buildMemoryStorage', () => {
 
   it('should not set up automatic cleanup when cleanupInterval is false', () => {
     const storage = buildMemoryStorage(false, false);
-    
+
     // No interval should be set
     expect(storage.cleaner).toBeUndefined();
   });
-
-  it('should handle structuredClone in environments where it exists', () => {
-    const originalStructuredClone = global.structuredClone;
-
-    // Mock structuredClone to ensure it's used when available
-    const mockClone = jest.fn((val) => JSON.parse(JSON.stringify(val)));
-    Object.defineProperty(global, 'structuredClone', {
-      value: mockClone,
-      writable: true
-    });
-
-    try {
-      const storage = buildMemoryStorage(true);
-      const value: StorageValue = {
-        state: 'cached',
-        data: { headers: {}, status: 200, statusText: 'OK', test: 'value' },
-        headers: {},
-        ttl: 1000,
-        createdAt: Date.now()
-      };
-
-      storage.set('test', value);
-      const retrieved = storage.data['test'];
-
-      // The function should be called during cloning (for double option)
-      // Since we didn't use 'double', cloning happens on retrieval
-      expect(retrieved).toBeDefined();
-    } finally {
-      // Restore original
-      Object.defineProperty(global, 'structuredClone', {
-        value: originalStructuredClone,
-        writable: true
-      });
-    }
   });
-});

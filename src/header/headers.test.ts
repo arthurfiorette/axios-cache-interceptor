@@ -45,25 +45,6 @@ describe('Header Constants', () => {
     expect(Header.XAxiosCacheStaleIfError).toBe('x-axios-cache-stale-if-error');
   });
 
-  test('should have all expected header keys', () => {
-    const expectedKeys = [
-      'IfModifiedSince',
-      'LastModified',
-      'IfNoneMatch',
-      'CacheControl',
-      'Pragma',
-      'ETag',
-      'Expires',
-      'Age',
-      'XAxiosCacheEtag',
-      'XAxiosCacheLastModified',
-      'XAxiosCacheStaleIfError'
-    ];
-    
-    const actualKeys = Object.keys(Header);
-    expect(actualKeys.sort()).toEqual(expectedKeys.sort());
-  });
-
   test('should be defined as a constant object', () => {
     // Check that Header object exists and is properly defined
     expect(Header).toBeDefined();

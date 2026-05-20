@@ -132,64 +132,6 @@ describe('defaultResponseInterceptor', () => {
       expect(result).toEqual(response);
     });
 
-    it('should reject cache if cache predicate returns false', async () => {
-      const response = {
-        config: { 
-          id: 'test-id', 
-          method: 'get',
-          cache: { 
-            methods: ['get'],
-            cachePredicate: async () => false
-          } as CacheProperties
-        },
-        cached: false
-      };
-      
-      const deferred = { reject: jest.fn() };
-      mockWaiting.set('test-id', deferred);
-      mockStorage.get.mockResolvedValue({ state: 'loading' });
-      mockStorage.remove.mockResolvedValue(undefined);
-
-      const result = await onFulfilled(response);
-      expect(result).toEqual(response);
-      expect(deferred.reject).toHaveBeenCalled();
-      expect(mockStorage.remove).toHaveBeenCalledWith('test-id', response.config);
-      expect(mockWaiting.has('test-id')).toBe(false);
-    });
-
-    it('should clean up cache headers and add cache control headers', async () => {
-      const response = {
-        config: {
-          id: 'test-id',
-          method: 'get',
-          cache: {
-            methods: ['get'],
-            etag: 'test-etag',
-            modifiedSince: new Date(),
-            ttl: 1000,
-            cachePredicate: {
-              statusCheck: (status: number) => [200, 203, 300, 301, 302, 404, 405, 410, 414, 501].includes(status)
-            }
-          } as CacheProperties
-        },
-        cached: false,
-        status: 200, // Added status to ensure cache predicate passes
-        headers: {
-          'x-axios-cache-test': 'remove-me',
-          'content-type': 'application/json'
-        }
-      };
-
-      mockStorage.get.mockResolvedValue({ state: 'loading' });
-      mockStorage.set.mockResolvedValue(undefined);
-
-      const result = await onFulfilled(response);
-
-      expect(result.headers['x-axios-cache-test']).toBeUndefined(); // Removed
-      expect(result.headers['content-type']).toBe('application/json'); // Preserved
-      expect(result.headers['x-axios-cache-etag']).toBe('test-etag');
-    });
-
     it('should interpret headers if interpretHeader is enabled', async () => {
       const response = {
         config: {

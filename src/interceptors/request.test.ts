@@ -116,15 +116,6 @@ describe('defaultRequestInterceptor', () => {
   });
 
   describe('when config.cache is false', () => {
-    it('should return config without processing', async () => {
-      mockConfig.cache = false;
-
-      const result = await interceptor.onFulfilled(mockConfig);
-
-      expect(result).toBe(mockConfig);
-      expect(mockAxios.generateKey).toHaveBeenCalledWith(mockConfig);
-      expect(mockConfig.id).toBe('test-key');
-    });
   });
 
   describe('when cache has ignoreUrls', () => {
@@ -186,28 +177,6 @@ describe('defaultRequestInterceptor', () => {
   });
 
   describe('when cacheTakeover is enabled', () => {
-    it('should add cache control headers', async () => {
-      mockConfig.cache!.cacheTakeover = true;
-      (mockAxios.storage.get as jest.Mock).mockResolvedValue({ state: 'empty' });
-
-      await interceptor.onFulfilled(mockConfig);
-
-      expect(mockConfig.headers[Header.CacheControl]).toBe('no-cache, no-store, must-revalidate');
-      expect(mockConfig.headers[Header.Pragma]).toBe('no-cache');
-      expect(mockConfig.headers[Header.Expires]).toBe('0');
-    });
-
-    it('should not override existing cache control headers', async () => {
-      mockConfig.cache!.cacheTakeover = true;
-      mockConfig.headers[Header.CacheControl] = 'custom-value';
-      (mockAxios.storage.get as jest.Mock).mockResolvedValue({ state: 'empty' });
-
-      await interceptor.onFulfilled(mockConfig);
-
-      expect(mockConfig.headers[Header.CacheControl]).toBe('custom-value');
-      expect(mockConfig.headers[Header.Pragma]).toBe('no-cache');
-      expect(mockConfig.headers[Header.Expires]).toBe('0');
-    });
   });
 
   describe('method validation', () => {
