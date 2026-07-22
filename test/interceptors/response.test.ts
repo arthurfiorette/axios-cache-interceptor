@@ -1,9 +1,10 @@
 import assert from 'node:assert';
 import { describe, it, mock } from 'node:test';
-import { setImmediate } from 'node:timers/promises';
+import { setImmediate, setTimeout as sleep } from 'node:timers/promises';
 import Axios from 'axios';
 import { setupCache } from '../../src/cache/create.ts';
 import { Header } from '../../src/header/headers.ts';
+import { buildMemoryStorage } from '../../src/storage/memory.ts';
 import { mockAxios, XMockRandom } from '../mocks/axios.ts';
 
 describe('Response Interceptor', () => {
@@ -358,6 +359,156 @@ describe('Response Interceptor', () => {
 
     assert.equal(storage.state, 'cached');
     assert.equal(storage.data?.data, true);
+  });
+
+  // https://github.com/arthurfiorette/axios-cache-interceptor/issues/1240
+  it('settles local followers when another instance updates shared storage first', async () => {
+    const storage = buildMemoryStorage();
+    const first = mockAxios({ storage });
+    const second = mockAxios({ storage });
+    const id = 'shared-request';
+
+    let startFirst!: () => void;
+    const firstStarted = new Promise<void>((resolve) => {
+      startFirst = resolve;
+    });
+    let finishFirst!: () => void;
+    const firstCanFinish = new Promise<void>((resolve) => {
+      finishFirst = resolve;
+    });
+    let followerReadLoading!: () => void;
+    const followerIsWaiting = new Promise<void>((resolve) => {
+      followerReadLoading = resolve;
+    });
+
+    const storageGet = storage.get.bind(storage);
+    storage.get = async (...args) => {
+      const value = await storageGet(...args);
+
+      if (value.state === 'loading') {
+        followerReadLoading();
+      }
+
+      return value;
+    };
+
+    first.defaults.adapter = async (config) => {
+      startFirst();
+      await firstCanFinish;
+
+      return {
+        config,
+        data: 'first',
+        headers: {},
+        status: 200,
+        statusText: 'OK'
+      };
+    };
+    second.defaults.adapter = async (config) => ({
+      config,
+      data: 'second',
+      headers: {},
+      status: 200,
+      statusText: 'OK'
+    });
+
+    const leader = first.get('url', { id });
+    await firstStarted;
+
+    const follower = first.get('url', { id });
+    await followerIsWaiting;
+
+    await second.get('url', { id });
+    finishFirst();
+    await leader;
+
+    const response = await Promise.race([
+      follower,
+      sleep(100).then(() => {
+        throw new Error('Local follower was not settled');
+      })
+    ]);
+
+    assert.equal(response.cached, true);
+    assert.equal(response.data, 'second');
+  });
+
+  // https://github.com/arthurfiorette/axios-cache-interceptor/issues/833
+  it('deduplicates local follower retries when a loading entry is evicted', async () => {
+    const storage = buildMemoryStorage();
+    const axios = mockAxios({ storage });
+    const id = 'evicted-request';
+
+    let markFirstStarted!: () => void;
+    const firstStarted = new Promise<void>((resolve) => {
+      markFirstStarted = resolve;
+    });
+    let finishFirst!: () => void;
+    const firstCanFinish = new Promise<void>((resolve) => {
+      finishFirst = resolve;
+    });
+    let markFollowersWaiting!: () => void;
+    const followersAreWaiting = new Promise<void>((resolve) => {
+      markFollowersWaiting = resolve;
+    });
+
+    const storageGet = storage.get.bind(storage);
+    let loadingReads = 0;
+    storage.get = async (...args) => {
+      const value = await storageGet(...args);
+
+      if (value.state === 'loading' && ++loadingReads === 3) {
+        markFollowersWaiting();
+      }
+
+      return value;
+    };
+
+    let requests = 0;
+    axios.defaults.adapter = async (config) => {
+      requests++;
+
+      if (requests === 1) {
+        markFirstStarted();
+        await firstCanFinish;
+      }
+
+      return {
+        config,
+        data: requests,
+        headers: {},
+        status: 200,
+        statusText: 'OK'
+      };
+    };
+
+    const leader = axios.get('url', { id });
+    await firstStarted;
+
+    const followers = [
+      axios.get('url', { id }),
+      axios.get('url', { id }),
+      axios.get('url', { id })
+    ];
+    await followersAreWaiting;
+
+    await storage.remove(id);
+    finishFirst();
+
+    const responses = await Promise.race([
+      Promise.all([leader, ...followers]),
+      sleep(100).then(() => {
+        throw new Error('Local followers did not retry');
+      })
+    ]);
+
+    assert.equal(responses[0].data, 1);
+    assert.deepEqual(
+      responses.slice(1).map((response) => response.data),
+      [2, 2, 2]
+    );
+    assert.equal(requests, 2);
+    assert.equal(axios.waiting.size, 0);
   });
 
   // https://github.com/arthurfiorette/axios-cache-interceptor/issues/922

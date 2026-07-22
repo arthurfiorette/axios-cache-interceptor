@@ -1,19 +1,35 @@
 # Storages
 
-Storages are responsible for saving, retrieving and serializing (if needed) cache data.
-They are completely customizable and you can code your own, or use one published on NPM.
+Storage adapters save and retrieve cache entries. They can also serialize entries when the
+underlying storage requires it. You can use a built-in adapter, create your own, or install
+one published on npm.
 
-They are meant to act as middleware between the cache interceptor and some sort of
-database (persistent or not) you may have. Our interceptors will call its methods
-internally to save and retrieve data, but you can do it manually to work programmatically
-your own way.
+A storage adapter connects the cache interceptor to a persistent or in-memory data store.
+The interceptors call it automatically, and you can also access the configured storage
+through `axios.storage` when you need to inspect or invalidate entries manually.
 
 Currently, two storages are included in the library by default:
 
-- [Memory Storage](#memory-storage) accessible with `buildMemoryStorage` _(works on Node
-  and Web)_
-- [Web Storage API](#web-storage-api) accessible with `buildWebStorage` _(works on Web
-  only)_
+- [Memory Storage](#memory-storage), created with `buildMemoryStorage` (Node.js and web)
+- [Web Storage API](#web-storage-api), created with `buildWebStorage` (web only)
+
+## Concurrent requests
+
+Concurrent request deduplication is local to each cache instance. When an eligible request
+is tracked in an instance's in-memory waiting map, later requests for the same key can wait
+for its result instead of reaching the network. Overrides and Vary mismatches can still
+produce additional requests.
+
+Shared storage, such as Redis, shares completed cache entries but does not share that
+in-memory coordination. If two processes request the same uncached key at the same time,
+both may send a network request. This is supported: each response completes normally, local
+waiting requests are settled, and they either read the shared result or retry if no result
+is available. The library does not provide a distributed lock or guarantee a single network
+request across processes.
+
+Duplicate requests are normally harmless for the default `GET` and `HEAD` methods. If you
+enable caching for non-idempotent methods, you are responsible for making duplicate network
+requests safe.
 
 ## Memory Storage
 
@@ -23,29 +39,30 @@ Currently, two storages are included in the library by default:
 
 :::
 
-Memory storage is the simplest one. It works everywhere and its values are lost upon page
-reload or when the process is killed.
+Memory storage works in Node.js and browsers. Its entries are lost when the page reloads or
+the process exits.
 
-If you are directly mutating some response property, you probably will face some reference
-issues because the storage will also get mutated. To avoid that, you can use the
-`clone: true` option to clone the response before saving it or `clone: 'double'` to also
-clone both ways, on `set()` and on `get()`. _Just like
-[#136](https://github.com/arthurfiorette/axios-cache-interceptor/issues/163) and many
-others._
+By default, responses and cached entries share object references. Mutating a response can
+therefore mutate its cached value. Set `cloneData` to `true` to clone values returned by
+`get()`, or use `'double'` to clone values on both `set()` and `get()`. See
+[#163](https://github.com/arthurfiorette/axios-cache-interceptor/issues/163) and many
+similar reports.
 
-For long-running processes, you can avoid memory leaks by tuning the
-`cleanupInterval` option. And can reduce memory usage with `maxEntries`. The `maxStaleAge`
-parameter helps prevent stale entries from accumulating indefinitely.
+For long-running processes, use `cleanupInterval`, `maxEntries`, and `maxStaleAge` to bound
+memory usage and remove old entries.
 
 The storage uses a JavaScript `Map` internally for efficient key-value lookups and
 iteration.
 
 ```ts
-import Axios from 'axios';
-import { setupCache, buildMemoryStorage } from 'axios-cache-interceptor';
+import axios from 'axios';
+import {
+  setupCache,
+  buildMemoryStorage
+} from 'axios-cache-interceptor';
 
 setupCache(axios, {
-  // You don't need to do that, as it is the default option.
+  // Memory storage is already the default.
   storage: buildMemoryStorage(
     /* cloneData default=*/ false,
     /* cleanupInterval default=*/ 5 * 60 * 1000,
@@ -57,32 +74,29 @@ setupCache(axios, {
 
 Options:
 
-- **cloneData**: Use `true` if the data returned by `find()` should be cloned to avoid
-  mutating the original data outside the `set()` method. Use `'double'` to also clone
-  before saving value in storage using `set()`. Disabled is default
+- **cloneData**: Clones values returned by `get()` when set to `true`. Use `'double'` to
+  also clone values before saving them. The default is `false`.
 
-- **cleanupInterval**: The interval in milliseconds to run a setInterval job of cleaning
-  old entries. If false, the job will not be created. 5 minutes (300_000) is default
+- **cleanupInterval**: How often, in milliseconds, to remove old entries. Set it to `false`
+  to disable automatic cleanup. The default is 5 minutes (`300_000`).
 
-- **maxEntries**: The maximum number of entries to keep in the storage. It's hard to
-  determine the size of the entries, so a smart FIFO order is used to determine eviction.
-  If false, no check will be done and you may grow memory usage. 1024 is default
+- **maxEntries**: The maximum number of entries to retain. The storage uses a FIFO-based
+  eviction order because entry sizes cannot be determined reliably. Set it to `false` to
+  disable the limit. The default is `1024`.
 
-- **maxStaleAge**: The maximum age in milliseconds a stale entry can stay in the storage
-  before being removed. This prevents stale-able entries (those with ETag or Last-Modified
-  headers) from staying indefinitely and causing memory leaks. 1 hour (3_600_000) is
-  default
+- **maxStaleAge**: How long, in milliseconds, a stale entry with a defined TTL can remain
+  before removal. The default is 1 hour (`3_600_000`).
 
 ## Web Storage API
 
-If you need persistent caching between page refreshes, you can use the `buildWebStorage`
-to get this behavior. It works by connecting our storage API to the browser's
+Use `buildWebStorage` to preserve cached entries across page refreshes. It connects the
+cache storage API to the browser's
 [Storage API](https://developer.mozilla.org/en-US/docs/Web/API/Storage).
 
 ::: code-group
 
 ```ts{7} [Local Storage]
-import Axios from 'axios';
+import axios from 'axios';
 import { setupCache, buildWebStorage } from 'axios-cache-interceptor';
 
 setupCache(axios, { // [!code focus:5]
@@ -93,7 +107,7 @@ setupCache(axios, { // [!code focus:5]
 ```
 
 ```ts{7} [Session Storage]
-import Axios from 'axios';
+import axios from 'axios';
 import { setupCache, buildWebStorage } from 'axios-cache-interceptor';
 
 setupCache(axios, { // [!code focus:5]
@@ -104,7 +118,7 @@ setupCache(axios, { // [!code focus:5]
 ```
 
 ```ts{4,7} [Custom Storage]
-import Axios from 'axios';
+import axios from 'axios';
 import { setupCache, buildWebStorage } from 'axios-cache-interceptor';
 
 const myStorage = new Storage(); // [!code focus:8]
@@ -122,121 +136,138 @@ setupCache(axios, {
 
 Options:
 
-- **storage**: The Storage instance to use (e.g., `localStorage`, `sessionStorage`)
-- **prefix**: The prefix to add to all keys to avoid collisions. Default is `'axios-cache-'`
-- **maxStaleAge**: The maximum age in milliseconds a stale entry can stay in the storage
-  before being removed. Prevents memory leaks from stale-able entries. Default is 1 hour
-  (3_600_000)
+- **storage**: The `Storage` instance to use, such as `localStorage` or `sessionStorage`.
+- **prefix**: A prefix added to every key to avoid collisions. The default is
+  `'axios-cache-'`.
+- **maxStaleAge**: How long, in milliseconds, a stale entry can remain before removal. The
+  default is 1 hour (`3_600_000`).
 
 ### Browser quota
 
 From `v0.9.0` onwards, web storage is able to detect and evict older entries if the
 browser's quota is reached.
 
-The eviction is done by the following algorithm:
+The storage handles quota errors as follows:
 
-1. Just saved a value and got an error. _(Probably quota exceeded)_
-2. Evicts all expired keys that cannot enter the `stale` state.
-3. If it fails again, evicts the oldest key with the given prefix.
-4. Repeat step 2 and 3 until the object can be saved or the storage has been emptied.
-5. If it still fails, the data is not saved. _Probably because the whole key is greater
-   than the quota or other libraries already consumed the whole usable space._
+1. Try to save the value.
+2. If the quota is exceeded, remove expired entries that cannot become stale.
+3. Retry the write. If it still fails, remove the oldest entry with the configured prefix.
+4. Repeat until the write succeeds or no matching entries remain.
+5. If the write still fails, leave the new value unstored. The value itself may exceed the
+   available quota, or another application may be using the remaining capacity.
 
 ## buildStorage()
 
-All integrated storages are wrappers around the `buildStorage` function. External
-libraries use it and if you want to build your own, `buildStorage` is the way to go!
-
-The exported `buildStorage` function abstracts the storage interface and requires a super
-simple object to build the storage. It has 3 methods:
+All built-in storage adapters use `buildStorage`. Use the same function to create a custom
+adapter from the following methods:
 
 - `set(key: string, value: NotEmptyStorageValue, currentRequest?: CacheRequestConfig): MaybePromise<void>`:
-  Receives the key and the value, and optionally the current request. It should save the
-  value in the storage.
+  Saves a cache value under the given key.
 
-- `remove(key: string, currentRequest?: CacheRequestConfig): MaybePromise<void>`: Receives
-  the key and optionally the current request. It should remove the value from the storage.
+- `remove(key: string, currentRequest?: CacheRequestConfig): MaybePromise<void>`: Removes
+  the value stored under the given key.
 
 - `find(key: string, currentRequest?: CacheRequestConfig) => MaybePromise<StorageValue | undefined>`:
-  Receives the key and optionally the current request. It should return the value from the
-  storage or `undefined` if not found.
+  Returns the stored value, or `undefined` when the key does not exist.
 
-- `clear() => MaybePromise<void>`: Clears all data from storage. **This method isn't used
-  by the interceptor itself**, instead, its here for you to use it programmatically.
+- `clear() => MaybePromise<void>`: Optionally clears all stored data. The interceptor does
+  not call this method; it is available for application-level invalidation.
 
-## Third Party Storages
+## Third-party storages
 
-These are not guaranteed to work with the latest version of the library as neither are
-maintained by the axios cache interceptor team. But, as we provide a minimal interface for
-storages, you can use them as a base to also create your own.
+The following examples are not maintained as separate integrations. Use them as starting
+points and adapt their expiration and serialization behavior to your application.
 
 - [Node Redis v4](#node-redis-storage)
-- [IndexedDb](#indexeddb)
+- [IndexedDB](#indexeddb)
 - [Node Cache](#node-cache)
-- **Have another one?**
-- [Open a PR](https://github.com/arthurfiorette/axios-cache-interceptor/pulls) to add it
-  here.
+- [Open a pull request](https://github.com/arthurfiorette/axios-cache-interceptor/pulls) to
+  add another example.
 
 ## Node Redis storage
 
-The node redis storage implementation is listed here because it shows the only tricky part
-when implementing a storage with a third party client that allows auto-evicting entries,
-as shown in the `PXAT` property.
+This example uses the Node Redis v4 client. The `PXAT` option gives every entry an absolute
+expiration time, including temporary `loading` entries left behind by interrupted requests.
 
-```ts{4}
-import { createClient } from 'redis'; // v4
-import { buildStorage, canStale } from 'axios-cache-interceptor';
+The expiration of a `loading` entry is only cleanup for abandoned requests. It does not
+provide distributed request deduplication; multiple processes can still send the same
+uncached request concurrently.
+
+```ts
+import { createClient } from 'redis';
+import {
+  buildStorage,
+  canStale,
+  type CacheRequestConfig,
+  type NotEmptyStorageValue,
+  type StorageValue
+} from 'axios-cache-interceptor';
 
 const client = createClient(/* connection config */);
-// [!code focus:36]
+await client.connect();
+
+function getExpiresAt(
+  value: NotEmptyStorageValue,
+  request?: CacheRequestConfig
+) {
+  switch (value.state) {
+    case 'loading': {
+      // Abandoned loading entries must not remain forever.
+      const requestTtl =
+        request?.cache && typeof request.cache.ttl === 'number'
+          ? request.cache.ttl
+          : 60_000;
+
+      return Date.now() + requestTtl;
+    }
+
+    case 'stale':
+      if (value.ttl) {
+        return value.createdAt + value.ttl;
+      }
+
+      break;
+
+    case 'cached':
+      if (!canStale(value)) {
+        return value.createdAt + value.ttl;
+      }
+
+      break;
+  }
+
+  // Keep revalidatable entries for at most one hour by default.
+  return Date.now() + 60 * 60 * 1000;
+}
+
 const redisStorage = buildStorage({
-  find(key) {
-    return client
-      .get(`axios-cache-${key}`)
-      .then((result) => result && (JSON.parse(result) as StorageValue));
+  async find(key) {
+    const result = await client.get(`axios-cache-${key}`);
+    return result ? (JSON.parse(result) as StorageValue) : undefined;
   },
 
-  set(key, value, req) {
-    return client.set(`axios-cache-${key}`, JSON.stringify(value), {
-      PXAT:
-        // We don't want to keep indefinitely values in the storage if
-        // their request don't finish somehow. Either set its value as
-        // the TTL or 1 minute.
-        value.state === 'loading'
-          ? Date.now() +
-            (req?.cache && typeof req.cache.ttl === 'number'
-              ? req.cache.ttl
-              : // 1 minute in milliseconds
-                60_000)
-          : // When a stale state has a determined value to expire, we can use it.
-          //   Or if the cached value cannot enter in stale state.
-          (value.state === 'stale' && value.ttl) ||
-            (value.state === 'cached' && !canStale(value))
-          ?
-            value.createdAt + value.ttl!
-          : // otherwise, we can't determine when it should expire, so we keep to up an hour.
-            Date.now() + 60 * 60 * 1000
+  async set(key, value, request) {
+    await client.set(`axios-cache-${key}`, JSON.stringify(value), {
+      PXAT: getExpiresAt(value, request)
     });
   },
 
-  remove(key) {
-    return client.del(`axios-cache-${key}`);
+  async remove(key) {
+    await client.del(`axios-cache-${key}`);
   }
 });
 ```
 
-However you can use the [`buildStorage`](#buildstorage) function to integrate with ANY
-storage you want, like `localForage`, `ioredis`, `memcache` and others.
+You can use [`buildStorage`](#buildstorage) to integrate other systems such as localForage,
+ioredis, or Memcached.
 
 ## IndexedDB
 
-Here is an example of how to use the `idb-keyval` library to create a storage that uses
-IndexedDB.
+This example uses `idb-keyval` to store cache entries in IndexedDB.
 
 ```ts
-import axios from 'axios';
 import { buildStorage } from 'axios-cache-interceptor';
-import { clear, del, get, set } from 'idb-keyval';
+import { del, get, set } from 'idb-keyval';
 
 const indexedDbStorage = buildStorage({
   async find(key) {
@@ -259,22 +290,21 @@ const indexedDbStorage = buildStorage({
 });
 ```
 
-### Node Cache
+## Node Cache
 
-This example implementation uses [node-cache](https://github.com/node-cache/node-cache) as
-a storage method. Do note that this library is somewhat old, however it appears to work at
-the time of writing.
+This example uses [node-cache](https://github.com/node-cache/node-cache). Check the package's
+current maintenance status before using it in a new application.
 
 ```ts
-import { buildStorage } from "axios-cache-interceptor";
-import NodeCache from "node-cache";
+import { buildStorage } from 'axios-cache-interceptor';
+import NodeCache from 'node-cache';
 
 const cache = new NodeCache({ stdTTL: 60 * 60 * 24 * 7 });
 
 const cacheStorage = buildStorage({
   find(key) {
-    return cache.get(key)
-  }
+    return cache.get(key);
+  },
 
   set(key, value) {
     cache.set(key, value);
@@ -282,7 +312,6 @@ const cacheStorage = buildStorage({
 
   remove(key) {
     cache.del(key);
-  },
+  }
 });
-
 ```
