@@ -31,7 +31,7 @@ jobs:
           languages: ${{ matrix.language }}
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v5
+        uses: pnpm/action-setup@v6
 
       - name: Setup node and restore cached dependencies
         uses: actions/setup-node@v6
