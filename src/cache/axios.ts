@@ -16,8 +16,9 @@ import type { CacheInstance, CacheProperties } from './cache.ts';
  * @template D The type that the request body was
  * @see https://axios-cache-interceptor.js.org/config/response-object
  */
-export interface CacheAxiosResponse<R = any, D = any> extends AxiosResponse<R, D> {
-  config: InternalCacheRequestConfig<R, D>;
+// biome-ignore lint/complexity/noBannedTypes: AxiosResponse uses {} as its default header type.
+export interface CacheAxiosResponse<R = any, D = any, P = any> extends AxiosResponse<R, D, {}, P> {
+  config: InternalCacheRequestConfig<R, D, P>;
 
   /**
    * The [Request ID](https://axios-cache-interceptor.js.org/guide/request-id) used in
@@ -60,7 +61,7 @@ export interface CacheAxiosResponse<R = any, D = any> extends AxiosResponse<R, D
  * @template R The type returned by this response
  * @template D The type for the request body
  */
-export interface CacheRequestConfig<R = any, D = any> extends AxiosRequestConfig<D> {
+export interface CacheRequestConfig<R = any, D = any, P = any> extends AxiosRequestConfig<D, P> {
   /**
    * The [Request ID](https://axios-cache-interceptor.js.org/guide/request-id) used in
    * this request.
@@ -97,7 +98,8 @@ export interface CacheRequestConfig<R = any, D = any> extends AxiosRequestConfig
  *
  * @deprecated This interface will be hidden in future versions. Please tell us why you need it at https://github.com/arthurfiorette/axios-cache-interceptor/issues/1158
  */
-export interface InternalCacheRequestConfig<R = any, D = any> extends CacheRequestConfig<R, D> {
+export interface InternalCacheRequestConfig<R = any, D = any, P = any>
+  extends CacheRequestConfig<R, D, P> {
   headers: AxiosRequestHeaders;
 }
 
@@ -113,17 +115,17 @@ export interface AxiosCacheInstance extends CacheInstance, AxiosInstance {
    * @template R1 The custom response type that the request can return
    * @template D1 The type that the request body use
    */
-  <T1 = any, D1 = any, R1 = CacheAxiosResponse<T1, D1>>(
-    config: CacheRequestConfig<T1, D1>
+  <T1 = any, D1 = any, R1 = CacheAxiosResponse<T1, D1>, P1 = any>(
+    config: CacheRequestConfig<T1, D1, P1>
   ): Promise<R1>;
   /**
    * @template T2 The type returned by this response
    * @template R2 The custom response type that the request can return
    * @template D2 The type that the request body use
    */
-  <T2 = any, D2 = any, R2 = CacheAxiosResponse<T2, D2>>(
+  <T2 = any, D2 = any, R2 = CacheAxiosResponse<T2, D2>, P2 = any>(
     url: string,
-    config?: CacheRequestConfig<T2, D2>
+    config?: CacheRequestConfig<T2, D2, P2>
   ): Promise<R2>;
 
   defaults: AxiosInstance['defaults'] & {
@@ -138,15 +140,15 @@ export interface AxiosCacheInstance extends CacheInstance, AxiosInstance {
   };
 
   /** @template D The type that the request body use */
-  getUri<D>(config?: CacheRequestConfig<any, D>): string;
+  getUri<D, P>(config?: CacheRequestConfig<any, D, P>): string;
 
   /**
    * @template T The type returned by this response
    * @template R The custom response type that the request can return
    * @template D The type that the request body use
    */
-  request<T = any, D = any, R = CacheAxiosResponse<T, D>>(
-    config?: CacheRequestConfig<T, D>
+  request<T = any, D = any, R = CacheAxiosResponse<T, D>, P = any>(
+    config?: CacheRequestConfig<T, D, P>
   ): Promise<R>;
 
   /**
@@ -154,9 +156,9 @@ export interface AxiosCacheInstance extends CacheInstance, AxiosInstance {
    * @template R The custom response type that the request can return
    * @template D The type that the request body use
    */
-  get<T = any, D = any, R = CacheAxiosResponse<T, D>>(
+  get<T = any, D = any, R = CacheAxiosResponse<T, D>, P = any>(
     url: string,
-    config?: CacheRequestConfig<T, D>
+    config?: CacheRequestConfig<T, D, P>
   ): Promise<R>;
 
   /**
@@ -164,9 +166,9 @@ export interface AxiosCacheInstance extends CacheInstance, AxiosInstance {
    * @template R The custom response type that the request can return
    * @template D The type that the request body use
    */
-  delete<T = any, D = any, R = CacheAxiosResponse<T, D>>(
+  delete<T = any, D = any, R = CacheAxiosResponse<T, D>, P = any>(
     url: string,
-    config?: CacheRequestConfig<T, D>
+    config?: CacheRequestConfig<T, D, P>
   ): Promise<R>;
 
   /**
@@ -174,9 +176,9 @@ export interface AxiosCacheInstance extends CacheInstance, AxiosInstance {
    * @template R The custom response type that the request can return
    * @template D The type that the request body use
    */
-  head<T = any, D = any, R = CacheAxiosResponse<T, D>>(
+  head<T = any, D = any, R = CacheAxiosResponse<T, D>, P = any>(
     url: string,
-    config?: CacheRequestConfig<T, D>
+    config?: CacheRequestConfig<T, D, P>
   ): Promise<R>;
 
   /**
@@ -184,9 +186,9 @@ export interface AxiosCacheInstance extends CacheInstance, AxiosInstance {
    * @template R The custom response type that the request can return
    * @template D The type that the request body use
    */
-  options<T = any, D = any, R = CacheAxiosResponse<T, D>>(
+  options<T = any, D = any, R = CacheAxiosResponse<T, D>, P = any>(
     url: string,
-    config?: CacheRequestConfig<T, D>
+    config?: CacheRequestConfig<T, D, P>
   ): Promise<R>;
 
   /**
@@ -194,21 +196,10 @@ export interface AxiosCacheInstance extends CacheInstance, AxiosInstance {
    * @template R The custom response type that the request can return
    * @template D The type that the request body use
    */
-  post<T = any, D = any, R = CacheAxiosResponse<T, D>>(
-    url: string,
-    data?: D,
-    config?: CacheRequestConfig<T, D>
-  ): Promise<R>;
-
-  /**
-   * @template T The type returned by this response
-   * @template R The custom response type that the request can return
-   * @template D The type that the request body use
-   */
-  postForm<T = any, D = any, R = CacheAxiosResponse<T, D>>(
+  post<T = any, D = any, R = CacheAxiosResponse<T, D>, P = any>(
     url: string,
     data?: D,
-    config?: CacheRequestConfig<T, D>
+    config?: CacheRequestConfig<T, D, P>
   ): Promise<R>;
 
   /**
@@ -216,10 +207,10 @@ export interface AxiosCacheInstance extends CacheInstance, AxiosInstance {
    * @template R The custom response type that the request can return
    * @template D The type that the request body use
    */
-  put<T = any, D = any, R = CacheAxiosResponse<T, D>>(
+  postForm<T = any, D = any, R = CacheAxiosResponse<T, D>, P = any>(
     url: string,
     data?: D,
-    config?: CacheRequestConfig<T, D>
+    config?: CacheRequestConfig<T, D, P>
   ): Promise<R>;
 
   /**
@@ -227,10 +218,10 @@ export interface AxiosCacheInstance extends CacheInstance, AxiosInstance {
    * @template R The custom response type that the request can return
    * @template D The type that the request body use
    */
-  putForm<T = any, D = any, R = CacheAxiosResponse<T, D>>(
+  put<T = any, D = any, R = CacheAxiosResponse<T, D>, P = any>(
     url: string,
     data?: D,
-    config?: CacheRequestConfig<T, D>
+    config?: CacheRequestConfig<T, D, P>
   ): Promise<R>;
 
   /**
@@ -238,10 +229,10 @@ export interface AxiosCacheInstance extends CacheInstance, AxiosInstance {
    * @template R The custom response type that the request can return
    * @template D The type that the request body use
    */
-  patch<T = any, D = any, R = CacheAxiosResponse<T, D>>(
+  putForm<T = any, D = any, R = CacheAxiosResponse<T, D>, P = any>(
     url: string,
     data?: D,
-    config?: CacheRequestConfig<T, D>
+    config?: CacheRequestConfig<T, D, P>
   ): Promise<R>;
 
   /**
@@ -249,9 +240,20 @@ export interface AxiosCacheInstance extends CacheInstance, AxiosInstance {
    * @template R The custom response type that the request can return
    * @template D The type that the request body use
    */
-  patchForm<T = any, D = any, R = CacheAxiosResponse<T, D>>(
+  patch<T = any, D = any, R = CacheAxiosResponse<T, D>, P = any>(
     url: string,
     data?: D,
-    config?: CacheRequestConfig<T, D>
+    config?: CacheRequestConfig<T, D, P>
+  ): Promise<R>;
+
+  /**
+   * @template T The type returned by this response
+   * @template R The custom response type that the request can return
+   * @template D The type that the request body use
+   */
+  patchForm<T = any, D = any, R = CacheAxiosResponse<T, D>, P = any>(
+    url: string,
+    data?: D,
+    config?: CacheRequestConfig<T, D, P>
   ): Promise<R>;
 }

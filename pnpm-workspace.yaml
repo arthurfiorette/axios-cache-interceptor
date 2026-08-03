@@ -1,4 +1,3 @@
-ignoredBuiltDependencies:
-  - '@swc/core'
-  - esbuild
-  - oxc-resolver
+allowBuilds:
+  esbuild: false
+  oxc-resolver: false
