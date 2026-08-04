@@ -188,8 +188,8 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
       if (axios.waiting.has(config.id) && !overrideCache) {
         cache = await axios.storage.get(config.id, config);
 
-        // This check is required when a request's cache is deleted manually, let's say by
-        // an `axios.storage.delete(key)` call, while it has a concurrent loading request.
+        // This check is required when a request's cache is removed manually, let's say by
+        // an `axios.storage.remove(key)` call, while it has a concurrent loading request.
         // Because in this case, the cache will be empty and may still have a pending key
         // in the waiting map.
         if (cache.state !== 'empty' && cache.state !== 'must-revalidate') {
