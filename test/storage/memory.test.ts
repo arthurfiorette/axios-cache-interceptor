@@ -9,7 +9,7 @@ import { testStorage } from './storages.ts';
 describe('MemoryStorage', () => {
   testStorage('MemoryStorage', buildMemoryStorage());
 
-  // Expects that when a result returned by storage.get() has his inner properties updated,
+  // Expects that when a result returned by storage.get() has its inner properties updated,
   // a new request to storage.get() should maintain the same value.
   //
   // https://github.com/arthurfiorette/axios-cache-interceptor/issues/163
@@ -40,7 +40,7 @@ describe('MemoryStorage', () => {
     assert.equal(result2.data?.data, 'data');
   });
 
-  // Expects that a when value saved using storage.set() is has his inner properties updated,
+  // Expects that when a value saved using storage.set() has its inner properties updated,
   // a request to storage.get() should return unmodified value.
   //
   // https://github.com/arthurfiorette/axios-cache-interceptor/issues/580
@@ -73,7 +73,7 @@ describe('MemoryStorage', () => {
   it('tests cleanup function', async () => {
     const storage = buildMemoryStorage(false, 500);
 
-    //@ts-expect-error - this is indeed wrongly behavior
+    //@ts-expect-error - this is indeed incorrect behavior
     await storage.set('empty', { state: 'empty' });
     await storage.set('stale', {
       state: 'stale',

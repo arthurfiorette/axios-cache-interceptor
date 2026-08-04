@@ -7,27 +7,27 @@ You can use it by changing the `setupCache` import:
 
 ::: code-group
 
-```ts [EcmaScript]
+```ts [ECMAScript]
 import Axios from 'axios';
 
 // Only import from `/dev` where you import `setupCache`.
 import { setupCache } from 'axios-cache-interceptor'; // [!code --]
 import { setupCache } from 'axios-cache-interceptor/dev'; // [!code ++]
 
-// same object, but with updated typings.
+// Same object, but with updated typings.
 const axios = setupCache(Axios, {
   debug: console.log // [!code ++]
 });
 ```
 
-```ts [Common JS]
+```ts [CommonJS]
 const Axios = require('axios');
 
 // Only import from `/dev` where you import `setupCache`.
 const { setupCache } = require('axios-cache-interceptor'); // [!code --]
 const { setupCache } = require('axios-cache-interceptor/dev'); // [!code ++]
 
-// same object, but with updated typings.
+// Same object, but with updated typings.
 const axios = setupCache(Axios, {
   debug: console.log // [!code ++]
 });
@@ -39,7 +39,7 @@ const Axios = window.axios;
 // Choose development bundle. // [!code ++]
 const { setupCache } = window.AxiosCacheInterceptor;
 
-// same object, but with updated typings.
+// Same object, but with updated typings.
 const axios = setupCache(Axios, {
   debug: console.log // [!code ++]
 });
@@ -52,7 +52,7 @@ import Axios from 'https://cdn.skypack.dev/axios';
 import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor'; // [!code --]
 import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor/dev'; // [!code ++]
 
-// same object, but with updated typings.
+// Same object, but with updated typings.
 const axios = setupCache(Axios, {
   debug: console.log // [!code ++]
 });

@@ -31,13 +31,13 @@
 
 # Axios Cache Interceptor
 
-> Cache interceptor for axios made with developers and performance in mind.
+> Cache interceptor for Axios, made with developers and performance in mind.
 
 <br />
 
 - ⚡ Faster!
 - 📦 Handy builds!
-- 🔩 Hassle free!
+- 🔩 Hassle-free!
 - 🛠️ Rich Features!
 - 🌐 No network waste!
 - 🔑 TypeScript!
@@ -74,7 +74,7 @@ res2.cached; // true
 
 ## License
 
-Licensed under the **MIT**. See [`LICENSE`](LICENSE) for more information.
+Licensed under the **MIT License**. See [`LICENSE`](LICENSE) for more information.
 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Farthurfiorette%2Faxios-cache-interceptor.svg?type=small)](https://app.fossa.com/projects/git%2Bgithub.com%2Farthurfiorette%2Faxios-cache-interceptor?ref=badge_small)
 
@@ -93,7 +93,7 @@ Licensed under the **MIT**. See [`LICENSE`](LICENSE) for more information.
 <br />
 <br />
 
-## All Thanks To Our Contributors:
+## All Thanks to Our Contributors
 
 <a href="https://github.com/arthurfiorette/axios-cache-interceptor/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=arthurfiorette/axios-cache-interceptor" />

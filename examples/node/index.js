@@ -10,7 +10,7 @@ const api = setupCache(
   { ttl: 5 * 1000 }
 );
 
-// Every time an api call reaches here, it will
+// Every time an API call reaches this point, it will
 // make another internal request and forward the response.
 app.get('/', (_req, res) => {
   api.get('/users').then(

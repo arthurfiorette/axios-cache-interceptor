@@ -229,7 +229,7 @@ describe('KeyGeneration', () => {
     const keyGenerator = buildKeyGenerator(({ data }) => data);
 
     // We should not throw errors here, as some recursive objects may be handled by axios/other interceptors
-    // This way, if any, error happens, it will be thrown by other packages, not this one
+    // This way, if any error happens, it will be thrown by other packages, not this one
     assert.doesNotThrow(() => keyGenerator(recursive));
     assert.doesNotThrow(() => defaultKeyGenerator(recursive));
   });

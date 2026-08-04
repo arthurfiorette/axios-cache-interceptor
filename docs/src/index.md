@@ -31,13 +31,13 @@ features:
   - icon: 📦
     title: Handy builds
     details:
-      No matter what your JS setup is, we got you covered! CDN, EcmaScript, UMD, CommonJS
+      No matter what your JS setup is, we've got you covered! CDN, ECMAScript, UMD, CommonJS
       and URL imports.
 
   - icon: 🔩
     title: Hassle free
     details:
-      Just setupCache() and watch the magic happen! Works for everyone, no matter the
+      Just call setupCache() and watch the magic happen! Works for everyone, no matter the
       current combination of adapters or interceptors.
 
   - icon: 🛠️
@@ -50,11 +50,11 @@ features:
     title: No network waste!
     details:
       Network speed should not matter for your users. Make your application work offline,
-      on 2G or ultra-fast 5G, it's up to your users.
+      on 2G, or on ultra-fast 5G; it's up to your users.
 
   - icon: 🔑
     title: TypeScript!
-    details: Fully configurable and flexible interceptors with full type-safe typing.
+    details: Fully configurable and flexible interceptors with fully type-safe APIs.
 ---
 
 <script setup>

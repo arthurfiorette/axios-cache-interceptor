@@ -19,7 +19,7 @@ describe('Web Storages', () => {
   testStorageQuota('SessionStorage', sessionStorage);
 
   it('Should use a key prefix by default', async () => {
-    const storage = sessionStorage; // does not matter any implementation details
+    const storage = sessionStorage; // implementation details do not matter
 
     storage.setItem('test-key', '1');
 

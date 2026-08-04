@@ -13,7 +13,7 @@ export type CachePredicate<R = unknown, D = unknown> = NonNullable<
 /**
  * A hint to the library about where the axios instance is being used.
  *
- * Used to take some decisions like handling or not `Cache-Control: private`.
+ * Used to make decisions like whether to handle `Cache-Control: private`.
  *
  * @default typeof window === 'undefined' ? 'server' : 'client'
  * @see https://axios-cache-interceptor.js.org/config#location
@@ -21,14 +21,14 @@ export type CachePredicate<R = unknown, D = unknown> = NonNullable<
 export type InstanceLocation = 'client' | 'server';
 
 export interface CachePredicateObject<R = unknown, D = unknown> {
-  /** Matches if this function returned true. */
+  /** Matches if this function returns true. */
   statusCheck?: (status: number) => MaybePromise<boolean>;
 
   /**
-   * Matches if all keys in this object returned true.
+   * Matches if all keys in this object return true.
    *
-   * The response does not contain all headers specified here, the specified function will
-   * be called without argument.
+   * If the response does not contain all headers specified here, the specified function
+   * will be called without an argument.
    *
    * ### Remember, all axios headers are lowercase.
    */
@@ -41,7 +41,7 @@ export interface CachePredicateObject<R = unknown, D = unknown> {
   responseMatch?: (res: CacheAxiosResponse<R, D>) => MaybePromise<boolean>;
 
   /**
-   * Ignores the request if their url matches any provided urls and/or regexes.
+   * Ignores the request if its URL matches any provided URLs and/or regexes.
    *
    * - It checks against the `request.url` property, `baseURL` is not considered.
    * - When only `baseURL` is specified, this property is ignored.
@@ -49,11 +49,11 @@ export interface CachePredicateObject<R = unknown, D = unknown> {
   ignoreUrls?: (RegExp | string)[];
 
   /**
-   * Ignores the request if their url does not match any provided urls and/or regexes.
+   * Ignores the request if its URL does not match any provided URLs and/or regexes.
    *
    * - It checks against the `request.url` property, `baseURL` is not considered.
    * - When only `baseURL` is specified, this property is ignored.
-   * - If both `ignoreUrls` & `allowUrls` are matched, `ignoreUrls` take precedence.
+   * - If both `ignoreUrls` & `allowUrls` are matched, `ignoreUrls` takes precedence.
    */
   allowUrls?: (RegExp | string)[];
 }
@@ -73,7 +73,7 @@ export type KeyGenerator<R = unknown, D = unknown> = (
 export type MaybePromise<T> = T | Promise<T> | PromiseLike<T>;
 
 /**
- * You can use a `number` to ensure an max time (in seconds) that the cache can be reused.
+ * You can use a `number` to ensure a maximum time (in seconds) that the cache can be reused.
  *
  * You can use `true` to use the cache until a new response is received.
  *

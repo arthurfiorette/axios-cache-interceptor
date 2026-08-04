@@ -14,10 +14,10 @@ export const defaultHeaderInterpreter: HeaderInterpreter = (headers, location) =
     const cc = parse(String(cacheControl));
 
     if (
-      // Header told that this response should not be cached.
+      // The header indicates that this response should not be cached.
       cc.noCache ||
       cc.noStore ||
-      // Server side handling private data
+      // Server-side handling of private data
       (location === 'server' && cc.private)
     ) {
       return 'dont cache';
@@ -42,10 +42,10 @@ export const defaultHeaderInterpreter: HeaderInterpreter = (headers, location) =
           : cc.maxAge * 1000,
         // Already out of date, must be requested again
         stale:
-          // I couldn't find any documentation about who should be used, as they
+          // I couldn't find any documentation about which should be used, as they
           // are not meant to overlap each other. But, as we cannot request in the
           // background, as the stale-while-revalidate says, and we just increase
-          // its staleTtl when its present, max-stale is being preferred over
+          // its staleTtl when it's present, max-stale is being preferred over
           // stale-while-revalidate.
           cc.maxStale !== undefined
             ? cc.maxStale * 1000

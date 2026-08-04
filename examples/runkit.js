@@ -19,7 +19,7 @@ const { log } = console;
   // fetchedResponse.cached == false
 
   //
-  // The next request won't do a network request, because the response is already cached
+  // The next request won't make a network request because the response is already cached.
   //
 
   const cachedResponse = await axios.get('/axios-cache-interceptor');
@@ -29,7 +29,7 @@ const { log } = console;
   log(`Second request was ${cachedResponse.cached ? 'cached' : 'fetched'}`);
 
   //
-  // The interpretHeader option used a different strategy, see the received Cache-Control header
+  // The interpretHeader option used a different strategy; see the received Cache-Control header.
   // (server may return undefined if this is the first request in a while :))
   //
 

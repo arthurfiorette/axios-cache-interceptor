@@ -191,7 +191,7 @@ const axios = setupCache(instance, {
 
 ### Vary: \* Behavior
 
-`Vary: *` means uncacheable in shared caches, so library marks as immediately stale.
+`Vary: *` means uncacheable in shared caches, so the library marks it as immediately stale.
 
 ### Concurrent Vary Mismatches
 
@@ -199,11 +199,11 @@ When concurrent requests have different vary headers, each gets its own cache af
 
 ### Storage Eviction During Loading
 
-If cache entry evicted while request in-flight, interceptor handles gracefully (no-op cleanup).
+If a cache entry is evicted while a request is in flight, the interceptor handles it gracefully (no-op cleanup).
 
 ### Request Cancellation
 
-Cancelled requests must reject deferred to unblock concurrent requests, but preserve cache if already cached.
+Cancelled requests must reject the deferred promise to unblock concurrent requests, but preserve cache if already cached.
 
 ### 304 Not Modified
 

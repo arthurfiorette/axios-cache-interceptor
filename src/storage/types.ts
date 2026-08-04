@@ -136,7 +136,7 @@ export interface EmptyStorageValue {
 
 /**
  * A storage interface is the entity responsible for saving, retrieving and serializing
- * data received from network and requested when a axios call is made.
+ * data received from network and requested when an Axios call is made.
  *
  * @default buildMemoryStorage
  * @see https://axios-cache-interceptor.js.org/guide/storages
@@ -168,10 +168,10 @@ export interface AxiosStorage {
   remove: (key: string, currentRequest?: CacheRequestConfig) => MaybePromise<void>;
 
   /**
-   * Returns the value for the given key. This method make checks for cache invalidation
-   * or etc.
+   * Returns the value for the given key. This method makes checks for cache invalidation
+   * and similar conditions.
    *
-   * If the internal `find()` method returned null, this will map it to a `'empty'`
+   * If the internal `find()` method returned null, this will map it to an `'empty'`
    * storage value.
    *
    * @param key The key to look for
@@ -185,7 +185,7 @@ export interface AxiosStorage {
    * Deletes all values from the storage, this method isn't used by the interceptor and is
    * here just for convenience.
    *
-   * **All native storages implement them, but it's not required.**
+   * **All native storages implement it, but it is not required.**
    *
    * @see https://axios-cache-interceptor.js.org/guide/storages#buildstorage
    */
