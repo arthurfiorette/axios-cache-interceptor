@@ -313,24 +313,24 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
 
         // After waiting, check if this request's vary headers match the cached variant
         // If mismatch, don't use the cache - make own request to prevent cache poisoning
-        if (
-          config.cache.vary !== false &&
-          state.data.meta?.vary &&
-          state.data.headers[Header.Vary]
-        ) {
+        if (config.cache.vary !== false && state.data.headers[Header.Vary]) {
           const vary = Array.isArray(config.cache.vary)
             ? config.cache.vary
             : parseVary(state.data.headers[Header.Vary]);
+          const cachedVary = state.data.meta?.vary;
 
-          // Compare vary headers - if mismatch, make own request
-          if (vary && vary !== '*' && !compareVary(vary, state.data.meta.vary, config.headers)) {
+          // Vary: * cannot be compared, so every waiting caller must make its own request.
+          if (
+            vary === '*' ||
+            (vary && cachedVary && !compareVary(vary, cachedVary, config.headers))
+          ) {
             if (__ACI_DEV__) {
               axios.debug({
                 id: config.id,
                 msg: 'Vary mismatch after concurrent request, making own request',
                 data: {
-                  cachedVary: state.data.meta.vary,
-                  currentVary: extractHeaders(config.headers, vary)
+                  cachedVary,
+                  currentVary: vary === '*' ? '*' : extractHeaders(config.headers, vary)
                 }
               });
             }

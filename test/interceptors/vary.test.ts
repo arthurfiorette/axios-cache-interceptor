@@ -28,6 +28,21 @@ describe('Vary Header Support', () => {
     assert.equal(resp2.cached, false); // Always revalidates
   });
 
+  it('does not deduplicate concurrent requests when Vary is *', async () => {
+    let networkCallCount = 0;
+    const axios = mockAxios({}, { [Header.Vary]: '*' }, undefined, () => ({
+      call: ++networkCallCount
+    }));
+
+    const [respA, respB] = await Promise.all([
+      axios.get('url', { headers: { authorization: 'Bearer A' } }),
+      axios.get('url', { headers: { authorization: 'Bearer B' } })
+    ]);
+
+    assert.equal(networkCallCount, 2);
+    assert.notEqual(respA.data.call, respB.data.call);
+  });
+
   it('handles multiple vary headers', async () => {
     const axios = mockAxios({}, { [Header.Vary]: 'Authorization, Accept-Language' });
 
