@@ -165,7 +165,7 @@ describe('Request Interceptor', () => {
 
     const res4 = await axios.get('url', config);
 
-    // Should be different because the call it may not serve stale
+    // Should be different because the call may not serve stale data
     const headers4 = res4.headers as Record<string, string>;
     assert.notEqual(headers1['x-mock-random'], headers4['x-mock-random']);
   });
@@ -270,7 +270,7 @@ describe('Request Interceptor', () => {
       }
     });
 
-    // These two setTimeouts is to ensure this code is executed after
+    // These two setTimeouts are intended to ensure this code is executed after
     // the request interceptor, but before the response interceptor.
     // Leading to test the intermediate loading state.
 
@@ -321,7 +321,7 @@ describe('Request Interceptor', () => {
       }
     });
 
-    // These two setTimeouts is to ensure this code is executed after
+    // These two setTimeouts are intended to ensure this code is executed after
     // the request interceptor, but before the response interceptor.
     // Leading to test the intermediate loading state.
 
@@ -399,14 +399,14 @@ describe('Request Interceptor', () => {
   it('ensure cached data is not transformed', async () => {
     const axios = mockAxios();
 
-    // data will transformed with first request
+    // data will be transformed by the first request
     const res1 = await axios.get('url', {
       transformResponse: (data: unknown) => [data]
     });
 
     assert.notEqual(res1.config.transformResponse, undefined);
 
-    // cached data should not transform the data as it is alread in desired format.
+    // cached data should not be transformed, as it is already in the desired format.
     // transform function is nullified in this scenario
     const res2 = await axios.get('url', {
       transformResponse: (data: unknown) => [data]

@@ -9,7 +9,7 @@ in real time without communicating with the server.
 
 **All available revalidation methods only work when the request is successful.**
 
-If you are wanting to revalidate with a non standard `2XX` status code, make sure to
+If you are wanting to revalidate with a nonstandard `2XX` status code, make sure to
 enable it at [`validateStatus`](https://axios-http.com/docs/handling_errors) or revalidate
 it manually as shown [below](#updating-cache-through-external-sources).
 
@@ -42,7 +42,7 @@ after.
 
 ## Programmatically
 
-If the mutation you made was just simple changes, you can get the mutation response and
+If the mutation you made involved only simple changes, you can get the mutation response and
 programmatically update your cache.
 
 Again considering the first example, we can just do an `array.push` to the `list-posts`
@@ -63,7 +63,7 @@ function createPost(data) {
     /* [!code focus:25] */ {
       cache: {
         update: {
-          // Will perform a cache update for the `list-posts` respective
+          // Will perform a cache update for the corresponding `list-posts`
           // cache entry.
           'list-posts': (listPostsCache, createPostResponse) => {
             // If the cache doesn't have a cached state, we don't need
@@ -76,10 +76,10 @@ function createPost(data) {
             // is: { posts: Post[]; }, and the `create-post` response
             // comes with the newly created post.
 
-            // Adds the created post to the end of the post's list
+            // Adds the created post to the end of the list of posts
             listPostsCache.data.posts.push(createPostResponse.data);
 
-            // Return the same cache state, but a updated one.
+            // Return the same cache state, but an updated one.
             return listPostsCache;
           }
         }
@@ -89,7 +89,7 @@ function createPost(data) {
 }
 ```
 
-This will update the `list-posts` cache at the client side, making it equal to the server.
+This will update the `list-posts` cache on the client side, making it equal to the server.
 When such operations are possible, they are the preferred approach. That's because
 we do not contact the server again and can update the cache ourselves.
 
@@ -97,7 +97,7 @@ we do not contact the server again and can update the cache ourselves.
 
 **Note to Vue users:** If you modify an array as shown above and then assign the result
 data of the axios request to a Vue `ref`, you may have issues with the UI not updating.
-This is because the cached array is the same object as was returned from the previous
+This is because the cached array is the same object that was returned from the previous
 request. You need to copy the array before modifying it:
 
 ```ts
@@ -107,7 +107,7 @@ listPostsCache.data.posts.push(createPostResponse.data);
 listPostsCache.data.posts = [...listPostsCache.data.posts, createPostResponse.data];
 ```
 
-or before assigning it to the `ref`:
+Alternatively, before assigning it to the `ref`:
 
 ```ts
 myRef.value = [...axios.get(url).data];
@@ -117,12 +117,12 @@ myRef.value = [...axios.get(url).data];
 
 ## Through network
 
-Sometimes, the mutation you made is not simple enough and would need a lot of copied
-service code to replicate all changes the backend made, turning it into a duplication and
+Sometimes, the mutation you made is complex enough to require a lot of copied service code
+to replicate all changes the backend made, turning it into a duplication and
 maintenance nightmare.
 
 In those cases, you can just invalidate the cache and let the next request be forwarded to
-the server, and update the cache with the new network response.
+the server and update the cache with the new network response.
 
 ```ts
 // Uses `list-posts` id to be able to reference it later.
@@ -157,7 +157,7 @@ the promise resolves and your page gets rendered.
 If you have any other type of external communication, such as a WebSocket listener for
 changes, you may want to update your axios cache outside of a request context.
 
-For that, you can operate the storage manually. It is simple as that:
+For that, you can operate the storage manually. It is as simple as that:
 
 ```ts
 if (someLogicThatShowsIfTheCacheShouldBeInvalidated) {
@@ -174,10 +174,10 @@ if (someLogicThatShowsIfTheCacheShouldBeInvalidated) {
 ## Keeping cache up to date
 
 If you were **not** the one responsible for that change, your client may not be aware that
-it has changed. E.g. When you are using a chat application, you may not be aware that a
+it has changed. For example, when you are using a chat application, you may not be aware that a
 new message was sent to you.
 
-In such cases that we **do not** have a way to know that the cache is outdated, you may
+In cases where we **do not** have a way to know that the cache is outdated, you may
 have to end up setting a custom time to live (TTL) for specific requests.
 
 ```ts

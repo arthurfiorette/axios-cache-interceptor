@@ -102,10 +102,10 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
       }
     }
 
-    // Applies sufficient headers to prevent other cache systems to work along with this one
+    // Applies sufficient headers to prevent other cache systems from working along with this one
     //
-    // Its currently used before isMethodIn because if the isMethodIn returns false, the request
-    // shouldn't be cached an therefore neither in the browser.
+    // It's currently used before isMethodIn because if the isMethodIn returns false, the request
+    // shouldn't be cached and therefore neither in the browser.
     // https://stackoverflow.com/a/2068407
     if (config.cache.cacheTakeover) {
       config.headers.set(
@@ -128,7 +128,7 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
       return config;
     }
 
-    // Assumes that the storage handled staled responses
+    // Assumes that the storage handled stale responses
     let cache = await axios.storage.get(config.id, config);
     const overrideCache = config.cache.override;
 
@@ -188,10 +188,10 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
       if (axios.waiting.has(config.id) && !overrideCache) {
         cache = await axios.storage.get(config.id, config);
 
-        // This check is required when a request has it own cache deleted manually, lets
-        // say by a `axios.storage.delete(key)` and has a concurrent loading request.
-        // Because in this case, the cache will be empty and may still has a pending key
-        // on waiting map.
+        // This check is required when a request's cache is removed manually, let's say by
+        // an `axios.storage.remove(key)` call, while it has a concurrent loading request.
+        // Because in this case, the cache will be empty and may still have a pending key
+        // in the waiting map.
         if (cache.state !== 'empty' && cache.state !== 'must-revalidate') {
           if (__ACI_DEV__) {
             axios.debug({
@@ -218,11 +218,11 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
           state: 'loading',
           previous: overrideCache
             ? // Simply determine if the request is stale or not
-              // based if it had previous data or not
+              // based on whether it had previous data
               cache.data
               ? 'stale'
               : 'empty'
-            : // Typescript doesn't know that cache.state here can only be 'empty' or 'stale'
+            : // TypeScript doesn't know that cache.state here can only be 'empty' or 'stale'
               (cache.state as 'stale' | 'must-revalidate'),
 
           data: cache.data as any,
@@ -270,8 +270,8 @@ export function defaultRequestInterceptor(axios: AxiosCacheInstance): RequestInt
     if (cache.state === 'loading') {
       const deferred = axios.waiting.get(config.id);
 
-      // The deferred may not exists when the process is using a persistent
-      // storage and cancelled  in the middle of a request, this would result in
+      // The deferred may not exist when the process is using a persistent
+      // storage and is cancelled in the middle of a request, this would result in
       // a pending loading state in the storage but no current promises to resolve
       if (!deferred) {
         // Hydrates any UI temporarily, if cache is available

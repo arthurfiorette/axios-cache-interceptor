@@ -19,7 +19,7 @@ const clone: <T>(value: T) => T =
  *
  * This is the storage used by default.
  *
- * If you need to modify it's data, you can do by the `data` property.
+ * If you need to modify its data, you can do so through the `data` property.
  *
  * @example
  *
@@ -37,18 +37,18 @@ const clone: <T>(value: T) => T =
  *
  * @param {boolean | 'double'} cloneData Use `true` if the data returned by `find()`
  *   should be cloned to avoid mutating the original data outside the `set()` method. Use
- *   `'double'` to also clone before saving value in storage using `set()`. Disabled is
- *   default
+ *   `'double'` to also clone before saving value in storage using `set()`. Disabled by
+ *   default.
  * @param {number | false} cleanupInterval The interval in milliseconds to run a
  *   setInterval job of cleaning old entries. If false, the job will not be created.
  *   5 minutes (300_000) is default
  * @param {number | false} maxEntries The maximum number of entries to keep in the
- *   storage. Its hard to determine the size of the entries, so a smart FIFO order is used
- *   to determine eviction. If false, no check will be done and you may grow up memory
+ *   storage. It's hard to determine the size of the entries, so a smart FIFO order is used
+ *   to determine eviction. If false, no check will be done and you may increase memory
  *   usage. 1024 is default
  * @param {number} maxStaleAge The maximum age in milliseconds a stale entry can stay
  *   in the storage before being removed. Otherwise, stale-able entries would stay
- *   indefinitely causing a memory leak eventually. 1 hour (3_600_000) is default
+ *   indefinitely, eventually causing a memory leak. 1 hour (3_600_000) is default
  */
 export function buildMemoryStorage(
   cloneData: boolean | 'double' = false,
@@ -100,7 +100,7 @@ export function buildMemoryStorage(
   storage.data = new Map();
 
   // When this program gets running for more than the specified interval, there's a good
-  // chance of it being a long-running process or at least have a lot of entries. Therefore,
+  // chance of it being a long-running process or at least having a lot of entries. Therefore,
   // "faster" loop is more important than code readability.
   storage.cleanup = () => {
     for (const [key, value] of sortedEntries()) {
@@ -124,7 +124,7 @@ export function buildMemoryStorage(
 
 export interface MemoryStorage extends AxiosStorage {
   data: Map<string, StorageValue>;
-  /** The job responsible to cleaning old entries */
+  /** The job responsible for cleaning old entries */
   cleaner: ReturnType<typeof setInterval>;
   /** Tries to remove any invalid entry from the memory */
   cleanup: () => void;

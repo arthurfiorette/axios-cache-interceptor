@@ -23,19 +23,19 @@ export interface CacheOptions extends Partial<CacheInstance>, Partial<CachePrope
 }
 
 /**
- * Apply the caching interceptors for a already created axios instance.
+ * Apply the caching interceptors for an already-created Axios instance.
  *
  * ```ts
  * const axios = setupCache(axios, OPTIONS);
  * ```
  *
- * The `setupCache` function receives global options and all [request
- * specifics](https://axios-cache-interceptor.js.org/config/request-specifics) ones too.
+ * The `setupCache` function receives global options and all
+ * [request-specific](https://axios-cache-interceptor.js.org/config/request-specifics) options too.
  * This way, you can customize the defaults for all requests.
  *
  * @param axios The already created axios instance
  * @param config The config for the caching interceptors
- * @returns The same instance with extended typescript types.
+ * @returns The same instance with extended TypeScript types.
  * @see https://axios-cache-interceptor.js.org/config
  */
 export function setupCache(axios: AxiosInstance, options: CacheOptions = {}): AxiosCacheInstance {
@@ -76,7 +76,7 @@ export function setupCache(axios: AxiosInstance, options: CacheOptions = {}): Ax
     ttl: options.ttl ?? 1000 * 60 * 5,
 
     // Although RFC 7231 also marks POST as cacheable, most users don't know that
-    // and may have problems about why their "create X" route not working.
+    // and may have questions about why their "create X" route is not working.
     methods: options.methods || ['get', 'head'],
 
     cachePredicate: options.cachePredicate || {

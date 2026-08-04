@@ -10,7 +10,7 @@ import type {
 } from './types.ts';
 
 /**
- * Returns true if the provided object was created from {@link buildStorage} function.
+ * Returns true if the provided object was created by the {@link buildStorage} function.
  *
  * @deprecated This function will be hidden in future versions. Please tell us why you need it at https://github.com/arthurfiorette/axios-cache-interceptor/issues/1158
  */
@@ -25,7 +25,7 @@ export const isStorage = (obj: unknown): obj is AxiosStorage =>
  * have naturally expired and been recreated with new format.
  */
 function migrateRevalidationHeaders(data: CachedResponse): void {
-  // Skip if already has meta.revalidation
+  // Skip if it already has meta.revalidation
   if (data.meta?.revalidation) {
     return;
   }
@@ -75,7 +75,7 @@ export function mustRevalidate(value: CachedStorageValue | StaleStorageValue): b
   return String(value.data.headers[Header.CacheControl]).includes('must-revalidate');
 }
 
-/** Returns true if this has sufficient properties to stale instead of expire. */
+/** Returns true if this has sufficient properties to become stale instead of expiring. */
 export function canStale(value: CachedStorageValue): boolean {
   if (hasRevalidationMetadata(value)) {
     return true;
@@ -85,7 +85,7 @@ export function canStale(value: CachedStorageValue): boolean {
     value.state === 'cached' &&
     value.staleTtl !== undefined &&
     // Only allow stale values after the ttl is already in the past and the staleTtl is in the future.
-    // In cases that just createdAt + ttl > Date.now(), isn't enough because the staleTtl could be <= 0.
+    // In cases where just createdAt + ttl > Date.now() isn't enough because the staleTtl could be <= 0.
     // This logic only returns true when Date.now() is between the (createdAt + ttl) and (createdAt + ttl + staleTtl).
     // Following the example below:
     // |--createdAt--:--ttl--:---staleTtl--->
@@ -117,7 +117,7 @@ const StateEvictionOrder: Record<StorageValue['state'], number> = {
 
 /**
  * Is a comparator function that sorts storage entries by their eviction priority
- * and, in the same group, by older first.
+ * and, within the same group, by oldest first.
  */
 export function storageEntriesSorter(
   [, a]: [string, StorageValue],
@@ -155,7 +155,7 @@ export function canRemoveStorageEntry(value: StorageValue, maxStaleAge: number):
 export interface BuildStorage extends Omit<AxiosStorage, 'get'> {
   /**
    * Returns the value for the given key. This method does not have to make checks for
-   * cache invalidation or anything. It just returns what was previous saved, if present.
+   * cache invalidation or anything. It just returns what was previously saved, if present.
    *
    * @param key The key to look for
    * @param currentRequest The current {@link CacheRequestConfig}, if any
@@ -224,7 +224,7 @@ export function buildStorage({ set, find, remove, clear }: BuildStorage): AxiosS
           return value;
         }
 
-        // Tries to stale expired value
+        // Tries to mark the expired value as stale
         if (!canStale(value)) {
           await remove(key, config);
           return { state: 'empty' };
