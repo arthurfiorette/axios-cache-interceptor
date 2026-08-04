@@ -171,7 +171,7 @@ export interface AxiosStorage {
    * Returns the value for the given key. This method makes checks for cache invalidation
    * and similar conditions.
    *
-   * If the internal `find()` method returned null, this will map it to an `'empty'`
+   * If the internal `find()` method returned `undefined`, this will map it to an `'empty'`
    * storage value.
    *
    * @param key The key to look for
