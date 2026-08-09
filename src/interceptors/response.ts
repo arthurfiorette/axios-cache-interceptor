@@ -16,8 +16,8 @@ import { createCacheResponse, isMethodIn } from './util.ts';
  */
 export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseInterceptor {
   /**
-   * Replies a deferred stored in the axios waiting map. Use resolve to proceed checking the
-   * previously updated cache or reject to abort deduplicated requests with error.
+   * Resolves or rejects a deferred stored in the axios waiting map. Use resolve to proceed
+   * checking the previously updated cache or reject to abort deduplicated requests with an error.
    */
   const replyDeferred = (responseId: string, mode: 'reject' | 'resolve', error?: any) => {
     // Rejects the deferred, if present
@@ -37,7 +37,7 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
   };
 
   const onFulfilled: ResponseInterceptor['onFulfilled'] = async (response) => {
-    // When response.config is not present, the response is indeed a error.
+    // When response.config is not present, the response is indeed an error.
     if (!response?.config) {
       if (__ACI_DEV__) {
         axios.debug({
@@ -70,7 +70,7 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
     }
 
     // Skip cache: either false or weird behavior
-    // config.cache should always exists, at least from global config merge.
+    // config.cache should always exist, at least from global config merge.
     if (!cacheConfig) {
       if (__ACI_DEV__) {
         axios.debug({
@@ -84,7 +84,7 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
       return response;
     }
 
-    // Update other entries before updating himself
+    // Update other entries before updating itself
     if (cacheConfig.update) {
       await updateCache(axios.storage, response, cacheConfig.update);
     }
@@ -122,7 +122,7 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
       return response;
     }
 
-    // Config told that this response should not be cached.
+    // The config indicates that this response should not be cached.
     if (
       // For 'loading' values (previous: stale), this check already ran in the past.
       !cache.data &&
@@ -140,7 +140,7 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
       return response;
     }
 
-    // Avoid remnant headers from remote server to break implementation
+    // Prevent remnant headers from the remote server from breaking the implementation
     for (const header of Object.keys(response.headers)) {
       if (header.startsWith('x-axios-cache')) {
         delete response.headers[header];
@@ -205,7 +205,7 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
       }
     }
 
-    // Either stales response (Vary *) or sets request Vary headers into metadata
+    // Either marks the response as stale (Vary *) or sets request Vary headers into metadata
     if (cacheConfig.vary !== false && response.headers[Header.Vary]) {
       const vary = Array.isArray(cacheConfig.vary)
         ? cacheConfig.vary
@@ -224,7 +224,7 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
           });
         }
 
-        // RFC States * must revalidate every time per RFC 9110.
+        // The RFC states that * must revalidate every time per RFC 9110.
       } else if (vary === '*') {
         if (__ACI_DEV__) {
           axios.debug({
@@ -266,7 +266,7 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
       data
     };
 
-    // Define this key as cache on the storage
+    // Define this key as cached in the storage
     await axios.storage.set(response.id, newCache, config);
     replyDeferred(response.id, 'resolve');
 
@@ -283,7 +283,7 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
   };
 
   const onRejected: ResponseInterceptor['onRejected'] = async (error) => {
-    // When response.config is not present, the response is indeed a error.
+    // When response.config is not present, the response is indeed an error.
     if (!error.isAxiosError || !error.config) {
       if (__ACI_DEV__) {
         axios.debug({
@@ -378,7 +378,7 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
         typeof cacheConfig.staleIfError === 'function'
           ? await cacheConfig.staleIfError(response, cache, error)
           : cacheConfig.staleIfError === true && staleHeader
-            ? staleHeader * 1000 //staleIfError is in seconds
+            ? staleHeader * 1000 // staleIfError is in seconds
             : cacheConfig.staleIfError;
 
       if (__ACI_DEV__) {

@@ -97,7 +97,7 @@ describe('LastModified handling', () => {
       {},
       {
         [Header.CacheControl]: 'max-age=0',
-        // etag is a header to makes a response able to stale
+        // ETag is a header that makes a response able to become stale
         [Header.ETag]: 'W/123'
       }
     );
@@ -107,7 +107,7 @@ describe('LastModified handling', () => {
       cache: { interpretHeader: true, modifiedSince: true }
     };
 
-    // pre caches
+    // Pre-caches
     await axios.get('url', config);
 
     const response = await axios.get('url', config);
@@ -124,7 +124,7 @@ describe('LastModified handling', () => {
   it('Header overriding with 304', async () => {
     const axios = mockAxios();
 
-    // First request, return x-my-header. Ttl 1 to make the cache stale
+    // First request, return x-my-header. TTL of 1 to make the cache stale
     const firstResponse = await axios.get('url', { cache: { ttl: -1 } });
     const firstMyHeader: unknown = firstResponse.headers?.[XMockRandom];
 

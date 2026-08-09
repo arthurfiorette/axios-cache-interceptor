@@ -44,7 +44,7 @@ function buildConfig(overrides: UserConfig) {
           banner,
           globalName: 'AxiosCacheInterceptor',
 
-          // Parse dependencies source code to better tree shake them
+          // Parse dependencies' source code to tree-shake them more effectively
           resolve: {
             alias: {
               'object-code': path.resolve('./node_modules/object-code/src/index.ts'),

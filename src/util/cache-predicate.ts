@@ -3,7 +3,7 @@ import type { CacheAxiosResponse } from '../cache/axios.ts';
 import type { CachePredicate, CachePredicateObject } from './types.ts';
 
 /**
- * Tests an response against a {@link CachePredicateObject}.
+ * Tests a response against a {@link CachePredicateObject}.
  *
  * @deprecated This function will be hidden in future versions. Please tell us why you need it at https://github.com/arthurfiorette/axios-cache-interceptor/issues/1158
  */

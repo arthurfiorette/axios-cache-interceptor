@@ -14,7 +14,7 @@ This page explains the default behavior and how to customize it.
 
 ## Explanation
 
-Axios interceptors are run differently for the request and response ones.
+Axios runs request and response interceptors differently.
 
 - **Request interceptors** are executed in **reverse order** - the last interceptor added runs first (LIFO - _Last In First Out_)
 - **Response interceptors** are executed in **normal order** - the first interceptor added runs first (FIFO - _First In First Out_)
@@ -71,11 +71,11 @@ axios.interceptors.request.use(
 
 ## Extending types
 
-When using axios-cache-interceptor, you'll notice that it has a different type than the defaults `AxiosInstance`, `AxiosRequestConfig` and `AxiosResponse`. That's because we chose to override axios's interfaces instead of extending, to avoid breaking changes with other libraries.
+When using axios-cache-interceptor, you'll notice that it has different types from the default `AxiosInstance`, `AxiosRequestConfig`, and `AxiosResponse` types. That's because we chose to override axios's interfaces instead of extending, to avoid breaking changes with other libraries.
 
 However, this also means that when integrating with other packages or creating your own
-custom interceptor, you need to override/extend our own types, `CacheInstance`,
-`CacheRequestConfig` and `CacheAxiosResponse` to match your needs.
+custom interceptor, you need to override or extend our own `CacheInstance`,
+`CacheRequestConfig`, and `CacheAxiosResponse` types to match your needs.
 
 This can be done as shown below:
 
@@ -120,7 +120,7 @@ This library cannot handle streams or buffers, so if you still need `response.da
 a stream or buffer, you will need to cache it manually.
 
 If you can collect the response data into a serializable format, `axios-cache-interceptor`
-can handle it for you with help of the `transformResponse` option.
+can handle it for you with the help of the `transformResponse` option.
 
 ## Custom Adapters
 

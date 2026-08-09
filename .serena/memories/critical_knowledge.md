@@ -67,13 +67,13 @@ Defines the state machine that all storage must follow. This is the single sourc
 
 - Storage eviction during loading (handled gracefully)
 - Request cancellation (must reject deferred)
-- Vary mismatch after waiting (must make own request)
+- Vary mismatch after waiting (must make its own request)
 
 ### Vary Header Support
 
 **Problem:** Server uses `Vary: Authorization` but cache key doesn't include auth header → cache poisoning (User A sees User B's data).
 
-**Solution:** When response has Vary header, extract specified request headers and include in cache key. Different header values = different cache entries.
+**Solution:** When the response has a Vary header, extract specified request headers and include in cache key. Different header values = different cache entries.
 
 **Code locations:**
 
@@ -84,7 +84,7 @@ Defines the state machine that all storage must follow. This is the single sourc
 **Edge cases:**
 
 - `Vary: *` (marks as immediately stale)
-- Concurrent requests with different vary headers (each gets own cache)
+- Concurrent requests with different vary headers (each gets its own cache)
 - Custom IDs with vary (ID gets overridden with generated key)
 - **undefined vs missing headers** (both treated as undefined - this is correct!)
 
@@ -109,7 +109,7 @@ cached → (Cache-Control: must-revalidate) → must-revalidate
 ### Bug: Forgetting to Resolve/Reject Deferred
 
 **Symptom:** Requests hang forever.
-**Cause:** `waiting` Map has promise that never resolves.
+**Cause:** The `waiting` Map has a promise that never resolves.
 **Fix:** Every code path must call `replyDeferred()` or manually resolve/reject.
 **Prevention:** Search codebase for all `waiting.get()` and ensure cleanup.
 
@@ -191,7 +191,7 @@ Don't just test happy path. Test:
 
 1. **Key generation** - Called for every request (use fast hash)
 2. **Storage lookup** - Called multiple times per request (O(1) required)
-3. **Vary comparison** - Called when vary headers present (keep O(n) small)
+3. **Vary comparison** - Called when Vary headers are present (keep O(n) small)
 4. **Deferred coordination** - Creates promises for concurrent requests (use efficient implementation)
 
 ### Less Critical:
@@ -235,7 +235,7 @@ Don't just test happy path. Test:
 
 ### Why Deferred Promises?
 
-Using `fast-defer` library for request coordination. Better performance than `new Promise()` with explicit resolve/reject tracking.
+Using the `fast-defer` library for request coordination. Better performance than `new Promise()` with explicit resolve/reject tracking.
 
 ### Why Map for Storage?
 
@@ -243,7 +243,7 @@ O(1) lookup is essential for performance. Users can implement any backend but mu
 
 ### Why 32-bit Hash?
 
-Fast and good enough for in-memory storage. Users with persistent storage should use stronger hash.
+Fast and good enough for in-memory storage. Users with persistent storage should use a stronger hash.
 
 ### Why Axios Interceptors?
 

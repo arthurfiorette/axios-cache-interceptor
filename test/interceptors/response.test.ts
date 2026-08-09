@@ -147,7 +147,7 @@ describe('Response Interceptor', () => {
     const axios = mockAxios();
     const id = 'my-id';
 
-    // first request (cached by tll)
+    // first request (cached by TTL)
 
     await axios.get('url', {
       id,
@@ -195,7 +195,7 @@ describe('Response Interceptor', () => {
     const { id } = await axios.get('url', {
       cache: {
         ttl: async () => {
-          await setImmediate(); // jumps to next nodejs event loop tick
+          await setImmediate(); // jumps to the next Node.js event-loop tick
 
           return new Promise((res) => {
             setTimeout(() => {
@@ -263,7 +263,7 @@ describe('Response Interceptor', () => {
 
     const NOT_RESPONSE = { notAResponse: true };
 
-    //@ts-expect-error - this is indeed wrongly behavior
+    //@ts-expect-error - this is indeed incorrect behavior
     instance.interceptors.response.use(() => NOT_RESPONSE);
 
     const axios = mockAxios(undefined, undefined, instance);

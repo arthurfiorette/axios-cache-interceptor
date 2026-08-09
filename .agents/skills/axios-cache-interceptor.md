@@ -36,7 +36,7 @@ res1.cached; // false — came from the network
 res2.cached; // true  — served from cache
 ```
 
-`setupCache` modifies the axios instance in-place and returns it. Call it only once per instance.
+`setupCache` modifies the axios instance in place and returns it. Call it only once per instance.
 
 ## Response Object
 
@@ -89,7 +89,7 @@ const axios = setupCache(Axios.create(), {
 });
 ```
 
-> **Tip:** Every option available per-request is also valid here as a global default.
+> **Tip:** Every option available per request is also valid here as a global default.
 
 ## Per-Request Configuration
 
@@ -271,7 +271,7 @@ setupCache(axios, {
 });
 ```
 
-### Custom Storage (e.g. Redis)
+### Custom Storage (e.g., Redis)
 
 ```ts
 import { buildStorage, canStale } from 'axios-cache-interceptor';
@@ -309,7 +309,7 @@ const redisStorage = buildStorage({
 
 ### ETag / If-None-Match
 
-Enabled by default. On revalidation the library sends `If-None-Match` with the stored ETag. A `304 Not Modified` response extends the cached entry without re-downloading the body.
+Enabled by default. On revalidation, the library sends `If-None-Match` with the stored ETag. A `304 Not Modified` response extends the cached entry without re-downloading the body.
 
 ```ts
 // Disable ETag handling globally
@@ -391,7 +391,7 @@ const axios = setupCache(Axios.create(), {
 });
 ```
 
-The debug callback receives events for: cache hits/misses, concurrent request deduplication, header interpretation results, Vary mismatches, and error-handling decisions.
+The debug callback receives events for cache hits/misses, concurrent request deduplication, header interpretation results, Vary mismatches, and error-handling decisions.
 
 ## TypeScript
 

@@ -7,7 +7,7 @@ import type { InstanceLocation } from '../util/types.ts';
  * - `'dont cache'`: the request will not be cached.
  * - `'not enough headers'`: the request will find other ways to determine the TTL value.
  * - `number`: used as the TTL value.
- * - `{ cache: number, stale: number }: used as the TTL value and stale TTL value`
+ * - `{ cache: number, stale: number }`: used as the TTL value and stale TTL value.
  *
  * @deprecated This interface will be hidden in future versions. Please tell us why you need it at https://github.com/arthurfiorette/axios-cache-interceptor/issues/1158
  */
@@ -22,19 +22,19 @@ export type InterpreterResult =
 
 /**
  * - If activated, when the response is received, the `ttl` property will be inferred from
- *   the requests headers. As described in the MDN docs and HTML specification.
+ *   the response's headers. As described in the MDN docs and HTTP specification.
  *
  * The possible returns are:
  *
  * - `'dont cache'`: the request will not be cached.
  * - `'not enough headers'`: the request will find other ways to determine the TTL value.
  * - `number`: used as the TTL value.
- * - `{ cache: number, stale: number }: used as the TTL value and stale TTL value`
+ * - `{ cache: number, stale: number }`: used as the TTL value and stale TTL value.
  *
  * @param header The header object to interpret.
  * @param location The instance location, either `'client'` or `'server'`.
- * @returns `false` if cache should not be used. `undefined` when provided headers was not
- *   enough to determine a valid value. Or a `number` containing the number of
+ * @returns `false` if cache should not be used. `undefined` when the provided headers were
+ *   not enough to determine a valid value, or a `number` containing the number of
  *   **milliseconds** to cache the response.
  * @see https://axios-cache-interceptor.js.org/config#headerinterpreter
  *

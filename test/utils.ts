@@ -24,7 +24,7 @@ export function createResponse<R>(config: Partial<CacheAxiosResponse<R>>): Cache
 /**
  * Mocks the result of Date.now() to return a current date plus the given ticks.
  *
- * TODO: Migrate to nodejs Date mock timers as soon as possible.
+ * TODO: Migrate to Node.js Date mock timers as soon as possible.
  *
  * @link https://github.com/nodejs/node/pull/48638
  */

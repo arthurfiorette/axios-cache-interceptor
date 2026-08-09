@@ -3,10 +3,10 @@ import { buildStorage, canRemoveStorageEntry } from './build.ts';
 import type { StorageValue } from './types.ts';
 
 /**
- * Creates a simple storage. You can persist his data by using `sessionStorage` or
+ * Creates a simple storage. You can persist its data by using `sessionStorage` or
  * `localStorage` with it.
  *
- * **ImplNote**: Without polyfill, this storage only works on browser environments.
+ * **ImplNote**: Without polyfill, this storage only works in browser environments.
  *
  * @example
  *
@@ -23,7 +23,7 @@ import type { StorageValue } from './types.ts';
  *   multiple places using the same storage.
  * @param {number} maxStaleAge The maximum age in milliseconds a stale entry can stay
  *   in the storage before being removed. Otherwise, stale-able entries would stay
- *   indefinitely causing a memory leak eventually. 1 hour (3_600_000) is default
+ *   indefinitely, eventually causing a memory leak. 1 hour (3_600_000) is default
  */
 export function buildWebStorage(
   storage: Storage,
@@ -59,7 +59,7 @@ export function buildWebStorage(
         return;
       }
 
-      // we cannot hide non quota errors
+      // We cannot hide non-quota errors
       if (!isDomQuotaExceededError(result.error)) {
         throw result.error;
       }
@@ -75,14 +75,14 @@ export function buildWebStorage(
         }
       }
 
-      // Try save again after removing expired values
+      // Try to save again after removing expired values
       const retry = Result.try(save, key, value);
 
       if (retry.ok) {
         return;
       }
 
-      // we cannot hide non quota errors
+      // We cannot hide non-quota errors
       if (!isDomQuotaExceededError(retry.error)) {
         throw retry.error;
       }
@@ -101,13 +101,13 @@ export function buildWebStorage(
           return;
         }
 
-        // we cannot hide non quota errors
+        // We cannot hide non-quota errors
         if (!isDomQuotaExceededError(lastTry.error)) {
           throw lastTry.error;
         }
       }
 
-      // Could not save even after removing all items, just ignore since its
+      // Could not save even after removing all items, just ignore since it's
       // a storage quota issue.
     }
   });

@@ -42,7 +42,7 @@ export const Header = {
 
   /**
    * ```txt
-   * Pragma: no - cache;
+   * Pragma: no-cache
    * ```
    *
    * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Pragma
@@ -51,8 +51,8 @@ export const Header = {
 
   /**
    * ```txt
-   * ETag: W / '<etag_value>';
-   * ETag: '<etag_value>';
+   * ETag: W/"<etag_value>"
+   * ETag: "<etag_value>"
    * ```
    *
    * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag
@@ -78,9 +78,9 @@ export const Header = {
   Age: 'age',
 
   /**
-   * Used internally as metadata to mark the cache item as revalidatable and enabling
-   * stale cache state Contains a string of ASCII characters that can be used as ETag for
-   * `If-Match` header Provided by user using `cache.etag` value.
+   * Used internally as metadata to mark the cache item as revalidatable and enable the
+   * stale cache state. Contains a string of ASCII characters that can be used as an ETag
+   * for the `If-None-Match` header. Provided by the user through the `cache.etag` value.
    *
    * ```txt
    * X-Axios-Cache-Etag: "<etag_value>"
@@ -89,8 +89,8 @@ export const Header = {
   XAxiosCacheEtag: 'x-axios-cache-etag',
 
   /**
-   * Used internally as metadata to mark the cache item as revalidatable and enabling
-   * stale cache state may contain `'use-cache-timestamp'` if `cache.modifiedSince` is
+   * Used internally as metadata to mark the cache item as revalidatable and enable the
+   * stale cache state. It may contain `'use-cache-timestamp'` if `cache.modifiedSince` is
    * `true`, otherwise will contain a date from `cache.modifiedSince`. If a date is
    * provided, it can be used for `If-Modified-Since` header, otherwise the cache
    * timestamp can be used for `If-Modified-Since` header.

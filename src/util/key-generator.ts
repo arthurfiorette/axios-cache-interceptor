@@ -8,7 +8,7 @@ import type { KeyGenerator } from './types.ts';
 const SLASHES_REGEX = /^\/|\/$/g;
 
 /**
- * Builds an generator that receives a {@link CacheRequestConfig} and optional metadata,
+ * Builds a generator that receives a {@link CacheRequestConfig} and optional metadata,
  * and returns a value hashed by {@link hash}.
  *
  * The value is hashed into a signed integer when the returned value from the provided

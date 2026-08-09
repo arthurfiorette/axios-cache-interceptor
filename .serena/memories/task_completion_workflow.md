@@ -78,10 +78,10 @@ pnpm test:only
 
 ### Cache Not Working
 
-1. Check if method in `cache.methods` (default: ['get', 'head'])
+1. Check if the method is in `cache.methods` (default: ['get', 'head'])
 2. Verify status code passes `cachePredicate.statusCheck`
 3. Check if server headers say "don't cache" (enable debug)
-4. Verify URL not in `ignoreUrls`
+4. Verify that the URL is not in `ignoreUrls`
 
 ### Unexpected Cache Behavior
 
@@ -101,7 +101,7 @@ pnpm test:only
 
 ### Pattern for New Tests
 
-1. Add test to appropriate `test/` file
+1. Add the test to the appropriate `test/` file
 2. Cover normal case + edge cases
 3. Test concurrent scenarios if relevant
 4. Validate storage state transitions

@@ -34,7 +34,7 @@ export function testStorageQuota(name: string, storage: Storage): void {
   it(`${name} with giant values`, async () => {
     const axios = mockAxios({ storage: buildWebStorage(storage) });
 
-    // Does not throw error
+    // Does not throw an error
     await axios.storage.set('key', {
       state: 'cached',
       createdAt: Date.now(),
@@ -42,7 +42,7 @@ export function testStorageQuota(name: string, storage: Storage): void {
       data: { ...EMPTY_RESPONSE, data: MAXIMUM_0 }
     });
 
-    // Too big for this storage save
+    // Too big for this storage to save
     assert.equal((await axios.storage.get('key')).state, 'empty');
   });
 
@@ -95,7 +95,7 @@ export function testStorageQuota(name: string, storage: Storage): void {
     const year2k = new Date(2000, 1, 1);
 
     // Fills the storage with 5 keys
-    // Each 10K ms newer than the previous one
+    // Each is 10K ms newer than the previous one
     for (const i of [1, 2, 3, 4, 5]) {
       await axios.storage.set(`dummy-${i}`, {
         state: 'loading',

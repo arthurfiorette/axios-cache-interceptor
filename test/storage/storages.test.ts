@@ -80,7 +80,7 @@ describe('General storage functions', () => {
     assert.equal(res1.id, res2.id);
 
     const cache = await axios.storage.get(res1.id, {
-      // sample of a request config. Just to the test pass.
+      // Sample request config, just to make the test pass.
       //@ts-expect-error ignore
       [symbol]: true
     });
