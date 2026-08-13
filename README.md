@@ -82,11 +82,11 @@ Licensed under the **MIT License**. See [`LICENSE`](LICENSE) for more informatio
 
 ## Star History
 
-<a href="https://star-history.com/#arthurfiorette/axios-cache-interceptor&Date">
+<a href="https://star-history.dera.page/#arthurfiorette/axios-cache-interceptor&type=Date">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=arthurfiorette/axios-cache-interceptor&type=Date&theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=arthurfiorette/axios-cache-interceptor&type=Date" />
-    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=arthurfiorette/axios-cache-interceptor&type=Date" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.dera.page/svg?repos=arthurfiorette/axios-cache-interceptor&type=Date&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.dera.page/svg?repos=arthurfiorette/axios-cache-interceptor&type=Date" />
+    <img alt="Star History Chart" src="https://api.star-history.dera.page/svg?repos=arthurfiorette/axios-cache-interceptor&type=Date" />
   </picture>
 </a>
 
