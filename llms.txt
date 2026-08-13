@@ -12,7 +12,7 @@ A cache interceptor for axios made with developers and performance in mind.
 - [Getting Started](https://axios-cache-interceptor.js.org/guide/getting-started.md)
 - [Debugging](https://axios-cache-interceptor.js.org/guide/debugging.md)
 - [Storages](https://axios-cache-interceptor.js.org/guide/storages.md)
-- [Request Id](https://axios-cache-interceptor.js.org/guide/request-id.md)
+- [Request ID](https://axios-cache-interceptor.js.org/guide/request-id.md)
 - [Invalidating Cache](https://axios-cache-interceptor.js.org/guide/invalidating-cache.md)
 - [Other Interceptors](https://axios-cache-interceptor.js.org/guide/interceptors.md)
 

@@ -1,5 +1,5 @@
 ---
-url: 'https://axios-cache-interceptor.js.org/config.md'
+url: https://axios-cache-interceptor.js.org/config.md
 ---
 # setupCache()
 
@@ -12,9 +12,9 @@ const axios = setupCache(axiosInstance, OPTIONS);
 
 ::: tip
 
-The `setupCache` function receives global options and all
-[request specifics](./config/request-specifics.md) ones too. This way, you can customize
-the defaults for all requests.
+The `setupCache` function accepts global options as well as all
+[request-specific](./config/request-specifics.md) options. This way, you can customize the
+defaults for all requests.
 
 :::
 
@@ -37,7 +37,7 @@ setupCache(Axios, OPTIONS);
 
 A hint to the library about where the axios instance is being used.
 
-Used to take some decisions like handling or not `Cache-Control: private`.
+Used to make decisions such as whether to handle `Cache-Control: private`.
 
 ```ts
 // NodeJS
@@ -67,7 +67,7 @@ See the [Storages](./guide/storages.md) page for more information.
 * Default: `defaultKeyGenerator`
 
 The `generateKey` property defines the function responsible for generating unique keys for
-each request cache.
+each request's cache.
 
 By default, it employs a strategy that prioritizes the `id` if available, falling back to
 a string generated using various request properties. The default implementation generates
@@ -76,7 +76,7 @@ request.
 
 ::: warning
 
-In any persistent cache scenario where hitting over 77K unique keys is a possibility, you
+In any persistent cache scenario where exceeding 77K unique keys is a possibility, you
 should use a more robust hashing algorithm.
 
 [Read more](./guide/request-id.md#custom-generator)
@@ -105,7 +105,7 @@ The function used to interpret all headers from a request and determine a time t
 ::: warning
 
 Many REST backends return some variation of `Cache-Control: no-cache` or
-`Cache-Control: no-store` headers, which tell us to ignore caching at all. You shall
+`Cache-Control: no-store` headers, which tell us to avoid caching altogether. You shall
 disable `headerInterpreter` for those requests.
 
 *If the debug mode prints `Cache header interpreted as 'dont cache'` this is probably the
@@ -118,7 +118,7 @@ The possible returns are:
 * `'dont cache'`: the request will not be cached.
 * `'not enough headers'`: the request will find other ways to determine the TTL value.
 * `number`: used as the TTL value.
-* `{ cache: number, stale: number }`: used as the TTL value and stale TTL value
+* `{ cache: number, stale: number }`: used as the TTL value and stale TTL value.
 
 ::: details Example of a custom headerInterpreter
 
@@ -150,7 +150,7 @@ const myHeaderInterpreter: HeaderInterpreter = (headers) => {
 * Type: `AxiosInterceptor<CacheRequestConfig<unknown, unknown>>`
 * Default: `defaultRequestInterceptor()`
 
-The function that will be used to intercept the request before it is sent to the axios
+The function that will be used to intercept the request before it is sent to the Axios
 adapter.
 
 It is the main function of this library, as it is the bridge between the axios request and
@@ -167,7 +167,7 @@ See its code for more information
 * Type: `AxiosInterceptor<CacheAxiosResponse<unknown, unknown>>`
 * Default: `defaultResponseInterceptor()`
 
-The function that will be used to intercept the request after it is returned by the axios
+The function that will be used to intercept the response after it is returned by the Axios
 adapter.
 
 It is the second most important function of this library, as it is the bridge between the
@@ -243,7 +243,7 @@ setupCache(axiosInstance, {
     myLoggerExample.emit({ id, msg, data })
 });
 
-// Disables debug. (default)
+// Disables debugging (default).
 setupCache(axiosInstance, { debug: undefined });
 ```
 

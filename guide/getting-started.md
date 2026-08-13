@@ -1,5 +1,5 @@
 ---
-url: 'https://axios-cache-interceptor.js.org/guide/getting-started.md'
+url: https://axios-cache-interceptor.js.org/guide/getting-started.md
 ---
 # Getting Started
 
@@ -37,7 +37,7 @@ instance, as shown below:
 
 ::: code-group
 
-```ts [EcmaScript]
+```ts [ECMAScript]
 import Axios from 'axios';
 import { setupCache } from 'axios-cache-interceptor';
 
@@ -113,9 +113,9 @@ config.
 
 ## Support Table
 
-Most of axios v0 breaking changes were about typing issues, so your version may work with
+Most of Axios v0's breaking changes were about typing issues, so your version may work with
 one outside of this table. **Axios and Axios Cache Interceptor v0 are not compatible with
-Axios and Axios Cache Interceptor v1**
+Axios and Axios Cache Interceptor v1.**
 
 > **Note**: Axios was not defined as a `peerDependency` for all v0 versions, because it
 > had a non-stable semver version.

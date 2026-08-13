@@ -1,5 +1,5 @@
 ---
-url: 'https://axios-cache-interceptor.js.org/guide/storages.md'
+url: https://axios-cache-interceptor.js.org/guide/storages.md
 ---
 # Storages
 
