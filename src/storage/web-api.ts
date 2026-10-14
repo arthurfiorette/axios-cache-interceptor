@@ -114,20 +114,17 @@ export function buildWebStorage(
 }
 
 function isDomQuotaExceededError(error: unknown): boolean {
-  // Check if it's a DOMException by duck-typing (works across different DOMException implementations)
-  const isDOMException =
-    error instanceof DOMException ||
-    (typeof error === 'object' &&
-      error !== null &&
-      'name' in error &&
-      error.constructor?.name === 'DOMException');
+  if (typeof error !== 'object' || error === null || !('name' in error)) {
+    return false;
+  }
 
+  // Matches by name because QuotaExceededError is now its own DOMException subclass, so
+  // checking the constructor name or instanceof DOMException is unreliable across
+  // browsers and DOM implementations.
+  // https://stackoverflow.com/a/23375082
   return (
-    isDOMException &&
-    // https://stackoverflow.com/a/23375082
-    'name' in (error as any) &&
-    ((error as any).name === 'QuotaExceededError' ||
-      (error as any).name === 'NS_ERROR_DOM_QUOTA_REACHED' ||
-      (error as any).name === 'QUOTA_EXCEEDED_ERR')
+    error.name === 'QuotaExceededError' ||
+    error.name === 'NS_ERROR_DOM_QUOTA_REACHED' ||
+    error.name === 'QUOTA_EXCEEDED_ERR'
   );
 }

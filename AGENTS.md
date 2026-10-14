@@ -384,9 +384,9 @@ await axios.get('/api/data', {
 ### Running Tests
 
 ```bash
-npm test              # Run all tests with coverage
-npm run test:only     # Run tests marked with .only
-npm run test:types    # TypeScript type checking
+pnpm test           # Run all tests with coverage
+pnpm test:only      # Run tests marked with .only
+pnpm test:types     # TypeScript type checking
 ```
 
 ### Test Patterns
@@ -640,7 +640,7 @@ Server returns 304:
 ### Tools
 
 - **tsdown**: TypeScript bundler (similar to tsup)
-- **TypeScript 5.9+**: Strict mode enabled
+- **TypeScript 7+**: Strict mode enabled
 - **Biome**: Linting and formatting
 - **c8**: Code coverage
 - **VitePress**: Documentation
@@ -657,14 +657,14 @@ Outputs:
 ### Scripts
 
 ```bash
-npm run build          # Production build
-npm run lint           # Check code quality
-npm run lint-fix       # Auto-fix issues
-npm run format         # Format code
-npm test               # Run tests with coverage
-npm run test:types     # Type check
-npm run docs:dev       # Serve docs locally
-npm run docs:build     # Build static docs
+pnpm build          # Production build
+pnpm lint           # Check code quality
+pnpm lint-fix       # Auto-fix issues
+pnpm format         # Format code
+pnpm test           # Run tests with coverage
+pnpm test:types     # Type check
+pnpm docs:dev       # Serve docs locally
+pnpm docs:build     # Build static docs
 ```
 
 ### Development vs Production
@@ -697,7 +697,7 @@ import { setupCache } from 'axios-cache-interceptor/dev';
 
 ### Runtime Dependencies
 
-- **axios**: >=1.0.0 (peer dependency)
+- **axios**: ^1.19.0 (peer dependency)
 - **cache-parser**: Parse Cache-Control headers
 - **fast-defer**: Efficient deferred promises
 - **http-vary**: Vary header parsing and comparison
