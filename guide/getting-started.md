@@ -1,13 +1,13 @@
 ---
 url: https://axios-cache-interceptor.js.org/guide/getting-started.md
 ---
-# Getting Started
+# Getting started
 
 [Looking for axios v0?](https://axios-cache-interceptor.js.org/v0/)
 
 ## Install
 
-Add Axios Cache Interceptor and Axios to your project using your favorite package manager:
+Install Axios and Axios Cache Interceptor:
 
 ::: code-group
 
@@ -16,10 +16,10 @@ npm install axios@^1 axios-cache-interceptor@^1
 ```
 
 ```html [Browser]
-<!-- Development UMD build for ES2017+ (~14.2 KiB) -->
+<!-- Development UMD build (~22 KiB) -->
 <script src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@1/dev/index.bundle.js"></script>
 
-<!-- Production UMD build for ES5+ (~16.4 KiB) -->
+<!-- Production UMD build (~18 KiB) -->
 <script src="https://cdn.jsdelivr.net/npm/axios-cache-interceptor@1/dist/index.bundle.js"></script>
 ```
 
@@ -32,8 +32,7 @@ import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor';
 
 ## Setup
 
-After installing, you can import the package and apply the interceptor to your axios
-instance, as shown below:
+Import `setupCache` and apply it to your axios instance:
 
 ::: code-group
 
@@ -103,22 +102,22 @@ res2.cached; // true // [!code focus]
 
 :::
 
-`setupCache(instance)` attaches both cache interceptors by default. If you need custom
-interceptor ordering, see [Other Interceptors](./interceptors.md).
+`setupCache(instance)` registers both cache interceptors. If you need a custom interceptor
+order, see [Other interceptors](./interceptors.md).
 
-Just the above is sufficient for most use cases. However, you can also customize each
-cache behavior by passing a configuration object to the `setupCache` function. And you can
-also customize some behaviors per request by using the `cache` option in the request
+This is enough for most use cases. To change the defaults, pass a
+[configuration object](../config.md) to `setupCache`. To change the behavior of a single
+request, use the [`cache` option](../config/request-specifics.md#cache) in its request
 config.
 
-## Support Table
+## Support table
 
-Most of Axios v0's breaking changes were about typing issues, so your version may work with
-one outside of this table. **Axios and Axios Cache Interceptor v0 are not compatible with
-Axios and Axios Cache Interceptor v1.**
+Most breaking changes in Axios v0 were typing issues, so your version may work with a
+combination outside this table. **Axios and Axios Cache Interceptor v0 are not compatible
+with Axios and Axios Cache Interceptor v1.**
 
-> **Note**: Axios was not defined as a `peerDependency` for all v0 versions, because it
-> had a non-stable semver version.
+> **Note**: Not every v0 release declared Axios as a `peerDependency`, because Axios did not
+> follow stable semver at the time.
 > [See #145 (Comment)](https://github.com/arthurfiorette/axios-cache-interceptor/issues/145#issuecomment-1042710481)
 
 | [Axios](https://github.com/axios/axios/releases) | [Axios Cache Interceptor](https://github.com/arthurfiorette/axios-cache-interceptor/releases) |
@@ -135,25 +134,22 @@ Axios and Axios Cache Interceptor v1.**
 | `~ v0.22`                                        | `~ v0.3`                                                                                      |
 | `v0.21`                                          | `<= v0.2`                                                                                     |
 
-## AI / LLM Skills
+## AI / LLM skill
 
-If you are using an AI coding assistant, you can install the axios-cache-interceptor skill
-to give it up-to-date context about this library:
+If you use an AI coding assistant, install the axios-cache-interceptor skill to give it
+up-to-date context about this library:
 
 ```bash
 npx skills add arthurfiorette/axios-cache-interceptor
 ```
 
-This uses the [Skills](https://github.com/vercel-labs/skills) framework. Once installed,
-your AI assistant will have access to the full API reference and usage patterns for this
-library.
+This uses the [Skills](https://github.com/vercel-labs/skills) CLI. Once installed, your
+assistant can read the library's API reference and common usage patterns.
 
-### Read More
-
-Some useful links to get you more familiar with the library:
+## Read more
 
 * [Debugging requests](./debugging.md)
 * [Storages](./storages.md)
 * [Global config](../config.md)
-* [Per request config](../config/request-specifics.md)
+* [Per-request config](../config/request-specifics.md)
 * [Response object](../config/response-object.md)

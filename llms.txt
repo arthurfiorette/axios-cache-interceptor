@@ -2,19 +2,19 @@
 
 > Small and efficient cache interceptor for axios. Etag, Cache-Control, TTL, HTTP headers and more!
 
-A cache interceptor for axios made with developers and performance in mind.
+Caches responses, deduplicates concurrent requests and follows HTTP caching headers.
 
 ## Table of Contents
 
 ### Guide
 
 - [Introduction](https://axios-cache-interceptor.js.org/guide.md)
-- [Getting Started](https://axios-cache-interceptor.js.org/guide/getting-started.md)
+- [Getting started](https://axios-cache-interceptor.js.org/guide/getting-started.md)
 - [Debugging](https://axios-cache-interceptor.js.org/guide/debugging.md)
 - [Storages](https://axios-cache-interceptor.js.org/guide/storages.md)
 - [Request ID](https://axios-cache-interceptor.js.org/guide/request-id.md)
-- [Invalidating Cache](https://axios-cache-interceptor.js.org/guide/invalidating-cache.md)
-- [Other Interceptors](https://axios-cache-interceptor.js.org/guide/interceptors.md)
+- [Invalidating cache](https://axios-cache-interceptor.js.org/guide/invalidating-cache.md)
+- [Other interceptors](https://axios-cache-interceptor.js.org/guide/interceptors.md)
 
 ### Config
 

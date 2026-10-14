@@ -1,58 +1,55 @@
 ---
 url: https://axios-cache-interceptor.js.org/guide/invalidating-cache.md
 ---
-# Invalidating Cache
+# Invalidating cache
 
-When using cache-first approaches to improve performance, data inconsistency becomes your
-major problem. That occurs because **you** can mutate data on the server and so can
-**others**. It becomes impossible to really know what the current state of the data is
-in real time without communicating with the server.
+With a cache-first approach, data inconsistency becomes your main problem. **You** can change
+data on the server, and so can **others**. Without asking the server, there is no way to know
+the current state of the data.
 
 ::: warning
 
-**All available revalidation methods only work when the request is successful.**
+**All revalidation methods below only run when the request succeeds.**
 
-If you are wanting to revalidate with a nonstandard `2XX` status code, make sure to
-enable it at [`validateStatus`](https://axios-http.com/docs/handling_errors) or revalidate
-it manually as shown [below](#updating-cache-through-external-sources).
+To revalidate after a non-`2XX` status code, accept that status in axios's
+[`validateStatus`](https://axios-http.com/docs/handling_errors) or revalidate manually as
+shown [below](#through-external-sources).
 
 :::
 
-Take a look at this simple example:
+Consider this example:
 
-1. User lists all available posts, the server returns an empty array.
-2. User proceeds to create a new post, server returns 200 OK.
-3. Your frontend navigates to the post list page.
-4. The post list page still shows 0 posts because it had a recent cache for that request.
-5. Your client shows 0 posts, but the server actually has 1 post.
+1. The user lists all posts, and the server returns an empty array.
+2. The user creates a new post, and the server returns 200 OK.
+3. Your frontend navigates back to the post list page.
+4. The page still shows 0 posts, because the list request was recently cached.
+5. Your client shows 0 posts, but the server has 1.
 
 ## Revalidation after mutation
 
-In most cases, you are responsible for that inconsistency — as in the example above,
-where the client itself initiated the mutation request. When that happens, you can
-invalidate the cache for all the entries you have changed.
+Most of the time, your own client causes the inconsistency, as in the example above, where it
+sent the mutation request itself. In that case, you can invalidate the cache of every entry
+the mutation changed.
 
-**The `cache.update` option is available for every request that you make, and it will be
-the go-to tool for invalidation.**
+**The `cache.update` option is available on every request, and it is the main tool for
+invalidation.**
 
 ::: tip
 
-By centralizing your requests into separate methods, you are more likely to keep track of
-custom IDs you use for each request, thus making it easier to reference and invalidate
-after.
+Wrapping each request in its own function makes it easier to keep track of the custom IDs
+each request uses, and to reference and invalidate them later.
 
 :::
 
 ## Programmatically
 
-If the mutation you made involved only simple changes, you can get the mutation response and
-programmatically update your cache.
+If the mutation made a simple change, you can use the mutation response to update your cache
+directly.
 
-Again considering the first example, we can just do an `array.push` to the `list-posts`
-cache and we are good to go.
+In the example above, you only need to push the new post into the `list-posts` cache entry.
 
 ```ts
-// Uses `list-posts` id to be able to reference it later.
+// Uses the `list-posts` ID so it can be referenced later.
 function listPosts() {
   return axios.get('/posts', {
     id: 'list-posts'
@@ -66,23 +63,20 @@ function createPost(data) {
     /* [!code focus:25] */ {
       cache: {
         update: {
-          // Will perform a cache update for the corresponding `list-posts`
-          // cache entry.
+          // Updates the cache entry of the `list-posts` request.
           'list-posts': (listPostsCache, createPostResponse) => {
-            // If the cache doesn't have a cached state, we don't need
-            // to update it
+            // Nothing to update if the entry is not cached
             if (listPostsCache.state !== 'cached') {
               return 'ignore';
             }
 
-            // Imagine the server response for the `list-posts` request
-            // is: { posts: Post[]; }, and the `create-post` response
-            // comes with the newly created post.
+            // Assume the `list-posts` response body is { posts: Post[] }
+            // and the create post response body is the new post.
 
-            // Adds the created post to the end of the list of posts
-            listPostsCache.data.posts.push(createPostResponse.data);
+            // Adds the new post to the end of the cached list
+            listPostsCache.data.data.posts.push(createPostResponse.data);
 
-            // Return the same cache state, but an updated one.
+            // Returns the updated cache entry to be stored.
             return listPostsCache;
           }
         }
@@ -92,43 +86,46 @@ function createPost(data) {
 }
 ```
 
-This will update the `list-posts` cache on the client side, making it equal to the server.
-When such operations are possible, they are the preferred approach. That's because
-we do not contact the server again and can update the cache ourselves.
+This updates the `list-posts` cache on the client so it matches the server. When an update
+like this is possible, prefer it, because it doesn't need another request to the server.
 
 ::: tip
 
-**Note to Vue users:** If you modify an array as shown above and then assign the result
-data of the axios request to a Vue `ref`, you may have issues with the UI not updating.
-This is because the cached array is the same object that was returned from the previous
-request. You need to copy the array before modifying it:
+**Note to Vue users:** with the default memory storage, the cached array is the same object
+that the previous request returned. If you modify it as shown above and assign the response
+data to a Vue `ref`, the UI may not update. Copy the array before modifying it:
 
 ```ts
-listPostsCache.data.posts = [...listPostsCache.data.posts];
-listPostsCache.data.posts.push(createPostResponse.data);
+const posts = listPostsCache.data.data.posts;
+
+listPostsCache.data.data.posts = [...posts];
+listPostsCache.data.data.posts.push(createPostResponse.data);
 // or
-listPostsCache.data.posts = [...listPostsCache.data.posts, createPostResponse.data];
+listPostsCache.data.data.posts = [...posts, createPostResponse.data];
 ```
 
-Alternatively, before assigning it to the `ref`:
+Or copy it before assigning it to the `ref`:
 
 ```ts
-myRef.value = [...axios.get(url).data];
+const response = await axios.get('/posts', { id: 'list-posts' });
+myRef.value = [...response.data.posts];
 ```
+
+You can also build the memory storage with `cloneData` enabled, so every read returns a copy.
+See [Memory Storage](./storages.md#memory-storage).
 
 :::
 
 ## Through network
 
-Sometimes, the mutation you made is complex enough to require a lot of copied service code
-to replicate all changes the backend made, turning it into a duplication and
-maintenance nightmare.
+Sometimes the mutation is complex enough that replicating every change the backend made would
+duplicate a lot of service code and become hard to maintain.
 
-In those cases, you can just invalidate the cache and let the next request be forwarded to
-the server and update the cache with the new network response.
+In those cases, invalidate the cache and let the next request go to the server, which updates
+the cache with the new response.
 
 ```ts
-// Uses `list-posts` id to be able to reference it later.
+// Uses the `list-posts` ID so it can be referenced later.
 function listPosts() {
   return axios.get('/posts', {
     // [!code focus:3]
@@ -141,9 +138,9 @@ function createPost(data) {
     // [!code focus:9]
     cache: {
       update: {
-        // Internally calls the storage.remove('list-posts') and lets the
-        // next request be forwarded to the server without you having to
-        // do any checks.
+        // Calls storage.remove('list-posts') internally, so the
+        // next request goes to the server without any extra
+        // checks on your side.
         'list-posts': 'delete'
       }
     }
@@ -151,40 +148,38 @@ function createPost(data) {
 }
 ```
 
-Continuing with the first example, at step **3**, the axios-cache-interceptor instance
-will automatically request the server again and apply the necessary cache changes before
-the promise resolves and your page gets rendered.
+In the first example, at step **3**, the axios-cache-interceptor instance requests the posts
+from the server again and updates the cache before the promise resolves and your page renders.
 
 ## Through external sources
 
-If you have any other type of external communication, such as a WebSocket listener for
-changes, you may want to update your axios cache outside of a request context.
+If you receive changes from somewhere else, such as a WebSocket listener, you may want to
+update the axios cache outside of a request.
 
-For that, you can operate the storage manually. It is as simple as that:
+For that, use the storage directly:
 
 ```ts
 if (someLogicThatShowsIfTheCacheShouldBeInvalidated) {
-  // Deletes the current cache for the `list-posts` respective request.
+  // Deletes the cache entry of the `list-posts` request.
   await axios.storage.remove('list-posts');
 }
 
 if (someLogicThatShowsIfTheCacheShouldBeInvalidated) {
-  // Deletes all cached data
-  await axios.storage.clear();
+  // Deletes all cached data. `clear` is optional for custom storages.
+  await axios.storage.clear?.();
 }
 ```
 
 ## Keeping cache up to date
 
-If you were **not** the one responsible for that change, your client may not be aware that
-it has changed. For example, when you are using a chat application, you may not be aware that a
-new message was sent to you.
+If someone else changed the data, your client may not know about it. In a chat application,
+for example, your client may not know that someone sent you a new message.
 
-In cases where we **do not** have a way to know that the cache is outdated, you may
-have to end up setting a custom time to live (TTL) for specific requests.
+When you have **no** way to know that the cache is outdated, set a shorter time to live (TTL)
+for those requests.
 
 ```ts
-// Uses `list-posts` id to be able to reference it later.
+// Uses the `list-posts` ID so it can be referenced later.
 function listPosts() {
   return axios.get('/posts', {
     id: 'list-posts',
@@ -198,10 +193,9 @@ function createPost(data) {
   return axios.post('/posts', data, {
     cache: {
       update: {
-        // I still want to delete the cache when I KNOW things have
-        // changed, but, by setting a TTL of 1 minute, I ensure that
-        // 1 minute is the highest time interval that the cache MAY
-        // get outdated.
+        // Still delete the cache when I KNOW things have changed.
+        // Unless the server sends its own cache headers, the
+        // cache is at most 1 minute out of date.
         'list-posts': 'delete'
       }
     }
@@ -209,13 +203,13 @@ function createPost(data) {
 }
 ```
 
-## Summary
+## Choosing a strategy
 
-When applying any kind of cache to any application, you choose to trade data
-consistency for performance. And, most of the time, that is OK.
+Any cache trades data consistency for performance, and most of the time that trade is worth
+it.
 
-*The best cache strategy is a combination of all of them. TTL, custom revalidation, stale
-while revalidate and all the others together are the best solution.*
+*The best strategy usually combines several approaches: TTL, invalidation after mutations,
+stale-while-revalidate and the others on this page.*
 
-The only real advice is to weigh the amount of inconsistency you are willing to accept
-against the performance you want to gain. **Sometimes, not caching is the best solution.**
+Weigh how much inconsistency you can accept against the performance you want to gain;
+sometimes that means not caching at all.

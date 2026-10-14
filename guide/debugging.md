@@ -3,21 +3,21 @@ url: https://axios-cache-interceptor.js.org/guide/debugging.md
 ---
 # Debugging
 
-At some point, you may encounter cache behavior that does not match expectations. To help
-diagnose such issues, the library provides a separate build with debug logging enabled.
+When the cache does not behave as you expect, switch to the development build. It logs the
+decisions the interceptors make, and why, through the [`debug`](../config.md#debug) option.
 
-You can use it by changing the `setupCache` import:
+To use it, import `setupCache` from `/dev` and pass a `debug` function:
 
 ::: code-group
 
 ```ts [ECMAScript]
 import Axios from 'axios';
 
-// Only import from `/dev` where you import `setupCache`.
+// Import `setupCache` from `/dev`.
 import { setupCache } from 'axios-cache-interceptor'; // [!code --]
 import { setupCache } from 'axios-cache-interceptor/dev'; // [!code ++]
 
-// Same object, but with updated typings.
+// Same API as the production build.
 const axios = setupCache(Axios, {
   debug: console.log // [!code ++]
 });
@@ -26,11 +26,11 @@ const axios = setupCache(Axios, {
 ```ts [CommonJS]
 const Axios = require('axios');
 
-// Only import from `/dev` where you import `setupCache`.
+// Import `setupCache` from `/dev`.
 const { setupCache } = require('axios-cache-interceptor'); // [!code --]
 const { setupCache } = require('axios-cache-interceptor/dev'); // [!code ++]
 
-// Same object, but with updated typings.
+// Same API as the production build.
 const axios = setupCache(Axios, {
   debug: console.log // [!code ++]
 });
@@ -39,23 +39,23 @@ const axios = setupCache(Axios, {
 ```ts{3,4} [Browser]
 const Axios = window.axios;
 
-// Choose development bundle. // [!code ++]
+// Load the development bundle (dev/index.bundle.js) instead of dist. // [!code ++]
 const { setupCache } = window.AxiosCacheInterceptor;
 
-// Same object, but with updated typings.
+// Same API as the production build.
 const axios = setupCache(Axios, {
   debug: console.log // [!code ++]
 });
 ```
 
-```ts {5,11} [Skypack]
+```ts {5,9} [Skypack]
 import Axios from 'https://cdn.skypack.dev/axios';
 
-// Only import from `/dev` where you import `setupCache`.
+// Import `setupCache` from `/dev`.
 import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor'; // [!code --]
 import { setupCache } from 'https://cdn.skypack.dev/axios-cache-interceptor/dev'; // [!code ++]
 
-// Same object, but with updated typings.
+// Same API as the production build.
 const axios = setupCache(Axios, {
   debug: console.log // [!code ++]
 });
@@ -63,70 +63,63 @@ const axios = setupCache(Axios, {
 
 :::
 
-And much more, depending on your context, situation, and configuration. **Any misbehavior
-you encounter will have a log to explain it.**
+The logs cover cache hits and misses, concurrent request deduplication, header
+interpretation, `Vary` mismatches, error handling and more, depending on your configuration.
+The development build also logs a message with `console.error` when it loads, as a reminder
+not to ship it to production.
 
-::: details Sample of logs sent to console.
+::: details Sample of logs for two concurrent requests followed by a third one.
 
 ```json
 [
+  // First request reaches the network
   {
     "id": "-644704205",
-    "msg": "Sending request, waiting …",
-    "data": { "overrideCache": false, "state": "empty" }
+    "msg": "Making network request",
+    "data": { "overrideCache": false, "cacheState": "empty" }
+  },
+  // Second request waits for the first one
+  {
+    "id": "-644704205",
+    "msg": "Concurrent request found, reusing result"
   },
   {
     "id": "-644704205",
-    "msg": "Waiting list had a deferred for this key, waiting for it to finish"
+    "msg": "Concurrent request detected, waiting..."
+  },
+  // First request's response arrives
+  {
+    "id": "-644704205",
+    "msg": "Caching response",
+    "data": { "ttl": 300000, "interpretHeader": true }
   },
   {
     "id": "-644704205",
-    "msg": "Detected concurrent request, waiting for it to finish"
+    "msg": "Found waiting deferred(s) and resolve them"
   },
   {
     "id": "-644704205",
-    "msg": "Useful response configuration found",
-    "data": {
-      "cacheConfig": {
-        /*...*/
-      },
-      "cacheResponse": {
-        "data": {
-          /*...*/
-        },
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          /*...*/
-        }
-      }
-    }
+    "msg": "Response cached successfully",
+    "data": { "state": "cached", "ttl": 300000 }
+  },
+  // Second request reuses the cached response
+  {
+    "id": "-644704205",
+    "msg": "Using cached response"
   },
   {
     "id": "-644704205",
-    "msg": "Found waiting deferred(s) and resolved them"
-  },
-  {
-    "id": "-644704205",
-    "msg": "Returning cached response"
+    "msg": "Returned cached response"
   },
 
-  // First request ended, second call below:
+  // A third request, made later, is answered from the cache
   {
     "id": "-644704205",
-    "msg": "Response cached",
-    "data": {
-      "cache": {
-        /*...*/
-      },
-      "response": {
-        /*...*/
-      }
-    }
+    "msg": "Using cached response"
   },
   {
     "id": "-644704205",
-    "msg": "Returning cached response"
+    "msg": "Returned cached response"
   }
 ]
 ```

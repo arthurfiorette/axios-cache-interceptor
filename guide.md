@@ -3,54 +3,55 @@ url: https://axios-cache-interceptor.js.org/guide.md
 ---
 # Introduction
 
-As its name suggests, Axios Cache Interceptor is an interceptor for Axios that handles caching.
-It was created to help developers call axios multiple times without having to worry about
-overloading the network or implementing a simple and error-prone cache system.
+Axios Cache Interceptor is an axios interceptor that caches responses. It lets you call axios
+as often as you need without overloading the network or writing your own error-prone cache.
 
-Each request goes through an interceptor applied to your axios instance. There, we handle
-each request and decide if we should send it to the network or return a cached response.
+Every request made through your axios instance passes through the interceptor, which decides
+whether to send it to the network or answer it with a cached response.
 
 ## How it works
 
-By using axios interceptors instead of adapters, each request is passed through the
-interceptor before calling the adapter and before returning to the original caller.
-Adapters are the final step and they are responsible for the actual network call, so by
-choosing to use interceptors, we create a minimally invasive approach that allows you to
-still use the axios adapter of your choice.
+Axios runs interceptors before calling the adapter and again before returning the response
+to the caller. The adapter is the last step and performs the actual network call. Because
+this library is built on interceptors instead of a custom adapter, you can keep using any
+axios adapter you want.
 
-Before the request is delivered to the adapter, our request interceptor checks whether the
-request has already been cached and is valid, whether the request should be cached
-(sometimes you don't want cache at all, and that's ok), whether a request has already been
-sent to the network that we can wait for, and many other conditions.
+Before a request reaches the adapter, the request interceptor checks, among other
+conditions:
 
-After the adapter gets the response, we check if it belongs to a *cacheable* request,
-save it to storage, resolve other requests waiting for the same resource and
-finally return the response to the original caller.
+* whether a valid cached response already exists;
+* whether the request should be cached at all (sometimes you don't want caching, and that's
+  fine);
+* whether an identical request is already in flight, so this one can wait for its result.
+
+After the adapter returns a response, the response interceptor checks whether it belongs to
+a *cacheable* request, saves it to storage, resolves other requests waiting for the same
+resource and returns the response to the original caller.
 
 ## Features
 
-* TTL, Cache-Control and ETag.
-* Return previous cached request if the new one failed.
-* Handles parallel requests
-* 100% Customizable
-* Built-in storages like In-Memory, Local Storage and Session Storage.
-* Less than 4.3 kB minified and gzipped.
-* Development mode to debug your requests.
-* 22 times faster than using axios and 8% faster than `axios-cache-adapter`.
-* And much more...
+* TTL, `Cache-Control`, `ETag`, `Last-Modified` and `Vary` support.
+* Returns the previous cached response when a new request fails.
+* Deduplicates concurrent requests for the same resource.
+* Configurable globally and per request.
+* Built-in in-memory, `localStorage` and `sessionStorage` storages.
+* Production UMD bundle of about 18 KiB minified (about 7 KiB gzipped), dependencies included.
+* A development build that logs why each request was or wasn't cached.
+* In a 2023 benchmark with cached responses, served about 21x more requests per second than
+  plain axios and about 9% more than `axios-cache-adapter`.
 
-## Why not...?
+## Alternatives
 
 ### axios-cache-adapter
 
-The creation of this library is heavily inspired by axios-cache-adapter. It was a great
-library but now it is unmaintained and has a lot of unresolved issues. Also, it weighs
-more than 4x the size of this library with fewer features and less performance.
+This library was heavily inspired by axios-cache-adapter. That library was good, but it is
+now unmaintained and has many unresolved issues. It is also larger than this library, with
+fewer features and lower performance.
 
-### Fetch and some state management library?
+### Fetch with a state management library
 
-As this library was built to be used with axios and to handle storage itself, I can assure you
-that it is more performant than any hand-rolled code you may find or write yourself. As for
-state management libraries and similar tools,
-[this blog post](https://arthur.place/implications-of-cache-or-state) explains why cache
-is the more architecturally correct approach than state.
+This library was built specifically for axios and manages its own storage, request
+deduplication and HTTP caching headers, which hand-rolled caches rarely cover. For state
+management libraries and similar tools,
+[this blog post](https://arthur.place/implications-of-cache-or-state) explains why a cache is
+a better architectural fit than state.
