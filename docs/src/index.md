@@ -6,7 +6,7 @@ hero:
   text: Small and fast HTTP caching for axios
   tagline: Caches responses, deduplicates concurrent requests and follows HTTP caching headers.
   image:
-    src: /rocket.svg
+    src: /logo.webp
     alt: Rocket
     title: Axios Cache Interceptor's logo
 
