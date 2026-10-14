@@ -25,20 +25,14 @@ jobs:
           fetch-depth: 0
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v6
-
-      - name: Setup node and restore cached dependencies
-        uses: actions/setup-node@v7
+        uses: pnpm/setup@v3
         with:
-          node-version-file: '.nvmrc'
-          registry-url: 'https://registry.npmjs.org/'
-          cache: 'pnpm'
-
-      - name: Install packages
-        run: pnpm install --frozen-lockfile
+          runtime: node@24
+          cache: true
+          install: true
 
       - name: Build
-        run: pnpm run build
+        run: pnpm build
 
       - name: Publish to NPM # OIDC authentication
-        run: pnpm publish --access public --no-git-checks
+        run: npx --yes npm@latest publish --access public
