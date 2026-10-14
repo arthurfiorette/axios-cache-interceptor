@@ -1,41 +1,40 @@
 # Storages
 
-Storage adapters save and retrieve cache entries. They can also serialize entries when the
-underlying storage requires it. You can use a built-in adapter, create your own, or install
-one published on npm.
+A storage adapter connects the cache interceptor to an in-memory or persistent data store.
+It saves and retrieves cache entries and serializes them when the underlying store requires
+it. You can use a built-in adapter, create your own, or install one published on npm.
 
-A storage adapter connects the cache interceptor to a persistent or in-memory data store.
-The interceptors call it automatically, and you can also access the configured storage
-through `axios.storage` when you need to inspect or invalidate entries manually.
+The interceptors call the storage automatically. You can also reach the configured storage
+through `axios.storage` to inspect or invalidate entries manually.
 
-Currently, two storages are included in the library by default:
+The library includes these storages:
 
-- [Memory Storage](#memory-storage), created with `buildMemoryStorage` (Node.js and web)
+- [Memory storage](#memory-storage), created with `buildMemoryStorage` (Node.js and web)
 - [Web Storage API](#web-storage-api), created with `buildWebStorage` (web only)
 
 ## Concurrent requests
 
-Concurrent request deduplication is local to each cache instance. When an eligible request
-is tracked in an instance's in-memory waiting map, later requests for the same key can wait
-for its result instead of reaching the network. Overrides and Vary mismatches can still
-produce additional requests.
+Concurrent request deduplication is local to each axios instance. While an eligible request
+is tracked in the instance's in-memory waiting map, later requests for the same key wait for
+its result instead of reaching the network. Overrides and Vary mismatches can still produce
+additional requests.
 
-Shared storage, such as Redis, shares completed cache entries but does not share that
-in-memory coordination. If two processes request the same uncached key at the same time,
-both may send a network request. This is supported: each response completes normally, local
-waiting requests are settled, and they either read the shared result or retry if no result
-is available. The library does not provide a distributed lock or guarantee a single network
+A shared storage, such as Redis, shares completed cache entries but not the in-memory
+waiting map. If two processes request the same uncached key at the same time, both may send
+a network request. This is supported: each response completes normally, local waiting
+requests are settled, and they either read the shared result or retry if no result is
+available. The library does not provide a distributed lock or guarantee a single network
 request across processes.
 
 Duplicate requests are normally harmless for the default `GET` and `HEAD` methods. If you
 enable caching for non-idempotent methods, you are responsible for making duplicate network
 requests safe.
 
-## Memory Storage
+## Memory storage
 
-::: warning
+::: tip
 
-**This is the storage chosen by default**
+This is the default storage.
 
 :::
 
@@ -45,14 +44,13 @@ the process exits.
 By default, responses and cached entries share object references. Mutating a response can
 therefore mutate its cached value. Set `cloneData` to `true` to clone values returned by
 `get()`, or use `'double'` to clone values on both `set()` and `get()`. See
-[#163](https://github.com/arthurfiorette/axios-cache-interceptor/issues/163) and many
-similar reports.
+[#163](https://github.com/arthurfiorette/axios-cache-interceptor/issues/163) and similar
+reports.
 
 For long-running processes, use `cleanupInterval`, `maxEntries`, and `maxStaleAge` to bound
 memory usage and remove old entries.
 
-The storage uses a JavaScript `Map` internally for efficient key-value lookups and
-iteration.
+The storage keeps entries in a JavaScript `Map`, exposed as `storage.data`.
 
 ```ts
 import axios from 'axios';
@@ -74,23 +72,25 @@ setupCache(axios, {
 
 Options:
 
-- **cloneData**: Clones values returned by `get()` when set to `true`. Use `'double'` to
-  also clone values before saving them. The default is `false`.
+- `cloneData`: clones values returned by `get()` when set to `true`. Use `'double'` to also
+  clone values before saving them. The default is `false`.
 
-- **cleanupInterval**: How often, in milliseconds, to remove old entries. Set it to `false`
-  to disable automatic cleanup. The default is 5 minutes (`300_000`).
+- `cleanupInterval`: how often, in milliseconds, to remove old entries. Set it to `false` to
+  disable automatic cleanup. The default is 5 minutes (`300_000`).
 
-- **maxEntries**: The maximum number of entries to retain. The storage uses a FIFO-based
-  eviction order because entry sizes cannot be determined reliably. Set it to `false` to
-  disable the limit. The default is `1024`.
+- `maxEntries`: the maximum number of entries to keep. Entry sizes cannot be measured
+  reliably, so when the limit is reached the storage first removes entries that can be
+  discarded (empty, must-revalidate, expired, or stale beyond `maxStaleAge`), then evicts by
+  state (empty, must-revalidate, stale, cached and finally loading), oldest first.
+  Set it to `false` to disable the limit. The default is `1024`.
 
-- **maxStaleAge**: How long, in milliseconds, a stale entry with a defined TTL can remain
-  before removal. The default is 1 hour (`3_600_000`).
+- `maxStaleAge`: how long, in milliseconds, a stale entry with a defined TTL can remain
+  after expiring before it is removed. The default is 1 hour (`3_600_000`).
 
 ## Web Storage API
 
-Use `buildWebStorage` to preserve cached entries across page refreshes. It connects the
-cache storage API to the browser's
+Use `buildWebStorage` to keep cached entries across page reloads. It stores entries as JSON
+in the browser's
 [Storage API](https://developer.mozilla.org/en-US/docs/Web/API/Storage).
 
 ::: code-group
@@ -100,8 +100,8 @@ import axios from 'axios';
 import { setupCache, buildWebStorage } from 'axios-cache-interceptor';
 
 setupCache(axios, { // [!code focus:5]
-  // As localStorage is a public storage, you can add a prefix
-  // to all keys to avoid collisions with other code.
+  // localStorage is shared with other code on the page, so
+  // prefix all keys to avoid collisions.
   storage: buildWebStorage(localStorage, 'axios-cache:')
 });
 ```
@@ -111,17 +111,18 @@ import axios from 'axios';
 import { setupCache, buildWebStorage } from 'axios-cache-interceptor';
 
 setupCache(axios, { // [!code focus:5]
-  // As sessionStorage is a public storage, you can add a prefix
-  // to all keys to avoid collisions with other code.
+  // sessionStorage is shared with other code on the page, so
+  // prefix all keys to avoid collisions.
   storage: buildWebStorage(sessionStorage, 'axios-cache:')
 });
 ```
 
-```ts{4,7} [Custom Storage]
+```ts{5,8} [Custom Storage]
 import axios from 'axios';
 import { setupCache, buildWebStorage } from 'axios-cache-interceptor';
 
-const myStorage = new Storage(); // [!code focus:8]
+// Any object implementing the Storage interface // [!code focus:10]
+const myStorage = createMyStorage();
 
 setupCache(axios, {
   storage: buildWebStorage(
@@ -136,16 +137,16 @@ setupCache(axios, {
 
 Options:
 
-- **storage**: The `Storage` instance to use, such as `localStorage` or `sessionStorage`.
-- **prefix**: A prefix added to every key to avoid collisions. The default is
+- `storage`: the `Storage` instance to use, such as `localStorage` or `sessionStorage`.
+- `prefix`: a prefix added to every key to avoid collisions. The default is
   `'axios-cache-'`.
-- **maxStaleAge**: How long, in milliseconds, a stale entry can remain before removal. The
-  default is 1 hour (`3_600_000`).
+- `maxStaleAge`: how long, in milliseconds, a stale entry with a defined TTL can remain
+  after expiring before it is removed. The default is 1 hour (`3_600_000`).
 
 ### Browser quota
 
-From `v0.9.0` onwards, web storage is able to detect and evict older entries if the
-browser's quota is reached.
+Since `v0.9.0`, the web storage evicts older entries when the browser's storage quota is
+reached.
 
 The storage handles quota errors as follows:
 
@@ -158,25 +159,28 @@ The storage handles quota errors as follows:
 
 ## buildStorage()
 
-All built-in storage adapters use `buildStorage`. Use the same function to create a custom
-adapter from the following methods:
+All built-in storage adapters use `buildStorage`, and `setupCache` only accepts storages
+created by it. Use the same function to create a custom adapter from the following methods:
 
 - `set(key: string, value: NotEmptyStorageValue, currentRequest?: CacheRequestConfig): MaybePromise<void>`:
-  Saves a cache value under the given key.
+  saves a cache value under the given key.
 
-- `remove(key: string, currentRequest?: CacheRequestConfig): MaybePromise<void>`: Removes
+- `remove(key: string, currentRequest?: CacheRequestConfig): MaybePromise<void>`: removes
   the value stored under the given key.
 
-- `find(key: string, currentRequest?: CacheRequestConfig) => MaybePromise<StorageValue | undefined>`:
-  Returns the stored value, or `undefined` when the key does not exist.
+- `find(key: string, currentRequest?: CacheRequestConfig): MaybePromise<StorageValue | undefined>`:
+  returns the stored value, or `undefined` when the key does not exist.
 
-- `clear() => MaybePromise<void>`: Optionally clears all stored data. The interceptor does
+- `clear?(): MaybePromise<void>`: optionally clears all stored data. The interceptor does
   not call this method; it is available for application-level invalidation.
+
+`find` only needs to return what was saved. The storage returned by `buildStorage` checks
+expiration itself, turning expired entries into stale ones or removing them.
 
 ## Third-party storages
 
-The following examples are not maintained as separate integrations. Use them as starting
-points and adapt their expiration and serialization behavior to your application.
+The following examples are not maintained as separate packages. Use them as starting points
+and adapt their expiration and serialization behavior to your application.
 
 - [Node Redis v4](#node-redis-storage)
 - [IndexedDB](#indexeddb)
@@ -228,15 +232,18 @@ function getExpiresAt(
 
       break;
 
-    case 'cached':
-      if (!canStale(value)) {
-        return value.createdAt + value.ttl;
-      }
+    case 'cached': {
+      // Keep entries that can become stale long enough to be revalidated.
+      const staleFor = Math.max(
+        value.staleTtl ?? 0,
+        canStale(value) ? 60 * 60 * 1000 : 0
+      );
 
-      break;
+      return value.createdAt + value.ttl + staleFor;
+    }
   }
 
-  // Keep revalidatable entries for at most one hour by default.
+  // Keep stale entries without a TTL for at most one hour.
   return Date.now() + 60 * 60 * 1000;
 }
 

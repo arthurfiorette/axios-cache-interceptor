@@ -73,7 +73,7 @@ export type KeyGenerator<R = unknown, D = unknown> = (
 export type MaybePromise<T> = T | Promise<T> | PromiseLike<T>;
 
 /**
- * You can use a `number` to ensure a maximum time (in seconds) that the cache can be reused.
+ * You can use a `number` to ensure a maximum time (in milliseconds) that the cache can be reused.
  *
  * You can use `true` to use the cache until a new response is received.
  *

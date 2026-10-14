@@ -3,8 +3,8 @@ layout: home
 
 hero:
   name: Axios Cache Interceptor
-  text: Performant, small and powerful
-  tagline: A cache interceptor for axios made with developers and performance in mind.
+  text: Small and fast HTTP caching for axios
+  tagline: Caches responses, deduplicates concurrent requests and follows HTTP caching headers.
   image:
     src: /rocket.svg
     alt: Rocket
@@ -12,7 +12,7 @@ hero:
 
   actions:
     - theme: brand
-      text: Get Started
+      text: Get started
       link: /guide/getting-started
 
     - theme: alt
@@ -25,36 +25,36 @@ hero:
 
 features:
   - icon: ⚡
-    title: Simply faster
-    details: Serving 21x more requests/s than axios itself.
+    title: Request deduplication
+    details:
+      Concurrent requests for the same resource share a single network call, and every caller
+      gets the same response.
 
   - icon: 📦
-    title: Handy builds
-    details:
-      No matter what your JS setup is, we've got you covered! CDN, ECMAScript, UMD, CommonJS
-      and URL imports.
+    title: Multiple builds
+    details: CDN, ECMAScript modules, UMD, CommonJS and URL imports.
 
   - icon: 🔩
-    title: Hassle free
+    title: One function call
     details:
-      Just call setupCache() and watch the magic happen! Works for everyone, no matter the
-      current combination of adapters or interceptors.
+      Call setupCache() on your axios instance. It works alongside your existing adapters and
+      interceptors.
 
   - icon: 🛠️
-    title: Rich Features
+    title: Standards-based
     details:
-      We follow strict rules defined by MDN, RFCs, and other specifications. No more
-      guessing.
+      Follows the caching rules defined in the HTTP RFCs and documented by MDN, including
+      Cache-Control, ETag and Vary.
 
   - icon: 🌐
-    title: No network waste!
+    title: Fewer network calls
     details:
-      Network speed should not matter for your users. Make your application work offline,
-      on 2G, or on ultra-fast 5G; it's up to your users.
+      Repeated requests are answered from cache, so your app stays responsive on slow
+      connections and can show cached data while offline.
 
   - icon: 🔑
-    title: TypeScript!
-    details: Fully configurable and flexible interceptors with fully type-safe APIs.
+    title: TypeScript
+    details: Every option, storage and interceptor is fully typed.
 ---
 
 <script setup>
@@ -63,10 +63,10 @@ import { VPTeamPageTitle } from 'vitepress/theme'
 
 <VPTeamPageTitle>
   <template #title>
-    Our Team
+    Our team
   </template>
   <template #lead>
-    Composed of a diverse group of people from all over the world through our open source community.
+    People who contribute to Axios Cache Interceptor.
   </template>
 </VPTeamPageTitle>
 <div class="contributors">

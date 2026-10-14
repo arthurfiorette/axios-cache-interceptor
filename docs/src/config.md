@@ -1,7 +1,8 @@
 # setupCache()
 
-The `setupCache` function receives the axios instance and a set of optional properties
-described below. This modifies the axios instance in place and returns it.
+`setupCache` receives an axios instance and the optional properties described below. It
+modifies the instance in place and returns it. Call it only once per instance; a second call
+throws an error.
 
 ```ts
 const axios = setupCache(axiosInstance, OPTIONS);
@@ -9,21 +10,21 @@ const axios = setupCache(axiosInstance, OPTIONS);
 
 ::: tip
 
-The `setupCache` function accepts global options as well as all
-[request-specific](./config/request-specifics.md) options. This way, you can customize the
-defaults for all requests.
+`setupCache` also accepts every `cache.*` [request-specific](./config/request-specifics.md)
+option, passed at the top level (`{ ttl }`, not `{ cache: { ttl } }`). Values passed here
+become the defaults for all requests made with this instance.
 
 :::
 
-::: tip
+::: warning
 
-If you want to use the same cache interceptor for all your axios instances, you can call
-`setupCache` with the default axios instance.
+Calling `setupCache(Axios, OPTIONS)` on the default axios export only caches requests made
+through that default instance. Instances created afterwards with `Axios.create()` do not get
+the cache interceptors, and calling `setupCache` on them throws, because they inherit the
+`defaults.cache` value set by the first call.
 
-```ts
-import Axios from 'axios';
-setupCache(Axios, OPTIONS);
-```
+To share cached data between instances, call `setupCache` on each instance and pass them the
+same [`storage`](#storage).
 
 :::
 
@@ -33,25 +34,21 @@ setupCache(Axios, OPTIONS);
  <Badge text="deprecated" type="danger"/>
 </a>
 
-<Badge text="optional" type="warning"/>
-
-- Type: `InstanceLocation`
+- Type: `InstanceLocation` (`'client' | 'server'`)
 - Default: `typeof window === 'undefined' ? 'server' : 'client'`
 
-A hint to the library about where the axios instance is being used.
+A hint to the library about where the axios instance is running. The default header
+interpreter uses it for `Cache-Control: private`. When the location is `'server'`, those
+responses are not cached.
 
-Used to make decisions such as whether to handle `Cache-Control: private`.
+`setupCache` always detects this value and ignores any `location` passed in its options. To
+change it, assign the property after setup:
 
 ```ts
-// NodeJS
-const cache = setupCache(Axios.create(), {
-  location: 'server'
-});
+const axios = setupCache(Axios.create());
 
-// Browser
-const cache = setupCache(Axios.create(), {
-  location: 'client'
-});
+// Treat this instance as a browser client, even when running in Node.js
+axios.location = 'client';
 ```
 
 ## storage
@@ -61,30 +58,28 @@ const cache = setupCache(Axios.create(), {
 - Type: `AxiosStorage`
 - Default: `buildMemoryStorage()`
 
-A storage interface is the entity responsible for saving, retrieving and serializing data
-received from the network when an axios call is made.
+The storage saves, retrieves and, when needed, serializes the responses received from the
+network.
 
 See the [Storages](./guide/storages.md) page for more information.
 
 ## generateKey
 
- <Badge text="optional" type="warning"/>
+<Badge text="optional" type="warning"/>
 
 - Type: `KeyGenerator<unknown, unknown>`
 - Default: `defaultKeyGenerator`
 
-The `generateKey` property defines the function responsible for generating unique keys for
-each request's cache.
+The function that generates the cache key (the request ID) for each request.
 
-By default, it employs a strategy that prioritizes the `id` if available, falling back to
-a string generated using various request properties. The default implementation generates
-a 32-bit hash key using the `method`, `baseURL`, `params`, `data`, and `url` of the
-request.
+The default generator returns the request's `id` when one is set. Otherwise, it hashes the
+request's `method`, `baseURL`, `url`, `params` and `data` into a 32-bit key. When
+[`Vary`](./config/request-specifics.md#cache-vary) requires it, the values of the request
+headers it lists are included too.
 
 ::: warning
 
-In any persistent cache scenario where exceeding 77K unique keys is a possibility, you
-should use a more robust hashing algorithm.
+If a persistent cache may hold more than 77K unique keys, use a stronger hashing algorithm.
 
 [Read more](./guide/request-id.md#custom-generator)
 
@@ -99,13 +94,13 @@ should use a more robust hashing algorithm.
 <Badge text="optional" type="warning"/>
 
 - Type: `Map<string, Deferred<void>>`
-- Default: `new Map`
+- Default: `new Map()`
 
-A simple object that will hold a promise for each pending request. Used to handle
-concurrent requests.
+A map holding a deferred promise for each pending request, used to deduplicate concurrent
+requests.
 
-You shouldn't change this property, but it is exposed in case you need to use it as some
-sort of listener or know when a request is waiting for others to finish.
+You shouldn't change it. It is exposed in case you want to use it as a listener, for example
+to know when a request is waiting for another one to finish.
 
 ## headerInterpreter
 
@@ -118,30 +113,36 @@ sort of listener or know when a request is waiting for others to finish.
 - Type: `HeaderInterpreter`
 - Default: `defaultHeaderInterpreter`
 
-The function used to interpret all headers from a request and determine a time to live
-(`ttl`) number.
+The function that reads the response headers and determines the time to live (`ttl`) of the
+cache entry. It receives the response headers and the instance's [`location`](#location).
+
+The default interpreter handles `Cache-Control` (`no-cache`, `no-store`, `private`,
+`immutable`, `max-age`, `max-stale` and `stale-while-revalidate`), `Age` and `Expires`.
 
 ::: warning
 
 Many REST backends return some variation of `Cache-Control: no-cache` or
-`Cache-Control: no-store` headers, which tell us to avoid caching altogether. You shall
-disable `headerInterpreter` for those requests.
+`Cache-Control: no-store`, which tells the library not to cache the response at all. Set
+[`cache.interpretHeader`](./config/request-specifics.md#cache-interpretheader) to `false` for
+those requests.
 
-_If the debug mode prints `Cache header interpreted as 'dont cache'` this is probably the
-reason._
+_If the debug mode prints `Cache-Control header indicates: do not cache`, this is probably
+the reason._
 
 :::
 
-The possible returns are:
+The possible return values are:
 
-- `'dont cache'`: the request will not be cached.
-- `'not enough headers'`: the request will find other ways to determine the TTL value.
-- `number`: used as the TTL value.
-- `{ cache: number, stale: number }`: used as the TTL value and stale TTL value.
+- `'dont cache'`: the response will not be cached.
+- `'not enough headers'`: the [`cache.ttl`](./config/request-specifics.md#cache-ttl) option
+  is used instead.
+- `number`: used as the TTL, in milliseconds.
+- `{ cache: number, stale?: number }`: used as the TTL and the stale TTL, in milliseconds.
 
 ::: details Example of a custom headerInterpreter
 
 ```ts
+import Axios from 'axios';
 import {
   setupCache,
   type HeaderInterpreter
@@ -155,11 +156,16 @@ const myHeaderInterpreter: HeaderInterpreter = (headers) => {
       return 'dont cache';
     }
 
-    return seconds;
+    // The TTL is in milliseconds
+    return seconds * 1000;
   }
 
   return 'not enough headers';
 };
+
+const axios = setupCache(Axios.create(), {
+  headerInterpreter: myHeaderInterpreter
+});
 ```
 
 :::
@@ -172,20 +178,18 @@ const myHeaderInterpreter: HeaderInterpreter = (headers) => {
 
 <Badge text="optional" type="warning"/>
 
-- Type: `AxiosInterceptor<CacheRequestConfig<unknown, unknown>>`
-- Default: `defaultRequestInterceptor()`
+- Type: `AxiosInterceptor<InternalCacheRequestConfig<unknown, unknown>>`
+- Default: `defaultRequestInterceptor(axios)`
 
-The function that will be used to intercept the request before it is sent to the Axios
-adapter.
+The interceptor that runs before the request is sent to the axios adapter.
 
-It is the main function of this library, as it is the bridge between the axios request and
-the cache.
+It is the main function of this library and connects the axios request to the cache.
 
-It wasn't meant to be changed, but if you need to, you can do it by passing a new function
-to this property.
+It isn't meant to be replaced, but you can pass your own implementation to this property if
+you need to.
 
-See its code for more information
-[here](https://github.com/arthurfiorette/axios-cache-interceptor/tree/main/src/interceptors).
+See [its source code](https://github.com/arthurfiorette/axios-cache-interceptor/tree/main/src/interceptors)
+for more information.
 
 ## responseInterceptor
 
@@ -195,20 +199,19 @@ See its code for more information
 
 <Badge text="optional" type="warning"/>
 
-- Type: `AxiosInterceptor<CacheAxiosResponse<unknown, unknown>>`
-- Default: `defaultResponseInterceptor()`
+- Type: `AxiosInterceptor<Partial<CacheAxiosResponse<unknown, unknown>> & AxiosResponse<unknown, unknown>>`
+- Default: `defaultResponseInterceptor(axios)`
 
-The function that will be used to intercept the response after it is returned by the Axios
-adapter.
+The interceptor that runs after the axios adapter returns a response.
 
-It is the second most important function of this library, as it is the bridge between the
-axios response and the cache.
+It is the second most important function of this library and connects the axios response
+to the cache.
 
-It wasn't meant to be changed, but if you need to, you can do it by passing a new function
-to this property.
+It isn't meant to be replaced, but you can pass your own implementation to this property if
+you need to.
 
-See its code for more information
-[here](https://github.com/arthurfiorette/axios-cache-interceptor/tree/main/src/interceptors).
+See [its source code](https://github.com/arthurfiorette/axios-cache-interceptor/tree/main/src/interceptors)
+for more information.
 
 ## register
 
@@ -217,12 +220,13 @@ See its code for more information
 - Type: `boolean`
 - Default: `true`
 
-Controls whether cache interceptors are automatically registered during `setupCache()`.
+Controls whether `setupCache()` registers the cache interceptors automatically.
 
-- `true`: register both cache interceptors (default).
-- `false`: do not register cache interceptors automatically.
+- `true`: registers both cache interceptors (default).
+- `false`: does not register them.
 
-Use `false` when you need full control over interceptor registration order.
+Use `false` when you need full control over the interceptor order. See
+[Other interceptors](./guide/interceptors.md) for how axios orders interceptors.
 
 ```ts
 import Axios from 'axios';
@@ -230,18 +234,20 @@ import { setupCache } from 'axios-cache-interceptor';
 
 const axios = setupCache(Axios.create(), { register: false });
 
-// register your own interceptors first
-axios.interceptors.request.use((req) => req);
-axios.interceptors.response.use((res) => res);
-
-// then register cache interceptors manually
-axios.interceptors.request.use(
-  axios.requestInterceptor.onFulfilled,
-  axios.requestInterceptor.onRejected
-);
+// Register the cache response interceptor first (response interceptors are FIFO)
 axios.interceptors.response.use(
   axios.responseInterceptor.onFulfilled,
   axios.responseInterceptor.onRejected
+);
+
+// Register your own interceptors
+axios.interceptors.request.use((req) => req);
+axios.interceptors.response.use((res) => res);
+
+// Register the cache request interceptor last (request interceptors are LIFO)
+axios.interceptors.request.use(
+  axios.requestInterceptor.onFulfilled,
+  axios.requestInterceptor.onRejected
 );
 ```
 
@@ -250,34 +256,36 @@ axios.interceptors.response.use(
 <Badge text="dev only" type="danger"/> <Badge text="optional" type="warning"/>
 
 - Type: `(msg: { id?: string; msg?: string; data?: unknown }) => void` or `undefined`
-- Default: `undefined`
+- Default: `undefined` (no logging)
 
 ::: warning
 
-This option only works when targeting a [Development](./guide/debugging.md) build.
+This option only works with the [development build](./guide/debugging.md).
 
 :::
 
-The debug option will print debug information in the console. It is good if you need to
-trace any undesired behavior or issue. You can enable it by setting `debug` to a function
-that receives a string and returns nothing.
+A function that receives debug information about every caching decision. Use it to trace
+unexpected behavior. It receives an object with optional `id`, `msg` and `data` fields, and
+returns nothing.
 
 Read the [Debugging](./guide/debugging.md) page for the complete guide.
 
 ::: details Example of a custom debug function
 
 ```ts
-// Will print debug info in the console.
-setupCache(axiosInstance, { debug: console.log });
+// Alternatives: pick one per instance.
 
-// Own logging platform.
-setupCache(axiosInstance, {
+// Prints debug info to the console.
+setupCache(Axios.create(), { debug: console.log });
+
+// Sends it to your own logging platform.
+setupCache(Axios.create(), {
   debug: ({ id, msg, data }) =>
     myLoggerExample.emit({ id, msg, data })
 });
 
 // Disables debugging (default).
-setupCache(axiosInstance, { debug: undefined });
+setupCache(Axios.create(), { debug: undefined });
 ```
 
 :::

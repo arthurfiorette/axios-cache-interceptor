@@ -391,7 +391,7 @@ export function defaultResponseInterceptor(axios: AxiosCacheInstance): ResponseI
 
       if (
         staleIfError === true ||
-        // staleIfError is the number of seconds that stale is allowed to be used
+        // staleIfError is the number of milliseconds that stale is allowed to be used
         (typeof staleIfError === 'number' && cache.createdAt + staleIfError > Date.now())
       ) {
         // re-mark the cache as stale
