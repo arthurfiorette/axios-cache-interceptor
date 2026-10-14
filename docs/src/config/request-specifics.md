@@ -472,9 +472,9 @@ Configures how the HTTP `Vary` header is handled.
 
 - `true`: handles `Vary` automatically (default, recommended).
 - `false`: disables `Vary` checks (**WARNING: can cause cache poisoning**).
-- `string[]`: uses these request headers instead of the server's `Vary` list. When set per
-  request, they are always part of the cache key. When set globally, they only apply to
-  responses that include a `Vary` header.
+- `string[]`: uses these request headers instead of the server's `Vary` list. Their values
+  are always part of the cache key, whether set globally or per request, even when the
+  response has no `Vary` header.
 
 When the server responds with a `Vary` header, the library stores the values of the listed
 request headers with the cache entry. A later request with different values for those

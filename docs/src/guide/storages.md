@@ -80,9 +80,9 @@ Options:
 
 - `maxEntries`: the maximum number of entries to keep. Entry sizes cannot be measured
   reliably, so when the limit is reached the storage first removes entries that can be
-  discarded (empty, must-revalidate, expired, or stale beyond `maxStaleAge`), then evicts by
-  state (empty, must-revalidate, stale, cached and finally loading), oldest first.
-  Set it to `false` to disable the limit. The default is `1024`.
+  discarded (empty, must-revalidate, expired, or stale with a TTL beyond `maxStaleAge`),
+  then evicts by state (empty, must-revalidate, stale, cached and finally loading), oldest
+  first. Set it to `false` to disable the limit. The default is `1024`.
 
 - `maxStaleAge`: how long, in milliseconds, a stale entry with a defined TTL can remain
   after expiring before it is removed. The default is 1 hour (`3_600_000`).

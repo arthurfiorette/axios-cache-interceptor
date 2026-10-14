@@ -276,7 +276,7 @@ const storage = buildMemoryStorage(
   /* cloneData        */ false,        // true clones on read, 'double' on read and write
   /* cleanupInterval  */ 5 * 60_000,  // run cleanup every 5 min (false to disable)
   /* maxEntries       */ 1024,         // max number of entries (false to disable)
-  /* maxStaleAge      */ 60 * 60_000  // remove stale entries 1 hour after they expire
+  /* maxStaleAge      */ 60 * 60_000  // remove stale entries with a TTL 1 hour after they expire
 );
 ```
 
