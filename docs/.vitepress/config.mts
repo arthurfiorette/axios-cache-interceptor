@@ -83,7 +83,7 @@ export default defineConfig({
   // Additional elements to render in the <head> tag in the page HTML
   head: [
     // Attach a custom favicon
-    ['link', { rel: 'icon', href: `${BASE_URL}favicon.ico', type: 'image/x-icon` }],
+    ['link', { rel: 'icon', href: `${BASE_URL}favicon.ico`, type: 'image/x-icon' }],
     ['link', { rel: 'apple-touch-icon', sizes: '57x57', href: `${BASE_URL}apple-icon-57x57.png` }],
     ['link', { rel: 'apple-touch-icon', sizes: '60x60', href: `${BASE_URL}apple-icon-60x60.png` }],
     ['link', { rel: 'apple-touch-icon', sizes: '72x72', href: `${BASE_URL}apple-icon-72x72.png` }],
@@ -166,7 +166,7 @@ export default defineConfig({
     ],
 
     ['link', { rel: 'manifest', href: `${BASE_URL}manifest.json` }],
-    ['meta', { name: 'msapplication-TileColor', content: '#e5972a' }],
+    ['meta', { name: 'msapplication-TileColor', content: '#1b1b1f' }],
     ['meta', { name: 'msapplication-TileImage', content: `${BASE_URL}ms-icon-144x144.png` }],
     ['meta', { name: 'theme-color', content: '#e5972a' }],
     ['meta', { name: 'description', content: description }],
@@ -176,7 +176,7 @@ export default defineConfig({
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:title', content: 'Axios Cache Interceptor' }],
     ['meta', { property: 'og:description', content: description }],
-    ['meta', { property: 'og:image', content: `${BASE_URL}preview.png` }],
+    ['meta', { property: 'og:image', content: `${url}${BASE_URL}preview.jpg` }],
 
     // Twitter Meta Tags
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
@@ -184,7 +184,7 @@ export default defineConfig({
     ['meta', { property: 'twitter:url', content: url }],
     ['meta', { name: 'twitter:title', content: 'Axios Cache Interceptor' }],
     ['meta', { name: 'twitter:description', content: description }],
-    ['meta', { name: 'twitter:image', content: `${BASE_URL}preview.png` }],
+    ['meta', { name: 'twitter:image', content: `${url}${BASE_URL}preview.jpg` }],
 
     [
       'meta',
@@ -216,8 +216,8 @@ export default defineConfig({
         sameAs: ['https://github.com/ArthurFiorette/axios-cache-interceptor'],
         datePublished: '2022-01-17',
         dateModified: '2022-01-17',
-        logo: `${url}/preview.png`,
-        image: `${url}/preview.png`,
+        logo: `${url}/logo.webp`,
+        image: `${url}/preview.jpg`,
         description:
           'Axios Cache Interceptor is a small and efficient cache interceptor for axios.',
         headline: 'A small and efficient cache interceptor for axios.'
@@ -227,7 +227,7 @@ export default defineConfig({
 
   // `themeConfig` has JSDoc definitions for all the options
   themeConfig: {
-    logo: '/rocket.svg',
+    logo: '/logo.webp',
     socialLinks: [
       {
         icon: 'discord',

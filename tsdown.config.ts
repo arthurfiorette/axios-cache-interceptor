@@ -40,7 +40,15 @@ function buildConfig(overrides: UserConfig) {
           platform: 'browser',
           sourcemap: true,
           minify: true, // Always minify UMD
-          noExternal: () => true,
+          // Format overrides replace the resolved `deps` object instead of merging it, and the
+          // deprecated top-level `noExternal` is ignored here, so the full shape is required.
+          // Without this, dependencies stay external and the browser bundle cannot load them.
+          deps: {
+            alwaysBundle: () => true,
+            onlyBundle: false,
+            resolveDepSubpath: true,
+            dts: {}
+          },
           banner,
           globalName: 'AxiosCacheInterceptor',
 

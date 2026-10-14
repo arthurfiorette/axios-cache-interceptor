@@ -1,48 +1,44 @@
-# Other Interceptors
+# Other interceptors
 
-When combining `axios-cache-interceptor` with other interceptors, execution order matters.
-This page explains the default behavior and how to customize it.
+When you combine `axios-cache-interceptor` with other interceptors, the order in which they run
+matters.
 
-## TL;DR
+## Default order
 
-- **Request** interceptors registered **before** `setupCache()` run **after** the cache
-  interceptor; those registered **after** `setupCache()` run **before** the cache interceptor.
-- **Response** interceptors registered **before** `setupCache()` run **before** the cache
-  interceptor; those registered **after** `setupCache()` run **after** the cache interceptor.
-- By default, `setupCache(axios)` attaches both cache interceptors immediately.
-- You can disable automatic registration with `register: false` and register manually.
+`setupCache(axios)` registers both cache interceptors immediately, and axios runs the two kinds
+of interceptors in different orders:
 
-## Explanation
+- Request interceptors run in **reverse order**: the last one added runs first (LIFO,
+  _Last In, First Out_). Request interceptors registered before `setupCache()` run after the
+  cache interceptor, and those registered after it run before it.
+- Response interceptors run in **insertion order**: the first one added runs first (FIFO,
+  _First In, First Out_). Response interceptors registered before `setupCache()` run before
+  the cache interceptor, and those registered after it run after it.
 
-Axios runs request and response interceptors differently.
-
-- **Request interceptors** are executed in **reverse order** - the last interceptor added runs first (LIFO - _Last In First Out_)
-- **Response interceptors** are executed in **normal order** - the first interceptor added runs first (FIFO - _First In First Out_)
-
-As explained better in the
-[Axios documentation](https://github.com/axios/axios#interceptors) and in
-[this issue](https://github.com/arthurfiorette/axios-cache-interceptor/issues/449#issuecomment-1370327566).
+See the [Axios documentation](https://github.com/axios/axios#interceptors) and
+[this issue](https://github.com/arthurfiorette/axios-cache-interceptor/issues/449#issuecomment-1370327566)
+for more details.
 
 ```ts
-// This will run AFTER the cache interceptor
+// Runs AFTER the cache interceptor
 axios.interceptors.request.use((req) => req);
 
-// This will run BEFORE the cache interceptor
+// Runs BEFORE the cache interceptor
 axios.interceptors.response.use((res) => res);
 
 setupCache(axios);
 
-// This will run BEFORE the cache interceptor
+// Runs BEFORE the cache interceptor
 axios.interceptors.request.use((req) => req);
 
-// This will run AFTER the cache interceptor
+// Runs AFTER the cache interceptor
 axios.interceptors.response.use((res) => res);
 ```
 
 ## Custom order
 
-If you need full control, disable automatic registration and register cache interceptors
-yourself.
+For full control, disable automatic registration with `register: false` and register the
+cache interceptors yourself.
 
 ```ts
 import Axios from 'axios';
@@ -50,7 +46,7 @@ import { setupCache } from 'axios-cache-interceptor';
 
 const axios = setupCache(Axios.create(), { register: false });
 
-// Register cache response interceptor first (response interceptors are FIFO)
+// Register the cache response interceptor first (response interceptors are FIFO)
 axios.interceptors.response.use(
   axios.responseInterceptor.onFulfilled,
   axios.responseInterceptor.onRejected
@@ -60,7 +56,7 @@ axios.interceptors.response.use(
 axios.interceptors.request.use((req) => req);
 axios.interceptors.response.use((res) => res);
 
-// Register cache request interceptor last (request interceptors are LIFO)
+// Register the cache request interceptor last (request interceptors are LIFO)
 axios.interceptors.request.use(
   axios.requestInterceptor.onFulfilled,
   axios.requestInterceptor.onRejected
@@ -71,32 +67,31 @@ axios.interceptors.request.use(
 
 ## Extending types
 
-When using axios-cache-interceptor, you'll notice that it has different types from the default `AxiosInstance`, `AxiosRequestConfig`, and `AxiosResponse` types. That's because we chose to override axios's interfaces instead of extending, to avoid breaking changes with other libraries.
+axios-cache-interceptor uses its own types instead of the default `AxiosInstance`,
+`AxiosRequestConfig` and `AxiosResponse`. The library defines new interfaces instead of
+augmenting axios's own, to avoid breaking other libraries that use axios.
 
-However, this also means that when integrating with other packages or creating your own
-custom interceptor, you need to override or extend our own `CacheInstance`,
-`CacheRequestConfig`, and `CacheAxiosResponse` types to match your needs.
-
-This can be done as shown below:
+As a result, when you integrate with other packages or write your own interceptor, you need
+to extend our `AxiosCacheInstance`, `CacheRequestConfig` and `CacheAxiosResponse` types:
 
 ```ts
 declare module 'axios-cache-interceptor' {
-  interface CacheRequestConfig<R = unknown, D = unknown> {
-    customProperty: string;
+  interface CacheRequestConfig<R = any, D = any, P = any> {
+    customProperty?: string;
   }
 }
 ```
 
-## Streams and non-JSON
+## Streams and non-JSON data
 
-Sometimes you may want to cache a response that is not `JSON`, or that is a `Stream`.
-Either created by another interceptor or even by the axios adapter itself.
+The cache stores `response.data` as it is. A stream can only be read once, so a cached stream
+cannot be served again, and storages that serialize entries with `JSON.stringify`, such as
+[`buildWebStorage`](./storages.md#web-storage-api), cannot keep buffers either.
 
-To do so, you can use axios's native `transformResponse` option, which is a function
-that receives the response and returns a string or a buffer.
-
-**Axios Cache Interceptor** can only handle serializable data types, so you need to
-convert the response to a string or a buffer.
+To cache non-JSON responses in any storage, ask axios for a serializable type with
+`responseType`, such as `'text'`, and use axios's native `transformResponse` option to turn
+the data into a string or plain object. It receives the response data and must return the
+transformed value synchronously:
 
 ```ts
 import Axios from 'axios';
@@ -105,39 +100,38 @@ import { setupCache } from 'axios-cache-interceptor';
 const instance = Axios.create();
 const axios = setupCache(instance);
 // [!code focus:8]
-const response = await axios.get('my-url-that-returns-a-stream', {
-  responseType: 'stream',
-  transformResponse(response) {
+const response = await axios.get('my-url-that-returns-csv', {
+  responseType: 'text',
+  transformResponse(data) {
     // You will need to implement this function.
-    return convertStreamToStringOrObject(response.data);
+    return convertCsvToObject(data);
   }
 });
 
-response.data; // Will be a string and will be able to be cached.
+response.data; // A plain object that can be cached.
 ```
 
-This library cannot handle streams or buffers, so if you still need `response.data` to be
-a stream or buffer, you will need to cache it manually.
+`transformResponse` only runs for network responses. Cached responses already hold the
+transformed data, so it is not applied again.
 
-If you can collect the response data into a serializable format, `axios-cache-interceptor`
-can handle it for you with the help of the `transformResponse` option.
+If you need `response.data` to stay a stream or a buffer, disable the cache for that request
+and cache the data manually.
 
-## Custom Adapters
+## Custom adapters
 
-If you are writing a custom Axios adapter, **always throw an `AxiosError`** (not a plain
-`Error` or any other type) when the request fails. The cache interceptor relies on the
-`AxiosError.config` property to identify which in-flight request failed so it can clean up
-internal state (the deferred waiting map and the loading cache entry).
+If you write a custom axios adapter, **always throw an `AxiosError`** (not a plain `Error` or
+any other type) when the request fails. The cache interceptor reads `AxiosError.config` to
+identify which in-flight request failed, so it can clean up its internal state (the
+deferred in the waiting map and the loading cache entry).
 
-If your adapter throws a non-`AxiosError`, the interceptor cannot determine which request
-failed, which will leave the cache entry stuck in a `loading` state and cause all
-subsequent requests to that key to hang indefinitely. The development build will log a
-debug message when this happens.
+If your adapter throws anything else, the interceptor cannot tell which request failed. The
+cache entry stays in the `loading` state, and every later request for that key hangs
+indefinitely. The development build logs a debug message when this happens.
 
 ```ts
 import { AxiosError } from 'axios';
 
-// ✅ Correct – always throw AxiosError
+// Correct: always throw an AxiosError
 const myAdapter = async (config) => {
   try {
     // ... perform request ...
@@ -146,8 +140,8 @@ const myAdapter = async (config) => {
   }
 };
 
-// ❌ Incorrect – plain errors bypass the cache error handler
+// Incorrect: plain errors bypass the cache error handler
 const badAdapter = async (config) => {
-  throw new TypeError('socket hang up'); // cache state becomes stuck!
+  throw new TypeError('socket hang up'); // The cache state gets stuck!
 };
 ```

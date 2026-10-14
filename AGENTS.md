@@ -509,15 +509,15 @@ const myInterpreter: HeaderInterpreter = (headers, location) => {
 
 ### Key Generation
 
-Custom key generator for better collision resistance:
+Custom key generator for better collision resistance. Keep every field the default uses, including `meta.vary`: on a Vary mismatch the request interceptor only switches entries when the regenerated key differs, so a generator that ignores `meta` makes users with different `Authorization` headers share one entry.
 
 ```typescript
 import { buildKeyGenerator } from 'axios-cache-interceptor';
 import { createHash } from 'crypto';
 
 const customGenerator = buildKeyGenerator((req, meta) => {
-  // Build unique string
-  const str = `${req.method}:${req.url}:${JSON.stringify(req.params)}`;
+  // Same fields as defaultKeyGenerator, including Vary header values
+  const str = JSON.stringify([req.method, req.baseURL, req.url, req.params, req.data, meta?.vary]);
 
   // Use stronger hash (for persistent storage)
   return createHash('sha256').update(str).digest('hex');
@@ -751,9 +751,12 @@ setupCache(axios, { storage: redisStorage });
 // GOOD - use cryptographic hash
 setupCache(axios, {
   storage: redisStorage,
-  generateKey: buildKeyGenerator((req) => {
+  generateKey: buildKeyGenerator((req, meta) => {
+    // Keep meta.vary, otherwise Vary-based entries collide (cache poisoning)
     return createHash('sha256')
-      .update(JSON.stringify([req.url, req.method, req.params]))
+      .update(
+        JSON.stringify([req.method, req.baseURL, req.url, req.params, req.data, meta?.vary])
+      )
       .digest('hex');
   })
 });
@@ -861,7 +864,7 @@ These work but will be removed in v2:
 **Check:**
 
 1. `vary: false` when server uses Vary header?
-2. Custom key generator not including all discriminating factors?
+2. Custom key generator not including all discriminating factors (including `meta.vary`)?
 3. Mutating cached data without `cloneData`?
 
 ### Concurrent requests not deduplicating

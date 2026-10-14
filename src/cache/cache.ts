@@ -177,9 +177,9 @@ export interface CacheProperties<R = unknown, D = unknown> {
    *
    * Types:
    *
-   * - `number` -> the max time (in seconds) that the cache can be reused.
+   * - `number` -> the max age (in milliseconds) of the stale cache that can be reused.
    * - `boolean` -> `false` disables and `true` enables with infinite time if no value is
-   *   present on `stale-if-error` in Cache-Control.
+   *   present on `stale-if-error` in Cache-Control (that value is in seconds).
    * - `function` -> a predicate that can return `number` or `boolean` as described above.
    *
    * @default true
@@ -260,6 +260,9 @@ export interface CacheInstance {
    * A hint to the library about where the axios instance is being used.
    *
    * Used to take some decisions like handling or not `Cache-Control: private`.
+   *
+   * `setupCache()` always detects this value and ignores any `location` passed in its
+   * options. To change it, assign `axios.location` after setup.
    *
    * @deprecated This property will be hidden in future versions. Please tell us why you need it at https://github.com/arthurfiorette/axios-cache-interceptor/issues/1158
    * @default typeof window === 'undefined' ? 'server' : 'client'
